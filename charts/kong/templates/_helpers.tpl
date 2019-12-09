@@ -177,7 +177,7 @@ The name of the service used for the ingress controller's validation webhook
 - name: {{ template "kong.fullname" . }}-tmp
   emptyDir: {}
 {{- range .Values.plugins.configMaps }}
-- name: kong-plugin-{{ .pluginName }}
+- name: kong-plugin-{{ empty .path | ternary .pluginName .name }}
   configMap:
     name: {{ .name }}
 {{- end }}
@@ -226,13 +226,13 @@ The name of the service used for the ingress controller's validation webhook
   mountPath: /etc/secrets/{{ . }}
 {{- end }}
 {{- range .Values.plugins.configMaps }}
-- name:  kong-plugin-{{ .pluginName }}
-  mountPath: /opt/kong/plugins/{{ .pluginName }}
+- name: kong-plugin-{{ empty .path | ternary .pluginName .name }}
+  mountPath: /opt/kong/plugins/{{ coalesce .path .pluginName }}
   readOnly: true
 {{- end }}
 {{- range .Values.plugins.secrets }}
-- name:  kong-plugin-{{ .pluginName }}
-  mountPath: /opt/kong/plugins/{{ .pluginName }}
+- name: kong-plugin-{{ empty .path | ternary .pluginName .name }}
+  mountPath: /opt/kong/plugins/{{ coalesce .path .pluginName }}
   readOnly: true
 {{- end }}
 {{- end -}}
@@ -245,7 +245,7 @@ The name of the service used for the ingress controller's validation webhook
 {{- range .Values.plugins.secrets -}}
   {{ $myList = append $myList .pluginName -}}
 {{- end }}
-{{- $myList | join "," -}}
+{{- $myList | uniq | join "," -}}
 {{- end -}}
 
 {{- define "kong.wait-for-db" -}}
