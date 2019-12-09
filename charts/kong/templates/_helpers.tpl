@@ -180,11 +180,21 @@ The name of the service used for the ingress controller's validation webhook
 - name: kong-plugin-{{ .pluginName }}
   configMap:
     name: {{ .name }}
+{{- range .subdirectories }}
+- name: {{ .name }}
+  configMap:
+    name: {{ .name }}
+{{- end }}
 {{- end }}
 {{- range .Values.plugins.secrets }}
 - name: kong-plugin-{{ .pluginName }}
   secret:
     secretName: {{ .name }}
+{{- range .subdirectories }}
+- name: {{ .name }}
+  secret:
+    secretName: {{ .name }}
+{{- end }}
 {{- end }}
 - name: custom-nginx-template-volume
   configMap:
@@ -226,14 +236,26 @@ The name of the service used for the ingress controller's validation webhook
   mountPath: /etc/secrets/{{ . }}
 {{- end }}
 {{- range .Values.plugins.configMaps }}
+{{- $mountPath := printf "/opt/kong/plugins/%s" .pluginName }}
 - name:  kong-plugin-{{ .pluginName }}
-  mountPath: /opt/kong/plugins/{{ .pluginName }}
+  mountPath: {{ $mountPath }}
+  readOnly: true
+{{- range .subdirectories }}
+- name: {{ .name }}
+  mountPath: {{ printf "%s/%s" $mountPath .path }}
   readOnly: true
 {{- end }}
+{{- end }}
 {{- range .Values.plugins.secrets }}
+{{- $mountPath := printf "/opt/kong/plugins/%s" .pluginName }}
 - name:  kong-plugin-{{ .pluginName }}
-  mountPath: /opt/kong/plugins/{{ .pluginName }}
+  mountPath: {{ $mountPath }}
   readOnly: true
+{{- range .subdirectories }}
+- name: {{ .name }}
+  mountPath: {{ printf "%s/%s" $mountPath .path }}
+  readOnly: true
+{{- end }}
 {{- end }}
 {{- end -}}
 
@@ -245,7 +267,7 @@ The name of the service used for the ingress controller's validation webhook
 {{- range .Values.plugins.secrets -}}
   {{ $myList = append $myList .pluginName -}}
 {{- end }}
-{{- $myList | join "," -}}
+{{- $myList | uniq | join "," -}}
 {{- end -}}
 
 {{- define "kong.wait-for-db" -}}
@@ -336,7 +358,7 @@ the template that it itself is using form the above sections.
 */}}
 {{- $autoEnv := dict -}}
 
-{{- $_ := set $autoEnv "KONG_LUA_PACKAGE_PATH" "/opt/?.lua;;" -}}
+{{- $_ := set $autoEnv "KONG_LUA_PACKAGE_PATH" "/opt/?.lua;/opt/?/init.lua;;" -}}
 
 {{- if .Values.admin.useTLS }}
   {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (printf "0.0.0.0:%d ssl" (int64 .Values.admin.containerPort)) -}}
