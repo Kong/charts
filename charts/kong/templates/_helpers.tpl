@@ -159,18 +159,6 @@ The name of the service used for the ingress controller's validation webhook
 {{ include "kong.fullname" . }}-validation-webhook
 {{- end -}}
 
-{{- define "kong.env" -}}
-{{- range $key, $val := .Values.env }}
-- name: KONG_{{ $key | upper}}
-{{- $valueType := printf "%T" $val -}}
-{{ if eq $valueType "map[string]interface {}" }}
-{{ toYaml $val | indent 2 -}}
-{{- else }}
-  value: {{ $val | quote -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
 {{- define "kong.ingressController.env" -}}
 {{- range $key, $val := .Values.ingressController.env }}
 - name: CONTROLLER_{{ $key | upper}}
@@ -265,25 +253,7 @@ The name of the service used for the ingress controller's validation webhook
   image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
   imagePullPolicy: {{ .Values.image.pullPolicy }}
   env:
-  {{- if .Values.enterprise.enabled }}
-  {{- include "kong.license" . | nindent 2 }}
-  {{- end }}
-  {{- if .Values.postgresql.enabled }}
-  - name: KONG_PG_HOST
-    value: {{ template "kong.postgresql.fullname" . }}
-  - name: KONG_PG_PORT
-    value: "{{ .Values.postgresql.service.port }}"
-  - name: KONG_PG_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: {{ template "kong.postgresql.fullname" . }}
-        key: postgresql-password
-  {{- end }}
-  - name: KONG_LUA_PACKAGE_PATH
-    value: "/opt/?.lua;;"
-  - name: KONG_PLUGINS
-    value: {{ template "kong.plugins" . }}
-  {{- include "kong.env" .  | nindent 2 }}
+  {{- include "kong.env" . | nindent 2 }}
   command: [ "/bin/sh", "-c", "until kong start; do echo 'waiting for db'; sleep 1; done; kong stop" ]
   volumeMounts:
   {{- include "kong.volumeMounts" . | nindent 4 }}
@@ -336,15 +306,11 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
 {{- end -}}
 
-{{/*
-Retrieve Kong Enterprise license from a secret and make it available in env vars
-*/}}
-{{- define "kong.license" -}}
-- name: KONG_LICENSE_DATA
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.enterprise.license_secret }}
-      key: license
+{{- define "secretkeyref" -}}
+valueFrom:
+  secretKeyRef:
+    name: {{ .name }}
+    key: {{ .key }}
 {{- end -}}
 
 {{/*
@@ -354,149 +320,168 @@ Use the Pod security context defined in Values or set the UID by default
 {{ .Values.securityContext | toYaml }}
 {{- end -}}
 
+{{- define "kong.no_daemon_env" -}}
+{{- template "kong.env" . }}
+- name: KONG_NGINX_DAEMON
+  value: "off"
+{{- end -}}
+
 {{/*
 The environment values passed to Kong; this should come after all
 the template that it itself is using form the above sections.
 */}}
-{{- define "kong.final_env" -}}
-- name: KONG_LUA_PACKAGE_PATH
-  value: "/opt/?.lua;;"
-{{- if not .Values.env.admin_listen }}
+{{- define "kong.env" -}}
+{{/*
+    ====== AUTO-GENERATED ENVIRONMENT VARIABLES ======
+*/}}
+{{- $autoEnv := dict -}}
+
+{{- $_ := set $autoEnv "KONG_LUA_PACKAGE_PATH" "/opt/?.lua;;" -}}
+
 {{- if .Values.admin.useTLS }}
-- name: KONG_ADMIN_LISTEN
-  value: "0.0.0.0:{{ .Values.admin.containerPort }} ssl"
+  {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (printf "0.0.0.0:%d ssl" (int64 .Values.admin.containerPort)) -}}
 {{- else }}
-- name: KONG_ADMIN_LISTEN
-  value: 0.0.0.0:{{ .Values.admin.containerPort }}
-{{- end }}
-{{- end }}
+  {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (printf "0.0.0.0:%d" (int64 .Values.admin.containerPort)) -}}
+{{- end -}}
+
 {{- if .Values.admin.ingress.enabled }}
-- name: KONG_ADMIN_API_URI
-  value: {{ include "kong.ingress.serviceUrl" .Values.admin.ingress }}
-{{- end }}
+  {{- $_ := set $autoEnv "KONG_ADMIN_API_URI" (include "kong.ingress.serviceUrl" .Values.admin.ingress) -}}
+{{- end -}}
+
 {{- if not .Values.env.proxy_listen }}
-- name: KONG_PROXY_LISTEN
-  value: {{ template "kong.kongProxyListenValue" . }}
-{{- end }}
+  {{- $_ := set $autoEnv "KONG_PROXY_LISTEN" (include "kong.kongProxyListenValue" .) -}}
+{{- end -}}
+
 {{- if and (not .Values.env.admin_gui_listen) (.Values.enterprise.enabled) }}
-- name: KONG_ADMIN_GUI_LISTEN
-  value: {{ template "kong.kongManagerListenValue" . }}
-{{- end }}
+  {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.kongManagerListenValue" .) -}}
+{{- end -}}
+
 {{- if and (.Values.manager.ingress.enabled) (.Values.enterprise.enabled) }}
-- name: KONG_ADMIN_GUI_URL
-  value: {{ include "kong.ingress.serviceUrl" .Values.manager.ingress }}
-{{- end }}
+  {{- $_ := set $autoEnv "KONG_ADMIN_GUI_URL" (include "kong.ingress.serviceUrl" .Values.manager.ingress) -}}
+{{- end -}}
+
 {{- if and (not .Values.env.portal_gui_listen) (.Values.enterprise.enabled) (.Values.enterprise.portal.enabled) }}
-- name: KONG_PORTAL_GUI_LISTEN
-  value: {{ template "kong.kongPortalListenValue" . }}
+  {{- $_ := set $autoEnv "KONG_PORTAL_GUI_LISTEN" (include "kong.kongPortalListenValue" .) -}}
 {{- end }}
+
 {{- if and (.Values.portal.ingress.enabled) (.Values.enterprise.enabled) (.Values.enterprise.portal.enabled) }}
-- name: KONG_PORTAL_GUI_HOST
-  value: {{ .Values.portal.ingress.hostname }}
-{{- if .Values.portal.ingress.tls }}
-- name: KONG_PORTAL_GUI_PROTOCOL
-  value: https
-{{- else }}
-- name: KONG_PORTAL_GUI_PROTOCOL
-  value: http
+  {{- $_ := set $autoEnv "KONG_PORTAL_GUI_HOST" .Values.portal.ingress.hostname -}}
+  {{- if .Values.portal.ingress.tls }}
+    {{- $_ := set $autoEnv "KONG_PORTAL_GUI_PROTOCOL" "https" -}}
+  {{- else }}
+    {{- $_ := set $autoEnv "KONG_PORTAL_GUI_PROTOCOL" "http" -}}
+  {{- end }}
 {{- end }}
-{{- end }}
+
 {{- if and (not .Values.env.portal_api_listen) (.Values.enterprise.enabled) (.Values.enterprise.portal.enabled) }}
-- name: KONG_PORTAL_API_LISTEN
-  value: {{ template "kong.kongPortalApiListenValue" . }}
+  {{- $_ := set $autoEnv "KONG_PORTAL_API_LISTEN" (include "kong.kongPortalApiListenValue" .) -}}
 {{- end }}
+
 {{- if and (.Values.portalapi.ingress.enabled) (.Values.enterprise.enabled) (.Values.enterprise.portal.enabled) }}
-- name: KONG_PORTAL_API_URL
-  value: {{ include "kong.ingress.serviceUrl" .Values.portalapi.ingress }}
+  {{- $_ := set $autoEnv "KONG_PORTAL_API_URL" (include "kong.ingress.serviceUrl" .Values.portalapi.ingress) -}}
 {{- end }}
-- name: KONG_NGINX_DAEMON
-  value: "off"
+
 {{- if .Values.enterprise.enabled }}
-{{- if not .Values.enterprise.vitals.enabled }}
-- name: KONG_VITALS
-  value: "off"
+  {{- if not .Values.enterprise.vitals.enabled }}
+    {{- $_ := set $autoEnv "KONG_VITALS" "off" -}}
+  {{- end }}
+
+  {{- if .Values.enterprise.portal.enabled }}
+    {{- $_ := set $autoEnv "KONG_PORTAL" "on" -}}
+    {{- if .Values.enterprise.portal.portal_auth }}
+      {{- $_ := set $autoEnv "KONG_PORTAL_AUTH" .Values.enterprise.portal.portal_auth -}}
+      {{- $portalSession := include "secretkeyref" (dict "name" .Values.enterprise.portal.session_conf_secret "key" "portal_session_conf") -}}
+      {{- $_ := set $autoEnv "KONG_PORTAL_SESSION_CONF" $portalSession -}}
+    {{- end }}
+  {{- end }}
+
+  {{- if .Values.enterprise.rbac.enabled }}
+    {{- $_ := set $autoEnv "KONG_ENFORCE_RBAC" "on" -}}
+    {{- $_ := set $autoEnv "KONG_ADMIN_GUI_AUTH" .Values.enterprise.rbac.admin_gui_auth | default "basic-auth" -}}
+
+    {{- if not (eq .Values.enterprise.rbac.admin_gui_auth "basic-auth") }}
+      {{- $guiAuthConf := include "secretkeyref" (dict "name" .Values.enterprise.rbac.admin_gui_auth_conf_secret "key" "admin_gui_auth_conf") -}}
+      {{- $_ := set $autoEnv "KONG_ADMIN_GUI_AUTH_CONF" $guiAuthConf -}}
+    {{- end }}
+
+    {{- $guiSessionConf := include "secretkeyref" (dict "name" .Values.enterprise.rbac.session_conf_secret "key" "admin_gui_session_conf") -}}
+    {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SESSION_CONF" $guiSessionConf -}}
+  {{- end }}
+
+  {{- if .Values.enterprise.smtp.enabled }}
+    {{- $_ := set $autoEnv "KONG_PORTAL_EMAILS_FROM" .Values.enterprise.smtp.portal_emails_from -}}
+    {{- $_ := set $autoEnv "KONG_PORTAL_EMAILS_REPLY_TO" .Values.enterprise.smtp.portal_emails_reply_to -}}
+    {{- $_ := set $autoEnv "KONG_ADMIN_EMAILS_FROM" .Values.enterprise.smtp.admin_emails_from -}}
+    {{- $_ := set $autoEnv "KONG_ADMIN_EMAILS_REPLY_TO" .Values.enterprise.smtp.admin_emails_reply_to -}}
+    {{- $_ := set $autoEnv "KONG_SMTP_HOST" .Values.enterprise.smtp.smtp_host -}}
+    {{- $_ := set $autoEnv "KONG_SMTP_PORT" .Values.enterprise.smtp.smtp_port -}}
+    {{- $_ := set $autoEnv "KONG_SMTP_STARTTLS" (quote .Values.enterprise.smtp.smtp_starttls) -}}
+    {{- if .Values.enterprise.smtp.auth.smtp_username }}
+      {{- $_ := set $autoEnv "KONG_SMTP_USERNAME" .Values.enterprise.smtp.auth.smtp_username -}}
+      {{- $smtpPassword := include "secretkeyref" (dict "name" .Values.enterprise.smtp.auth.smtp_password_secret "key" "smtp_password") -}}
+      {{- $_ := set $autoEnv "KONG_SMTP_PASSWORD" $smtpPassword -}}
+    {{- end }}
+  {{- else }}
+    {{- $_ := set $autoEnv "KONG_SMTP_MOCK" "on" -}}
+  {{- end }}
+
+  {{- $lic := include "secretkeyref" (dict "name" .Values.enterprise.license_secret "key" "license") -}}
+  {{- $_ := set $autoEnv "KONG_LICENSE_DATA" $lic -}}
+
+{{- end }} {{/* End of the Enterprise settings block */}}
+
+{{- $_ := set $autoEnv "KONG_NGINX_HTTP_INCLUDE" "/kong/servers.conf" -}}
+
+{{- if .Values.postgresql.enabled }}
+  {{- $_ := set $autoEnv "KONG_PG_HOST" (include "kong.postgresql.fullname" .) -}}
+  {{- $_ := set $autoEnv "KONG_PG_PORT" .Values.postgresql.service.port -}}
+  {{- $pgPassword := include "secretkeyref" (dict "name" (include "kong.postgresql.fullname" .) "key" "postgresql-password") -}}
+  {{- $_ := set $autoEnv "KONG_PG_PASSWORD" $pgPassword -}}
 {{- end }}
-{{- if .Values.enterprise.portal.enabled }}
-- name: KONG_PORTAL
-  value: "on"
-{{- if .Values.enterprise.portal.portal_auth }}
-- name: KONG_PORTAL_AUTH
-  value: {{ .Values.enterprise.portal.portal_auth }}
-- name: KONG_PORTAL_SESSION_CONF
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.enterprise.portal.session_conf_secret }}
-      key: portal_session_conf
+
+{{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
+  {{- $_ := set $autoEnv "KONG_DECLARATIVE_CONFIG" "/kong_dbless/kong.yml" -}}
 {{- end }}
-{{- end }}
-{{- if .Values.enterprise.rbac.enabled }}
-- name: KONG_ENFORCE_RBAC
-  value: "on"
-- name: KONG_ADMIN_GUI_AUTH
-  value: {{ .Values.enterprise.rbac.admin_gui_auth | default "basic-auth" }}
-{{- if not (eq .Values.enterprise.rbac.admin_gui_auth "basic-auth") }}
-- name: KONG_ADMIN_GUI_AUTH_CONF
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.enterprise.rbac.admin_gui_auth_conf_secret }}
-      key: admin_gui_auth_conf
-{{- end }}
-- name: KONG_ADMIN_GUI_SESSION_CONF
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.enterprise.rbac.session_conf_secret }}
-      key: admin_gui_session_conf
-{{- end }}
-{{- if .Values.enterprise.smtp.enabled }}
-- name: KONG_PORTAL_EMAILS_FROM
-  value: {{ .Values.enterprise.smtp.portal_emails_from }}
-- name: KONG_PORTAL_EMAILS_REPLY_TO
-  value: {{ .Values.enterprise.smtp.portal_emails_reply_to }}
-- name: KONG_ADMIN_EMAILS_FROM
-  value: {{ .Values.enterprise.smtp.admin_emails_from }}
-- name: KONG_ADMIN_EMAILS_REPLY_TO
-  value: {{ .Values.enterprise.smtp.admin_emails_reply_to }}
-- name: KONG_SMTP_HOST
-  value: {{ .Values.enterprise.smtp.smtp_host }}
-- name: KONG_SMTP_PORT
-  value: {{ .Values.enterprise.smtp.smtp_port | quote }}
-- name: KONG_SMTP_STARTTLS
-  value: {{ .Values.enterprise.smtp.smtp_starttls | quote }}
-{{- if .Values.enterprise.smtp.auth.smtp_username }}
-- name: KONG_SMTP_USERNAME
-  value: {{ .Values.enterprise.smtp.auth.smtp_username }}
-- name: KONG_SMTP_PASSWORD
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.enterprise.smtp.auth.smtp_password_secret }}
-      key: smtp_password
+
+{{- $_ := set $autoEnv "KONG_PLUGINS" (include "kong.plugins" .) -}}
+
+{{/*
+    ====== USER-SET ENVIRONMENT VARIABLES ======
+*/}}
+
+{{- $userEnv := dict -}}
+{{- range $key, $val := .Values.env }}
+  {{- $upper := upper $key -}}
+  {{- $var := printf "KONG_%s" $upper -}}
+  {{- $_ := set $userEnv $var $val -}}
+{{- end -}}
+
+{{/*
+      ====== MERGE AND RENDER ENV BLOCK ======
+*/}}
+
+{{- $completeEnv := mergeOverwrite $autoEnv $userEnv -}}
+
+{{- range keys $completeEnv }}
+{{- $val := pluck . $completeEnv | first -}}
+{{- $valueType := printf "%T" $val -}}
+{{ if eq $valueType "map[string]interface {}" }}
+- name: {{ . }}
+{{ toYaml $val | indent 2 -}}
+{{- else if eq $valueType "string" }}
+{{- if regexMatch "valueFrom" $val }}
+- name: {{ . }}
+{{ $val | indent 2 }}
+{{- else }}
+- name: {{ . }}
+  value: {{ $val | quote }}
 {{- end }}
 {{- else }}
-- name: KONG_SMTP_MOCK
-  value: "on"
+- name: {{ . }}
+  value: {{ $val | quote }}
 {{- end }}
-{{ include "kong.license" . }}
-{{- end }}
-- name: KONG_NGINX_HTTP_INCLUDE
-  value: /kong/servers.conf
-{{- if .Values.postgresql.enabled }}
-- name: KONG_PG_HOST
-  value: {{ template "kong.postgresql.fullname" . }}
-- name: KONG_PG_PORT
-  value: "{{ .Values.postgresql.service.port }}"
-- name: KONG_PG_PASSWORD
-  valueFrom:
-    secretKeyRef:
-      name: {{ template "kong.postgresql.fullname" . }}
-      key: postgresql-password
-{{- end }}
-{{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
-- name: KONG_DECLARATIVE_CONFIG
-  value: "/kong_dbless/kong.yml"
-{{- end }}
-- name: KONG_PLUGINS
-  value: {{ template "kong.plugins" . }}
-{{- include "kong.env" . }}
+{{- end -}}
+
 {{- end -}}
 
 {{- define "kong.wait-for-postgres" -}}
@@ -504,6 +489,6 @@ the template that it itself is using form the above sections.
   image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
   imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
   env:
-  {{- include "kong.final_env" . | nindent 2 }}
+  {{- include "kong.no_daemon_env" . | nindent 2 }}
   command: [ "/bin/sh", "-c", "until nc -zv $KONG_PG_HOST $KONG_PG_PORT -w1; do echo 'waiting for db'; sleep 1; done" ]
 {{- end -}}
