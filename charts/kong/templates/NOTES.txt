@@ -1,16 +1,18 @@
-To connect to Kong, please execute the following command
+To connect to Kong, please execute the following commands:
 
-
-{{- if contains "LoadBalancer" .Values.proxy.type }}
-  HOST=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-  PORT=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.spec.ports[0].port}')
+{{ if contains "LoadBalancer" .Values.proxy.type }}
+HOST=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+PORT=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.spec.ports[0].port}')
 {{- else if contains "NodePort" .Values.proxy.type -}}
-  HOST=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath='{.items[0].status.addresses[0].address}')
-  PORT=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.spec.ports[0].nodePort}')
+HOST=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath='{.items[0].status.addresses[0].address}')
+PORT=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.spec.ports[0].nodePort}')
 {{- end -}}
 export PROXY_IP=${HOST}:${PORT}
 curl $PROXY_IP
 
 Once installed, please follow along the getting started guide to start using Kong:
 https://bit.ly/k4k8s-get-started
-
+{{ if .Values.admin.containerPort -}} {{/* Legacy admin listener */}}
+WARNING: You are currently using a legacy admin listener configuration. Support for this will be removed in a future release.
+You should update your values.yaml to use separate "http" and "tls" subsections, as shown in https://github.com/helm/charts/blob/master/stable/kong/values.yaml
+{{- end -}}

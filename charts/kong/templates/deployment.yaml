@@ -60,12 +60,31 @@ spec:
             exec:
               command: [ "/bin/sh", "-c", "kong quit" ]
         ports:
+        {{/* TODO: remove legacy admin port template */}}
+        {{- if .Values.admin.containerPort }}
         - name: admin
           containerPort: {{ .Values.admin.containerPort }}
           {{- if .Values.admin.hostPort }}
           hostPort: {{ .Values.admin.hostPort }}
           {{- end}}
           protocol: TCP
+        {{- end }}
+        {{- if .Values.admin.http.enabled }}
+        - name: admin
+          containerPort: {{ .Values.admin.http.containerPort }}
+          {{- if .Values.admin.http.hostPort }}
+          hostPort: {{ .Values.admin.http.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
+        {{- if .Values.admin.tls.enabled }}
+        - name: admin-tls
+          containerPort: {{ .Values.admin.tls.containerPort }}
+          {{- if .Values.admin.tls.hostPort }}
+          hostPort: {{ .Values.admin.tls.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
         {{- if .Values.proxy.http.enabled }}
         - name: proxy
           containerPort: {{ .Values.proxy.http.containerPort }}

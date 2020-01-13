@@ -46,8 +46,9 @@ image:
   #   - myRegistrKeySecretName
 
 # Specify Kong admin service configuration
-# Note: It is recommended to not use the Admin API to configure Kong
-# when using Kong as an Ingress Controller.
+# Enabling this service exposes the admin API to other pods. It is disabled by default, as
+# the ingress controller (also enabled by default) runs within the same pod.
+# If you disable the ingress controller, you will typically enable this service.
 admin:
   enabled: false
   # If you want to specify annotations for the admin service, uncomment the following
@@ -55,15 +56,23 @@ admin:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
 
-  # HTTPS traffic on the admin port
-  # if set to false also set readinessProbe and livenessProbe httpGet scheme's to 'HTTP'
-  useTLS: true
-  servicePort: 8444
-  containerPort: 8444
-  # Kong admin service type
+  http:
+    enabled: false
+    servicePort: 8001
+    containerPort: 8001
+    # Set a nodePort which is available if service type is NodePort
+    # nodePort: 32081
+
+  # Enable HTTPS for the admin API
+  tls:
+    enabled: true
+    servicePort: 8444
+    containerPort: 8444
+    # Set a nodePort which is available if service type is NodePort
+    # nodePort: 32444
+
   type: NodePort
-  # Set a nodePort which is available
-  # nodePort: 32444
+
   # Kong admin ingress settings. Useful if you want to expose the Admin
   # API of Kong outside the k8s cluster.
   ingress:

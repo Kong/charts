@@ -195,11 +195,16 @@ Kong can be configured via two methods:
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
 | replicaCount                       | Kong instance count                                                                   | `1`                 |
 | admin.enabled                      | Create Admin Service                                                                  | `false`             |
-| admin.useTLS                       | Secure Admin traffic                                                                  | `true`              |
-| admin.servicePort                  | TCP port on which the Kong admin service is exposed                                   | `8444`              |
-| admin.containerPort                | TCP port on which Kong app listens for admin traffic                                  | `8444`              |
-| admin.nodePort                     | Node port when service type is `NodePort`                                             |                     |
-| admin.hostPort                     | Host port to use for admin traffic                                                    |                     |
+| admin.http.enabled                 | Enables http on the admin API                                                         | false               |
+| admin.http.servicePort             | Service port to use for http                                                          | 8001                |
+| admin.http.containerPort           | Container port to use for http                                                        | 8001                |
+| admin.http.nodePort                | Node port to use for http                                                             |                     |
+| admin.http.hostPort                | Host port to use for http                                                             |                     |
+| admin.tls.enabled                  | Enables TLS on the admin API                                                          | true                |
+| admin.tls.containerPort            | Container port to use for TLS                                                         | 8444                |
+| admin.tls.servicePort              | Service port to use for TLS                                                           | 8444                |
+| admin.tls.nodePort                 | Node port to use for TLS                                                              |                     |
+| admin.tls.hostPort                 | Host port to use for TLS                                                              |                     |
 | admin.type                         | k8s service type, Options: NodePort, ClusterIP, LoadBalancer                          | `NodePort`          |
 | admin.loadBalancerIP               | Will reuse an existing ingress static IP for the admin service                        | `null`              |
 | admin.loadBalancerSourceRanges     | Limit admin access to CIDRs if set and service type is `LoadBalancer`                 | `[]`                |
@@ -314,22 +319,6 @@ For complete list of Kong configurations please check the
 [Kong configuration docs](https://docs.konghq.com/latest/configuration).
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
-
-##### Admin/Proxy listener override
-
-If you specify `env.admin_listen` or `env.proxy_listen`, this chart will use
-the value provided by you as opposed to constructing a listen variable
-from fields like `proxy.http.containerPort` and `proxy.http.enabled`.
-This allows you to be more prescriptive when defining listen directives.
-
-**Note:** Overriding `env.proxy_listen` and `env.admin_listen` will
-potentially cause `admin.containerPort`, `proxy.http.containerPort` and
-`proxy.tls.containerPort` to become out of sync,
-and therefore must be updated accordingly.
-
-For example, updating to `env.proxy_listen: 0.0.0.0:4444, 0.0.0.0:4443 ssl`
-will need `proxy.http.containerPort: 4444` and `proxy.tls.containerPort: 4443`
-to be set in order for the service definition to work properly.
 
 ## Kong Enterprise Parameters
 
@@ -463,6 +452,53 @@ If your SMTP server requires authentication, you should the `username` and
 value is your SMTP password.
 
 ## Changelog
+
+### 1.2.0
+
+> https://github.com/Kong/charts/pull/19
+
+### Improvements
+
+- Move all Enterprise-specific service-related environment variable generation
+  under the Enterprise block.
+- Consolidate listener templates into a single template.
+- Rework admin API listener handling to match other Kong services and update
+  example values.yaml to reflect the new format.
+- Add conditional templates for handling legacy admin API listen configuration.
+- Add warning to NOTES.txt for legacy admin API listener configuration.
+
+### Upgrade instructions
+
+The format of the `admin` section of values.yaml has changed. While the older
+format is still supported, it is deprecated, and users are advised to convert
+to the new format at their earliest convenience.
+
+The old format used a single set of port declarations, with a `useTLS` flag
+controlling whether a TLS or plaintext HTTP service was created:
+
+```
+admin:
+  enabled: true
+  annotations: {}
+  useTLS: true
+  servicePort: 8444
+  containerPort: 8444
+  type: NodePort
+```
+The new  format uses separate `tls` and `http` sections to control whether TLS
+and/or plaintext HTTP admin API services are created. The new format equivalent
+of the above, with only a TLS service, is:
+
+```
+admin:
+  enabled: true
+  annotations: {}
+  tls:
+    enabled: true
+    servicePort: 8444
+    containerPort: 8444
+  type: NodePort
+```
 
 ### 1.1.0
 
