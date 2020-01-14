@@ -73,7 +73,7 @@ chart and deletes the release.
 ## FAQs
 
 Please read the
-[FAQs](https://github.com/helm/charts/blob/master/stable/kong/FAQs.md)
+[FAQs](https://github.com/Kong/charts/blob/master/charts/kong/FAQs.md)
 document.
 
 ## Kong Enterprise
