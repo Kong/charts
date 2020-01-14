@@ -461,6 +461,15 @@ value is your SMTP password.
 
 ## Changelog
 
+### 1.0.0
+
+There are not code changes between `1.0.0` and `0.36.5`.
+From this version onwards, charts are hosted at https://charts.konghq.com.
+
+The `0.x` versions of the chart are available in Helm's
+[Charts](https://github.com/helm/charts) repository are are now considered
+deprecated.
+
 ### 0.36.5
 
 > PR https://github.com/helm/charts/pull/20099
