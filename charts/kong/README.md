@@ -11,8 +11,9 @@ This chart bootstraps all the components needed to run Kong on a
 ## TL;DR;
 
 ```bash
+$ helm repo add kong https://charts.konghq.com
 $ helm repo update
-$ helm install stable/kong
+$ helm install kong/kong
 ```
 
 ## Table of content
@@ -53,8 +54,9 @@ $ helm install stable/kong
 To install the chart with the release name `my-release`:
 
 ```bash
+$ helm repo add kong https://charts.konghq.com
 $ helm repo update
-$ helm install --name my-release stable/kong
+$ helm install kong/kong
 ```
 
 ## Uninstall
