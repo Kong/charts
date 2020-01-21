@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kong-collectorapi.fullname" . }}-celery-beat
+  annotations: {}
+  creationTimestamp: null
+  labels:
+    {{- include "kong-collectorapi.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: queue
+spec:
+  replicas: 1
+  strategy: {}
+  selector:
+    matchLabels:
+      {{- include "kong-collectorapi.metaLabels" . | nindent 6 }}
+      app.kubernetes.io/component: queue
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        {{- include "kong-collectorapi.metaLabels" . | nindent 8 }}
+        app.kubernetes.io/component: queue
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      initContainers:
+      {{- include "kong-collectorapi.wait-for-db" . | nindent 6 }}
+      containers:
+      - args:
+        - bash
+        - -c
+        - celery beat -l info -A collector.scheduler.celery
+        env:
+        - name: CELERY_BROKER_URL
+          value: "redis://:{{ .Values.redis.password }}@{{ template "kong-collectorapi.redis.fullname" . }}:{{ .Values.redis.port }}/0"
+        - name: COLLECTOR_DISCARD
+          value: "True"
+        - name: FLASK_APP
+          value: /collector
+        - name: KONG_PROTOCOL
+          value: "{{ .Values.kongAdminProtocol }}"
+        - name: KONG_HOST
+          value: "{{ .Values.kongAdminHost }}"
+        - name: KONG_PORT
+          value: "{{ .Values.kongAdminServicePort }}"
+        - name: SQLALCHEMY_DATABASE_URI
+          value: "postgres://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@{{ template "kong-collectorapi.postgresql.fullname" . }}:{{ .Values.postgresql.service.port }}/{{ .Values.postgresql.postgresqlDatabase }}"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        name: celery-beat
+        resources: {}
+      restartPolicy: Always
+status: {}

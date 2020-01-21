@@ -1,0 +1,36 @@
+{{- if .Values.testendpoints.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kong-collectorapi.fullname" . }}-testendpoints
+  annotations: {}
+  creationTimestamp: null
+  labels:
+    {{- include "kong-collectorapi.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: testendpoints
+spec:
+  replicas: 1
+  strategy: {}
+  selector:
+    matchLabels:
+      {{- include "kong-collectorapi.metaLabels" . | nindent 6 }}
+      app.kubernetes.io/component: testendpoints
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        {{- include "kong-collectorapi.metaLabels" . | nindent 8 }}
+        app.kubernetes.io/component: testendpoints
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+      - image: kong-docker-kong-brain-internal-builds.bintray.io/kong-brain-test-endpoints:latest
+        name: testendpoints
+        ports:
+        - containerPort: 6000
+      restartPolicy: Always
+status: {}
+{{- end }}

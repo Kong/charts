@@ -1,0 +1,48 @@
+image:
+  repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
+  tag: 1.3.0.2-alpine
+  pullSecrets:
+  - kong-enterprise-docker
+enterprise:
+  enabled: true
+  license_secret: kong-enterprise-license
+ingressController:
+  enabled: false
+proxy:
+  http:
+    enabled: true
+    nodePort: 32000
+  tls:
+    enabled: false
+  type: NodePort
+admin:
+  enabled: true
+  useTLS: false
+  servicePort: 8001
+  containerPort: 8001
+  type: NodePort
+  nodePort: 32001
+manager:
+  http:
+    enabled: true
+    servicePort: 8002
+    containerPort: 8002
+    nodePort: 32002
+  tls:
+    enabled: false
+  type: NodePort
+env:
+  database: postgres
+  pg_user: kong
+  pg_password: kong
+  pg_port: 5432
+  admin_listen: 0.0.0.0:8001, 0.0.0.0:32001
+  admin_gui_flags: '{"IMMUNITY_ENABLED":true}'
+postgresql:
+  enabled: true
+  postgresqlUsername: kong
+  postgresqlPassword: kong
+  postgresqlDatabase: kong
+  nameOverride: kongdb
+  service:
+    port: 5432
