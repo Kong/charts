@@ -463,6 +463,10 @@ value is your SMTP password.
 
 ## Changelog
 
+### 1.0.1
+
+Fixed invalid namespace variable name causing ServiceAccount and Role to be generated in other namespace than desired.
+
 ### 1.0.0
 
 There are not code changes between `1.0.0` and `0.36.5`.
