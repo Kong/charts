@@ -143,19 +143,19 @@ for more details.
 
 There are three different packages of Kong that are available:
 
-- **Kong Gateway**  
+- **Kong Gateway**
   This is the [Open-Source](https://github.com/kong/kong) offering. It is a
   full-blown API Gateway and Ingress solution with a wide-array of functionality.
   When Kong Gateway is combined with the Ingress based configuration method,
   you get Kong for Kubernetes. This is the default deployment for this Helm
   Chart.
-- **Kong Enterprise K8S**  
+- **Kong Enterprise K8S**
   This package builds up on top of the Open-Source Gateway and bundles in all
   the Enterprise-only plugins as well.
   When Kong Enterprise K8S is combined with the Ingress based
   configuration method, you get Kong for Kubernetes Enterprise.
   This package also comes with 24x7 support from Kong Inc.
-- **Kong Enterprise**  
+- **Kong Enterprise**
   This is the full-blown Enterprise package which packs with itself all the
   Enterprise functionality like Manager, Portal, Vitals, etc.
   This package can't be run in DB-less mode.
@@ -167,7 +167,7 @@ the [Kong Enterprise Parameters](#kong-enterprise-parameters) section.
 ### Configuration method
 
 Kong can be configured via two methods:
-- **Ingress and CRDs**  
+- **Ingress and CRDs**
   The configuration for Kong is done via `kubectl` and Kubernetes-native APIs.
   This is also known as Kong Ingress Controller or Kong for Kubernetes and is
   the default deployment pattern for this Helm Chart. The configuration
@@ -178,7 +178,7 @@ Kong can be configured via two methods:
   on Kong Ingress Controller.
   To configure and fine-tune the controller, please read the
   [Ingress Controller Parameters](#ingress-controller-parameters) section.
-- **Admin API**  
+- **Admin API**
   This is the traditional method of running and configuring Kong.
   By default, the Admin API of Kong is not exposed as a Service. This
   can be controlled via `admin.enabled` and `env.admin_listen` parameters.
@@ -259,7 +259,7 @@ section of `values.yaml` file:
 | admissionWebhook.failurePolicy     | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)      | Fail                                                                         |
 | admissionWebhook.port              | The port the ingress controller will listen on for admission webhooks                 | 8080                                                                         |
 
-For a complete list of all configuration values you can set in the 
+For a complete list of all configuration values you can set in the
 `env` section, please read the Kong Ingress Controller's
 [configuration document](https://github.com/Kong/kubernetes-ingress-controller/blob/master/docs/references/cli-arguments.md).
 
@@ -463,6 +463,11 @@ value is your SMTP password.
 
 ## Changelog
 
+### 1.0.2
+
+- Fix invalid namespace for pre-migrations and Role.
+- Fix whitespaces formatting in README.
+
 ### 1.0.1
 
 Fixed invalid namespace variable name causing ServiceAccount and Role to be generated in other namespace than desired.
@@ -526,9 +531,9 @@ deprecated.
 
 - When upgrading from <0.35.0, in-place chart upgrades will fail.
   It is necessary to delete the helm release with `helm del --purge $RELEASE` and redeploy from scratch.
-  Note that this will cause downtime for the kong proxy. 
+  Note that this will cause downtime for the kong proxy.
 
-#### Improvements 
+#### Improvements
 
 - Fixed Deployment's label selector that prevented in-place chart upgrades.
 
@@ -732,7 +737,7 @@ Following changes have no end user visible effects:
 
 #### Breaking changes
 
-- The configuration format for ingresses in values.yaml has changed. 
+- The configuration format for ingresses in values.yaml has changed.
 Previously, all ingresses accepted an array of hostnames, and would create
 ingress rules for each. Ingress configuration for services other than the proxy
 now accepts a single hostname, which allows simpler TLS configuration and
