@@ -463,6 +463,10 @@ value is your SMTP password.
 
 ## Changelog
 
+### 1.0.2
+
+Helm 3 support: CRDs are declared in crds directory. Backward compatible support for helm 2. 
+
 ### 1.0.1
 
 Fixed invalid namespace variable name causing ServiceAccount and Role to be generated in other namespace than desired.
