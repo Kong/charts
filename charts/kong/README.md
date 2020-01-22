@@ -167,7 +167,7 @@ the [Kong Enterprise Parameters](#kong-enterprise-parameters) section.
 ### Configuration method
 
 Kong can be configured via two methods:
-- **Ingress and CRDs**
+- **Ingress and CRDs**\
   The configuration for Kong is done via `kubectl` and Kubernetes-native APIs.
   This is also known as Kong Ingress Controller or Kong for Kubernetes and is
   the default deployment pattern for this Helm Chart. The configuration
@@ -178,7 +178,7 @@ Kong can be configured via two methods:
   on Kong Ingress Controller.
   To configure and fine-tune the controller, please read the
   [Ingress Controller Parameters](#ingress-controller-parameters) section.
-- **Admin API**
+- **Admin API**\
   This is the traditional method of running and configuring Kong.
   By default, the Admin API of Kong is not exposed as a Service. This
   can be controlled via `admin.enabled` and `env.admin_listen` parameters.
