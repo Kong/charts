@@ -253,6 +253,7 @@ section of `values.yaml` file:
 | image.tag                          | Version of the ingress controller                                                     | 0.7.0                                                                        |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
+| installCRDs                        | Create CRDs. Regardless of value of this, Helm v3+ will install the CRDs if those are not present already. Use `--skip-crds` with `helm install` if you want to skip CRD creation. | true |
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
 | ingressClass                       | The ingress-class value for controller                                                | kong                                                                         |
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
