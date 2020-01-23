@@ -464,6 +464,21 @@ value is your SMTP password.
 
 ## Changelog
 
+### 1.1.0
+
+> https://github.com/Kong/charts/pull/4
+
+#### Improvements
+
+* Significantly refactor the `env`/EnvVar templating system to determine the
+  complete set of environment variables (both user-defined variables and
+  variables generated from other sections of values.yaml) and resolve conflicts
+  before rendering. User-provided values are now guaranteed to take precedence
+  over generated values. Previously, precedence relied on a Kubernetes
+  implementation quirk that was not consistent across all Kubernetes providers.
+* Combine templates for license, session configuration, etc. that generate
+  `secretKeyRef` values into a single generic template.
+
 ### 1.0.3
 
 - Fix invalid namespace for pre-migrations and Role.
