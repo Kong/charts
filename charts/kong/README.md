@@ -466,12 +466,12 @@ value is your SMTP password.
 
 ### 1.0.3
 
-- Helm 3 support: CRDs are declared in crds directory. Backward compatible support for helm 2. 
+- Fix invalid namespace for pre-migrations and Role.
+- Fix whitespaces formatting in README.
 
 ### 1.0.2
 
-- Fix invalid namespace for pre-migrations and Role.
-- Fix whitespaces formatting in README.
+- Helm 3 support: CRDs are declared in crds directory. Backward compatible support for helm 2. 
 
 ### 1.0.1
 
