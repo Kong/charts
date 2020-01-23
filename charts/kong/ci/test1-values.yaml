@@ -1,4 +1,7 @@
 # This tests the following unrealted aspects of Ingress Controller
+# - HPA enabled
+autoscaling:
+  enabled: true
 # - ingressController deploys without a database (default)
 ingressController:
   enabled: true

@@ -323,6 +323,22 @@ podAnnotations: {}
 # Kong pod count
 replicaCount: 1
 
+# Enable autoscaling using HorizontalPodAutoscaler
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  ## targetCPUUtilizationPercentage only used if the cluster doesn't support autoscaling/v2beta
+  targetCPUUtilizationPercentage:
+  ## Otherwise for clusters that do support autoscaling/v2beta, use metrics
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+
 # Kong Pod Disruption Budget
 podDisruptionBudget:
   enabled: false
