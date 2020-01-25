@@ -464,6 +464,17 @@ value is your SMTP password.
 
 ## Changelog
 
+### 1.1.1
+
+#### Fixed
+
+* Add missing `smtp_admin_emails` and `smtp_mock = off` to SMTP enabled block in
+  `kong.env`.
+
+#### CI changes
+
+* Remove version bump requirement in preparation for new release model.
+
 ### 1.1.0
 
 > https://github.com/Kong/charts/pull/4
