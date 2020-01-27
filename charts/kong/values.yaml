@@ -143,7 +143,9 @@ plugins: {}
   # - pluginName: rewriter
   #   name: kong-plugin-rewriter
 # Inject specified secrets as a volume in Kong Container at path /etc/secrets/{secret-name}/
-# This can be used to override default SSL certificates
+# This can be used to override default SSL certificates.
+# Be aware that the secret name will be used verbatim, and that certain types
+# of punctuation (e.g. `.`) can cause issues.
 # Example configuration
 # secretVolumes:
 # - kong-proxy-tls
