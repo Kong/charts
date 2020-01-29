@@ -11,7 +11,6 @@ This chart bootstraps a [Kong-Collector](https://docs.konghq.com/enterprise/late
 ## Prerequisites
 
 - Kubernetes 1.12+
-- Helm 3.0+
 - Kong Enterprise version 1.3.0.2+ or later [chart](https://github.com/helm/charts/tree/master/stable/kong)
 
 ## Installing the Chart

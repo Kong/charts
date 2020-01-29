@@ -1,4 +1,4 @@
-apiVersion: v2
+apiVersion: v1
 name: kong-collectorapi
 description: Kong Brain and Kong Immunity help automate the entire API and service development life cycle. By automating processes for configuration, traffic analysis and the creation of documentation, Kong Brain and Kong Immunity help organizations improve efficiency, governance, reliability and security.
 home: https://konghq.com/
@@ -6,11 +6,3 @@ icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-larg
 type: application
 version: 0.1.3
 appVersion: 1.1.0
-
-dependencies:
-- name: postgresql
-  version: ~8.1.0
-  repository: https://kubernetes-charts.storage.googleapis.com/
-- name: redis
-  version: 9.3.2
-  repository: https://kubernetes-charts.storage.googleapis.com/
