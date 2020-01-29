@@ -1,6 +1,8 @@
 image:
   repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-  tag: 1.3.0.2-alpine
+  tag: latest
+  # repository: mashape/kong-enterprise
+  # tag: dev-master
   pullSecrets:
   - kong-enterprise-docker
 enterprise:
