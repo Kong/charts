@@ -1,13 +1,13 @@
 image:
-  repository: kong-docker-kong-brain-immunity-base.bintray.io/kong-brain-immunity
-  tag: latest
+  # repository: kong-docker-kong-brain-immunity-base.bintray.io/kong-brain-immunity
+  # tag: latest
   pullPolicy: IfNotPresent
-  # repository: kong-docker-kong-brain-internal-builds.bintray.io/kong-brain
-  # tag: master
+  repository: kong-docker-kong-brain-internal-builds.bintray.io/kong-brain
+  tag: master
 
 imagePullSecrets:
-  - name: bintray-kong-brain-immunity
-  # - name: bintray-kong-brain-internal
+  # - name: bintray-kong-brain-immunity
+  - name: bintray-kong-brain-internal
 
 waitImage:
   repository: busybox
