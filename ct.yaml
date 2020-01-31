@@ -4,3 +4,4 @@ chart-dirs:
   - charts
 chart-repos: []
 helm-extra-args: --timeout 200
+check-version-increment: false
