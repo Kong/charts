@@ -253,6 +253,8 @@ section of `values.yaml` file:
 | image.tag                          | Version of the ingress controller                                                     | 0.7.0                                                                        |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
+| serviceAccount.create              | Create Service Account for ingress controller                                         | true
+| serviceAccount.name                | Use existing Service Account, specifiy its name                                       | ""
 | installCRDs                        | Create CRDs. Regardless of value of this, Helm v3+ will install the CRDs if those are not present already. Use `--skip-crds` with `helm install` if you want to skip CRD creation. | true |
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
 | ingressClass                       | The ingress-class value for controller                                                | kong                                                                         |
@@ -497,7 +499,7 @@ value is your SMTP password.
 
 ### 1.0.2
 
-- Helm 3 support: CRDs are declared in crds directory. Backward compatible support for helm 2. 
+- Helm 3 support: CRDs are declared in crds directory. Backward compatible support for helm 2.
 
 ### 1.0.1
 
