@@ -1,17 +1,23 @@
 # Kong-Collector
 
-[Kong-Collector](https://konghq.com/products/kong-enterprise/kong-immunity) is an application which enables the use of Kong Brain and Kong Immunity.
+[Kong-Collector](https://konghq.com/products/kong-enterprise/kong-immunity) is
+an application which enables the use of Kong Brain and Kong Immunity.
 
-Kong Brain and Kong Immunity are installed as add-ons on Kong Enterprise, using a Collector API and a Collector Plugin to communicate with Kong Enterprise.
+Kong Brain and Kong Immunity are installed as add-ons on Kong Enterprise, using
+a Collector API and a Collector Plugin to communicate with Kong Enterprise.
 
 ## Introduction
 
-This chart bootstraps a [Kong-Collector](https://docs.konghq.com/enterprise/latest/brain-immunity/install-configure/) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a
+[Kong-Collector](https://docs.konghq.com/enterprise/latest/brain-immunity/install-configure/)
+deployment on a [Kubernetes](http://kubernetes.io) cluster using the
+[Helm](https://helm.sh) package manager.
 
 ## Prerequisites
 
 - Kubernetes 1.12+
-- Kong Enterprise version 1.3.0.2+ [chart](https://github.com/helm/charts/tree/master/stable/kong)
+- Kong Enterprise version 1.3.0.2+
+  [chart](https://github.com/helm/charts/tree/master/stable/kong)
 
 ## Installing the Chart
 
@@ -19,11 +25,14 @@ This chart bootstraps a [Kong-Collector](https://docs.konghq.com/enterprise/late
 
 To install the chart with the release name `my-release`:
 
-1. [Add Kong Enterprise license secret](https://github.com/Kong/charts/tree/master/charts/kong#kong-enterprise)
+1. [Add Kong Enterprise license
+   secret](https://github.com/Kong/charts/tree/master/charts/kong#kong-enterprise)
 
-2. [Add Kong Enterprise registry secret](https://github.com/Kong/charts/tree/master/charts/kong#kong-enterprise-docker-registry-access)
+2. [Add Kong Enterprise registry
+   secret](https://github.com/Kong/charts/tree/master/charts/kong#kong-enterprise-docker-registry-access)
 
-3. Set up Kong Enterprise with postgresql, overriding postgres host and setting a port for kong manager to use the Kong Admin API
+3. Set up Kong Enterprise with postgresql, overriding postgres host and setting
+   a port for kong manager to use the Kong Admin API
 
 ```console
 $ helm install my-kong stable/kong --version 0.36.1 -f kong-values.yaml --set env.admin_api_uri=$(minikube ip):32001
@@ -38,13 +47,15 @@ $ kubectl create secret docker-registry bintray-kong-brain-immunity \
     --docker-password=$BINTRAY_KEY
 ```
 
-5. Set up collector, overriding Kong Admin host and port to allow collector to push swagger specs to Kong
+5. Set up collector, overriding Kong Admin host and port to allow collector to
+   push swagger specs to Kong
 
 ```console
 $ helm install my-release . --set kongAdminHost=my-kong-kong-admin,kongAdminServicePort=8001
 ```
 
-6. Add a "Collector Plugin" to Kong, using the Kong Admin API or Kong Manager GUI
+6. Add a "Collector Plugin" to Kong, using the Kong Admin API or Kong Manager
+   GUI
 
 ```console
 $ open http://$(minikube ip):32002
@@ -64,7 +75,8 @@ $ curl -s -X POST <NODE_IP>:<KONG-ADMIN-PORT>/<WORKSPACE>/plugins \
   -d config.connection_timeout=300
 ```
 
-7. Follow the [Kong Brain & Immunity Documentation](https://docs.konghq.com/enterprise/latest/brain-immunity/install-configure/)
+7. Follow the [Kong Brain & Immunity
+   Documentation](https://docs.konghq.com/enterprise/latest/brain-immunity/install-configure/)
 
 ## Uninstalling the Chart
 
@@ -74,11 +86,13 @@ To uninstall/delete the `my-release` deployment:
 $ helm delete my-release
 ```
 
-The command removes all the Kubernetes components associated with the chart and deletes the release.
+The command removes all the Kubernetes components associated with the chart and
+deletes the release.
 
 ## Parameters
 
-The following tables lists the configurable parameters of the PostgreSQL chart and their default .Values.
+The following tables lists the configurable parameters of the PostgreSQL chart
+and their default .Values.
 
 | Parameter                       | Description                                           | Default                                                                                  |
 | ------------------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -98,11 +112,13 @@ The following tables lists the configurable parameters of the PostgreSQL chart a
 
 ### Tested with the following environment
 
-The following was tested on macos in minikube with the following configuration:
+The following was tested on MacOS in minikube with the following configuration:
 
-1. Start minikube `minikube start --vm-driver hyperkit --memory='6144mb' --cpus=4`
-1. Install both kong and collector charts then `open http://$(minikube ip):32002`
-1. Create kong service and route then add a collector plugin pointing at the collector host and port.
+1. `minikube start --vm-driver hyperkit --memory='6144mb' --cpus=4`
+1. Install both kong and collector charts then `open http://$(minikube
+   ip):32002`
+1. Create kong service and route then add a collector plugin pointing at the
+   collector host and port.
 1. Ensure traffic is being passed to collector by checking the collector logs
 
 ## Changelog
