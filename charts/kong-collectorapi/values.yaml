@@ -36,6 +36,7 @@ ingress:
   enabled: false
   
 postgresql:
+  enabled: true
   postgresqlUsername: collector
   postgresqlPassword: collector
   postgresqlDatabase: collector
@@ -43,5 +44,6 @@ postgresql:
     port: 5432
 
 redis:
+  enabled: true
   port: 6379
   password: redis
