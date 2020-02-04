@@ -439,6 +439,8 @@ the template that it itself is using form the above sections.
   {{- $_ := set $autoEnv "KONG_PG_PORT" .Values.postgresql.service.port -}}
   {{- $pgPassword := include "secretkeyref" (dict "name" (include "kong.postgresql.fullname" .) "key" "postgresql-password") -}}
   {{- $_ := set $autoEnv "KONG_PG_PASSWORD" $pgPassword -}}
+{{- else if eq .Values.env.database "postgres" }}
+  {{- $_ := set $autoEnv "KONG_PG_PORT" "5432" }}
 {{- end }}
 
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
@@ -492,5 +494,5 @@ the template that it itself is using form the above sections.
   imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
   env:
   {{- include "kong.no_daemon_env" . | nindent 2 }}
-  command: [ "/bin/sh", "-c", "until nc -zv $KONG_PG_HOST $KONG_PG_PORT -w1; do echo 'waiting for db'; sleep 1; done" ]
+  command: [ "/bin/sh", "-c", "set -u; until nc -zv $KONG_PG_HOST $KONG_PG_PORT -w1; do echo \"waiting for db - trying ${KONG_PG_HOST}:${KONG_PG_PORT}\"; sleep 1; done" ]
 {{- end -}}
