@@ -64,11 +64,9 @@ $ open http://$(minikube ip):32002
 _OR_
 
 ```console
-$ curl -s -X POST <NODE_IP>:<KONG-ADMIN-PORT>/<WORKSPACE>/plugins \
+$ curl -s -X POST <NODE_IP>:<KONG_ADMIN_PORT>/<WORKSPACE>/plugins \
   -d name=collector \
-  -d config.host=<COLLECTOR-HOST> \
-  -d config.port=5000 \
-  -d config.https=false \
+  -d config.http_endpoint=http://<COLLECTOR_HOST>:<SERVICE_PORT> \
   -d config.log_bodies=true \
   -d config.queue_size=100 \
   -d config.flush_timeout=1 \
