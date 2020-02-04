@@ -47,17 +47,3 @@ spec:
       volumes:
       {{- include "kong.volumes" . | nindent 6 -}}
 {{- end }}
-
-{{ if or .Values.podSecurityPolicy.enabled (and .Values.ingressController.enabled .Values.ingressController.serviceAccount.create) -}}
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ template "kong.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace }}
-  annotations:
-    "helm.sh/hook": pre-upgrade
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
-  labels:
-    {{- include "kong.metaLabels" . | nindent 4 }}
-{{- end -}}

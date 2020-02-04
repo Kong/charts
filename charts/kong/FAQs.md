@@ -30,3 +30,42 @@ If you do, then please delete the release, delete the volume, and then
 do a fresh installation. PersistentVolumes can remain in the cluster even if
 you delete the namespace itself (the namespace in which they were present).
 
+#### Upgrading a release fails due to missing ServiceAccount
+
+When upgrading a release, some configuration changes result in this error:
+
+```
+Error creating: pods "releasename-kong-pre-upgrade-migrations-" is forbidden: error looking up service account releasename-kong: serviceaccount "releasename-kong" not found
+```
+
+Enabling the ingress controller or PodSecurityPolicy requires that the Kong
+chart also create a ServiceAccount. When upgrading from a configuration that
+previously had neither of these features enabled, the pre-upgrade-migrations
+Job attempts to use this ServiceAccount before it is created. It is [not
+possible to easily handle this case automatically](https://github.com/Kong/charts/pull/31).
+
+Users encountering this issue should temporarily modify their
+[pre-upgrade-migrations template](https://github.com/Kong/charts/blob/master/charts/kong/templates/migrations-pre-upgrade.yaml),
+adding the following at the bottom:
+
+```
+{{ if or .Values.podSecurityPolicy.enabled (and .Values.ingressController.enabled .Values.ingressController.serviceAccount.create) -}}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ template "kong.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+{{- end -}}
+```
+
+Upgrading with this in place will create a temporary service account before
+creating the actual service account. After this initial upgrade, users must
+revert to the original pre-upgrade migrations template, as leaving the
+temporary ServiceAccount template in place will [cause permissions issues on
+subsequent upgrades](https://github.com/Kong/charts/issues/30).
