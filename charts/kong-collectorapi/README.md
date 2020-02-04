@@ -101,12 +101,16 @@ and their default .Values.
 | `imagePullSecrets`              | Specify Image pull secrets                            | `- name: bintray-kong-brain-immunity` (does not add image pull secrets to deployed pods) |
 | `kongAdminHost`                 | Hostname where Kong Admin API can be found            | `my-kong-kong-admin`                                                                     |
 | `kongAdminPort`                 | Port where Kong Admin API can be found                | `8001`                                                                                   |
+| `service.port`                      | TCP port on which the Collector service is exposed | `5000`                                                                                  |
+| `containerPort`                      | TCP port on which Collector listens for kong traffic | `5000`                                                                                  |
 | `nodePort`                      | Port to access Collector API from outside the cluster | `31555`                                                                                  |
+| `postgresql.enabled` | Deploy PostgreSQL server                            | `true`                                                                              |
 | `postgresql.postgresqlDatabase` | PostgreSQL dataname name                              | `collector`                                                                              |
 | `postgresql.service.port`       | PostgreSQL port                                       | `5432`                                                                                   |
 | `postgresql.postgresqlUsername` | PostgreSQL user name                                  | `collector`                                                                              |
 | `postgresql.postgresqlPassword` | PostgreSQL password                                   | `collector`                                                                              |
-| `redis.port`                    | Redis port                                            | `5432`                                                                                   |
+| `redis.enabled` | Deploy Redis server                            | `true`                                                                              |
+| `redis.port`                    | Redis port                                            | `6379`                                                                                   |
 | `redis.password`                | Redis password                                        | `redis`                                                                                  |
 | `testendpoints.enabled`         | Creates a testing service                             | `false`                                                                                  |
 

@@ -51,7 +51,7 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         name: collector
         ports:
-        - containerPort: 5000
+        - containerPort: {{ .Values.collector.containerPort }}
         resources: {}
       restartPolicy: Always
 status: {}
