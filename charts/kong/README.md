@@ -19,6 +19,7 @@ $ helm install kong/kong
 ## Table of content
 
 - [Prerequisites](#prerequisites)
+- [Helm 2 vs Helm 3](#important-helm-2-vs-helm-3)
 - [Install](#install)
 - [Uninstall](#uninstall)
 - [Kong Enterprise](#kong-enterprise)
@@ -48,6 +49,21 @@ $ helm install kong/kong
 - Kubernetes 1.12+
 - PV provisioner support in the underlying infrastructure if persistence
   is needed for Kong datastore.
+
+## Important: Helm 2 vs Helm 3
+
+Custom Resource Definitions (CRDs) are handled differently in Helm 2 vs Helm 3. In short:
+
+#### Helm 2
+If you want CRDs to be installed, make sure `ingressController.installCRDs` is set to `true` 
+(either in your values.yaml or passing `--set ingressController.installCRDs=false` at the command line).
+
+#### Helm 3
+Make sure `ingressController.installCRDs` is set to `false` 
+(either in your values.yaml or passing `--set ingressController.installCRDs=false` at the command line).
+If you do not, the helm chart will not install correctly.
+
+Use `--skip-crds` with `helm install` if you want to skip CRD creation. 
 
 ## Install
 
@@ -253,7 +269,7 @@ section of `values.yaml` file:
 | image.tag                          | Version of the ingress controller                                                     | 0.7.0                                                                        |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
-| installCRDs                        | Create CRDs. Regardless of value of this, Helm v3+ will install the CRDs if those are not present already. Use `--skip-crds` with `helm install` if you want to skip CRD creation. | true |
+| installCRDs                        | Create CRDs. **FOR HELM3, MAKE SURE THIS VALUE IS SET TO `false`.**                     | false                                                                        |
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
 | ingressClass                       | The ingress-class value for controller                                                | kong                                                                         |
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
