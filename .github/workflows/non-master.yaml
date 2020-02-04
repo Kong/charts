@@ -1,9 +1,12 @@
 name: Lint and Test Charts
 
 on:
+  push:
+    branches-ignore:
+    - 'master'
   pull_request:
     branches:
-      - next
+    - '**'
 
 jobs:
   lint-test:
