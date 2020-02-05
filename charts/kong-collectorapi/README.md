@@ -97,8 +97,9 @@ and their default .Values.
 | `image.repository`              | Kong-Collector Image repository                       | `kong-docker-kong-brain-immunity-base.bintray.io/kong-brain-immunity`                    |
 | `image.tag`                     | Kong-Collector Image tag                              | `1.1.0`                                                                                  |
 | `imagePullSecrets`              | Specify Image pull secrets                            | `- name: bintray-kong-brain-immunity` (does not add image pull secrets to deployed pods) |
-| `kongAdminHost`                 | Hostname where Kong Admin API can be found            | `my-kong-kong-admin`                                                                     |
-| `kongAdminPort`                 | Port where Kong Admin API can be found                | `8001`                                                                                   |
+| `kongAdmin.protocol`                 | Protocol on which Kong Admin API can be found            | `http`                                                                     |
+| `kongAdmin.host`                 | Hostname where Kong Admin API can be found            | `my-kong-kong-admin`                                                                     |
+| `kongAdmin.servicePort`                 | Port where Kong Admin API can be found                | `8001`                                                                                   |
 | `service.port`                      | TCP port on which the Collector service is exposed | `5000`                                                                                  |
 | `containerPort`                      | TCP port on which Collector listens for kong traffic | `5000`                                                                                  |
 | `nodePort`                      | Port to access Collector API from outside the cluster | `31555`                                                                                  |
