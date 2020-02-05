@@ -26,13 +26,10 @@ collector:
   containerPort: 5000
   # Set a nodePort which is available
   nodePort: 31555
-  service: 
+  service:
     type: NodePort
     port: 5000
 
-ingress:
-  enabled: false
-  
 postgresql:
   enabled: true
   postgresqlUsername: collector
@@ -46,6 +43,9 @@ redis:
   port: 6379
   password: redis
 
+ingress:
+  enabled: false
+
 # Enable this for running integration tests
-testendpoints: 
+testendpoints:
   enabled: false
