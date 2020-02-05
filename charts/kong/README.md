@@ -466,6 +466,13 @@ value is your SMTP password.
 
 ## Changelog
 
+### UNRELEASED
+
+#### Improvements
+
+* Handle initial migrations using an auto-deleted hook. This prevents old
+  migrations jobs from interfering with upgrades.
+
 ### 1.1.1
 
 #### Fixed

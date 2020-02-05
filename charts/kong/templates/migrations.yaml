@@ -6,6 +6,9 @@ metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: init-migrations
+  annotations:
+    helm.sh/hook: "post-install"
+    helm.sh/hook-delete-policy: "hook-succeeded"
 spec:
   template:
     metadata:
