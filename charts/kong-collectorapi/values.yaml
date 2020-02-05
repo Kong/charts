@@ -14,23 +14,20 @@ waitImage:
   tag: latest
   pullPolicy: IfNotPresent
 
+kongAdmin:
+  # Set this to the Kong Admin API hostname
+  host: my-kong-kong-admin
+  # Set this to the Kong Admin API port
+  servicePort: 8001
+  # Set this to the Kong Admin API protocol
+  Protocol: http
 
-# Set this to the Kong Admin API hostname
-kongAdminHost: my-kong-kong-admin
-# Set this to the Kong Admin API port
-kongAdminServicePort: 8001
-# Set this to the Kong Admin API protocol
-kongAdminProtocol: http
 containerPort: 5000
 # Set a nodePort which is available
 nodePort: 31555
 service: 
   type: NodePort
   port: 5000
-
-# Enable this for running integration tests
-testendpoints: 
-  enabled: false
 
 ingress:
   enabled: false
@@ -47,3 +44,7 @@ redis:
   enabled: true
   port: 6379
   password: redis
+
+# Enable this for running integration tests
+testendpoints: 
+  enabled: false

@@ -87,6 +87,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
   env:
   - name: KONG_ADMIN_HOST
-    value: "{{ .Values.kongAdminHost }}"
+    value: "{{ .Values.kongAdmin.host }}"
   command: [ "/bin/sh", "-c", "until nslookup $KONG_ADMIN_HOST; do echo waiting for $KONG_ADMIN_HOST; sleep 2; done;" ]
 {{- end -}}
