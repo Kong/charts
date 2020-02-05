@@ -8,11 +8,11 @@ metadata:
     {{- include "kong-collectorapi.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: app
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.collector.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.nodePort))) }}
-      nodePort: {{ .Values.nodePort }}
+    - port: {{ .Values.collector.service.port }}
+      {{- if (and (eq .Values.collector.service.type "NodePort") (not (empty .Values.collector.nodePort))) }}
+      nodePort: {{ .Values.collector.nodePort }}
       {{- end }}
   selector:
     {{- include "kong-collectorapi.metaLabels" . | nindent 4 }}

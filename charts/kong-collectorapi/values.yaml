@@ -22,12 +22,13 @@ kongAdmin:
   # Set this to the Kong Admin API protocol
   Protocol: http
 
-containerPort: 5000
-# Set a nodePort which is available
-nodePort: 31555
-service: 
-  type: NodePort
-  port: 5000
+collector:
+  containerPort: 5000
+  # Set a nodePort which is available
+  nodePort: 31555
+  service: 
+    type: NodePort
+    port: 5000
 
 ingress:
   enabled: false
