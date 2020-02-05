@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: batch/v1
 kind: Job
 metadata:
   name: "{{ include "kong-collectorapi.fullname" . }}-test-connection"
@@ -7,9 +7,11 @@ metadata:
   annotations:
     "helm.sh/hook": test-success
 spec:
-  containers:
-    - name: wget
-      image: busybox
-      command: ['wget']
-      args:  ['{{ include "kong-collectorapi.fullname" . }}:{{ .Values.collector.service.port }}']
-  restartPolicy: Never
+  template:
+    spec:
+      containers:
+      - name: wget
+        image: busybox
+        command: ['wget']
+        args:  ['{{ include "kong-collectorapi.fullname" . }}:{{ .Values.collector.service.port }}']
+      restartPolicy: Never
