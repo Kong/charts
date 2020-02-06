@@ -270,6 +270,11 @@ For a complete list of all configuration values you can set in the
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
+| autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
+| autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |
+| autoscaling.targetCPUUtilizationPercentage | Target Percentage for when autoscaling takes affect. Only used if cluster doesnt support `autoscaling/v2beta2` | `80`  |
+| autoscaling.metrics                | metrics used for autoscaling for clusters that support autoscaling/v2beta2`           | See [values.yaml](values.yaml) |
 | updateStrategy                     | update strategy for deployment                                                        | `{}`                |
 | readinessProbe                     | Kong readiness probe                                                                  |                     |
 | livenessProbe                      | Kong liveness probe                                                                   |                     |
