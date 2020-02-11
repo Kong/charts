@@ -471,6 +471,19 @@ value is your SMTP password.
 
 ## Changelog
 
+### 1.2.0
+
+#### Improvements
+* Added support for HorizontalPodAutoscaler (https://github.com/Kong/charts/pull/12)
+* Environment variables are now consistently sorted alphabetically. (https://github.com/Kong/charts/pull/29)
+
+#### Fixed
+* Removed temporary ServiceAccount template, which caused upgrades to break the existing ServiceAccount's credentials. Moved template and instructions for use to FAQs, as the temporary user is only needed in rare scenarios. (https://github.com/Kong/charts/pull/31)
+* Fix an issue where the wait-for-postgres job did not know which port to use in some scenarios. (https://github.com/Kong/charts/pull/28)
+
+#### Documentation
+* Added warning regarding volume mounts (https://github.com/Kong/charts/pull/25)
+
 ### 1.1.1
 
 #### Fixed
