@@ -13,7 +13,7 @@ spec:
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   {{- if not (.Capabilities.APIVersions.Has "autoscaling/v2beta2") }}
-  targetCPUUtilizationPercentage: {{ .Values.autscaling.targetCPUUtilizationPercentage | default 80 }}
+  targetCPUUtilizationPercentage: {{ .Values.autoscaling.targetCPUUtilizationPercentage | default 80 }}
   {{- else }}
   metrics:
     {{- toYaml .Values.autoscaling.metrics | nindent 4 }}
