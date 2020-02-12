@@ -17,7 +17,8 @@ Before submitting a pull request, please run through the following steps:
 - Rebase your branch off the current tip of the `next` branch.
 - Run `helm lint` and correct any issues it finds.
 - If your change adds new user-facing (exposed in values.yaml) features or
-  changes existing features, update README.md accordingly.
+  changes existing features, update README.md accordingly. Documentation should
+  adhere to the [Microsoft Writing Style Guide](https://docs.microsoft.com/en-us/style-guide/welcome/).
 
 All contributors must sign our Community License Agreement. If you have not yet
 signed it, we will add a comment asking you to do so.
