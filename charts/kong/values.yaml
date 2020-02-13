@@ -131,6 +131,40 @@ status:
     containerPort: 8543
 
 # Specify Kong proxy service and listener configuration
+cluster:
+  # If you want to specify annotations for the Manager service, uncomment the following
+  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  annotations: {}
+  #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+
+  tls:
+    enabled: false
+    servicePort: 8005
+    containerPort: 8005
+    # Set a nodePort which is available if service type is NodePort
+    # nodePort: 32443
+
+  type: NodePort
+
+  # Kong cluster ingress settings.
+  # TODO: have left this in for now, but there is no corresponding template, and it doesn't work
+  # unsure if it makes sense to have a standard ingress setup, since it's of questionable use and
+  # the hybrid mTLS presumably cannot work through an ingress proxy without considerable work
+  ingress:
+    # Enable/disable exposure using ingress.
+    enabled: false
+    # TLS secret name.
+    # tls: kong-proxy.example.com-tls
+    # Ingress hostname
+    hostname:
+    # Map of ingress annotations.
+    annotations: {}
+    # Ingress path.
+    path: /
+
+  externalIPs: []
+
+# Specify Kong proxy service configuration
 proxy:
   # Enable creating a Kubernetes service for the proxy
   enabled: true

@@ -23,6 +23,14 @@ change this value to `true` if you use Helm 2).
   installs Kong for Kubernetes with Kong Enterprise with the ingress controller
   in PostgreSQL. It enables all Enterprise services.
 
+* [minimal-kong-hybrid-control.yaml](minimal-kong-hybrid-control.yaml) and 
+  [minimal-kong-hybrid-data.yaml](minimal-kong-hybrid-data.yaml) install
+  separate releases for hybrid mode control and data plane nodes, using
+  the built-in PostgreSQL chart on the control plane release. They require
+  some pre-work to create certificates and configure the control plane
+  location. See comments in the file headers for details. Note that you should
+  install the control plane release before the data plane release.
+
 All Enterprise examples require some level of additional user configuration to
 install properly. Read the comments at the top of each file for instructions.
 
