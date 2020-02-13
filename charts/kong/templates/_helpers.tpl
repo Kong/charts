@@ -57,18 +57,17 @@ Create the KONG_PROXY_LISTEN value string
 */}}
 {{- define "kong.kongProxyListenValue" -}}
 
-{{- if and .Values.proxy.http.enabled .Values.proxy.tls.enabled -}}
-   0.0.0.0:{{ .Values.proxy.http.containerPort }},0.0.0.0:{{ .Values.proxy.tls.containerPort }} ssl
-{{- else -}}
 {{- if .Values.proxy.http.enabled -}}
-   0.0.0.0:{{ .Values.proxy.http.containerPort }}
-{{- end -}}
-{{- if .Values.proxy.tls.enabled -}}
-   0.0.0.0:{{ .Values.proxy.tls.containerPort }} ssl
-{{- end -}}
+    0.0.0.0:{{ .Values.proxy.http.containerPort }}{{- if .Values.proxy.tls.enabled -}},0.0.0.0:{{ .Values.proxy.tls.containerPort }} ssl{{- end -}}{{- if .Values.proxy.grpc.enabled -}},0.0.0.0:{{ .Values.proxy.grpc.containerPort }} http2{{- end -}}{{- if .Values.proxy.grpcs.enabled -}},0.0.0.0:{{ .Values.proxy.grpcs.containerPort }} http2 ssl{{- end -}}
+{{- else if .Values.proxy.tls.enabled -}}
+    0.0.0.0:{{ .Values.proxy.tls.containerPort }} ssl{{- if .Values.proxy.grpc.enabled -}},0.0.0.0:{{ .Values.proxy.grpc.containerPort }} http2{{- end -}}{{- if .Values.proxy.grpcs.enabled -}},0.0.0.0:{{ .Values.proxy.grpcs.containerPort }} http2 ssl{{- end -}}
+{{- else if .Values.proxy.grpc.enabled -}}
+    0.0.0.0:{{ .Values.proxy.grpc.containerPort }} http2{{- if .Values.proxy.grpcs.enabled -}},0.0.0.0:{{ .Values.proxy.grpcs.containerPort }} http2 ssl{{- end -}}
+{{- else if .Values.proxy.grpcs.enabled -}}
+    0.0.0.0:{{ .Values.proxy.grpcs.containerPort }} http2 ssl
 {{- end -}}
 
-{{- end }}
+{{- end -}}
 
 {{/*
 Create the KONG_ADMIN_GUI_LISTEN value string
