@@ -135,10 +135,16 @@ proxy:
 # The `name` property refers to the name of the ConfigMap or Secret
 # itself, while the pluginName refers to the name of the plugin as it appears
 # in Kong.
+# Subdirectories (which are optional) require separate ConfigMaps/Secrets.
+# "path" indicates their directory under the main plugin directory: the example
+# below will mount the contents of kong-plugin-rewriter-migrations at "/opt/kong/rewriter/migrations".
 plugins: {}
   # configMaps:
   # - pluginName: rewriter
   #   name: kong-plugin-rewriter
+  #   subdirectories:
+  #   - name: kong-plugin-rewriter-migrations
+  #     path: migrations
   # secrets:
   # - pluginName: rewriter
   #   name: kong-plugin-rewriter
