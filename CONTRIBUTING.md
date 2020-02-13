@@ -1,11 +1,9 @@
 # Contributing to Kong Helm charts
 
 Feel free to contribute fixes or minor features, we love to receive pull
-requests! If you are planning to develop a larger feature, please come talk to
-us first. We can be found in the [#kong
-channel](https://kubernetes.slack.com/archives/CDCA87FRD) on the Kubernetes
-community Slack instance or the [Kubernetes
-forum](https://discuss.konghq.com/c/kubernetes/19) on Kong Nation.
+requests! If you are planning to develop a larger feature, please submit a
+GitHub issue describing your proposal first, to discuss it with the chart
+maintainers.
 
 ## Submitting a pull request
 The Kong charts repository accepts contributions via GitHub pull requests to
