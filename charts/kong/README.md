@@ -270,6 +270,9 @@ section of `values.yaml` file:
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
 | installCRDs                        | Create CRDs. **FOR HELM3, MAKE SURE THIS VALUE IS SET TO `false`.**                   | true                                                                         |
+| serviceAccount.create              | Create Service Account for ingress controller                                         | true
+| serviceAccount.name                | Use existing Service Account, specifiy its name                                       | ""
+| installCRDs                        | Create CRDs. Regardless of value of this, Helm v3+ will install the CRDs if those are not present already. Use `--skip-crds` with `helm install` if you want to skip CRD creation. | true |
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
 | ingressClass                       | The ingress-class value for controller                                                | kong                                                                         |
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
@@ -284,6 +287,11 @@ For a complete list of all configuration values you can set in the
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
+| autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
+| autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |
+| autoscaling.targetCPUUtilizationPercentage | Target Percentage for when autoscaling takes affect. Only used if cluster doesnt support `autoscaling/v2beta2` | `80`  |
+| autoscaling.metrics                | metrics used for autoscaling for clusters that support autoscaling/v2beta2`           | See [values.yaml](values.yaml) |
 | updateStrategy                     | update strategy for deployment                                                        | `{}`                |
 | readinessProbe                     | Kong readiness probe                                                                  |                     |
 | livenessProbe                      | Kong liveness probe                                                                   |                     |
@@ -480,6 +488,19 @@ value is your SMTP password.
 
 ## Changelog
 
+### 1.2.0
+
+#### Improvements
+* Added support for HorizontalPodAutoscaler (https://github.com/Kong/charts/pull/12)
+* Environment variables are now consistently sorted alphabetically. (https://github.com/Kong/charts/pull/29)
+
+#### Fixed
+* Removed temporary ServiceAccount template, which caused upgrades to break the existing ServiceAccount's credentials. Moved template and instructions for use to FAQs, as the temporary user is only needed in rare scenarios. (https://github.com/Kong/charts/pull/31)
+* Fix an issue where the wait-for-postgres job did not know which port to use in some scenarios. (https://github.com/Kong/charts/pull/28)
+
+#### Documentation
+* Added warning regarding volume mounts (https://github.com/Kong/charts/pull/25)
+
 ### 1.1.1
 
 #### Fixed
@@ -513,7 +534,7 @@ value is your SMTP password.
 
 ### 1.0.2
 
-- Helm 3 support: CRDs are declared in crds directory. Backward compatible support for helm 2. 
+- Helm 3 support: CRDs are declared in crds directory. Backward compatible support for helm 2.
 
 ### 1.0.1
 

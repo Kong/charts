@@ -180,11 +180,21 @@ The name of the service used for the ingress controller's validation webhook
 - name: kong-plugin-{{ .pluginName }}
   configMap:
     name: {{ .name }}
+{{- range .subdirectories }}
+- name: {{ .name }}
+  configMap:
+    name: {{ .name }}
+{{- end }}
 {{- end }}
 {{- range .Values.plugins.secrets }}
 - name: kong-plugin-{{ .pluginName }}
   secret:
     secretName: {{ .name }}
+{{- range .subdirectories }}
+- name: {{ .name }}
+  secret:
+    secretName: {{ .name }}
+{{- end }}
 {{- end }}
 - name: custom-nginx-template-volume
   configMap:
@@ -226,14 +236,26 @@ The name of the service used for the ingress controller's validation webhook
   mountPath: /etc/secrets/{{ . }}
 {{- end }}
 {{- range .Values.plugins.configMaps }}
+{{- $mountPath := printf "/opt/kong/plugins/%s" .pluginName }}
 - name:  kong-plugin-{{ .pluginName }}
-  mountPath: /opt/kong/plugins/{{ .pluginName }}
+  mountPath: {{ $mountPath }}
+  readOnly: true
+{{- range .subdirectories }}
+- name: {{ .name  }}
+  mountPath: {{ printf "%s/%s" $mountPath ( .path | default .name ) }}
   readOnly: true
 {{- end }}
+{{- end }}
 {{- range .Values.plugins.secrets }}
+{{- $mountPath := printf "/opt/kong/plugins/%s" .pluginName }}
 - name:  kong-plugin-{{ .pluginName }}
-  mountPath: /opt/kong/plugins/{{ .pluginName }}
+  mountPath: {{ $mountPath }}
   readOnly: true
+{{- range .subdirectories }}
+- name: {{ .name }}
+  mountPath: {{ printf "%s/%s" $mountPath .path }}
+  readOnly: true
+{{- end }}
 {{- end }}
 {{- end -}}
 
@@ -336,7 +358,7 @@ the template that it itself is using form the above sections.
 */}}
 {{- $autoEnv := dict -}}
 
-{{- $_ := set $autoEnv "KONG_LUA_PACKAGE_PATH" "/opt/?.lua;;" -}}
+{{- $_ := set $autoEnv "KONG_LUA_PACKAGE_PATH" "/opt/?.lua;/opt/?/init.lua;;" -}}
 
 {{- if .Values.admin.useTLS }}
   {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (printf "0.0.0.0:%d ssl" (int64 .Values.admin.containerPort)) -}}
@@ -439,6 +461,8 @@ the template that it itself is using form the above sections.
   {{- $_ := set $autoEnv "KONG_PG_PORT" .Values.postgresql.service.port -}}
   {{- $pgPassword := include "secretkeyref" (dict "name" (include "kong.postgresql.fullname" .) "key" "postgresql-password") -}}
   {{- $_ := set $autoEnv "KONG_PG_PASSWORD" $pgPassword -}}
+{{- else if eq .Values.env.database "postgres" }}
+  {{- $_ := set $autoEnv "KONG_PG_PORT" "5432" }}
 {{- end }}
 
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
@@ -464,7 +488,7 @@ the template that it itself is using form the above sections.
 
 {{- $completeEnv := mergeOverwrite $autoEnv $userEnv -}}
 
-{{- range keys $completeEnv }}
+{{- range keys $completeEnv | sortAlpha }}
 {{- $val := pluck . $completeEnv | first -}}
 {{- $valueType := printf "%T" $val -}}
 {{ if eq $valueType "map[string]interface {}" }}
@@ -492,5 +516,5 @@ the template that it itself is using form the above sections.
   imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
   env:
   {{- include "kong.no_daemon_env" . | nindent 2 }}
-  command: [ "/bin/sh", "-c", "until nc -zv $KONG_PG_HOST $KONG_PG_PORT -w1; do echo 'waiting for db'; sleep 1; done" ]
+  command: [ "/bin/sh", "-c", "set -u; until nc -zv $KONG_PG_HOST $KONG_PG_PORT -w1; do echo \"waiting for db - trying ${KONG_PG_HOST}:${KONG_PG_PORT}\"; sleep 1; done" ]
 {{- end -}}
