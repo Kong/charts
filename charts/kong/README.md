@@ -219,16 +219,6 @@ Kong can be configured via two methods:
 | proxy.tls.nodePort                 | Node port to use for TLS                                                              | 32443               |
 | proxy.tls.hostPort                 | Host port to use for TLS                                                              |                     |
 | proxy.tls.overrideServiceTargetPort| Override service port to use for TLS without touching Kong containerPort              |                     |
-| proxy.grpc.enabled                 | Enables grpc on the proxy                                                             | false               |
-| proxy.grpc.servicePort             | Service port to use for grpc                                                          | 9000                |
-| proxy.grpc.containerPort           | Container port to use for grpc                                                        | 9000                |
-| proxy.grpc.nodePort                | Node port to use for grpc                                                             | 32081               |
-| proxy.grpc.hostPort                | Host port to use for grpc                                                             |                     |
-| proxy.grpcs.enabled                | Enables grpcs (http2 + TLS) on the proxy                                              | false               |
-| proxy.grpcs.servicePort            | Service port to use for grpcs                                                         | 9443                |
-| proxy.grpcs.containerPort          | Container port to use for grpcs                                                       | 9443                |
-| proxy.grpcs.nodePort               | Node port to use for grpcs                                                            | 32444               |
-| proxy.grpcs.hostPort               | Host port to use for grpcs                                                            |                     |
 | proxy.type                         | k8s service type. Options: NodePort, ClusterIP, LoadBalancer                          | `LoadBalancer`      |
 | proxy.clusterIP                    | k8s service clusterIP                                                                 |                     |
 | proxy.loadBalancerSourceRanges     | Limit proxy access to CIDRs if set and service type is `LoadBalancer`                 | `[]`                |

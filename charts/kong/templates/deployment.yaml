@@ -82,22 +82,6 @@ spec:
           {{- end}}
           protocol: TCP
         {{- end }}
-        {{- if .Values.proxy.grpc.enabled }}
-        - name: proxy-grpc
-          containerPort: {{ .Values.proxy.grpc.containerPort }}
-          {{- if .Values.proxy.grpc.hostPort }}
-          hostPort: {{ .Values.proxy.grpc.hostPort }}
-          {{- end}}
-          protocol: TCP
-        {{- end }}
-        {{- if .Values.proxy.grpcs.enabled }}
-        - name: proxy-grpcs
-          containerPort: {{ .Values.proxy.grpcs.containerPort }}
-          {{- if .Values.proxy.grpcs.hostPort }}
-          hostPort: {{ .Values.proxy.grpcs.hostPort }}
-          {{- end}}
-          protocol: TCP
-        {{- end }}
         - name: metrics
           containerPort: 9542
           protocol: TCP

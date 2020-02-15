@@ -103,22 +103,6 @@ proxy:
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32443
 
-  # gRPC/HTTP2 plain-text traffic (disabled by default)
-  grpc:
-    enabled: false
-    servicePort: 9000
-    containerPort: 9000
-    # Set a nodePort which is available if service type is NodePort
-    # nodePort: 32081
-
-  # gRPC/HTTP2 TLS traffic (disabled by default)
-  grpcs:
-    enabled: false
-    servicePort: 9443
-    containerPort: 9443
-    # Set a nodePort which is available if service type is NodePort
-    # nodePort: 32444
-
   type: LoadBalancer
 
   # Kong proxy ingress settings.

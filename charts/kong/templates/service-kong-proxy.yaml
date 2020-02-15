@@ -44,24 +44,6 @@ spec:
   {{- end }}
     protocol: TCP
   {{- end }}
-  {{- if .Values.proxy.grpc.enabled }}
-  - name: kong-proxy-grpc
-    port: {{ .Values.proxy.grpc.servicePort }}
-    targetPort: {{ .Values.proxy.grpc.containerPort }}
-  {{- if (and (eq .Values.proxy.type "NodePort") (not (empty .Values.proxy.grpc.nodePort))) }}
-    nodePort: {{ .Values.proxy.grpc.nodePort }}
-  {{- end }}
-    protocol: TCP
-  {{- end }}
-  {{- if .Values.proxy.grpcs.enabled }}
-  - name: kong-proxy-grpcs
-    port: {{ .Values.proxy.grpcs.servicePort }}
-    targetPort: {{ .Values.proxy.grpcs.containerPort }}
-  {{- if (and (eq .Values.proxy.type "NodePort") (not (empty .Values.proxy.grpcs.nodePort))) }}
-    nodePort: {{ .Values.proxy.grpcs.nodePort }}
-  {{- end }}
-    protocol: TCP
-  {{- end }}
   {{- if .Values.proxy.externalTrafficPolicy }}
   externalTrafficPolicy: {{ .Values.proxy.externalTrafficPolicy }}
   {{- end }}
