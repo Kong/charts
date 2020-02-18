@@ -58,17 +58,17 @@ Create the KONG_PROXY_LISTEN value string
 {{- define "kong.kongProxyListenValue" -}}
 
 {{- if and .Values.proxy.http.enabled .Values.proxy.tls.enabled -}}
-   0.0.0.0:{{ .Values.proxy.http.containerPort }},0.0.0.0:{{ .Values.proxy.tls.containerPort }} ssl
+   0.0.0.0:{{ .Values.proxy.http.containerPort }} reuseport,0.0.0.0:{{ .Values.proxy.tls.containerPort }} ssl http2 reuseport
 {{- else -}}
 {{- if .Values.proxy.http.enabled -}}
-   0.0.0.0:{{ .Values.proxy.http.containerPort }}
+   0.0.0.0:{{ .Values.proxy.http.containerPort }} reuseport
 {{- end -}}
 {{- if .Values.proxy.tls.enabled -}}
-   0.0.0.0:{{ .Values.proxy.tls.containerPort }} ssl
+   0.0.0.0:{{ .Values.proxy.tls.containerPort }} ssl http2 reuseport
 {{- end -}}
 {{- end -}}
 
-{{- end }}
+{{- end -}}
 
 {{/*
 Create the KONG_ADMIN_GUI_LISTEN value string
