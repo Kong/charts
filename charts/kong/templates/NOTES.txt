@@ -1,16 +1,23 @@
-To connect to Kong, please execute the following command
+To connect to Kong, please execute the following commands:
 
-
-{{- if contains "LoadBalancer" .Values.proxy.type }}
-  HOST=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-  PORT=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.spec.ports[0].port}')
+{{ if contains "LoadBalancer" .Values.proxy.type }}
+HOST=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+PORT=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.spec.ports[0].port}')
 {{- else if contains "NodePort" .Values.proxy.type -}}
-  HOST=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath='{.items[0].status.addresses[0].address}')
-  PORT=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.spec.ports[0].nodePort}')
+HOST=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath='{.items[0].status.addresses[0].address}')
+PORT=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.spec.ports[0].nodePort}')
 {{- end -}}
 export PROXY_IP=${HOST}:${PORT}
 curl $PROXY_IP
 
 Once installed, please follow along the getting started guide to start using Kong:
 https://bit.ly/k4k8s-get-started
+
+{{ if and (.Values.enterprise.portal.enabled) (or (.Values.enterprise.portal.portal_auth) (.Values.enterprise.portal.session_conf_secret)) -}} {{/* Legacy Portal auth handling */}}
+/!\ WARNING: You are currently using legacy Portal authentication configuration in values.yaml (https://github.com/Kong/charts/blob/kong-1.2.0/charts/kong/values.yaml#L384-L392). Support for this will be removed in a future release.
+
+You should typically remove these settings entirely, as both are configured per-workspace, and the values here only provide defaults. If you wish to configure them, you should set them under the Values.env block.
+
+Enterprise 0.35 users MUST add portal_session_conf to their Values.env using a secretKeyRef, as 0.35 does not support per-workspace session configuration.
+{{- end -}}
 
