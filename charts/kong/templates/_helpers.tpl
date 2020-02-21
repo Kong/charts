@@ -410,7 +410,7 @@ the template that it itself is using form the above sections.
 
   {{- if .Values.enterprise.portal.enabled }}
     {{- $_ := set $autoEnv "KONG_PORTAL" "on" -}}
-    {{- if .Values.enterprise.portal.portal_auth }}
+    {{- if .Values.enterprise.portal.portal_auth }} {{/* TODO: deprecated, remove in a future version */}}
       {{- $_ := set $autoEnv "KONG_PORTAL_AUTH" .Values.enterprise.portal.portal_auth -}}
       {{- $portalSession := include "secretkeyref" (dict "name" .Values.enterprise.portal.session_conf_secret "key" "portal_session_conf") -}}
       {{- $_ := set $autoEnv "KONG_PORTAL_SESSION_CONF" $portalSession -}}

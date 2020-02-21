@@ -452,9 +452,13 @@ accessible outside the Pod.
 
 Login sessions for Kong Manager and the Developer Portal make use of
 [the Kong Sessions plugin](https://docs.konghq.com/enterprise/latest/kong-manager/authentication/sessions).
-Their configuration must be stored in Secrets, as it contains an HMAC key.
-If using either RBAC or the Portal, create a Secret with `admin_gui_session_conf`
-and `portal_session_conf` keys.
+When configured via values.yaml, their configuration must be stored in Secrets,
+as it contains an HMAC key.
+
+Kong Manager's session configuration must be configured via values.yaml,
+whereas this is optional for the Developer Portal on versions 0.36+. Providing
+Portal session configuration in values.yaml provides the default session
+configuration, which can be overriden on a per-workspace basis.
 
 ```
 $ cat admin_gui_session_conf
@@ -468,8 +472,8 @@ The exact plugin settings may vary in your environment. The `secret` should
 always be changed for both configurations.
 
 After creating your secret, set its name in values.yaml, in the
-`.enterprise.rbac.session_conf_secret` and
-`.enterprise.portal.session_conf_secret` keys.
+`.enterprise.rbac.session_conf_secret` and optionally in
+`env.portal_session_conf` using a secretKeyRef.
 
 ### Email/SMTP
 

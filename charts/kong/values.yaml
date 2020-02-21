@@ -384,21 +384,10 @@ enterprise:
   # This secret must contain a single 'license' key, containing your base64-encoded license data
   # The license secret is required for all Kong Enterprise deployments
   license_secret: you-must-create-a-kong-license-secret
-  # Session configuration secret
-  # The session conf secret is required if using RBAC or the Portal
   vitals:
     enabled: true
   portal:
     enabled: false
-    # portal_auth here sets the default authentication mechanism for the Portal
-    # FIXME This can be changed per-workspace, but must currently default to
-    # basic-auth to work around limitations with session configuration
-    portal_auth: basic-auth
-    # If the Portal is enabled and any workspace's Portal uses authentication,
-    # this Secret must contain an portal_session_conf key
-    # The key value must be a secret configuration, following the example at
-    # https://docs.konghq.com/enterprise/latest/developer-portal/configuration/authentication/sessions
-    session_conf_secret: you-must-create-a-portal-session-conf-secret
   rbac:
     enabled: false
     admin_gui_auth: basic-auth
