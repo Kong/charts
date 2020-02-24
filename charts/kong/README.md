@@ -246,6 +246,7 @@ Kong can be configured via two methods:
 | proxy.ingress.hosts                | List of ingress hosts.                                                                | `[]`                |
 | proxy.ingress.path                 | Ingress path.                                                                         | `/`                 |
 | proxy.ingress.annotations          | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
+| proxy.annotations                  | Service annotations                                                                   | `{}`                |
 | plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
 | runMigrations                      | Run Kong migrations job                                                               | `true`              |
