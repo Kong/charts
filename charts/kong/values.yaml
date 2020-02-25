@@ -355,6 +355,9 @@ podDisruptionBudget:
 podSecurityPolicy:
   enabled: false
 
+
+priorityClassName: ""
+
 # securityContext for Kong pods.
 securityContext:
   runAsUser: 1000
