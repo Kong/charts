@@ -69,3 +69,22 @@ creating the actual service account. After this initial upgrade, users must
 revert to the original pre-upgrade migrations template, as leaving the
 temporary ServiceAccount template in place will [cause permissions issues on
 subsequent upgrades](https://github.com/Kong/charts/issues/30).
+
+#### Running "helm upgrade" fails because of old init-migrations Job
+
+When running `helm upgrade`, the upgrade fails and Helm reports an error
+similar to the following:
+
+```
+Error: UPGRADE FAILED: cannot patch "RELEASE-NAME-kong-init-migrations" with
+kind Job: Job.batch "RELEASE-NAME-kong-init-migrations" is invalid ... field
+is immutable
+```
+
+This occurs if a `RELEASE-NAME-kong-init-migrations` Job is left over from a
+previous `helm install` or `helm upgrade`. Deleting it with
+`kubectl delete job RELEASE-NAME-kong-init-migrations` will allow the upgrade
+to proceed.
+
+This job is not removed automatically [due to limitations in
+Helm](https://github.com/Kong/charts/pull/36).
