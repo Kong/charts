@@ -33,6 +33,9 @@ spec:
         {{- include "kong.metaLabels" . | nindent 8 }}
         app.kubernetes.io/component: app
     spec:
+      {{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+      {{- end }}
       {{- if or .Values.ingressController.enabled .Values.podSecurityPolicy.enabled }}
       serviceAccountName: {{ template "kong.serviceAccountName" . }}
       {{ end }}
