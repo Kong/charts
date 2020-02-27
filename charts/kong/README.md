@@ -398,22 +398,30 @@ Kong is going to be deployed.
 #### Kong Enterprise Docker registry access
 
 Next, we need to setup Docker credentials in order to allow Kubernetes
-nodes to pull down Kong Enterprise Docker image, which is hosted as a private
-repository.
+nodes to pull down Kong Enterprise Docker images, which are hosted in a private
+registry.
 
-As part of your sign up for Kong Enterprise, you should have received
-credentials for these as well.
+You should received credentials to log into https://bintray.com/kong after
+purchasing Kong Enterprise. After logging in, you can retrieve your API key
+from \<your username\> \> Edit Profile \> API Key. Use this to create registry
+secrets:
 
 ```bash
-$ kubectl create secret docker-registry kong-enterprise-docker \
+$ kubectl create secret docker-registry kong-enterprise-k8s-docker \
     --docker-server=kong-docker-kong-enterprise-k8s.bintray.io \
-    --docker-username=<your-username> \
-    --docker-password=<your-password>
-secret/kong-enterprise-docker created
+    --docker-username=<your-username@kong> \
+    --docker-password=<your-bintray-api-key>
+secret/kong-enterprise-k8s-docker created
+
+$ kubectl create secret docker-registry kong-enterprise-edition-docker \
+    --docker-server=kong-docker-kong-enterprise-edition-docker.bintray.io \
+    --docker-username=<your-username@kong> \
+    --docker-password=<your-bintray-api-key>
+secret/kong-enterprise-edition-docker created
 ```
 
-Set the secret name in `values.yaml` in the `image.pullSecrets` section.
-Again, Please ensure the above secret is created in the same namespace in which
+Set the secret names in `values.yaml` in the `image.pullSecrets` section.
+Again, please ensure the above secret is created in the same namespace in which
 Kong is going to be deployed.
 
 ### Service location hints
