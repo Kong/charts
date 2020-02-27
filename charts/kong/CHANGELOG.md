@@ -1,17 +1,61 @@
 # Changelog
 
+## 1.3.0
+
+### Improvements
+
+* Custom plugin mounts now support subdirectories. These are necessary for
+  plugins that include their own migrations. Note that Kong versions prior to
+  2.0.1 [have a bug](https://github.com/Kong/kong/pull/5509) that prevents them
+  from running these migrations. ([#24](https://github.com/Kong/charts/pull/24))
+* LoadBalancer services will now respect their NodePort.
+  ([#48](https://github.com/Kong/charts/pull/41))
+* The proxy TLS listen now enables HTTP/2 (and, by extension, gRPC).
+  ([#47](https://github.com/Kong/charts/pull/47))
+* Added support for `priorityClassName` to the Kong deployment.
+  ([#56](https://github.com/Kong/charts/pull/56))
+* Bumped default Kong version to 2.0 and controller version to 0.7.1.
+  ([#60](https://github.com/Kong/charts/pull/60))
+* Removed dedicated Portal auth settings, which are unnecessary in modern
+  versions. ([#55](https://github.com/Kong/charts/pull/56))
+
+### Fixed
+
+* Fixed typo in HorizontalPodAutoscaler template.
+  ([#45](https://github.com/Kong/charts/pull/45))
+
+### Documentation
+
+* Added contributing guidelines. ([#41](https://github.com/Kong/charts/pull/41))
+* Added README section for Helm 2 versus Helm 3 considerations.
+  ([#34](https://github.com/Kong/charts/pull/41))
+* Added documentation for `proxy.annotations` to README.md.
+  ([#57](https://github.com/Kong/charts/pull/57))
+* Added FAQ entry for init-migrations job conflicts on upgrades.
+  ([#59](https://github.com/Kong/charts/pull/59)
+* Move changelog out of README.md into CHANGELOG.md.
+  ([#60](https://github.com/Kong/charts/pull/60)
+* Improved formatting for 1.2.0 changelog.
+
 ## 1.2.0
 
 ### Improvements
-* Added support for HorizontalPodAutoscaler (https://github.com/Kong/charts/pull/12)
-* Environment variables are now consistently sorted alphabetically. (https://github.com/Kong/charts/pull/29)
+* Added support for HorizontalPodAutoscaler.
+  ([#12](https://github.com/Kong/charts/pull/12))
+* Environment variables are now consistently sorted alphabetically.
+  ([#29](https://github.com/Kong/charts/pull/29))
 
 ### Fixed
-* Removed temporary ServiceAccount template, which caused upgrades to break the existing ServiceAccount's credentials. Moved template and instructions for use to FAQs, as the temporary user is only needed in rare scenarios. (https://github.com/Kong/charts/pull/31)
-* Fix an issue where the wait-for-postgres job did not know which port to use in some scenarios. (https://github.com/Kong/charts/pull/28)
+* Removed temporary ServiceAccount template, which caused upgrades to break the
+  existing ServiceAccount's credentials. Moved template and instructions for
+  use to FAQs, as the temporary user is only needed in rare scenarios.
+  ([#31](https://github.com/Kong/charts/pull/31))
+* Fix an issue where the wait-for-postgres job did not know which port to use
+  in some scenarios. ([#28](https://github.com/Kong/charts/pull/28))
 
 ### Documentation
-* Added warning regarding volume mounts (https://github.com/Kong/charts/pull/25)
+* Added warning regarding volume mounts.
+  ([#25](https://github.com/Kong/charts/pull/25))
 
 ## 1.1.1
 
