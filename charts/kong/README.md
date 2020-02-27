@@ -471,9 +471,9 @@ secret/kong-session-config created
 The exact plugin settings may vary in your environment. The `secret` should
 always be changed for both configurations.
 
-After creating your secret, set its name in values.yaml, in the
-`.enterprise.rbac.session_conf_secret` and optionally in
-`env.portal_session_conf` using a secretKeyRef.
+After creating your secret, set its name in values.yaml in
+`.enterprise.rbac.session_conf_secret`. If you create a Portal configuration,
+add it at `env.portal_session_conf` using a secretKeyRef.
 
 ### Email/SMTP
 
