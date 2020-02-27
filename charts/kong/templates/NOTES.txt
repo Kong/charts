@@ -16,8 +16,6 @@ https://bit.ly/k4k8s-get-started
 {{ if and (.Values.enterprise.portal.enabled) (or (.Values.enterprise.portal.portal_auth) (.Values.enterprise.portal.session_conf_secret)) -}} {{/* Legacy Portal auth handling */}}
 /!\ WARNING: You are currently using legacy Portal authentication configuration in values.yaml (https://github.com/Kong/charts/blob/kong-1.2.0/charts/kong/values.yaml#L384-L392). Support for this will be removed in a future release.
 
-You should typically remove these settings entirely, as both are configured per-workspace, and the values here only provide defaults. If you wish to configure them, you should set them under the Values.env block.
-
-Enterprise 0.35 users MUST add portal_session_conf to their Values.env using a secretKeyRef, as 0.35 does not support per-workspace session configuration.
+You should move these settings to "portal_session_conf" (using a secretKeyRef) and "portal_auth" under your "env" block.
 {{- end -}}
 
