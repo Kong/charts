@@ -7,7 +7,10 @@ This is the official Helm Charts repository for installing Kong on Kubernetes.
 ```bash
 helm repo add kong https://charts.konghq.com
 helm repo update
+# helm2
 helm install kong/kong
+# helm3
+helm install kong kong/kong --skip-crds
 ```
 
 ## Documentation
