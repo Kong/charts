@@ -41,6 +41,7 @@ env:
   pg_port: 5432
   admin_listen: 0.0.0.0:8001, 0.0.0.0:32001
   admin_gui_flags: '{"IMMUNITY_ENABLED":true}'
+  password: my-token
 postgresql:
   enabled: true
   postgresqlUsername: kong

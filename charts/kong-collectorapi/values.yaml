@@ -20,7 +20,9 @@ kongAdmin:
   # Set this to the Kong Admin API port
   servicePort: 8001
   # Set this to the Kong Admin API protocol
-  Protocol: http
+  protocol: http
+  # Set this to the Kong Admin API token
+  token: my-token
 
 collector:
   containerPort: 5000

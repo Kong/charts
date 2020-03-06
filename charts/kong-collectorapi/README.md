@@ -100,6 +100,7 @@ and their default .Values.
 | `kongAdmin.protocol`                 | Protocol on which Kong Admin API can be found            | `http`                                                                     |
 | `kongAdmin.host`                 | Hostname where Kong Admin API can be found            | `my-kong-kong-admin`                                                                     |
 | `kongAdmin.servicePort`                 | Port where Kong Admin API can be found                | `8001`                                                                                   |
+| `kongAdmin.token`                 | Token used for making requests to Kong Admin API                | `my-token`                                                                                   |
 | `collector.service.port`                      | TCP port on which the Collector service is exposed | `5000`                                                                                  |
 | `collector.containerPort`                      | TCP port on which Collector listens for kong traffic | `5000`                                                                                  |
 | `collector.nodePort`                      | Port to access Collector API from outside the cluster | `31555`                                                                                  |
@@ -125,6 +126,10 @@ The following was tested on MacOS in minikube with the following configuration:
 1. Ensure traffic is being passed to collector by checking the collector logs
 
 ## Changelog
+
+### Unreleased
+
+- Exposed RBAC token
 
 ### 0.1.3
 
