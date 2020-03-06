@@ -210,12 +210,20 @@ Kong can be configured via two methods:
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
 | replicaCount                       | Kong instance count                                                                   | `1`                 |
-| admin.enabled                      | Create Admin Service                                                                  | `false`             |
-| admin.useTLS                       | Secure Admin traffic                                                                  | `true`              |
-| admin.servicePort                  | TCP port on which the Kong admin service is exposed                                   | `8444`              |
-| admin.containerPort                | TCP port on which Kong app listens for admin traffic                                  | `8444`              |
-| admin.nodePort                     | Node port when service type is `NodePort`                                             |                     |
-| admin.hostPort                     | Host port to use for admin traffic                                                    |                     |
+| admin.enabled                      | Create admin Service                                                                  | `false`             |
+| admin.http.enabled                 | Enables http on the admin API                                                         | `false`             |
+| admin.http.servicePort             | Service port to use for http                                                          | 8001                |
+| admin.http.containerPort           | Container port to use for http                                                        | 8001                |
+| admin.http.nodePort                | Node port to use for http                                                             |                     |
+| admin.http.hostPort                | Host port to use for http                                                             |                     |
+| admin.http.parameters              | Array of additional listen parameters                                                 | `[]`                |
+| admin.tls.enabled                  | Enables TLS on the admin API                                                          | true                |
+| admin.tls.containerPort            | Container port to use for TLS                                                         | 8443                |
+| admin.tls.servicePort              | Service port to use for TLS                                                           | 8443                |
+| admin.tls.nodePort                 | Node port to use for TLS                                                              |                     |
+| admin.tls.hostPort                 | Host port to use for TLS                                                              |                     |
+| admin.tls.overrideServiceTargetPort| Override service port to use for TLS without touching Kong containerPort              |                     |
+| admin.tls.parameters               | Array of additional listen parameters                                                 | `[]`                |
 | admin.type                         | k8s service type, Options: NodePort, ClusterIP, LoadBalancer                          | `NodePort`          |
 | admin.loadBalancerIP               | Will reuse an existing ingress static IP for the admin service                        | `null`              |
 | admin.loadBalancerSourceRanges     | Limit admin access to CIDRs if set and service type is `LoadBalancer`                 | `[]`                |
@@ -224,17 +232,20 @@ Kong can be configured via two methods:
 | admin.ingress.hosts                | List of ingress hosts.                                                                | `[]`                |
 | admin.ingress.path                 | Ingress path.                                                                         | `/`                 |
 | admin.ingress.annotations          | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
+| proxy.enabled                      | Create proxy Service                                                                  | `true`              |
 | proxy.http.enabled                 | Enables http on the proxy                                                             | true                |
 | proxy.http.servicePort             | Service port to use for http                                                          | 80                  |
 | proxy.http.containerPort           | Container port to use for http                                                        | 8000                |
-| proxy.http.nodePort                | Node port to use for http                                                             | 32080               |
+| proxy.http.nodePort                | Node port to use for http                                                             |                     |
 | proxy.http.hostPort                | Host port to use for http                                                             |                     |
+| proxy.http.parameters              | Array of additional listen parameters                                                 | `{}`                |
 | proxy.tls.enabled                  | Enables TLS on the proxy                                                              | true                |
 | proxy.tls.containerPort            | Container port to use for TLS                                                         | 8443                |
 | proxy.tls.servicePort              | Service port to use for TLS                                                           | 8443                |
-| proxy.tls.nodePort                 | Node port to use for TLS                                                              | 32443               |
+| proxy.tls.nodePort                 | Node port to use for TLS                                                              |                     |
 | proxy.tls.hostPort                 | Host port to use for TLS                                                              |                     |
 | proxy.tls.overrideServiceTargetPort| Override service port to use for TLS without touching Kong containerPort              |                     |
+| proxy.tls.parameters               | Array of additional listen parameters                                                 | `{}`                |
 | proxy.type                         | k8s service type. Options: NodePort, ClusterIP, LoadBalancer                          | `LoadBalancer`      |
 | proxy.clusterIP                    | k8s service clusterIP                                                                 |                     |
 | proxy.loadBalancerSourceRanges     | Limit proxy access to CIDRs if set and service type is `LoadBalancer`                 | `[]`                |
@@ -322,7 +333,7 @@ and upper-cased before setting the environment variable.
 Furthermore, all `kong.env` parameters can also accept a mapping instead of a
 value to ensure the parameters can be set through configmaps and secrets.
 
-An example :
+An example:
 
 ```yaml
 kong:
@@ -340,22 +351,6 @@ For complete list of Kong configurations please check the
 [Kong configuration docs](https://docs.konghq.com/latest/configuration).
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
-
-##### Admin/Proxy listener override
-
-If you specify `env.admin_listen` or `env.proxy_listen`, this chart will use
-the value provided by you as opposed to constructing a listen variable
-from fields like `proxy.http.containerPort` and `proxy.http.enabled`.
-This allows you to be more prescriptive when defining listen directives.
-
-**Note:** Overriding `env.proxy_listen` and `env.admin_listen` will
-potentially cause `admin.containerPort`, `proxy.http.containerPort` and
-`proxy.tls.containerPort` to become out of sync,
-and therefore must be updated accordingly.
-
-For example, updating to `env.proxy_listen: 0.0.0.0:4444, 0.0.0.0:4443 ssl`
-will need `proxy.http.containerPort: 4444` and `proxy.tls.containerPort: 4443`
-to be set in order for the service definition to work properly.
 
 ## Kong Enterprise Parameters
 
