@@ -65,7 +65,7 @@ admin:
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
-    parameters: {}
+    parameters: []
 
   tls:
     # Enable HTTPS listen for the admin API
@@ -115,7 +115,7 @@ proxy:
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
-    parameters: {}
+    parameters: []
 
   tls:
     # Enable HTTPS listen for the proxy
@@ -463,7 +463,7 @@ manager:
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
-    parameters: {}
+    parameters: []
 
   tls:
     # Enable HTTPS listen for Kong Manager
@@ -509,7 +509,7 @@ portal:
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
-    parameters: {}
+    parameters: []
 
   tls:
     # Enable HTTPS listen for the Developer Portal
@@ -555,7 +555,7 @@ portalapi:
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
-    parameters: {}
+    parameters: []
 
   tls:
     # Enable HTTPS listen for the Developer Portal API
