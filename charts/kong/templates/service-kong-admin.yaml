@@ -1,5 +1,5 @@
-{{- if .Values.admin.enabled -}}
 {{- if .Values.admin.containerPort -}} {{/* TODO: remove legacy admin handling */}}
+{{- if .Values.admin.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -33,7 +33,9 @@ spec:
     protocol: TCP
   selector:
     {{- include "kong.selectorLabels" . | nindent 4 }}
+{{- end -}}
 {{- else -}} {{/* Modern admin handler */}}
+{{- if and .Values.admin.enabled (or .Values.admin.http.enabled .Values.admin.tls.enabled) -}}
 apiVersion: v1
 kind: Service
 metadata:

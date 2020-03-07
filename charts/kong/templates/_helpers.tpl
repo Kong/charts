@@ -56,19 +56,34 @@ Create the name of the service account to use
 Create KONG_SERVICE_LISTEN strings
 */}}
 {{- define "kong.listen" -}}
+  {{- $httpListen := list -}}
+  {{- $tlsListen := list -}}
+  {{- $unifiedListen := list -}}
 
-{{- if and .http.enabled .tls.enabled -}}
-   0.0.0.0:{{ .http.containerPort }},0.0.0.0:{{ .tls.containerPort }} ssl
-{{- else -}}
-{{- if .http.enabled -}}
-   0.0.0.0:{{ .http.containerPort }}
-{{- end -}}
-{{- if .tls.enabled -}}
-   0.0.0.0:{{ .tls.containerPort }} ssl
-{{- end -}}
-{{- end -}}
+  {{- if .http.enabled -}}
+    {{- $httpListen = append $httpListen (printf "0.0.0.0:%d" (int64 .http.containerPort)) -}}
+    {{- range $param := .http.parameters }}
+      {{- $httpListen = append $httpListen $param -}}
+    {{- end -}}
 
-{{- end }}
+    {{- $unifiedListen = append $unifiedListen ($httpListen | join " ") -}}
+  {{- end -}}
+
+  {{- if .tls.enabled -}}
+    {{- $tlsListen = append $tlsListen (printf "0.0.0.0:%d ssl" (int64 .tls.containerPort)) -}}
+    {{- range $param := .tls.parameters }}
+      {{- $tlsListen = append $tlsListen $param -}}
+    {{- end -}}
+
+    {{- $unifiedListen = append $unifiedListen ($tlsListen | join " ") -}}
+  {{- end -}}
+
+  {{- $listenString := ($unifiedListen | join ", ") -}}
+  {{- if eq (len $listenString) 0 -}}
+    {{- $listenString = "off" -}}
+  {{- end -}}
+  {{- $listenString -}}
+{{- end -}}
 
 {{/*
 Create the ingress servicePort value string
@@ -307,7 +322,7 @@ the template that it itself is using form the above sections.
 {{- $_ := set $autoEnv "KONG_LUA_PACKAGE_PATH" "/opt/?.lua;/opt/?/init.lua;;" -}}
 
 {{/*
-TODO: remove legacy behavior at a future date
+TODO: remove legacy admin listen behavior at a future date
 */}}
 
 {{- if .Values.admin.containerPort -}} {{/* Legacy admin listener */}}
