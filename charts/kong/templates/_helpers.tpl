@@ -85,6 +85,28 @@ Create KONG_SERVICE_LISTEN strings
   {{- $listenString -}}
 {{- end -}}
 
+
+{{/*
+Return the local admin API URL, preferring HTTPS if available
+*/}}
+{{- define "kong.adminLocalURL" -}}
+  {{- if .Values.admin.containerPort -}} {{/* TODO: Remove legacy admin behavior */}}
+    {{- if .Values.admin.useTLS -}}
+https://localhost:{{ .Values.admin.containerPort }}
+    {{- else -}}
+http://localhost:{{ .Values.admin.containerPort }}
+    {{- end -}}
+  {{- else -}}
+    {{- if .Values.admin.tls.enabled -}}
+https://localhost:{{ .Values.admin.tls.containerPort }}
+    {{- else if .Values.admin.http.enabled -}}
+http://localhost:{{ .Values.admin.http.containerPort }}
+    {{- else -}}
+http://localhost:9999 # You have an ingress controller enabled, but no admin listens!
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
 {{/*
 Create the ingress servicePort value string
 */}}
@@ -252,11 +274,11 @@ The name of the service used for the ingress controller's validation webhook
   - --ingress-class={{ .Values.ingressController.ingressClass }}
   - --election-id=kong-ingress-controller-leader-{{ .Values.ingressController.ingressClass }}
   # the kong URL points to the kong admin api server
-  {{- if .Values.admin.useTLS }}
-  - --kong-url=https://localhost:{{ .Values.admin.containerPort }}
+  {{- if (or .Values.admin.useTLS .Values.admin.tls.enabled) }} {{/* TODO: remove legacy admin handling */}}
+  - --kong-url={{ template "kong.adminLocalURL" . }}
   - --admin-tls-skip-verify # TODO make this configurable
   {{- else }}
-  - --kong-url=http://localhost:{{ .Values.admin.containerPort }}
+  - --kong-url={{ template "kong.adminLocalURL" . }}
   {{- end }}
   {{- if .Values.ingressController.admissionWebhook.enabled }}
   - --admission-webhook-listen=0.0.0.0:{{ .Values.ingressController.admissionWebhook.port }}
