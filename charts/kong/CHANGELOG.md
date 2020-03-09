@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3.1
+
+### Fixed
+
+* Added missing newline to NOTES.txt template.
+  ([#66](https://github.com/Kong/charts/pull/66)
+
+### Documentation
+
+* Instruct users to create secrets for both the kong-enterprise-k8s and
+  kong-enterprise-edition Docker registries.
+  ([#65](https://github.com/Kong/charts/pull/65)
+* Updated maintainer information.
+
 ## 1.3.0
 
 ### Improvements
