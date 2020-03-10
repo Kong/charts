@@ -118,18 +118,43 @@ and their default .Values.
 
 The following was tested on MacOS in minikube with the following configuration:
 
-1. `minikube start --vm-driver hyperkit --memory='6144mb' --cpus=4`
-1. Install both kong and collector charts then `open http://$(minikube
+1. Start local kubernetes cluster
+
+```console
+$ minikube start --vm-driver hyperkit --memory='6144mb' --cpus=4
+```
+
+2. Install both kong and collector charts then `open http://$(minikube
    ip):32002`
-1. Create kong service and route then add a collector plugin pointing at the
-   collector host and port.
-1. Ensure traffic is being passed to collector by checking the collector logs
+
+```console
+$ helm install my-kong stable/kong --version 0.36.1 -f kong-values.yaml \
+   --set env.admin_api_uri=$(minikube ip):32001
+$ helm install my-release . --set kongAdmin.host=my-kong-kong-admin
+```
+
+3. Create kong service and route then add a collector plugin pointing at the
+   collector, if you have access to 
+   [kong-collector](https://github.com/kong/kong-collector) you can pull this
+   code and run the integration tests using as shown below
+
+```console
+$ KONG_ADMIN_URL=$(minikube ip):32001  \
+   COLLECTOR_URL=my-release-kong-collectorapi:5000  \
+   ENDPOINT_URL=my-release-kong-collectorapi-testendpoints:6000 ./kong-setup.sh
+
+$ KONG_PROXY_URL=$(minikube ip):32000  \
+   KONG_ADMIN_URL=$(minikube ip):32001  \
+   COLLECTOR_URL=$(minikube ip):31555 pipenv run python integration_test.py
+
+```
 
 ## Changelog
 
 ### Unreleased
 
 - Exposed RBAC token
+- Pinned collector at 1.2.0
 
 ### 0.1.3
 
