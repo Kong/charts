@@ -29,6 +29,8 @@ spec:
         {{- if .Values.podAnnotations }}
 {{ toYaml .Values.podAnnotations | indent 8 }}
         {{- end }}
+        kuma.io/gateway: enabled
+        traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         {{- include "kong.metaLabels" . | nindent 8 }}
         app.kubernetes.io/component: app

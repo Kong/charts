@@ -326,9 +326,7 @@ tolerations: []
 nodeSelector: {}
 
 # Annotation to be added to Kong pods
-podAnnotations:
-  traffic.sidecar.istio.io/includeInboundPorts: ""
-  kuma.io/gateway: enabled
+podAnnotations: {}
 
 # Kong pod count
 replicaCount: 1
