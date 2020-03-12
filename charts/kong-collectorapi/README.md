@@ -17,7 +17,7 @@ deployment on a [Kubernetes](http://kubernetes.io) cluster using the
 
 - Kubernetes 1.12+
 - Kong Enterprise version 1.3.0.2+
-  [chart](https://github.com/helm/charts/tree/master/stable/kong)
+  [chart](https://github.com/Kong/charts/tree/master/charts/kong#kong-enterprise)
 
 ## Installing the Chart
 
@@ -35,7 +35,7 @@ To install the chart with the release name `my-release`:
    a port for kong manager to use the Kong Admin API
 
 ```console
-$ helm install my-kong stable/kong --version 0.36.1 -f kong-values.yaml --set env.admin_api_uri=$(minikube ip):32001
+$ helm install my-kong kong/kong --version 1.3.0 -f kong-values.yaml --set env.admin_api_uri=$(minikube ip):32001
 ```
 
 4. Add Kong Brain and Immunity registry secret
@@ -47,11 +47,11 @@ $ kubectl create secret docker-registry bintray-kong-brain-immunity \
     --docker-password=$BINTRAY_KEY
 ```
 
-5. Set up collector, overriding Kong Admin host and port to allow collector to
-   push swagger specs to Kong
+5. Set up collector, overriding Kong Admin host to allow collector to push 
+   swagger specs to Kong
 
 ```console
-$ helm install my-release . --set kongAdminHost=my-kong-kong-admin,kongAdminServicePort=8001
+$ helm install my-release . --set kongAdminHost=my-kong-kong-admin
 ```
 
 6. Add a "Collector Plugin" to Kong, using the Kong Admin API or Kong Manager
@@ -128,9 +128,9 @@ $ minikube start --vm-driver hyperkit --memory='6144mb' --cpus=4
    ip):32002`
 
 ```console
-$ helm install my-kong stable/kong --version 0.36.1 -f kong-values.yaml \
-   --set env.admin_api_uri=$(minikube ip):32001
+$ helm install my-kong kong/kong --version 1.3.0 -f kong-values.yaml --set env.admin_api_uri=$(minikube ip):32001
 $ helm install my-release . --set kongAdmin.host=my-kong-kong-admin
+$ kubectl wait --for=condition=complete job --all && helm test my-release
 ```
 
 3. Create kong service and route then add a collector plugin pointing at the
@@ -144,6 +144,7 @@ $ KONG_ADMIN_URL=$(minikube ip):32001  \
    ENDPOINT_URL=my-release-kong-collectorapi-testendpoints:6000 ./kong-setup.sh
 
 $ KONG_PROXY_URL=$(minikube ip):32000  \
+   KONG_PROXY_INTERNAL_URL=$(minikube ip):8000 \
    KONG_ADMIN_URL=$(minikube ip):32001  \
    COLLECTOR_URL=$(minikube ip):31555 pipenv run python integration_test.py
 
@@ -154,7 +155,9 @@ $ KONG_PROXY_URL=$(minikube ip):32000  \
 ### Unreleased
 
 - Exposed RBAC token
-- Pinned collector at 1.2.0
+- Pinned collector at 1.2.1
+- Added dev portal to enable swagger test
+- Upgrade kong chart
 
 ### 0.1.3
 

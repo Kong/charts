@@ -9,6 +9,8 @@ image:
 enterprise:
   enabled: true
   license_secret: kong-enterprise-license
+  portal:
+    enabled: true
 ingressController:
   enabled: false
 proxy:
@@ -42,6 +44,8 @@ env:
   admin_listen: 0.0.0.0:8001, 0.0.0.0:32001
   admin_gui_flags: '{"IMMUNITY_ENABLED":true}'
   password: my-token
+  portal_auth: basic-auth
+  portal_session_conf: '{"cookie_name":"portal_session","secret":"super-secret","cookie_secure":false,"storage":"kong"}'
 postgresql:
   enabled: true
   postgresqlUsername: kong
