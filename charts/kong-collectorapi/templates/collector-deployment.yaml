@@ -27,6 +27,7 @@ spec:
     {{- end }}
       initContainers:
       {{- include "kong-collectorapi.wait-for-db" . | nindent 6 }}
+      {{- include "kong-collectorapi.wait-for-redis" . | nindent 6 }}
       {{- include "kong-collectorapi.wait-for-kong" . | nindent 6 }}
       containers:
       - args:

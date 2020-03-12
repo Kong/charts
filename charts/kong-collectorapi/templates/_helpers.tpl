@@ -90,3 +90,15 @@ app.kubernetes.io/instance: {{ .Release.Name }}
     value: "{{ .Values.kongAdmin.host }}"
   command: [ "/bin/sh", "-c", "until nslookup $KONG_ADMIN_HOST; do echo waiting for $KONG_ADMIN_HOST; sleep 2; done;" ]
 {{- end -}}
+
+{{- define "kong-collectorapi.wait-for-redis" -}}
+- name: wait-for-redis
+  image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
+  imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
+  env:
+  - name: REDIS_HOST
+    value: "{{ template "kong-collectorapi.redis.fullname" . }}"
+  - name: REDIS_PORT
+    value: "{{ .Values.redis.port }}"
+  command: [ "/bin/sh", "-c", "until nc -zv $REDIS_HOST $REDIS_PORT -w1; do echo 'waiting for db'; sleep 1; done" ]
+{{- end -}}
