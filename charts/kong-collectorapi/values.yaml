@@ -1,13 +1,13 @@
 image:
   repository: kong-docker-kong-brain-immunity-base.bintray.io/kong-brain-immunity
-  tag: 1.2.0
+  tag: 1.2.1
   pullPolicy: IfNotPresent
   # repository: kong-docker-kong-brain-internal-builds.bintray.io/kong-brain
   # tag: master
 
 imagePullSecrets:
   - name: bintray-kong-brain-immunity
-  # - name: bintray-kong-brain-internal
+  - name: bintray-kong-brain-internal
 
 waitImage:
   repository: busybox
@@ -50,4 +50,4 @@ ingress:
 
 # Enable this for running integration tests
 testendpoints:
-  enabled: false
+  enabled: true
