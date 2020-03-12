@@ -478,7 +478,6 @@ manager:
 
   type: NodePort
 
-  # Kong proxy ingress settings.
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
@@ -524,7 +523,6 @@ portal:
 
   type: NodePort
 
-  # Kong proxy ingress settings.
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
@@ -570,7 +568,6 @@ portalapi:
 
   type: NodePort
 
-  # Kong proxy ingress settings.
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
