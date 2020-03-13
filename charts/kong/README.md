@@ -16,7 +16,7 @@ $ helm repo update
 $ helm install kong/kong
 ```
 
-## Table of content
+## Table of contents
 
 - [Prerequisites](#prerequisites)
 - [Helm 2 vs Helm 3](#important-helm-2-vs-helm-3)
