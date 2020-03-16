@@ -11,7 +11,6 @@
 # -----------------------------------------------------------------------------
 # Kong parameters
 # -----------------------------------------------------------------------------
-
 # Specify Kong configurations
 # Kong configurations guide https://docs.konghq.com/latest/configuration
 # Values here take precedence over values from other sections of values.yaml,
@@ -29,6 +28,10 @@ env:
   admin_gui_error_log: /dev/stderr
   portal_api_error_log: /dev/stderr
   prefix: /kong_prefix/
+
+
+# Configure deployment kind (Deployment or ReplicaSet)
+deploymentKind: Deployment
 
 # Specify Kong's Docker image and repository details here
 image:
@@ -80,6 +83,8 @@ admin:
 
 # Specify Kong proxy service configuration
 proxy:
+  # By default service proxy is enabled
+  enabled: true
   # If you want to specify annotations for the proxy service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}

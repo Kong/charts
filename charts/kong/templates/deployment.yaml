@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ .Values.deploymentKind }}
 metadata:
   name: {{ template "kong.fullname" . }}
   labels:
@@ -10,7 +10,7 @@ spec:
   selector:
     matchLabels:
       {{- include "kong.selectorLabels" . | nindent 6 }}
-  {{- if .Values.updateStrategy }}
+  {{- if (and (eq .Values.deploymentKind "Deployment")  .Values.updateStrategy) }}
   strategy:
 {{ toYaml .Values.updateStrategy | indent 4 }}
   {{- end }}

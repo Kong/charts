@@ -224,6 +224,7 @@ Kong can be configured via two methods:
 | admin.ingress.hosts                | List of ingress hosts.                                                                | `[]`                |
 | admin.ingress.path                 | Ingress path.                                                                         | `/`                 |
 | admin.ingress.annotations          | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
+| proxy.enabled                      | Enables k8s service                                                                   | true                |
 | proxy.http.enabled                 | Enables http on the proxy                                                             | true                |
 | proxy.http.servicePort             | Service port to use for http                                                          | 80                  |
 | proxy.http.containerPort           | Container port to use for http                                                        | 8000                |
@@ -288,6 +289,7 @@ For a complete list of all configuration values you can set in the
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| deplomentKind                      | Change k8s deployment kind                                                            |  Deployment         |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
 | autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
 | autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |
