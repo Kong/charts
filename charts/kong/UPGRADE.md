@@ -10,7 +10,7 @@ entirely. While support for the old functionality remains, the chart will show
 a warning about the outdated configuration when running `helm
 install/status/upgrade`.
 
-## Index
+## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
 - [1.4.0](#140)
@@ -25,6 +25,12 @@ migrations up` and then spawns new Kong pods with the updated version. Once
 these pods become ready, they begin processing traffic and old pods are
 terminated. Once this is complete, the chart spawns another job to run `kong
 migrations finish`.
+
+While the migrations themselves are automated, the chart does not automatically
+ensure that you follow the recommended upgrade path. If you are upgrading from
+more than one minor Kong version back, check the [upgrade path
+recommendations for Kong open source](https://github.com/Kong/kong/blob/master/UPGRADE.md#3-suggested-upgrade-path)
+or [Kong Enterprise](https://docs.konghq.com/enterprise/latest/deployment/migrations/).
 
 Users may encounter an error when upgrading which displays a large block of
 text ending with `field is immutable`. This is typically due to a bug with the
@@ -44,7 +50,7 @@ changes to the configuration format in values.yaml. Prior to 1.4.0, the admin
 API allowed a single listen only, which could be toggled between HTTPS and
 HTTP:
 
-```
+```yaml
 admin:
   enabled: false # create Service
   useTLS: true
@@ -54,7 +60,7 @@ admin:
 In 1.4.0+, the admin API allows enabling or disabling the HTTP and TLS listens
 independently. The equivalent of the above configuration is:
 
-```
+```yaml
 admin:
   enabled: false # create Service
   http:
@@ -111,7 +117,7 @@ Kong Enterprise 0.35 (which did not provide a means to set per-workspace
 session configuration) you should convert them to environment variables. For
 example, if you currently have:
 
-```
+```yaml
 portal:
   enabled: true
   portal_auth: basic-auth
@@ -120,7 +126,7 @@ portal:
 You should remove the `portal_auth` and `session_conf_secret` entries and
 replace them with their equivalents under the `env` block:
 
-```
+```yaml
 env:
   portal_auth: basic-auth
   portal_session_conf:
