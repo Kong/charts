@@ -42,6 +42,7 @@ $ helm install kong/kong
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
 - [Changelog](https://github.com/Kong/charts/blob/master/charts/kong/CHANGELOG.md)
+- [Upgrading](https://github.com/Kong/charts/blob/master/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
