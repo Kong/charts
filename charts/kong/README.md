@@ -30,6 +30,7 @@ $ helm install kong/kong
   - [Configuration method](#configuration-method)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
+    - [Kong Service Parameters](#kong-service-parameters)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
   - [The `env` section](#the-env-section)
@@ -203,12 +204,6 @@ Kong can be configured via two methods:
 
 ### Kong parameters
 
-The various `SVC.*` parameters below are common to the various Kong services
-(the admin API, proxy, Kong Manger, the Developer Portal, and the Developer
-Portal API) and define their listener configuration, K8S Service properties,
-and K8S Ingress properties. Defaults are listed only if consistent across the
-individual services: see values.yaml for their individual default values.
-
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | image.repository                   | Kong image                                                                            | `kong`              |
@@ -216,6 +211,33 @@ individual services: see values.yaml for their individual default values.
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
 | replicaCount                       | Kong instance count                                                                   | `1`                 |
+| plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
+| env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
+| runMigrations                      | Run Kong migrations job                                                               | `true`              |
+| waitImage.repository               | Image used to wait for database to become ready                                       | `busybox`           |
+| waitImage.tag                      | Tag for image used to wait for database to become ready                               | `latest`            |
+| waitImage.pullPolicy               | Wait image pull policy                                                                | `IfNotPresent`      |
+| postgresql.enabled                 | Spin up a new postgres instance for Kong                                              | `false`             |
+| dblessConfig.configMap             | Name of an existing ConfigMap containing the `kong.yml` file. This must have the key `kong.yml`.| `` |
+| dblessConfig.config                | Yaml configuration file for the dbless (declarative) configuration of Kong | see in `values.yaml`    |
+
+#### Kong Service Parameters
+
+The various `SVC.*` parameters below are common to the various Kong services
+(the admin API, proxy, Kong Manger, the Developer Portal, and the Developer
+Portal API) and define their listener configuration, K8S Service properties,
+and K8S Ingress properties. Defaults are listed only if consistent across the
+individual services: see values.yaml for their individual default values.
+
+`SVC` below can be substituted with each of:
+* `proxy`
+* `admin`
+* `manager`
+* `portal`
+* `portalapi`
+
+| Parameter                          | Description                                                                           | Default             |
+| ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | SVC.enabled                        | Create Service resource for SVC (admin, proxy, manager, etc.)                         |                     |
 | SVC.http.enabled                   | Enables http on the service                                                           |                     |
 | SVC.http.servicePort               | Service port to use for http                                                          |                     |
@@ -242,15 +264,6 @@ individual services: see values.yaml for their individual default values.
 | SVC.ingress.path                   | Ingress path.                                                                         | `/`                 |
 | SVC.ingress.annotations            | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
 | SVC.annotations                    | Service annotations                                                                   | `{}`                |
-| plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
-| env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
-| runMigrations                      | Run Kong migrations job                                                               | `true`              |
-| waitImage.repository               | Image used to wait for database to become ready                                       | `busybox`           |
-| waitImage.tag                      | Tag for image used to wait for database to become ready                               | `latest`            |
-| waitImage.pullPolicy               | Wait image pull policy                                                                | `IfNotPresent`      |
-| postgresql.enabled                 | Spin up a new postgres instance for Kong                                              | `false`             |
-| dblessConfig.configMap             | Name of an existing ConfigMap containing the `kong.yml` file. This must have the key `kong.yml`.| `` |
-| dblessConfig.config                | Yaml configuration file for the dbless (declarative) configuration of Kong | see in `values.yaml`    |
 
 ### Ingress Controller Parameters
 

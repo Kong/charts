@@ -45,12 +45,13 @@ image:
   # pullSecrets:
   #   - myRegistrKeySecretName
 
-# Specify Kong admin service and listener configuration
+# Specify Kong admin API service and listener configuration
 admin:
-  # Enable creating a Service for the admin API
+  # Enable creating a Kubernetes service for the admin API
   # Disabling this is recommended for most ingress controller configurations
   # Enterprise users that wish to use Kong Manager with the controller should enable this
   enabled: false
+  type: NodePort
   # If you want to specify annotations for the admin service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
@@ -81,9 +82,6 @@ admin:
     parameters:
     - http2
 
-  type: NodePort
-  # Set a nodePort which is available
-  # nodePort: 32444
   # Kong admin ingress settings. Useful if you want to expose the Admin
   # API of Kong outside the k8s cluster.
   ingress:
@@ -100,8 +98,9 @@ admin:
 
 # Specify Kong proxy service and listener configuration
 proxy:
-  # Enable creating a Service for the proxy
+  # Enable creating a Kubernetes service for the proxy
   enabled: true
+  type: LoadBalancer
   # If you want to specify annotations for the proxy service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
@@ -130,8 +129,6 @@ proxy:
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
     parameters:
     - http2
-
-  type: LoadBalancer
 
   # Kong proxy ingress settings.
   # Note: You need this only if you are using another Ingress Controller
@@ -448,8 +445,9 @@ enterprise:
       smtp_password_secret: you-must-create-an-smtp-password
 
 manager:
-  # Enable creating a Service for Kong Manager
+  # Enable creating a Kubernetes service for Kong Manager
   enabled: true
+  type: NodePort
   # If you want to specify annotations for the Manager service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
@@ -476,8 +474,6 @@ manager:
     parameters:
     - http2
 
-  type: NodePort
-
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
@@ -493,8 +489,9 @@ manager:
   externalIPs: []
 
 portal:
-  # Enable creating a Service for the Developer Portal
+  # Enable creating a Kubernetes service for the Developer Portal
   enabled: true
+  type: NodePort
   # If you want to specify annotations for the Portal service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
@@ -521,8 +518,6 @@ portal:
     parameters:
     - http2
 
-  type: NodePort
-
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
@@ -538,8 +533,9 @@ portal:
   externalIPs: []
 
 portalapi:
-  # Enable creating a Service for the Developer Portal API
+  # Enable creating a Kubernetes service for the Developer Portal API
   enabled: true
+  type: NodePort
   # If you want to specify annotations for the Portal API service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
@@ -565,8 +561,6 @@ portalapi:
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
     parameters:
     - http2
-
-  type: NodePort
 
   ingress:
     # Enable/disable exposure using ingress.

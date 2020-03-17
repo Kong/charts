@@ -54,6 +54,7 @@ Create the name of the service account to use
 
 {{/*
 Create KONG_SERVICE_LISTEN strings
+Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
 */}}
 {{- define "kong.listen" -}}
   {{- $httpListen := list -}}
@@ -102,7 +103,7 @@ https://localhost:{{ .Values.admin.tls.containerPort }}
     {{- else if .Values.admin.http.enabled -}}
 http://localhost:{{ .Values.admin.http.containerPort }}
     {{- else -}}
-http://localhost:9999 # You have an ingress controller enabled, but no admin listens!
+http://localhost:9999 # You have no admin listens! The controller will not work unless you set .Values.admin.http.enabled=true or .Values.admin.tls.enabled=true!
     {{- end -}}
   {{- end -}}
 {{- end -}}
@@ -365,7 +366,7 @@ TODO: remove legacy admin listen behavior at a future date
 
 {{- if .Values.enterprise.enabled }}
   {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.listen" .Values.manager) -}}
-  {{- if and (.Values.manager.ingress.enabled) (.Values.enterprise.enabled) }}
+  {{- if .Values.manager.ingress.enabled }}
     {{- $_ := set $autoEnv "KONG_ADMIN_GUI_URL" (include "kong.ingress.serviceUrl" .Values.manager.ingress) -}}
   {{- end -}}
 
@@ -375,10 +376,10 @@ TODO: remove legacy admin listen behavior at a future date
 
   {{- if .Values.enterprise.portal.enabled }}
     {{- $_ := set $autoEnv "KONG_PORTAL" "on" -}}
-        {{- $_ := set $autoEnv "KONG_PORTAL_GUI_LISTEN" (include "kong.listen" .Values.portal) -}}
+      {{- $_ := set $autoEnv "KONG_PORTAL_GUI_LISTEN" (include "kong.listen" .Values.portal) -}}
     {{- $_ := set $autoEnv "KONG_PORTAL_API_LISTEN" (include "kong.listen" .Values.portalapi) -}}
 
-    {{- if and (.Values.portal.ingress.enabled) (.Values.enterprise.enabled) (.Values.enterprise.portal.enabled) }}
+    {{- if .Values.portal.ingress.enabled }}
       {{- $_ := set $autoEnv "KONG_PORTAL_GUI_HOST" .Values.portal.ingress.hostname -}}
       {{- if .Values.portal.ingress.tls }}
         {{- $_ := set $autoEnv "KONG_PORTAL_GUI_PROTOCOL" "https" -}}
@@ -387,7 +388,7 @@ TODO: remove legacy admin listen behavior at a future date
       {{- end }}
     {{- end }}
 
-    {{- if and (.Values.portalapi.ingress.enabled) (.Values.enterprise.enabled) (.Values.enterprise.portal.enabled) }}
+    {{- if .Values.portalapi.ingress.enabled }}
       {{- $_ := set $autoEnv "KONG_PORTAL_API_URL" (include "kong.ingress.serviceUrl" .Values.portalapi.ingress) -}}
     {{- end }}
 
