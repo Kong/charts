@@ -58,7 +58,7 @@ Custom Resource Definitions (CRDs) are handled differently in Helm 2 vs Helm 3. 
 If you want CRDs to be installed, make sure `ingressController.installCRDs` is set to `true` (the default value)
 
 #### Helm 3
-Make sure `ingressController.installCRDs` is set to `false` - note that the default is `false`.
+Make sure `ingressController.installCRDs` is set to `false` - note that the default is `true`.
 You can do so either by passing in a custom `values.yaml` (`-f` when running helm)
 or passing `--set ingressController.installCRDs=false` at the command line.
 **If you do not set this value to `false`, the helm chart will not install correctly.**
