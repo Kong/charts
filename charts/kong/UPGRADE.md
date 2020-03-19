@@ -32,6 +32,10 @@ more than one minor Kong version back, check the [upgrade path
 recommendations for Kong open source](https://github.com/Kong/kong/blob/master/UPGRADE.md#3-suggested-upgrade-path)
 or [Kong Enterprise](https://docs.konghq.com/enterprise/latest/deployment/migrations/).
 
+Although not required, users should upgrade their chart version and Kong
+version indepedently. In the even of any issues, this will help clarify whether
+the issue stems from changes in Kubernetes resources or changes in Kong.
+
 Users may encounter an error when upgrading which displays a large block of
 text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which is [difficult to solve using current Helm
