@@ -276,6 +276,7 @@ section of `values.yaml` file:
 | installCRDs                        | Create CRDs. Regardless of value of this, Helm v3+ will install the CRDs if those are not present already. Use `--skip-crds` with `helm install` if you want to skip CRD creation. | true |
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
 | ingressClass                       | The ingress-class value for controller                                                | kong                                                                         |
+| watchNamespace                     | Limits resource watch to only one namespace                                           | "                                                                            |
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
 | admissionWebhook.failurePolicy     | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)      | Fail                                                                         |
 | admissionWebhook.port              | The port the ingress controller will listen on for admission webhooks                 | 8080                                                                         |

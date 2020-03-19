@@ -290,6 +290,10 @@ The name of the service used for the ingress controller's validation webhook
   # Set the ingress class
   - --ingress-class={{ .Values.ingressController.ingressClass }}
   - --election-id=kong-ingress-controller-leader-{{ .Values.ingressController.ingressClass }}
+  # Set watch-namespace - limit ingress-controller to only one namespace 
+  {{- if .Values.ingressController.watchNamespace }}
+  - --watch-namespace={{ .Values.ingressController.watchNamespace }}
+  {{- end }}
   # the kong URL points to the kong admin api server
   {{- if .Values.admin.useTLS }}
   - --kong-url=https://localhost:{{ .Values.admin.containerPort }}
