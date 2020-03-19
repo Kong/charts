@@ -224,6 +224,10 @@ Kong can be configured via two methods:
 | admin.ingress.hosts                | List of ingress hosts.                                                                | `[]`                |
 | admin.ingress.path                 | Ingress path.                                                                         | `/`                 |
 | admin.ingress.annotations          | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
+| metrics.containerPort              | Container port to serve metrics endpoint on                                           | 9542                |
+| metrics.service.enabled            | Enable service for metrics port                                                       | false               |
+| metrics.service.port               | Service listen port                                                                   | 9542                |
+| metrics.service.type               | Service type                                                                          | ClusterIP           |
 | proxy.http.enabled                 | Enables http on the proxy                                                             | true                |
 | proxy.http.servicePort             | Service port to use for http                                                          | 80                  |
 | proxy.http.containerPort           | Container port to use for http                                                        | 8000                |

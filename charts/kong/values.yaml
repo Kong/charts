@@ -371,6 +371,14 @@ serviceMonitor:
   # labels:
   #   foo: bar
 
+# Toggle Kubernetes service to expose Prometheus metrics
+metrics:
+  containerPort: 9542
+  service:
+    enabled: false
+    port: 9542
+    type: "ClusterIP"
+
 # -----------------------------------------------------------------------------
 # Kong Enterprise parameters
 # -----------------------------------------------------------------------------

@@ -86,7 +86,7 @@ spec:
           protocol: TCP
         {{- end }}
         - name: metrics
-          containerPort: 9542
+          containerPort: {{ .Values.metrics.containerPort }}
           protocol: TCP
         {{- if .Values.ingressController.admissionWebhook.enabled }}
         - name: webhook
