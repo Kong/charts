@@ -16,7 +16,7 @@ $ helm repo update
 $ helm install kong/kong
 ```
 
-## Table of content
+## Table of contents
 
 - [Prerequisites](#prerequisites)
 - [Helm 2 vs Helm 3](#important-helm-2-vs-helm-3)
@@ -42,6 +42,7 @@ $ helm install kong/kong
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
 - [Changelog](https://github.com/Kong/charts/blob/master/charts/kong/CHANGELOG.md)
+- [Upgrading](https://github.com/Kong/charts/blob/master/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites

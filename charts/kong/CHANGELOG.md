@@ -5,13 +5,13 @@
 ### Fixed
 
 * Added missing newline to NOTES.txt template.
-  ([#66](https://github.com/Kong/charts/pull/66)
+  ([#66](https://github.com/Kong/charts/pull/66))
 
 ### Documentation
 
 * Instruct users to create secrets for both the kong-enterprise-k8s and
   kong-enterprise-edition Docker registries.
-  ([#65](https://github.com/Kong/charts/pull/65)
+  ([#65](https://github.com/Kong/charts/pull/65))
 * Updated maintainer information.
 
 ## 1.3.0
@@ -31,7 +31,7 @@
 * Bumped default Kong version to 2.0 and controller version to 0.7.1.
   ([#60](https://github.com/Kong/charts/pull/60))
 * Removed dedicated Portal auth settings, which are unnecessary in modern
-  versions. ([#55](https://github.com/Kong/charts/pull/56))
+  versions. ([#55](https://github.com/Kong/charts/pull/55))
 
 ### Fixed
 
