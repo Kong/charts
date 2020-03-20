@@ -45,25 +45,43 @@ image:
   # pullSecrets:
   #   - myRegistrKeySecretName
 
-# Specify Kong admin service configuration
-# Note: It is recommended to not use the Admin API to configure Kong
-# when using Kong as an Ingress Controller.
+# Specify Kong admin API service and listener configuration
 admin:
+  # Enable creating a Kubernetes service for the admin API
+  # Disabling this is recommended for most ingress controller configurations
+  # Enterprise users that wish to use Kong Manager with the controller should enable this
   enabled: false
+  type: NodePort
   # If you want to specify annotations for the admin service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
 
-  # HTTPS traffic on the admin port
-  # if set to false also set readinessProbe and livenessProbe httpGet scheme's to 'HTTP'
-  useTLS: true
-  servicePort: 8444
-  containerPort: 8444
-  # Kong admin service type
-  type: NodePort
-  # Set a nodePort which is available
-  # nodePort: 32444
+  http:
+    # Enable plaintext HTTP listen for the admin API
+    # Disabling this and using a TLS listen only is recommended for most configuration
+    enabled: false
+    servicePort: 8001
+    containerPort: 8001
+    # Set a nodePort which is available if service type is NodePort
+    # nodePort: 32080
+    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
+    parameters: []
+
+  tls:
+    # Enable HTTPS listen for the admin API
+    enabled: true
+    servicePort: 8444
+    containerPort: 8444
+    # Set a target port for the TLS port in the admin API service, useful when using TLS
+    # termination on an ELB.
+    # overrideServiceTargetPort: 8000
+    # Set a nodePort which is available if service type is NodePort
+    # nodePort: 32443
+    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
+    parameters:
+    - http2
+
   # Kong admin ingress settings. Useful if you want to expose the Admin
   # API of Kong outside the k8s cluster.
   ingress:
@@ -78,22 +96,28 @@ admin:
     # Ingress path.
     path: /
 
-# Specify Kong proxy service configuration
+# Specify Kong proxy service and listener configuration
 proxy:
+  # Enable creating a Kubernetes service for the proxy
+  enabled: true
+  type: LoadBalancer
   # If you want to specify annotations for the proxy service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
 
-  # HTTP plain-text traffic
   http:
+    # Enable plaintext HTTP listen for the proxy
     enabled: true
     servicePort: 80
     containerPort: 8000
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
+    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
+    parameters: []
 
   tls:
+    # Enable HTTPS listen for the proxy
     enabled: true
     servicePort: 443
     containerPort: 8443
@@ -102,8 +126,9 @@ proxy:
     # overrideServiceTargetPort: 8000
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32443
-
-  type: LoadBalancer
+    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
+    parameters:
+    - http2
 
   # Kong proxy ingress settings.
   # Note: You need this only if you are using another Ingress Controller
@@ -420,29 +445,35 @@ enterprise:
       smtp_password_secret: you-must-create-an-smtp-password
 
 manager:
+  # Enable creating a Kubernetes service for Kong Manager
+  enabled: true
+  type: NodePort
   # If you want to specify annotations for the Manager service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
 
-  # HTTP plain-text traffic
   http:
+    # Enable plaintext HTTP listen for Kong Manager
     enabled: true
     servicePort: 8002
     containerPort: 8002
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
+    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
+    parameters: []
 
   tls:
+    # Enable HTTPS listen for Kong Manager
     enabled: true
     servicePort: 8445
     containerPort: 8445
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32443
+    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
+    parameters:
+    - http2
 
-  type: NodePort
-
-  # Kong proxy ingress settings.
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
@@ -458,29 +489,35 @@ manager:
   externalIPs: []
 
 portal:
+  # Enable creating a Kubernetes service for the Developer Portal
+  enabled: true
+  type: NodePort
   # If you want to specify annotations for the Portal service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
 
-  # HTTP plain-text traffic
   http:
+    # Enable plaintext HTTP listen for the Developer Portal
     enabled: true
     servicePort: 8003
     containerPort: 8003
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
+    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
+    parameters: []
 
   tls:
+    # Enable HTTPS listen for the Developer Portal
     enabled: true
     servicePort: 8446
     containerPort: 8446
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32443
+    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
+    parameters:
+    - http2
 
-  type: NodePort
-
-  # Kong proxy ingress settings.
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
@@ -496,29 +533,35 @@ portal:
   externalIPs: []
 
 portalapi:
+  # Enable creating a Kubernetes service for the Developer Portal API
+  enabled: true
+  type: NodePort
   # If you want to specify annotations for the Portal API service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
 
-  # HTTP plain-text traffic
   http:
+    # Enable plaintext HTTP listen for the Developer Portal API
     enabled: true
     servicePort: 8004
     containerPort: 8004
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
+    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
+    parameters: []
 
   tls:
+    # Enable HTTPS listen for the Developer Portal API
     enabled: true
     servicePort: 8447
     containerPort: 8447
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32443
+    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
+    parameters:
+    - http2
 
-  type: NodePort
-
-  # Kong proxy ingress settings.
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false

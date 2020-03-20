@@ -1,4 +1,5 @@
 {{- if .Values.enterprise.enabled }}
+{{- if and .Values.portalapi.enabled (or .Values.portalapi.http.enabled .Values.portalapi.tls.enabled) -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -47,4 +48,5 @@ spec:
   {{- end }}
   selector:
     {{- include "kong.selectorLabels" . | nindent 4 }}
+{{- end -}}
 {{- end -}}
