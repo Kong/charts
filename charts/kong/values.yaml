@@ -356,6 +356,11 @@ podAnnotations: {}
 # Kong pod count
 replicaCount: 1
 
+# Annotations to be added to Kong deployment
+deploymentAnnotations:
+  kuma.io/gateway: enabled
+  traffic.sidecar.istio.io/includeInboundPorts: ""
+
 # Enable autoscaling using HorizontalPodAutoscaler
 autoscaling:
   enabled: false

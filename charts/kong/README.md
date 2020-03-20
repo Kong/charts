@@ -307,6 +307,7 @@ For a complete list of all configuration values you can set in the
 | livenessProbe                      | Kong liveness probe                                                                   |                     |
 | affinity                           | Node/pod affinities                                                                   |                     |
 | nodeSelector                       | Node labels for pod assignment                                                        | `{}`                |
+| deploymentAnnotations              | Annotations to add to deployment                                                      |  see `values.yaml`  |
 | podAnnotations                     | Annotations to add to each pod                                                        | `{}`                |
 | resources                          | Pod resource requests & limits                                                        | `{}`                |
 | tolerations                        | List of node taints to tolerate                                                       | `[]`                |
