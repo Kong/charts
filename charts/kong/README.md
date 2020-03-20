@@ -18,22 +18,30 @@ $ helm install kong/kong
 
 ## Table of content
 
+- [Kong for Kubernetes](#kong-for-kubernetes)
+- [TL;DR;](#tldr)
+- [Table of content](#table-of-content)
 - [Prerequisites](#prerequisites)
-- [Helm 2 vs Helm 3](#important-helm-2-vs-helm-3)
+- [Important: Helm 2 vs Helm 3](#important-helm-2-vs-helm-3)
+    - [Helm 2](#helm-2)
+    - [Helm 3](#helm-3)
 - [Install](#install)
 - [Uninstall](#uninstall)
-- [Kong Enterprise](#kong-enterprise)
 - [FAQs](#faqs)
+- [Kong Enterprise](#kong-enterprise)
 - [Deployment Options](#deployment-options)
   - [Database](#database)
+    - [DB-less  deployment](#db-less-deployment)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
 - [Configuration](#configuration)
-  - [Kong Parameters](#kong-parameters)
+  - [Kong parameters](#kong-parameters)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
-  - [The `env` section](#the-env-section)
+    - [The `env` section](#the-env-section)
+      - [Admin/Proxy listener override](#adminproxy-listener-override)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
+  - [Overview](#overview)
   - [Prerequisites](#prerequisites-1)
     - [Kong Enterprise License](#kong-enterprise-license)
     - [Kong Enterprise Docker registry access](#kong-enterprise-docker-registry-access)
@@ -41,7 +49,6 @@ $ helm install kong/kong
   - [RBAC](#rbac)
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
-- [Changelog](https://github.com/Kong/charts/blob/master/charts/kong/CHANGELOG.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
@@ -63,7 +70,7 @@ You can do so either by passing in a custom `values.yaml` (`-f` when running hel
 or passing `--set ingressController.installCRDs=false` at the command line.
 **If you do not set this value to `false`, the helm chart will not install correctly.**
 
-Use `--skip-crds` with `helm install` if you want to skip CRD creation. 
+Use `--skip-crds` with `helm install` if you want to skip CRD creation.
 
 ## Install
 
@@ -276,7 +283,7 @@ section of `values.yaml` file:
 | installCRDs                        | Create CRDs. Regardless of value of this, Helm v3+ will install the CRDs if those are not present already. Use `--skip-crds` with `helm install` if you want to skip CRD creation. | true |
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
 | ingressClass                       | The ingress-class value for controller                                                | kong                                                                         |
-| watchNamespace                     | Limits resource watch to only one namespace                                           | "                                                                            |
+| args                               | Map of ingress-controller cli arguments                                               | {}                                                                           |
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
 | admissionWebhook.failurePolicy     | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)      | Fail                                                                         |
 | admissionWebhook.port              | The port the ingress controller will listen on for admission webhooks                 | 8080                                                                         |
