@@ -13,7 +13,12 @@ This chart bootstraps all the components needed to run Kong on a
 ```bash
 $ helm repo add kong https://charts.konghq.com
 $ helm repo update
+
+# Helm 2
 $ helm install kong/kong
+
+# Helm 3
+$ helm install kong/kong --generate-name --set ingressController.installCRDs=false
 ```
 
 ## Table of contents
@@ -54,32 +59,46 @@ $ helm install kong/kong
 
 ## Important: Helm 2 vs Helm 3
 
-Custom Resource Definitions (CRDs) are handled differently in Helm 2 vs Helm 3. In short:
+Custom Resource Definitions (CRDs) are handled differently in Helm 2 vs Helm 3.
 
 #### Helm 2
-If you want CRDs to be installed, make sure `ingressController.installCRDs` is set to `true` (the default value)
+
+If you want CRDs to be installed,
+make sure `ingressController.installCRDs` is set to `true` (the default value).
+Set this value to `false` to skip installing CRDs.
 
 #### Helm 3
-Make sure `ingressController.installCRDs` is set to `false` - note that the default is `true`.
-You can do so either by passing in a custom `values.yaml` (`-f` when running helm)
-or passing `--set ingressController.installCRDs=false` at the command line.
+
+Make sure `ingressController.installCRDs` is set to `false`,
+note that the default is `true`.
+You can do so either by passing in a custom `values.yaml`
+(`-f` when running helm)
+or by passing `--set ingressController.installCRDs=false`
+at the command line.
+
 **If you do not set this value to `false`, the helm chart will not install correctly.**
 
-Use `--skip-crds` with `helm install` if you want to skip CRD creation. 
+Use helm CLI flag `--skip-crds` with `helm install` if you want to skip
+CRD creation while creating a release.
 
 ## Install
 
-To install the chart with the release name `my-release`:
+To install Kong:
 
 ```bash
 $ helm repo add kong https://charts.konghq.com
 $ helm repo update
+
+# Helm 2
 $ helm install kong/kong
+
+# Helm 3
+$ helm install kong/kong --generate-name --set ingressController.installCRDs=false
 ```
 
 ## Uninstall
 
-To uninstall/delete the `my-release` deployment:
+To uninstall/delete a Helm release `my-release`:
 
 ```bash
 $ helm delete my-release
