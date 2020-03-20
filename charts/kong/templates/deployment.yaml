@@ -5,6 +5,10 @@ metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: app
+  annotations:
+    {{- if .Values.deploymentAnnotations }}
+{{ toYaml .Values.deploymentAnnotations | indent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
