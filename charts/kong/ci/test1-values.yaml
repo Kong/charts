@@ -2,6 +2,8 @@
 # - HPA enabled
 autoscaling:
   enabled: true
+  args:
+    - --alsologtostderr
 # - ingressController deploys without a database (default)
 ingressController:
   enabled: true
