@@ -191,6 +191,7 @@ ingressController:
   image:
     repository: kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller
     tag: 0.7.1
+  args: []
 
   # Specify Kong Ingress Controller configuration via environment variables
   env: {}

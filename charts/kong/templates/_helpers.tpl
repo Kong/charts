@@ -293,12 +293,17 @@ The name of the service used for the ingress controller's validation webhook
   # the kong URL points to the kong admin api server
   {{- if .Values.admin.useTLS }}
   - --kong-url=https://localhost:{{ .Values.admin.containerPort }}
-  - --admin-tls-skip-verify # TODO make this configurable
+  - --admin-tls-skip-verify
   {{- else }}
   - --kong-url=http://localhost:{{ .Values.admin.containerPort }}
   {{- end }}
   {{- if .Values.ingressController.admissionWebhook.enabled }}
   - --admission-webhook-listen=0.0.0.0:{{ .Values.ingressController.admissionWebhook.port }}
+  {{- end }}
+  {{ if .Values.ingressController.args}}
+  {{- range $val := .Values.ingressController.args }}
+  - {{ $val }}
+  {{- end }}
   {{- end }}
   env:
   - name: POD_NAME
