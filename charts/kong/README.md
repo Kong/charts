@@ -293,7 +293,6 @@ section of `values.yaml` file:
 | Parameter                          | Description                                                                           | Default                                                                      |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | enabled                            | Deploy the ingress controller, rbac and crd                                           | true                                                                         |
-| replicaCount                       | Number of desired ingress controllers                                                 | 1                                                                            |
 | image.repository                   | Docker image with the ingress controller                                              | kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller |
 | image.tag                          | Version of the ingress controller                                                     | 0.7.0                                                                        |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
