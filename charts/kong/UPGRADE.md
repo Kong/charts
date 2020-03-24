@@ -45,6 +45,33 @@ clear it.
 
 ## 1.4.0
 
+### `strip_path` now defaults to `false` for controller-managed routes
+
+1.4.0 defaults to version 0.8 of the ingress controller, which changes the
+default value of the `strip_path` route setting from `true` to `false`. To
+understand how this works in practice, compare the upstream path for these
+requests when `strip_path` is toggled:
+
+| Ingress path | `strip_path` | Request path | Upstream path |
+|--------------|--------------|--------------|---------------|
+| /foo/bar     | true         | /foo/bar/baz | /baz          |
+| /foo/bar     | false        | /foo/bar/baz | /foo/bar/baz  |
+
+This change brings the controller in line with the Kubernetes Ingress
+specification, which expects that controllers will not modify the request
+before passing it upstream unless explicitly configured to do so.
+
+To preserve your existing route handling, you should add this annotation to
+your ingress resources:
+
+```
+konghq.com/strip-path: true
+```
+
+This is a new annotation that is equivalent to the `route.strip_path` setting
+in KongIngress resources. Note that if you have already set this to `false`,
+you should leave it as-is and not add an annotation to the ingress.
+
 ### Changes to Kong service configuration 
 
 1.4.0 reworks the templates and configuration used to generate Kong
