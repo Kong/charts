@@ -1,5 +1,50 @@
 # Changelog
 
+## 1.4.0
+
+### Improvements
+
+* Service and listen configuration now use a unified configuration format.
+  Listen configuration now supports specifying parameters. Kubernetes service
+  creation can now be enabled or disabled for all Kong services. Users should
+  review the [1.4.0 upgrade
+  guide](https://github.com/Kong/charts/blob/next/charts/kong/UPGRADE.md#changes-to-kong-service-configuration)
+  for details on how to update their values.yaml.
+  ([#72](https://github.com/Kong/charts/pull/72))
+* Updated the default controller version to 0.8. This adds new
+  KongClusterPlugin and TCPIngress CRDs and RBAC permissions for them. Users
+  should also note that `strip_path` now defaults to disabled, which will
+  likely break existing configuration. See [the controller
+  changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/master/CHANGELOG.md#080---20200325)
+  and [upgrade-guide](https://github.com/Kong/charts/blob/next/charts/kong/UPGRADE.md#strip_path-now-defaults-to-false-for-controller-managed-routes)
+  for full details.
+  ([#77](https://github.com/Kong/charts/pull/77))
+* Added support for user-supplied ingress controller CLI arguments.
+  ([#79](https://github.com/Kong/charts/pull/79))
+* Added support for annotating the chart's deployment.
+  ([#81](https://github.com/Kong/charts/pull/81))
+* Switched to the Bitnami Postgres chart, as the chart in Helm's repository has
+  [moved
+  there](https://github.com/helm/charts/tree/master/stable/postgresql#this-helm-chart-is-deprecated).
+  ([#82](https://github.com/Kong/charts/pull/82))
+
+### Fixed
+
+* Corrected the app version in Chart.yaml.
+  ([#86](https://github.com/Kong/charts/pull/86))
+
+### Documentation
+
+* Fixed incorrect default value for `installCRDs`.
+  ([#78](https://github.com/Kong/charts/pull/78))
+* Added detailed upgrade guide covering breaking changes and deprecations.
+  ([#74](https://github.com/Kong/charts/pull/74))
+* Improved installation steps for Helm 2 and Helm 3.
+  ([#83](https://github.com/Kong/charts/pull/83))
+  ([#84](https://github.com/Kong/charts/pull/84))
+* Remove outdated `ingressController.replicaCount` setting.
+  ([#87](https://github.com/Kong/charts/pull/87))
+
 ## 1.3.1
 
 ### Fixed
