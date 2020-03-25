@@ -13,10 +13,15 @@ This chart bootstraps all the components needed to run Kong on a
 ```bash
 $ helm repo add kong https://charts.konghq.com
 $ helm repo update
+
+# Helm 2
 $ helm install kong/kong
+
+# Helm 3
+$ helm install kong/kong --generate-name --set ingressController.installCRDs=false
 ```
 
-## Table of content
+## Table of contents
 
 - [Prerequisites](#prerequisites)
 - [Helm 2 vs Helm 3](#important-helm-2-vs-helm-3)
@@ -30,6 +35,7 @@ $ helm install kong/kong
   - [Configuration method](#configuration-method)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
+    - [Kong Service Parameters](#kong-service-parameters)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
   - [The `env` section](#the-env-section)
@@ -42,6 +48,7 @@ $ helm install kong/kong
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
 - [Changelog](https://github.com/Kong/charts/blob/master/charts/kong/CHANGELOG.md)
+- [Upgrading](https://github.com/Kong/charts/blob/master/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
@@ -52,32 +59,46 @@ $ helm install kong/kong
 
 ## Important: Helm 2 vs Helm 3
 
-Custom Resource Definitions (CRDs) are handled differently in Helm 2 vs Helm 3. In short:
+Custom Resource Definitions (CRDs) are handled differently in Helm 2 vs Helm 3.
 
 #### Helm 2
-If you want CRDs to be installed, make sure `ingressController.installCRDs` is set to `true` (the default value)
+
+If you want CRDs to be installed,
+make sure `ingressController.installCRDs` is set to `true` (the default value).
+Set this value to `false` to skip installing CRDs.
 
 #### Helm 3
-Make sure `ingressController.installCRDs` is set to `false` - note that the default is `false`.
-You can do so either by passing in a custom `values.yaml` (`-f` when running helm)
-or passing `--set ingressController.installCRDs=false` at the command line.
+
+Make sure `ingressController.installCRDs` is set to `false`,
+note that the default is `true`.
+You can do so either by passing in a custom `values.yaml`
+(`-f` when running helm)
+or by passing `--set ingressController.installCRDs=false`
+at the command line.
+
 **If you do not set this value to `false`, the helm chart will not install correctly.**
 
-Use `--skip-crds` with `helm install` if you want to skip CRD creation.
+Use helm CLI flag `--skip-crds` with `helm install` if you want to skip
+CRD creation while creating a release.
 
 ## Install
 
-To install the chart with the release name `my-release`:
+To install Kong:
 
 ```bash
 $ helm repo add kong https://charts.konghq.com
 $ helm repo update
+
+# Helm 2
 $ helm install kong/kong
+
+# Helm 3
+$ helm install kong/kong --generate-name --set ingressController.installCRDs=false
 ```
 
 ## Uninstall
 
-To uninstall/delete the `my-release` deployment:
+To uninstall/delete a Helm release `my-release`:
 
 ```bash
 $ helm delete my-release
@@ -210,43 +231,6 @@ Kong can be configured via two methods:
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
 | replicaCount                       | Kong instance count                                                                   | `1`                 |
-| admin.enabled                      | Create Admin Service                                                                  | `false`             |
-| admin.useTLS                       | Secure Admin traffic                                                                  | `true`              |
-| admin.servicePort                  | TCP port on which the Kong admin service is exposed                                   | `8444`              |
-| admin.containerPort                | TCP port on which Kong app listens for admin traffic                                  | `8444`              |
-| admin.nodePort                     | Node port when service type is `NodePort`                                             |                     |
-| admin.hostPort                     | Host port to use for admin traffic                                                    |                     |
-| admin.type                         | k8s service type, Options: NodePort, ClusterIP, LoadBalancer                          | `NodePort`          |
-| admin.loadBalancerIP               | Will reuse an existing ingress static IP for the admin service                        | `null`              |
-| admin.loadBalancerSourceRanges     | Limit admin access to CIDRs if set and service type is `LoadBalancer`                 | `[]`                |
-| admin.ingress.enabled              | Enable ingress resource creation (works with proxy.type=ClusterIP)                    | `false`             |
-| admin.ingress.tls                  | Name of secret resource, containing TLS secret                                        |                     |
-| admin.ingress.hosts                | List of ingress hosts.                                                                | `[]`                |
-| admin.ingress.path                 | Ingress path.                                                                         | `/`                 |
-| admin.ingress.annotations          | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
-| proxy.http.enabled                 | Enables http on the proxy                                                             | true                |
-| proxy.http.servicePort             | Service port to use for http                                                          | 80                  |
-| proxy.http.containerPort           | Container port to use for http                                                        | 8000                |
-| proxy.http.nodePort                | Node port to use for http                                                             | 32080               |
-| proxy.http.hostPort                | Host port to use for http                                                             |                     |
-| proxy.tls.enabled                  | Enables TLS on the proxy                                                              | true                |
-| proxy.tls.containerPort            | Container port to use for TLS                                                         | 8443                |
-| proxy.tls.servicePort              | Service port to use for TLS                                                           | 8443                |
-| proxy.tls.nodePort                 | Node port to use for TLS                                                              | 32443               |
-| proxy.tls.hostPort                 | Host port to use for TLS                                                              |                     |
-| proxy.tls.overrideServiceTargetPort| Override service port to use for TLS without touching Kong containerPort              |                     |
-| proxy.type                         | k8s service type. Options: NodePort, ClusterIP, LoadBalancer                          | `LoadBalancer`      |
-| proxy.clusterIP                    | k8s service clusterIP                                                                 |                     |
-| proxy.loadBalancerSourceRanges     | Limit proxy access to CIDRs if set and service type is `LoadBalancer`                 | `[]`                |
-| proxy.loadBalancerIP               | To reuse an existing ingress static IP for the admin service                          |                     |
-| proxy.externalIPs                  | IPs for which nodes in the cluster will also accept traffic for the proxy             | `[]`                |
-| proxy.externalTrafficPolicy        | k8s service's externalTrafficPolicy. Options: Cluster, Local                          |                     |
-| proxy.ingress.enabled              | Enable ingress resource creation (works with proxy.type=ClusterIP)                    | `false`             |
-| proxy.ingress.tls                  | Name of secret resource, containing TLS secret                                        |                     |
-| proxy.ingress.hosts                | List of ingress hosts.                                                                | `[]`                |
-| proxy.ingress.path                 | Ingress path.                                                                         | `/`                 |
-| proxy.ingress.annotations          | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
-| proxy.annotations                  | Service annotations                                                                   | `{}`                |
 | plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
 | runMigrations                      | Run Kong migrations job                                                               | `true`              |
@@ -257,6 +241,50 @@ Kong can be configured via two methods:
 | dblessConfig.configMap             | Name of an existing ConfigMap containing the `kong.yml` file. This must have the key `kong.yml`.| `` |
 | dblessConfig.config                | Yaml configuration file for the dbless (declarative) configuration of Kong | see in `values.yaml`    |
 
+#### Kong Service Parameters
+
+The various `SVC.*` parameters below are common to the various Kong services
+(the admin API, proxy, Kong Manger, the Developer Portal, and the Developer
+Portal API) and define their listener configuration, K8S Service properties,
+and K8S Ingress properties. Defaults are listed only if consistent across the
+individual services: see values.yaml for their individual default values.
+
+`SVC` below can be substituted with each of:
+* `proxy`
+* `admin`
+* `manager`
+* `portal`
+* `portalapi`
+
+| Parameter                          | Description                                                                           | Default             |
+| ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| SVC.enabled                        | Create Service resource for SVC (admin, proxy, manager, etc.)                         |                     |
+| SVC.http.enabled                   | Enables http on the service                                                           |                     |
+| SVC.http.servicePort               | Service port to use for http                                                          |                     |
+| SVC.http.containerPort             | Container port to use for http                                                        |                     |
+| SVC.http.nodePort                  | Node port to use for http                                                             |                     |
+| SVC.http.hostPort                  | Host port to use for http                                                             |                     |
+| SVC.http.parameters                | Array of additional listen parameters                                                 | `[]`                |
+| SVC.tls.enabled                    | Enables TLS on the service                                                            |                     |
+| SVC.tls.containerPort              | Container port to use for TLS                                                         |                     |
+| SVC.tls.servicePort                | Service port to use for TLS                                                           |                     |
+| SVC.tls.nodePort                   | Node port to use for TLS                                                              |                     |
+| SVC.tls.hostPort                   | Host port to use for TLS                                                              |                     |
+| SVC.tls.overrideServiceTargetPort  | Override service port to use for TLS without touching Kong containerPort              |                     |
+| SVC.tls.parameters                 | Array of additional listen parameters                                                 | `["http2"]`         |
+| SVC.type                           | k8s service type. Options: NodePort, ClusterIP, LoadBalancer                          |                     |
+| SVC.clusterIP                      | k8s service clusterIP                                                                 |                     |
+| SVC.loadBalancerSourceRanges       | Limit service access to CIDRs if set and service type is `LoadBalancer`               | `[]`                |
+| SVC.loadBalancerIP                 | Reuse an existing ingress static IP for the service                                   |                     |
+| SVC.externalIPs                    | IPs for which nodes in the cluster will also accept traffic for the servic            | `[]`                |
+| SVC.externalTrafficPolicy          | k8s service's externalTrafficPolicy. Options: Cluster, Local                          |                     |
+| SVC.ingress.enabled                | Enable ingress resource creation (works with SVC.type=ClusterIP)                      | `false`             |
+| SVC.ingress.tls                    | Name of secret resource, containing TLS secret                                        |                     |
+| SVC.ingress.hosts                  | List of ingress hosts.                                                                | `[]`                |
+| SVC.ingress.path                   | Ingress path.                                                                         | `/`                 |
+| SVC.ingress.annotations            | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
+| SVC.annotations                    | Service annotations                                                                   | `{}`                |
+
 ### Ingress Controller Parameters
 
 All of the following properties are nested under the `ingressController`
@@ -265,7 +293,6 @@ section of `values.yaml` file:
 | Parameter                          | Description                                                                           | Default                                                                      |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | enabled                            | Deploy the ingress controller, rbac and crd                                           | true                                                                         |
-| replicaCount                       | Number of desired ingress controllers                                                 | 1                                                                            |
 | image.repository                   | Docker image with the ingress controller                                              | kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller |
 | image.tag                          | Version of the ingress controller                                                     | 0.7.0                                                                        |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
@@ -299,6 +326,7 @@ For a complete list of all configuration values you can set in the
 | livenessProbe                      | Kong liveness probe                                                                   |                     |
 | affinity                           | Node/pod affinities                                                                   |                     |
 | nodeSelector                       | Node labels for pod assignment                                                        | `{}`                |
+| deploymentAnnotations              | Annotations to add to deployment                                                      |  see `values.yaml`  |
 | podAnnotations                     | Annotations to add to each pod                                                        | `{}`                |
 | resources                          | Pod resource requests & limits                                                        | `{}`                |
 | tolerations                        | List of node taints to tolerate                                                       | `[]`                |
@@ -323,7 +351,7 @@ and upper-cased before setting the environment variable.
 Furthermore, all `kong.env` parameters can also accept a mapping instead of a
 value to ensure the parameters can be set through configmaps and secrets.
 
-An example :
+An example:
 
 ```yaml
 kong:
@@ -341,22 +369,6 @@ For complete list of Kong configurations please check the
 [Kong configuration docs](https://docs.konghq.com/latest/configuration).
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
-
-##### Admin/Proxy listener override
-
-If you specify `env.admin_listen` or `env.proxy_listen`, this chart will use
-the value provided by you as opposed to constructing a listen variable
-from fields like `proxy.http.containerPort` and `proxy.http.enabled`.
-This allows you to be more prescriptive when defining listen directives.
-
-**Note:** Overriding `env.proxy_listen` and `env.admin_listen` will
-potentially cause `admin.containerPort`, `proxy.http.containerPort` and
-`proxy.tls.containerPort` to become out of sync,
-and therefore must be updated accordingly.
-
-For example, updating to `env.proxy_listen: 0.0.0.0:4444, 0.0.0.0:4443 ssl`
-will need `proxy.http.containerPort: 4444` and `proxy.tls.containerPort: 4443`
-to be set in order for the service definition to work properly.
 
 ## Kong Enterprise Parameters
 

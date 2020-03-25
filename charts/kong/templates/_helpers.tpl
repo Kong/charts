@@ -53,76 +53,60 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Create the KONG_PROXY_LISTEN value string
+Create KONG_SERVICE_LISTEN strings
+Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
 */}}
-{{- define "kong.kongProxyListenValue" -}}
+{{- define "kong.listen" -}}
+  {{- $httpListen := list -}}
+  {{- $tlsListen := list -}}
+  {{- $unifiedListen := list -}}
 
-{{- if and .Values.proxy.http.enabled .Values.proxy.tls.enabled -}}
-   0.0.0.0:{{ .Values.proxy.http.containerPort }},0.0.0.0:{{ .Values.proxy.tls.containerPort }} ssl http2
-{{- else -}}
-{{- if .Values.proxy.http.enabled -}}
-   0.0.0.0:{{ .Values.proxy.http.containerPort }}
-{{- end -}}
-{{- if .Values.proxy.tls.enabled -}}
-   0.0.0.0:{{ .Values.proxy.tls.containerPort }} ssl http2
-{{- end -}}
+  {{- if .http.enabled -}}
+    {{- $httpListen = append $httpListen (printf "0.0.0.0:%d" (int64 .http.containerPort)) -}}
+    {{- range $param := .http.parameters }}
+      {{- $httpListen = append $httpListen $param -}}
+    {{- end -}}
+
+    {{- $unifiedListen = append $unifiedListen ($httpListen | join " ") -}}
+  {{- end -}}
+
+  {{- if .tls.enabled -}}
+    {{- $tlsListen = append $tlsListen (printf "0.0.0.0:%d ssl" (int64 .tls.containerPort)) -}}
+    {{- range $param := .tls.parameters }}
+      {{- $tlsListen = append $tlsListen $param -}}
+    {{- end -}}
+
+    {{- $unifiedListen = append $unifiedListen ($tlsListen | join " ") -}}
+  {{- end -}}
+
+  {{- $listenString := ($unifiedListen | join ", ") -}}
+  {{- if eq (len $listenString) 0 -}}
+    {{- $listenString = "off" -}}
+  {{- end -}}
+  {{- $listenString -}}
 {{- end -}}
 
-{{- end -}}
 
 {{/*
-Create the KONG_ADMIN_GUI_LISTEN value string
+Return the local admin API URL, preferring HTTPS if available
 */}}
-{{- define "kong.kongManagerListenValue" -}}
-
-{{- if and .Values.manager.http.enabled .Values.manager.tls.enabled -}}
-   0.0.0.0:{{ .Values.manager.http.containerPort }},0.0.0.0:{{ .Values.manager.tls.containerPort }} ssl
-{{- else -}}
-{{- if .Values.manager.http.enabled -}}
-   0.0.0.0:{{ .Values.manager.http.containerPort }}
+{{- define "kong.adminLocalURL" -}}
+  {{- if .Values.admin.containerPort -}} {{/* TODO: Remove legacy admin behavior */}}
+    {{- if .Values.admin.useTLS -}}
+https://localhost:{{ .Values.admin.containerPort }}
+    {{- else -}}
+http://localhost:{{ .Values.admin.containerPort }}
+    {{- end -}}
+  {{- else -}}
+    {{- if .Values.admin.tls.enabled -}}
+https://localhost:{{ .Values.admin.tls.containerPort }}
+    {{- else if .Values.admin.http.enabled -}}
+http://localhost:{{ .Values.admin.http.containerPort }}
+    {{- else -}}
+http://localhost:9999 # You have no admin listens! The controller will not work unless you set .Values.admin.http.enabled=true or .Values.admin.tls.enabled=true!
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
-{{- if .Values.manager.tls.enabled -}}
-   0.0.0.0:{{ .Values.manager.tls.containerPort }} ssl
-{{- end -}}
-{{- end -}}
-
-{{- end }}
-
-{{/*
-Create the KONG_PORTAL_GUI_LISTEN value string
-*/}}
-{{- define "kong.kongPortalListenValue" -}}
-
-{{- if and .Values.portal.http.enabled .Values.portal.tls.enabled -}}
-   0.0.0.0:{{ .Values.portal.http.containerPort }},0.0.0.0:{{ .Values.portal.tls.containerPort }} ssl
-{{- else -}}
-{{- if .Values.portal.http.enabled -}}
-   0.0.0.0:{{ .Values.portal.http.containerPort }}
-{{- end -}}
-{{- if .Values.portal.tls.enabled -}}
-   0.0.0.0:{{ .Values.portal.tls.containerPort }} ssl
-{{- end -}}
-{{- end -}}
-
-{{- end }}
-
-{{/*
-Create the KONG_PORTAL_API_LISTEN value string
-*/}}
-{{- define "kong.kongPortalApiListenValue" -}}
-
-{{- if and .Values.portalapi.http.enabled .Values.portalapi.tls.enabled -}}
-   0.0.0.0:{{ .Values.portalapi.http.containerPort }},0.0.0.0:{{ .Values.portalapi.tls.containerPort }} ssl
-{{- else -}}
-{{- if .Values.portalapi.http.enabled -}}
-   0.0.0.0:{{ .Values.portalapi.http.containerPort }}
-{{- end -}}
-{{- if .Values.portalapi.tls.enabled -}}
-   0.0.0.0:{{ .Values.portalapi.tls.containerPort }} ssl
-{{- end -}}
-{{- end -}}
-
-{{- end }}
 
 {{/*
 Create the ingress servicePort value string
@@ -291,11 +275,11 @@ The name of the service used for the ingress controller's validation webhook
   - --ingress-class={{ .Values.ingressController.ingressClass }}
   - --election-id=kong-ingress-controller-leader-{{ .Values.ingressController.ingressClass }}
   # the kong URL points to the kong admin api server
-  {{- if .Values.admin.useTLS }}
-  - --kong-url=https://localhost:{{ .Values.admin.containerPort }}
+  {{- if (or .Values.admin.useTLS .Values.admin.tls.enabled) }} {{/* TODO: remove legacy admin handling */}}
+  - --kong-url={{ template "kong.adminLocalURL" . }}
   - --admin-tls-skip-verify
   {{- else }}
-  - --kong-url=http://localhost:{{ .Values.admin.containerPort }}
+  - --kong-url={{ template "kong.adminLocalURL" . }}
   {{- end }}
   {{- if .Values.ingressController.admissionWebhook.enabled }}
   - --admission-webhook-listen=0.0.0.0:{{ .Values.ingressController.admissionWebhook.port }}
@@ -365,56 +349,54 @@ the template that it itself is using form the above sections.
 
 {{- $_ := set $autoEnv "KONG_LUA_PACKAGE_PATH" "/opt/?.lua;/opt/?/init.lua;;" -}}
 
-{{- if .Values.admin.useTLS }}
-  {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (printf "0.0.0.0:%d ssl" (int64 .Values.admin.containerPort)) -}}
-{{- else }}
-  {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (printf "0.0.0.0:%d" (int64 .Values.admin.containerPort)) -}}
+{{/*
+TODO: remove legacy admin listen behavior at a future date
+*/}}
+
+{{- if .Values.admin.containerPort -}} {{/* Legacy admin listener */}}
+  {{- if .Values.admin.useTLS -}}
+    {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (printf "0.0.0.0:%d ssl" (int64 .Values.admin.containerPort)) -}}
+  {{- else -}}
+    {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (printf "0.0.0.0:%d" (int64 .Values.admin.containerPort)) -}}
+  {{- end -}}
+{{- else -}} {{/* Modern admin listener */}}
+  {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (include "kong.listen" .Values.admin) -}}
 {{- end -}}
 
 {{- if .Values.admin.ingress.enabled }}
   {{- $_ := set $autoEnv "KONG_ADMIN_API_URI" (include "kong.ingress.serviceUrl" .Values.admin.ingress) -}}
 {{- end -}}
 
-{{- if not .Values.env.proxy_listen }}
-  {{- $_ := set $autoEnv "KONG_PROXY_LISTEN" (include "kong.kongProxyListenValue" .) -}}
-{{- end -}}
-
-{{- if and (not .Values.env.admin_gui_listen) (.Values.enterprise.enabled) }}
-  {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.kongManagerListenValue" .) -}}
-{{- end -}}
-
-{{- if and (.Values.manager.ingress.enabled) (.Values.enterprise.enabled) }}
-  {{- $_ := set $autoEnv "KONG_ADMIN_GUI_URL" (include "kong.ingress.serviceUrl" .Values.manager.ingress) -}}
-{{- end -}}
-
-{{- if and (not .Values.env.portal_gui_listen) (.Values.enterprise.enabled) (.Values.enterprise.portal.enabled) }}
-  {{- $_ := set $autoEnv "KONG_PORTAL_GUI_LISTEN" (include "kong.kongPortalListenValue" .) -}}
-{{- end }}
-
-{{- if and (.Values.portal.ingress.enabled) (.Values.enterprise.enabled) (.Values.enterprise.portal.enabled) }}
-  {{- $_ := set $autoEnv "KONG_PORTAL_GUI_HOST" .Values.portal.ingress.hostname -}}
-  {{- if .Values.portal.ingress.tls }}
-    {{- $_ := set $autoEnv "KONG_PORTAL_GUI_PROTOCOL" "https" -}}
-  {{- else }}
-    {{- $_ := set $autoEnv "KONG_PORTAL_GUI_PROTOCOL" "http" -}}
-  {{- end }}
-{{- end }}
-
-{{- if and (not .Values.env.portal_api_listen) (.Values.enterprise.enabled) (.Values.enterprise.portal.enabled) }}
-  {{- $_ := set $autoEnv "KONG_PORTAL_API_LISTEN" (include "kong.kongPortalApiListenValue" .) -}}
-{{- end }}
-
-{{- if and (.Values.portalapi.ingress.enabled) (.Values.enterprise.enabled) (.Values.enterprise.portal.enabled) }}
-  {{- $_ := set $autoEnv "KONG_PORTAL_API_URL" (include "kong.ingress.serviceUrl" .Values.portalapi.ingress) -}}
-{{- end }}
+{{- $_ := set $autoEnv "KONG_PROXY_LISTEN" (include "kong.listen" .Values.proxy) -}}
 
 {{- if .Values.enterprise.enabled }}
+  {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.listen" .Values.manager) -}}
+  {{- if .Values.manager.ingress.enabled }}
+    {{- $_ := set $autoEnv "KONG_ADMIN_GUI_URL" (include "kong.ingress.serviceUrl" .Values.manager.ingress) -}}
+  {{- end -}}
+
   {{- if not .Values.enterprise.vitals.enabled }}
     {{- $_ := set $autoEnv "KONG_VITALS" "off" -}}
   {{- end }}
 
   {{- if .Values.enterprise.portal.enabled }}
     {{- $_ := set $autoEnv "KONG_PORTAL" "on" -}}
+      {{- $_ := set $autoEnv "KONG_PORTAL_GUI_LISTEN" (include "kong.listen" .Values.portal) -}}
+    {{- $_ := set $autoEnv "KONG_PORTAL_API_LISTEN" (include "kong.listen" .Values.portalapi) -}}
+
+    {{- if .Values.portal.ingress.enabled }}
+      {{- $_ := set $autoEnv "KONG_PORTAL_GUI_HOST" .Values.portal.ingress.hostname -}}
+      {{- if .Values.portal.ingress.tls }}
+        {{- $_ := set $autoEnv "KONG_PORTAL_GUI_PROTOCOL" "https" -}}
+      {{- else }}
+        {{- $_ := set $autoEnv "KONG_PORTAL_GUI_PROTOCOL" "http" -}}
+      {{- end }}
+    {{- end }}
+
+    {{- if .Values.portalapi.ingress.enabled }}
+      {{- $_ := set $autoEnv "KONG_PORTAL_API_URL" (include "kong.ingress.serviceUrl" .Values.portalapi.ingress) -}}
+    {{- end }}
+
     {{- if .Values.enterprise.portal.portal_auth }} {{/* TODO: deprecated, remove in a future version */}}
       {{- $_ := set $autoEnv "KONG_PORTAL_AUTH" .Values.enterprise.portal.portal_auth -}}
       {{- $portalSession := include "secretkeyref" (dict "name" .Values.enterprise.portal.session_conf_secret "key" "portal_session_conf") -}}
