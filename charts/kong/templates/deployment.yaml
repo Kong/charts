@@ -108,6 +108,14 @@ spec:
           {{- end}}
           protocol: TCP
         {{- end }}
+        {{- range .Values.proxy.stream }}
+        - name: {{ .name }}
+          containerPort: {{ .containerPort }}
+          {{- if .hostPort }}
+          hostPort: {{ .hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
         - name: metrics
           containerPort: 9542
           protocol: TCP

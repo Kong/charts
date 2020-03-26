@@ -272,6 +272,12 @@ individual services: see values.yaml for their individual default values.
 | SVC.tls.hostPort                   | Host port to use for TLS                                                              |                     |
 | SVC.tls.overrideServiceTargetPort  | Override service port to use for TLS without touching Kong containerPort              |                     |
 | SVC.tls.parameters                 | Array of additional listen parameters                                                 | `["http2"]`         |
+| proxy.stream.name                  | Name for a stream listen                                                              |                     |
+| proxy.stream.containerPort         | Container port to use for a stream listen                                             |                     |
+| proxy.stream.servicePort           | Service port to use for a stream listen                                               |                     |
+| proxy.stream.nodePort              | Node port to use for a stream listen                                                  |                     |
+| proxy.stream.hostPort              | Host port to use for a stream listen                                                  |                     |
+| proxy.stream.parameters            | Array of additional listen parameters                                                 | `["http2"]`         |
 | SVC.type                           | k8s service type. Options: NodePort, ClusterIP, LoadBalancer                          |                     |
 | SVC.clusterIP                      | k8s service clusterIP                                                                 |                     |
 | SVC.loadBalancerSourceRanges       | Limit service access to CIDRs if set and service type is `LoadBalancer`               | `[]`                |
