@@ -65,7 +65,7 @@ To preserve your existing route handling, you should add this annotation to
 your ingress resources:
 
 ```
-konghq.com/strip-path: true
+konghq.com/strip-path: "true"
 ```
 
 This is a new annotation that is equivalent to the `route.strip_path` setting

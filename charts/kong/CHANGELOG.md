@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.1
+
+### Documentation
+
+* Fixed an issue with the 1.4.1 upgrade steps.
+
 ## 1.4.0
 
 ### Improvements
