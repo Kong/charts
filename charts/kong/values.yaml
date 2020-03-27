@@ -219,7 +219,18 @@ ingressController:
   args: []
 
   # Specify Kong Ingress Controller configuration via environment variables
-  env: {}
+  env:
+    # The controller disables TLS verification by default because Kong
+    # generates self-signed certificates by default. Set this to false once you
+    # have installed CA-signed certificates.
+    kong_admin_tls_skip_verify: true
+    # If using Kong Enterprise with RBAC enabled, uncomment the section below
+    # and specify the secret/key containing your admin token.
+    # kong_admin_token:
+    #   valueFrom:
+    #     secretKeyRef:
+    #        name: CHANGEME-admin-token-secret
+    #        key: CHANGEME-admin-token-key
 
   admissionWebhook:
     enabled: false
