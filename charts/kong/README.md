@@ -120,13 +120,16 @@ document.
 If using Kong Enterprise, several additional steps are necessary before
 installing the chart:
 
-- set `enterprise.enabled` to `true` in `values.yaml` file
-- Update values.yaml to use a Kong Enterprise image
+- Set `enterprise.enabled` to `true` in `values.yaml` file.
+- Update values.yaml to use a Kong Enterprise image.
 - Satisfy the two  prerequsisites below for
   [Enterprise License](#kong-enterprise-license) and
-  [Enterprise Docker Registry](#kong-enterprise-docker-registry-access)
+  [Enterprise Docker Registry](#kong-enterprise-docker-registry-access).
+- (Optional) [set a `password` environment variable](#rbac) to create the
+  initial super-admin. Though not required, this is recommended for users that
+  wish to use RBAC, as it cannot be done after initial setup.
 
-Once you have these set, it is possible to install Kong Enterprise
+Once you have these set, it is possible to install Kong Enterprise.
 
 Please read through
 [Kong Enterprise considerations](#kong-enterprise-parameters)
@@ -378,10 +381,13 @@ Kong Enterprise requires some additional configuration not needed when using
 Kong Open-Source. To use Kong Enterprise, at the minimum,
 you need to do the following:
 
-- set `enterprise.enabled` to `true` in `values.yaml` file
-- Update values.yaml to use a Kong Enterprise image
-- Satisfy the two  prerequsisites below for Enterprise License and
-  Enterprise Docker Registry
+- Set `enterprise.enabled` to `true` in `values.yaml` file.
+- Update values.yaml to use a Kong Enterprise image.
+- Satisfy the two prerequsisites below for Enterprise License and
+  Enterprise Docker Registry.
+- (Optional) [set a `password` environment variable](#rbac) to create the
+  initial super-admin. Though not required, this is recommended for users that
+  wish to use RBAC, as it cannot be done after initial setup.
 
 Once you have these set, it is possible to install Kong Enterprise,
 but please make sure to review the below sections for other settings that
@@ -453,21 +459,39 @@ for more details on these settings.
 
 ### RBAC
 
-You can create a default RBAC superuser when initially setting up an
-environment, by setting the `KONG_PASSWORD` environment variable on the initial
-migration Job's Pod. This will create a `kong_admin` admin whose token and
-basic-auth password match the value of `KONG_PASSWORD`.
-You can create a secret holding the initial password value and then
-mount the secret as an environment variable using the `env` section.
+You can create a default RBAC superuser when initially running `helm install`
+by setting a `password` environment variable under `env` in values.yaml. It
+should be a reference to a secret key containing your desired password. This
+will create a `kong_admin` admin whose token and basic-auth password match the
+value in the secret. For example:
 
-Note that RBAC is **NOT** currently enabled on the admin API container for the
-controller Pod when the ingress controller is enabled. This admin API container
-is not exposed outside the Pod, so only the controller can interact with it. We
-intend to add RBAC to this container in the future after updating the controller
-to add support for storing its RBAC token in a Secret, as currently it would
-need to be stored in plaintext. RBAC is still enforced on the admin API of the
-main deployment when using the ingress controller, as that admin API *is*
-accessible outside the Pod.
+```yaml
+env:
+ password:
+   valueFrom:
+     secretKeyRef:
+        name: CHANGEME-admin-token-secret
+        key: CHANGEME-admin-token-key
+```
+
+This value is not used after the initial install. It (and the associated
+secret) should be removed after.
+
+If using the ingress controller, the controller needs an RBAC token that grants
+at least workspace admin privileges in its workspace (`default` by default,
+settable by setting a `workspace` variable under `ingressController.env`). You
+should specify its token using `kong_admin_token` in your environment
+variables. For example:
+
+```yaml
+ingressController:
+  env:
+   kong_admin_token:
+     valueFrom:
+       secretKeyRef:
+          name: CHANGEME-admin-token-secret
+          key: CHANGEME-admin-token-key
+```
 
 ### Sessions
 
