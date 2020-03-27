@@ -144,15 +144,37 @@ The name of the service used for the ingress controller's validation webhook
 {{- end -}}
 
 {{- define "kong.ingressController.env" -}}
+{{/*
+    ====== AUTO-GENERATED ENVIRONMENT VARIABLES ======
+*/}}
+
+{{- $autoEnv := dict -}}
+{{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" (printf "%s/%s-proxy" .Release.Namespace (include "kong.fullname" .)) -}}
+{{- $_ := set $autoEnv "CONTROLLER_INGRESS_CLASS" .Values.ingressController.ingressClass -}}
+{{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
+{{- $_ := set $autoEnv "CONTROLLER_KONG_URL" (include "kong.adminLocalURL" .) -}}
+{{- if .Values.ingressController.admissionWebhook.enabled }}
+  {{- $_ := set $autoEnv "CONTROLLER_ADMISSION_WEBHOOK_LISTEN" (printf "0.0.0.0:%d" .Values.ingressController.admissionWebhook.port) -}}
+{{- end }}
+
+{{/*
+    ====== USER-SET ENVIRONMENT VARIABLES ======
+*/}}
+
+{{- $userEnv := dict -}}
 {{- range $key, $val := .Values.ingressController.env }}
-- name: CONTROLLER_{{ $key | upper}}
-{{- $valueType := printf "%T" $val -}}
-{{ if eq $valueType "map[string]interface {}" }}
-{{ toYaml $val | indent 2 -}}
-{{- else }}
-  value: {{ $val | quote -}}
+  {{- $upper := upper $key -}}
+  {{- $var := printf "CONTROLLER_%s" $upper -}}
+  {{- $_ := set $userEnv $var $val -}}
 {{- end -}}
-{{- end -}}
+
+{{/*
+      ====== MERGE AND RENDER ENV BLOCK ======
+*/}}
+
+{{- $completeEnv := mergeOverwrite $autoEnv $userEnv -}}
+{{- template "kong.renderEnv" $completeEnv -}}
+
 {{- end -}}
 
 {{- define "kong.volumes" -}}
@@ -269,20 +291,6 @@ The name of the service used for the ingress controller's validation webhook
 - name: ingress-controller
   args:
   - /kong-ingress-controller
-  # Service from were we extract the IP address/es to use in Ingress status
-  - --publish-service={{ .Release.Namespace }}/{{ template "kong.fullname" . }}-proxy
-  # Set the ingress class
-  - --ingress-class={{ .Values.ingressController.ingressClass }}
-  - --election-id=kong-ingress-controller-leader-{{ .Values.ingressController.ingressClass }}
-  # the kong URL points to the kong admin api server
-  {{- if (or .Values.admin.useTLS .Values.admin.tls.enabled) }} {{/* TODO: remove legacy admin handling */}}
-  - --kong-url={{ template "kong.adminLocalURL" . }}
-  {{- else }}
-  - --kong-url={{ template "kong.adminLocalURL" . }}
-  {{- end }}
-  {{- if .Values.ingressController.admissionWebhook.enabled }}
-  - --admission-webhook-listen=0.0.0.0:{{ .Values.ingressController.admissionWebhook.port }}
-  {{- end }}
   {{ if .Values.ingressController.args}}
   {{- range $val := .Values.ingressController.args }}
   - {{ $val }}
@@ -473,9 +481,20 @@ TODO: remove legacy admin listen behavior at a future date
 */}}
 
 {{- $completeEnv := mergeOverwrite $autoEnv $userEnv -}}
+{{- template "kong.renderEnv" $completeEnv -}}
 
-{{- range keys $completeEnv | sortAlpha }}
-{{- $val := pluck . $completeEnv | first -}}
+{{- end -}}
+
+{{/*
+Given a dictionary of variable=value pairs, render a container env block.
+Environment variables are sorted alphabetically
+*/}}
+{{- define "kong.renderEnv" -}}
+
+{{- $dict := . -}}
+
+{{- range keys . | sortAlpha }}
+{{- $val := pluck . $dict | first -}}
 {{- $valueType := printf "%T" $val -}}
 {{ if eq $valueType "map[string]interface {}" }}
 - name: {{ . }}
