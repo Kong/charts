@@ -45,6 +45,33 @@ clear it.
 
 ## 1.4.0
 
+### Changes to default Postgres permissions
+
+The [Postgres sub-chart](https://github.com/bitnami/charts/tree/master/bitnami/postgresql)
+used by this chart has modified the way their chart handles file permissions.
+This is not an issue for new installations, but prevents Postgres from starting
+if its PVC was created with an older version. If affected, your Postgres pod
+logs will show:
+
+```
+postgresql 19:16:04.03 INFO  ==> ** Starting PostgreSQL **
+2020-03-27 19:16:04.053 GMT [1] FATAL:  data directory "/bitnami/postgresql/data" has group or world access
+2020-03-27 19:16:04.053 GMT [1] DETAIL:  Permissions should be u=rwx (0700).
+```
+
+You can restore the old permission handling behavior by adding two settings to
+the `postgresql` block in values.yaml:
+
+```yaml
+postgresql:
+  enabled: true
+  postgresqlDataDir: /bitnami/postgresql/data
+  volumePermissions:
+    enabled: true
+```
+
+For background, see https://github.com/helm/charts/issues/13651
+
 ### `strip_path` now defaults to `false` for controller-managed routes
 
 1.4.0 defaults to version 0.8 of the ingress controller, which changes the
