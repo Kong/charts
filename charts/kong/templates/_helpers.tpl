@@ -277,7 +277,6 @@ The name of the service used for the ingress controller's validation webhook
   # the kong URL points to the kong admin api server
   {{- if (or .Values.admin.useTLS .Values.admin.tls.enabled) }} {{/* TODO: remove legacy admin handling */}}
   - --kong-url={{ template "kong.adminLocalURL" . }}
-  - --admin-tls-skip-verify
   {{- else }}
   - --kong-url={{ template "kong.adminLocalURL" . }}
   {{- end }}
