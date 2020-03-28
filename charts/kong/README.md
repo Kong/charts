@@ -23,23 +23,30 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
 
 ## Table of contents
 
+- [Kong for Kubernetes](#kong-for-kubernetes)
+- [TL;DR;](#tldr)
+- [Table of contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
-- [Helm 2 vs Helm 3](#important-helm-2-vs-helm-3)
+- [Important: Helm 2 vs Helm 3](#important-helm-2-vs-helm-3)
+    - [Helm 2](#helm-2)
+    - [Helm 3](#helm-3)
 - [Install](#install)
 - [Uninstall](#uninstall)
-- [Kong Enterprise](#kong-enterprise)
 - [FAQs](#faqs)
+- [Kong Enterprise](#kong-enterprise)
 - [Deployment Options](#deployment-options)
   - [Database](#database)
+    - [DB-less  deployment](#db-less-deployment)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
 - [Configuration](#configuration)
-  - [Kong Parameters](#kong-parameters)
+  - [Kong parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
-  - [The `env` section](#the-env-section)
+    - [The `env` section](#the-env-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
+  - [Overview](#overview)
   - [Prerequisites](#prerequisites-1)
     - [Kong Enterprise License](#kong-enterprise-license)
     - [Kong Enterprise Docker registry access](#kong-enterprise-docker-registry-access)
@@ -47,8 +54,6 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [RBAC](#rbac)
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
-- [Changelog](https://github.com/Kong/charts/blob/master/charts/kong/CHANGELOG.md)
-- [Upgrading](https://github.com/Kong/charts/blob/master/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
@@ -227,7 +232,7 @@ Kong can be configured via two methods:
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | image.repository                   | Kong image                                                                            | `kong`              |
-| image.tag                          | Kong image version                                                                    | `1.3`               |
+| image.tag                          | Kong image version                                                                    | `2.0`               |
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
 | replicaCount                       | Kong instance count                                                                   | `1`                 |
