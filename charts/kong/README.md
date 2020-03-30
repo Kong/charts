@@ -234,6 +234,7 @@ Kong can be configured via two methods:
 | plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
 | runMigrations                      | Run Kong migrations job                                                               | `true`              |
+| migrationAnnotations               | Annotations for migration jobs                                                        | `{"sidecar.istio.io/inject": "false", "kuma.io/sidecar-injection": "disabled"}` |
 | waitImage.repository               | Image used to wait for database to become ready                                       | `busybox`           |
 | waitImage.tag                      | Tag for image used to wait for database to become ready                               | `latest`            |
 | waitImage.pullPolicy               | Wait image pull policy                                                                | `IfNotPresent`      |
