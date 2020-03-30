@@ -1,4 +1,4 @@
-{{- if (and (.Values.runMigrations) (not (eq .Values.env.database "off"))) }}
+{{- if (and (or (.Values.runMigrations) (.Values.migrations.preUpgrade)) (not (eq .Values.env.database "off"))) }}
 # Why is this Job duplicated and not using only helm hooks?
 # See: https://github.com/helm/charts/pull/7362
 apiVersion: batch/v1
@@ -11,6 +11,9 @@ metadata:
   annotations:
     helm.sh/hook: "pre-upgrade"
     helm.sh/hook-delete-policy: "before-hook-creation"
+    {{- range $key, $value := .Values.migrationAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
   template:
     metadata:

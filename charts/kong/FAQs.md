@@ -84,7 +84,8 @@ is immutable
 This occurs if a `RELEASE-NAME-kong-init-migrations` Job is left over from a
 previous `helm install` or `helm upgrade`. Deleting it with
 `kubectl delete job RELEASE-NAME-kong-init-migrations` will allow the upgrade
-to proceed.
+to proceed. Setting `migrations.init: false` will prevent the job from spawning
+and creating this issue for future upgrades.
 
 This job is not removed automatically [due to limitations in
 Helm](https://github.com/Kong/charts/pull/36).

@@ -1,4 +1,4 @@
-{{- if (and (.Values.runMigrations) (not (eq .Values.env.database "off"))) }}
+{{- if (and (or (.Values.runMigrations) (.Values.migrations.init)) (not (eq .Values.env.database "off"))) }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -6,6 +6,10 @@ metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: init-migrations
+  annotations:
+    {{- range $key, $value := .Values.migrationAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
   template:
     metadata:
