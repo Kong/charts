@@ -474,14 +474,8 @@ env:
         key: CHANGEME-admin-token-key
 ```
 
-This value is not used after the initial install. It (and the associated
-secret) should be removed after.
-
-If using the ingress controller, the controller needs an RBAC token that grants
-at least workspace admin privileges in its workspace (`default` by default,
-settable by setting a `workspace` variable under `ingressController.env`). You
-should specify its token using `kong_admin_token` in your environment
-variables. For example:
+If using the ingress controller, it needs access to the token as well, by
+specifying `kong_admin_token` in its environment variables:
 
 ```yaml
 ingressController:
@@ -492,6 +486,15 @@ ingressController:
           name: CHANGEME-admin-token-secret
           key: CHANGEME-admin-token-key
 ```
+
+Although the above examples both use the initial super-admin, we recommend
+[creating a less-privileged RBAC user](https://docs.konghq.com/enterprise/latest/kong-manager/administration/rbac/add-user/)
+for the controller after installing. It needs at least workspace admin
+privileges in its workspace (`default` by default, settable by adding a
+`workspace` variable under `ingressController.env`). Once you create the
+controller user, add its token to a secret and update your `kong_admin_token`
+variable to use it. Remove the `password` variable from Kong's environment
+variables and the secret containing the super-admin token after.
 
 ### Sessions
 
