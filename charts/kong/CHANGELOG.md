@@ -10,11 +10,12 @@
 
 ### Improvements
 
-* Service and listen configuration now use a unified configuration format.
-  Listen configuration now supports specifying parameters. Kubernetes service
-  creation can now be enabled or disabled for all Kong services. Users should
-  review the [1.4.0 upgrade
-  guide](https://github.com/Kong/charts/blob/next/charts/kong/UPGRADE.md#changes-to-kong-service-configuration)
+* :warning: Service and listen configuration now use a unified configuration
+  format. **The previous configuration format for the admin API service is
+  deprecated and will be removed in a future release.** Listen configuration
+  now supports specifying parameters. Kubernetes service creation can now be
+  enabled or disabled for all Kong services. Users should review the
+  [1.4.0 upgrade guide](https://github.com/Kong/charts/blob/next/charts/kong/UPGRADE.md#changes-to-kong-service-configuration)
   for details on how to update their values.yaml.
   ([#72](https://github.com/Kong/charts/pull/72))
 * Updated the default controller version to 0.8. This adds new
@@ -81,8 +82,13 @@
   ([#56](https://github.com/Kong/charts/pull/56))
 * Bumped default Kong version to 2.0 and controller version to 0.7.1.
   ([#60](https://github.com/Kong/charts/pull/60))
-* Removed dedicated Portal auth settings, which are unnecessary in modern
-  versions. ([#55](https://github.com/Kong/charts/pull/55))
+* :warning: Removed dedicated Portal auth settings, which are unnecessary in
+  modern versions. **The `enterprise.portal.portal_auth` and
+  `enterprise.portal.session_conf_secret` settings in values.yaml are
+  deprecated and will be removed in a future release.** See the [upgrade
+  guide](https://github.com/Kong/charts/blob/master/charts/kong/UPGRADE.md#removal-of-dedicated-portal-authentication-configuration-parameters)
+  for instructions on migrating them to environment variables.
+  ([#55](https://github.com/Kong/charts/pull/55))
 
 ### Fixed
 
