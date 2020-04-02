@@ -185,12 +185,9 @@ secretVolumes: []
 
 # Enable/disable migration jobs, and set annotations for them
 migrations:
-  # Enable initial migrations/"kong migrations bootstrap"
-  # This should be set to false after the initial install
-  init: true
-  # Enable pre-upgrade migrations/"kong migrations up"
+  # Enable pre-upgrade migrations (run "kong migrations up")
   preUpgrade: true
-  # Enable post-upgrade migrations/"kong migrations finish"
+  # Enable post-upgrade migrations (run "kong migrations finish")
   postUpgrade: true
   # Annotations to apply to migrations jobs
   # By default, these disable service mesh sidecar injection for Istio and Kuma,

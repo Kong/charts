@@ -97,9 +97,6 @@ $ helm install kong/kong
 $ helm install kong/kong --generate-name --set ingressController.installCRDs=false
 ```
 
-After installing, set `migrations.init: false` in values.yaml to prevent the
-initial migrations from spawning during upgrades.
-
 ## Uninstall
 
 To uninstall/delete a Helm release `my-release`:
@@ -210,8 +207,8 @@ the [Kong Enterprise Parameters](#kong-enterprise-parameters) section.
 Users may wish to split their Kong deployment into multiple instances that only
 run some of Kong's services, e.g. where some nodes only run the proxy and other
 only run the admin API, or where some nodes only run Developer Portal services.
-At present, these require separate Helm releases (i.e. you run `helm install`
-once for every instance type you wish to create).
+These require separate Helm releases (i.e. you run `helm install` once for
+every instance type you wish to create).
 
 To disable Kong services on an instance, you should set `SVC.enabled`,
 `SVC.http.enabled`, `SVC.tls.enabled`, and `SVC.ingress.enabled` all to
@@ -276,7 +273,6 @@ Kong can be configured via two methods:
 | replicaCount                       | Kong instance count                                                                   | `1`                 |
 | plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
-| migrations.init                    | Run "kong migrations bootstrap" jobs                                                  | `true`              |
 | migrations.preUpgrade              | Run "kong migrations up" jobs                                                         | `true`              |
 | migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
 | migrations.annotations             | Annotations for migration jobs                                                        | `{"sidecar.istio.io/inject": "false", "kuma.io/sidecar-injection": "disabled"}` |

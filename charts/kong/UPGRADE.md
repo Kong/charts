@@ -19,9 +19,6 @@ install/status/upgrade`.
 
 ## Upgrade considerations for all versions
 
-Before upgrading, users should set `migrations.init: false` in values.yaml.
-This prevents the `field is immutable` error mentioned below.
-
 The chart automates the
 [upgrade migration process](https://github.com/Kong/kong/blob/master/UPGRADE.md).
 When running `helm upgrade`, the chart spawns an initial job to run `kong
@@ -46,11 +43,9 @@ the issue stems from changes in Kubernetes resources or changes in Kong.
 
 Users may encounter an error when upgrading which displays a large block of
 text ending with `field is immutable`. This is typically due to a bug with the
-`init-migrations` job, which is [difficult to solve using current Helm
-functionality](https://github.com/Kong/charts/blob/master/charts/kong/FAQs.md#running-helm-upgrade-fails-because-of-old-init-migrations-job).
+`init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
-clear it. Set `migrations.init: false` in values.yaml to avoid this in future
-upgrades.
+clear it.
 
 ## 1.5.0
 
@@ -58,11 +53,10 @@ upgrades.
 
 Previously, all migration jobs were enabled/disabled through a single
 `runMigrations` setting. 1.5.0 splits these into toggles for each of the
-individual migrations:
+individual upgrade migrations:
 
 ```
 migrations:
-  init: true
   preUpgrade: true
   postUpgrade: true
   annotations:
@@ -70,11 +64,14 @@ migrations:
     kuma.io/sidecar-injection: "disabled"
 ```
 
+Initial migration jobs are now only run during `helm install` and are deleted
+automatically when users first run `helm upgrade`.
+
 Users should replace `runMigrations` with the above block from the latest
 values.yaml.
 
 The new format addresses several needs:
-* The initial migrations job can be disabled after the initial install,
+* The initial migrations job are only created during the initial install,
   preventing [conflicts on upgrades](https://github.com/Kong/charts/blob/master/charts/kong/FAQs.md#running-helm-upgrade-fails-because-of-old-init-migrations-job).
 * The upgrade migrations jobs can be disabled as need for managing
   [multi-release clusters](https://github.com/Kong/charts/blob/master/charts/kong/README.md#separate-admin-and-proxy-nodes).
@@ -82,7 +79,7 @@ The new format addresses several needs:
   e.g. nodes that only run the proxy and nodes that only run the admin API.
 * Migration jobs now allow specifying annotations, and provide a default set
   of annotations that disable some service mesh sidecars. Because sidecar
-  containers do not terminate, they prevent the jobs from terminating.
+  containers do not terminate, they [prevent the jobs from terminating](https://github.com/kubernetes/kubernetes/issues/25908).
 
 ## 1.4.0
 
