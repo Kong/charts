@@ -79,7 +79,7 @@ The new format addresses several needs:
   e.g. nodes that only run the proxy and nodes that only run the admin API.
 * Migration jobs now allow specifying annotations, and provide a default set
   of annotations that disable some service mesh sidecars. Because sidecar
-  containers do not terminate, they [prevent the jobs from terminating](https://github.com/kubernetes/kubernetes/issues/25908).
+  containers do not terminate, they [prevent the jobs from completing](https://github.com/kubernetes/kubernetes/issues/25908).
 
 ## 1.4.0
 
