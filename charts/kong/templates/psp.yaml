@@ -25,6 +25,7 @@ spec:
   hostNetwork: false
   hostIPC: false
   hostPID: false
+  readOnlyRootFilesystem: {{ .Values.podSecurityPolicy.readOnlyRootFilesystem }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

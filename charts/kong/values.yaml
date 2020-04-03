@@ -403,6 +403,9 @@ podDisruptionBudget:
 
 podSecurityPolicy:
   enabled: false
+  # Make the root filesystem read-only. This is not compatible with Kong Enterprise <1.5.
+  # If you use Kong Enterprise <1.5, this must be set to false.
+  readOnlyRootFilesystem: true
 
 
 priorityClassName: ""

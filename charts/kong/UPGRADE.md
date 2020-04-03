@@ -13,6 +13,7 @@ install/status/upgrade`.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [1.5.0](#150)
 - [1.4.0](#140)
 - [1.3.0](#130)
 
@@ -42,6 +43,19 @@ text ending with `field is immutable`. This is typically due to a bug with the
 functionality](https://github.com/Kong/charts/blob/master/charts/kong/FAQs.md#running-helm-upgrade-fails-because-of-old-init-migrations-job).
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 1.5.0
+
+### PodSecurityPolicy defaults to read-only root filesystem
+
+1.5.0 defaults to using a read-only root container filesystem if
+`podSecurityPolicy.enabled: true` is set in values.yaml. This improves
+security, but is incompatible with Kong Enterprise versions prior to 1.5. If
+you use an older version and enable PodSecurityPolicy, you must set
+`podSecurityPolicy.readOnlyRootFilesystem: false`.
+
+Kong open-source and Kong for Kubernetes Enterprise are compatible with a
+read-only root filesystem on all versions.
 
 ## 1.4.0
 
