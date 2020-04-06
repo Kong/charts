@@ -109,7 +109,7 @@ Create a single listen (IP+port+parameter combo)
 {{- define "kong.singleListen" -}}
   {{- $listen := list -}}
   {{- $listen = append $listen (printf "0.0.0.0:%d" (int64 .containerPort)) -}}
-  {{- range $param := .parameters }}
+  {{- range $param := .parameters | uniq }}
     {{- $listen = append $listen $param -}}
   {{- end -}}
   {{- $listen | join " " -}}

@@ -47,7 +47,7 @@ spec:
   {{- end }}
   {{- $root := .Values }}
   {{- range .Values.proxy.stream }}
-  - name: {{ .name }}
+  - name: stream-{{ .containerPort }}
     port: {{ .servicePort }}
     targetPort: {{ .containerPort }}
     {{- if (and (or (eq $root.proxy.type "LoadBalancer") (eq $root.proxy.type "NodePort")) (not (empty .nodePort))) }}

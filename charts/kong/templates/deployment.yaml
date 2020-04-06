@@ -109,7 +109,7 @@ spec:
           protocol: TCP
         {{- end }}
         {{- range .Values.proxy.stream }}
-        - name: {{ .name }}
+        - name: stream-{{ .containerPort }}
           containerPort: {{ .containerPort }}
           {{- if .hostPort }}
           hostPort: {{ .hostPort }}
