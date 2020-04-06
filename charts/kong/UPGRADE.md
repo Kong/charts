@@ -59,9 +59,6 @@ individual upgrade migrations:
 migrations:
   preUpgrade: true
   postUpgrade: true
-  annotations:
-    sidecar.istio.io/inject: false
-    kuma.io/sidecar-injection: "disabled"
 ```
 
 Initial migration jobs are now only run during `helm install` and are deleted

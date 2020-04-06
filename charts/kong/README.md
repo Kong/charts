@@ -216,8 +216,8 @@ To disable Kong services on an instance, you should set `SVC.enabled`,
 
 The standard chart upgrade automation process assumes that there is only a
 single Kong release in the Kong cluster, and runs both `migrations up` and
-`migrations finish` jobs. To handle clusters split across multipl releases, you
-should:
+`migrations finish` jobs. To handle clusters split across multiple releases,
+you should:
 1. Upgrade one of the releases with `helm upgrade RELEASENAME -f values.yaml
    --set migrations.preUpgrade=true --set migrations.postUpgrade=false`.
 2. Upgrade all but one of the remaining releases with `helm upgrade RELEASENAME
