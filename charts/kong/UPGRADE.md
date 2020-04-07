@@ -52,7 +52,7 @@ clear it.
 `podSecurityPolicy.enabled: true` is set in values.yaml. This improves
 security, but is incompatible with Kong Enterprise versions prior to 1.5. If
 you use an older version and enable PodSecurityPolicy, you must set
-`podSecurityPolicy.readOnlyRootFilesystem: false`.
+`podSecurityPolicy.spec.readOnlyRootFilesystem: false`.
 
 Kong open-source and Kong for Kubernetes Enterprise are compatible with a
 read-only root filesystem on all versions.
