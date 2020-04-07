@@ -26,12 +26,3 @@ dblessConfig:
             message: "dbless-config"
 proxy:
   type: NodePort
-# - add stream listens
-  stream:
-  - containerPort: 9000
-    servicePort: 9000
-    parameters: []
-  - containerPort: 9001
-    servicePort: 9001
-    parameters:
-    - ssl
