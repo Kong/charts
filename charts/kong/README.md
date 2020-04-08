@@ -302,8 +302,8 @@ individual services: see values.yaml for their individual default values.
 * `portalapi`
 * `status`
 
-`status` is intended for internal use within the Kong pod only. Unlike other
-services it cannot be exposed outside the pod, and cannot create a Kubernetes
+`status` is intended for internal use within the cluster. Unlike other
+services it cannot be exposed externally, and cannot create a Kubernetes
 service or ingress. It supports the settings under `SVC.http` and `SVC.tls`
 only.
 
