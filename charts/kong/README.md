@@ -288,6 +288,19 @@ individual services: see values.yaml for their individual default values.
 | SVC.ingress.annotations            | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
 | SVC.annotations                    | Service annotations                                                                   | `{}`                |
 
+#### Stream listens
+
+The proxy configuration additionally supports creating stream listens. These
+are configured using an array of objects under `proxy.stream`:
+
+| Parameter                          | Description                                                                           | Default             |
+| ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| containerPort                      | Container port to use for a stream listen                                             |                     |
+| servicePort                        | Service port to use for a stream listen                                               |                     |
+| nodePort                           | Node port to use for a stream listen                                                  |                     |
+| hostPort                           | Host port to use for a stream listen                                                  |                     |
+| parameters                         | Array of additional listen parameters                                                 | `[]`                |
+
 ### Ingress Controller Parameters
 
 All of the following properties are nested under the `ingressController`
