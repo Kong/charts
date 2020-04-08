@@ -135,6 +135,22 @@ proxy:
     parameters:
     - http2
 
+  # Define stream (TCP) listen
+  # To enable, remove "{}", uncomment the section below, and select your desired
+  # ports and parameters. Listens are dynamically named after their servicePort,
+  # e.g. "stream-9000" for the below.
+  stream: {}
+    #   # Set the container (internal) and service (external) ports for this listen.
+    #   # These values should normally be the same. If your environment requires they
+    #   # differ, note that Kong will match routes based on the containerPort only.
+    # - containerPort: 9000
+    #   servicePort: 9000
+    #   # Optionally set a static nodePort if the service type is NodePort
+    #   # nodePort: 32080
+    #   # Additional listen parameters, e.g. "ssl", "reuseport", "backlog=16384"
+    #   # "ssl" is required for SNI-based routes. It is not supported on versions <2.0
+    #   parameters: []
+
   # Kong proxy ingress settings.
   # Note: You need this only if you are using another Ingress Controller
   # to expose Kong outside the k8s cluster.
