@@ -33,6 +33,7 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [Database](#database)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
+  - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
@@ -204,6 +205,45 @@ The package to run can be changed via `image.repository` and `image.tag`
 parameters. If you would like to run the Enterprise package, please read
 the [Kong Enterprise Parameters](#kong-enterprise-parameters) section.
 
+### Separate admin and proxy nodes
+
+Users may wish to split their Kong deployment into multiple instances that only
+run some of Kong's services, e.g. where some nodes only run the proxy and other
+only run the admin API, or where some nodes only run Developer Portal services.
+These require separate Helm releases (i.e. you run `helm install` once for
+every instance type you wish to create).
+
+To disable Kong services on an instance, you should set `SVC.enabled`,
+`SVC.http.enabled`, `SVC.tls.enabled`, and `SVC.ingress.enabled` all to
+`false`, where `SVC` is `proxy`, `admin`, `manager`, `portal`, or `portalapi`.
+
+The standard chart upgrade automation process assumes that there is only a
+single Kong release in the Kong cluster, and runs both `migrations up` and
+`migrations finish` jobs. To handle clusters split across multiple releases,
+you should:
+1. Upgrade one of the releases with `helm upgrade RELEASENAME -f values.yaml
+   --set migrations.preUpgrade=true --set migrations.postUpgrade=false`.
+2. Upgrade all but one of the remaining releases with `helm upgrade RELEASENAME
+   -f values.yaml --set migrations.preUpgrade=false --set
+   migrations.postUpgrade=false`.
+3. Upgrade the final release with `helm upgrade RELEASENAME -f values.yaml
+   --set migrations.preUpgrade=false --set migrations.postUpgrade=true`.
+
+This ensures that all instances are using the new Kong package before running
+`kong migrations finish`.
+
+Users should note that Helm supports supplying multiple values.yaml files,
+allowing you to separate shared configuration from instance-specific
+configuration. For example, you may have a shared values.yaml that contains
+environment variables and other common settings, and then several
+instance-specific values.yamls that contain service configuration only. You can
+then create releases with:
+
+```
+helm install proxy-only -f shared-values.yaml -f only-proxy.yaml kong/kong
+helm install admin-only -f shared-values.yaml -f only-admin.yaml kong/kong
+```
+
 ### Configuration method
 
 Kong can be configured via two methods:
@@ -236,7 +276,9 @@ Kong can be configured via two methods:
 | replicaCount                       | Kong instance count                                                                   | `1`                 |
 | plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
-| runMigrations                      | Run Kong migrations job                                                               | `true`              |
+| migrations.preUpgrade              | Run "kong migrations up" jobs                                                         | `true`              |
+| migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
+| migrations.annotations             | Annotations for migration jobs                                                        | `{"sidecar.istio.io/inject": "false", "kuma.io/sidecar-injection": "disabled"}` |
 | waitImage.repository               | Image used to wait for database to become ready                                       | `busybox`           |
 | waitImage.tag                      | Tag for image used to wait for database to become ready                               | `latest`            |
 | waitImage.pullPolicy               | Wait image pull policy                                                                | `IfNotPresent`      |
