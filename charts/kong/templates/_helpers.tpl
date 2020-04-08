@@ -407,6 +407,8 @@ TODO: remove legacy admin listen behavior at a future date
 
 {{- $_ := set $autoEnv "KONG_STREAM_LISTEN" (include "kong.streamListen" .Values.proxy) -}}
 
+{{- $_ := set $autoEnv "KONG_STATUS_LISTEN" (include "kong.listen" .Values.status) -}}
+
 {{- if .Values.enterprise.enabled }}
   {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.listen" .Values.manager) -}}
   {{- if .Values.manager.ingress.enabled }}

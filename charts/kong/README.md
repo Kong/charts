@@ -300,6 +300,11 @@ individual services: see values.yaml for their individual default values.
 * `manager`
 * `portal`
 * `portalapi`
+* `status`
+
+Unlike most services, `status` cannot be exposed outside the pod, and cannot
+create a Kubernetes service or ingress. It supports the settings under
+`SVC.http` and `SVC.tls` only.
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
