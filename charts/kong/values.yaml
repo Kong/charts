@@ -108,16 +108,11 @@ status:
     # Enable plaintext HTTP listen for the status listen
     enabled: true
     containerPort: 8100
-    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
-    parameters: []
 
   tls:
     # Enable HTTPS listen for the status listen
     enabled: true
     containerPort: 8143
-    # Additional listen parameters, e.g. "reuseport", "backlog=16384"
-    parameters:
-    - http2
 
 # Specify Kong proxy service and listener configuration
 proxy:
