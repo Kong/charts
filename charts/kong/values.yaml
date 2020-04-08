@@ -113,7 +113,7 @@ status:
     # Enable HTTPS listen for the status listen
     # Kong does not currently support HTTPS status listens, so this should remain false
     enabled: false
-    containerPort: 8143
+    containerPort: 8543
 
 # Specify Kong proxy service and listener configuration
 proxy:
