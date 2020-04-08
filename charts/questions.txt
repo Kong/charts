@@ -1,7 +1,0 @@
-* Would there be any reason not to generate a service for each listen? Bit cluttered, but whatever.
-* Generic listens present a challenge: there is a static list of possible X_listen parameters, and shouldn't really be user-configurable. We don't have any way to prevent users from just removing or changing them. Probably better to keep dedicated blocks and maybe reuse templates underneath.
-* TCPIngress/Ingress divide also makes the above merger annoying.
-* That said, does exposing a generic TCPIngress inside the chart for these even make sense? It makes sense for the Kong services, since those are truly served by Kong (the proxy excepted--it's more for convenience). The ultimate destination of stream listens is not Kong, so they should presumably be defined with their applicationsgt
-* Should it be possible to disable the service for stream listens? Why would you ever have an internal-only stream listen? Proxy chaining maybe, but eh...
-* servicePort/containerPort is a bit redundant when nested, but IMO it's not immediately clear what they are otherwise.
-* Can routes for streams handle inbound traffic on multiple ports/dual-stack plain transport and TLS-wrapped transport? I think they can, so requiring that users add both independently may be clunky.
