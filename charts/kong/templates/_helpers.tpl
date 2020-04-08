@@ -109,7 +109,7 @@ Create a single listen (IP+port+parameter combo)
 {{- define "kong.singleListen" -}}
   {{- $listen := list -}}
   {{- $listen = append $listen (printf "0.0.0.0:%d" (int64 .containerPort)) -}}
-  {{- range $param := .parameters | uniq }}
+  {{- range $param := .parameters | default (list) | uniq }}
     {{- $listen = append $listen $param -}}
   {{- end -}}
   {{- $listen | join " " -}}
@@ -406,6 +406,8 @@ TODO: remove legacy admin listen behavior at a future date
 {{- $_ := set $autoEnv "KONG_PROXY_LISTEN" (include "kong.listen" .Values.proxy) -}}
 
 {{- $_ := set $autoEnv "KONG_STREAM_LISTEN" (include "kong.streamListen" .Values.proxy) -}}
+
+{{- $_ := set $autoEnv "KONG_STATUS_LISTEN" (include "kong.listen" .Values.status) -}}
 
 {{- if .Values.enterprise.enabled }}
   {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.listen" .Values.manager) -}}

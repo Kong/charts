@@ -300,6 +300,12 @@ individual services: see values.yaml for their individual default values.
 * `manager`
 * `portal`
 * `portalapi`
+* `status`
+
+`status` is intended for internal use within the cluster. Unlike other
+services it cannot be exposed externally, and cannot create a Kubernetes
+service or ingress. It supports the settings under `SVC.http` and `SVC.tls`
+only.
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |

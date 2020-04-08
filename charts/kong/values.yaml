@@ -101,6 +101,20 @@ admin:
     # Ingress path.
     path: /
 
+# Specify Kong status listener configuration
+# This listen is internal-only. It cannot be exposed through a service or ingress.
+status:
+  http:
+    # Enable plaintext HTTP listen for the status listen
+    enabled: true
+    containerPort: 8100
+
+  tls:
+    # Enable HTTPS listen for the status listen
+    # Kong does not currently support HTTPS status listens, so this should remain false
+    enabled: false
+    containerPort: 8543
+
 # Specify Kong proxy service and listener configuration
 proxy:
   # Enable creating a Kubernetes service for the proxy
