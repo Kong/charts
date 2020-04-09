@@ -1,5 +1,48 @@
 # Changelog
 
+## 1.5.0
+
+### Improvements
+
+* Added support for annotating the ServiceAccount.
+  ([#97](https://github.com/Kong/charts/pull/97))
+* Updated controller templates to use environment variables for default
+  configuration.
+  ([#99](https://github.com/Kong/charts/pull/99))
+* Added support for stream listens.
+  ([#103](https://github.com/Kong/charts/pull/103))
+* Moved migration configuration under a `migrations` block with support for
+  enabling upgrade jobs independently and adding annotations.
+  ([#102](https://github.com/Kong/charts/pull/102))
+* Added support for the [status listen](https://github.com/Kong/kong/pull/4977).
+  ([#107](https://github.com/Kong/charts/pull/107))
+* :warning: Exposed PodSecurityPolicy spec in values.yaml and added default
+  configuration to enforce a read-only root filesystem. **Kong Enterprise
+  versions prior to 1.5.0 require the root filesystem be read-write. If you use
+  an older version and enforce PodSecurityPolicy, you must set
+  `.Values.podSecurityPolicy.spec.readOnlyRootFilesystem: false`.**
+  ([#104](https://github.com/Kong/charts/pull/104))
+
+### Fixed
+
+* Fixed old init-migrations jobs blocking upgrades.
+  ([#102](https://github.com/Kong/charts/pull/102))
+
+### Documentation
+
+* Fixed discrepancy between image version in values.yaml and README.md.
+  ([#96](https://github.com/Kong/charts/pull/96))
+* Added example Enterprise image tags to values.yaml.
+  ([#100](https://github.com/Kong/charts/pull/100))
+* Added deprecation warnings in CHANGELOG.md.
+  ([#91](https://github.com/Kong/charts/pull/91))
+* Improved RBAC documentation to clarify process and use new controller
+  functionality.
+  ([#95](https://github.com/Kong/charts/pull/95))
+* Added documentation for managing multi-release clusters with varied node
+  roles (e.g. admin-only, Portal-only, etc.).
+  ([#102](https://github.com/Kong/charts/pull/102))
+
 ## 1.4.1
 
 ### Documentation
