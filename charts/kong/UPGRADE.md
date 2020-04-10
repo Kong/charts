@@ -49,6 +49,17 @@ clear it.
 
 ## 1.5.0
 
+### PodSecurityPolicy defaults to read-only root filesystem
+
+1.5.0 defaults to using a read-only root container filesystem if
+`podSecurityPolicy.enabled: true` is set in values.yaml. This improves
+security, but is incompatible with Kong Enterprise versions prior to 1.5. If
+you use an older version and enable PodSecurityPolicy, you must set
+`podSecurityPolicy.spec.readOnlyRootFilesystem: false`.
+
+Kong open-source and Kong for Kubernetes Enterprise are compatible with a
+read-only root filesystem on all versions.
+
 ### Changes to migration job configuration
 
 Previously, all migration jobs were enabled/disabled through a single
