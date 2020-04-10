@@ -402,11 +402,10 @@ For a complete list of all configuration values you can set in the
 | podSecurityPolicy.spec             | Collection of [PodSecurityPolicy settings](https://kubernetes.io/docs/concepts/policy/pod-security-policy/#what-is-a-pod-security-policy) | |
 | priorityClassName                  | Set pod scheduling priority class for Kong pods                                       | ""                  |
 | serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | false               |
-| serviceMonitor.interval            | Scrapping interval                                                                    | 10s                 |
+| serviceMonitor.interval            | Scraping interval                                                                     | 30s                 |
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
 | secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |
-| serviceMonitor.labels              | ServiceMonito Labels                                                                  | {}                  |
-
+| serviceMonitor.labels              | ServiceMonitor labels                                                                 | `{}`                |
 #### The `env` section
 
 The `env` section can be used to configured all properties of Kong.
