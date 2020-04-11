@@ -482,6 +482,8 @@ serviceMonitor:
   # namespace: monitoring
   # labels:
   #   foo: bar
+  # additionalMatchLabels:
+  #   foo: bar
 
 # -----------------------------------------------------------------------------
 # Kong Enterprise parameters

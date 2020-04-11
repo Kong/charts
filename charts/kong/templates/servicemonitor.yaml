@@ -25,4 +25,7 @@ spec:
   selector:
     matchLabels:
       {{- include "kong.metaLabels" . | nindent 6 }}
+    {{- if .Values.serviceMonitor.additionalMatchLabels }}
+      {{- toYaml .Values.serviceMonitor.additionalMatchLabels | nindent 6 }}
+    {{- end }}
 {{- end }}

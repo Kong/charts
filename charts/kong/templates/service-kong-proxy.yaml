@@ -9,6 +9,9 @@ metadata:
     {{- end }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
+  {{- if .Values.serviceMonitor.additionalMatchLabels }}
+    {{- toYaml .Values.serviceMonitor.additionalMatchLabels | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.proxy.type }}
   {{- if eq .Values.proxy.type "LoadBalancer" }}

@@ -404,8 +404,9 @@ For a complete list of all configuration values you can set in the
 | serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | false               |
 | serviceMonitor.interval            | Scrapping interval                                                                    | 10s                 |
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
-| secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |
 | serviceMonitor.labels              | ServiceMonito Labels                                                                  | {}                  |
+| serviceMonitor.additionalMatchLabels | Add matchLabels selector to ServiceMonitor and corresponding label to proxy Service | `{}`                |
+| secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |
 
 #### The `env` section
 
