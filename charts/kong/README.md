@@ -400,12 +400,13 @@ For a complete list of all configuration values you can set in the
 | podDisruptionBudget.minAvailable   | Represents the number of Pods that must be available (integer or percentage)          |                     |
 | podSecurityPolicy.enabled          | Enable podSecurityPolicy for Kong                                                     | `false`             |
 | podSecurityPolicy.spec             | Collection of [PodSecurityPolicy settings](https://kubernetes.io/docs/concepts/policy/pod-security-policy/#what-is-a-pod-security-policy) | |
-| priorityClassName                  | Set pod scheduling priority class for Kong pods                                       | ""                  |
-| serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | false               |
-| serviceMonitor.interval            | Scraping interval                                                                     | 30s                 |
-| serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
+| priorityClassName                  | Set pod scheduling priority class for Kong pods                                       | `""`                |
 | secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |
+| serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | `false`             |
+| serviceMonitor.interval            | Scraping interval                                                                     | `30s`               |
+| serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
 | serviceMonitor.labels              | ServiceMonitor labels                                                                 | `{}`                |
+
 #### The `env` section
 
 The `env` section can be used to configured all properties of Kong.
