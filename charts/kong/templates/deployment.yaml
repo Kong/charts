@@ -63,9 +63,7 @@ spec:
         env:
         {{- include "kong.no_daemon_env" . | nindent 8 }}
         lifecycle:
-          preStop:
-            exec:
-              command: [ "/bin/sh", "-c", "kong quit" ]
+          {{- toYaml .Values.lifecycle | nindent 10 }}
         ports:
         {{/* TODO: remove legacy admin port template */}}
         {{- if .Values.admin.containerPort }}

@@ -389,6 +389,7 @@ For a complete list of all configuration values you can set in the
 | updateStrategy                     | update strategy for deployment                                                        | `{}`                |
 | readinessProbe                     | Kong readiness probe                                                                  |                     |
 | livenessProbe                      | Kong liveness probe                                                                   |                     |
+| lifecycle                          | Proxy container lifecycle hooks                                                       | see `values.yaml`   |
 | affinity                           | Node/pod affinities                                                                   |                     |
 | nodeSelector                       | Node labels for pod assignment                                                        | `{}`                |
 | deploymentAnnotations              | Annotations to add to deployment                                                      |  see `values.yaml`  |
