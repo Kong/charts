@@ -12,6 +12,7 @@ ingressController:
     enabled: true
 # - environment variables can be injected into ingress controller container
   env:
+    anonymous_reports: "false"
     kong_admin_header: "foo:bar"
 # - annotations can be injected for service account
   serviceAccount:
@@ -35,3 +36,5 @@ proxy:
     hosts: ["test.com", "test2.com"]
     annotations: {}
     path: /
+env:
+  anonymous_reports: "off"
