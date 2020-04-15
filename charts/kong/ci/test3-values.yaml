@@ -4,6 +4,7 @@ ingressController:
   enabled: false
 # - disable DB for kong
 env:
+  anonymous_reports: "off"
   database: "off"
 postgresql:
   enabled: false

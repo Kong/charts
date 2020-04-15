@@ -2,6 +2,8 @@
 # - ingressController deploys with a database
 ingressController:
   enabled: true
+  env:
+    anonymous_reports: "false"
 postgresql:
   enabled: true
   postgresqlUsername: kong
@@ -9,6 +11,7 @@ postgresql:
   service:
     port: 5432
 env:
+  anonymous_reports: "off"
   database: "postgres"
 # - ingress resources are created without hosts
 admin:
