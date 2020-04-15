@@ -397,6 +397,13 @@ livenessProbe:
   successThreshold: 1
   failureThreshold: 3
 
+# Proxy container lifecycle hooks
+# Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
+lifecycle:
+  preStop:
+    exec:
+      command: ["/bin/sh", "-c", "/bin/sleep 15 && kong quit"]
+
 # Affinity for pod assignment
 # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 # affinity: {}
