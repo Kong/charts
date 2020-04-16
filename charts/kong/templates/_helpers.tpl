@@ -385,6 +385,10 @@ the template that it itself is using form the above sections.
 
 {{- $_ := set $autoEnv "KONG_LUA_PACKAGE_PATH" "/opt/?.lua;/opt/?/init.lua;;" -}}
 
+{{- if .Values.ingressController.enabled -}}
+  {{- $_ := set $autoEnv "KONG_KIC" "on" -}}
+{{- end -}}
+
 {{/*
 TODO: remove legacy admin listen behavior at a future date
 */}}
