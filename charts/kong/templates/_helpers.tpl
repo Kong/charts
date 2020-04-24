@@ -253,6 +253,11 @@ The name of the service used for the ingress controller's validation webhook
   secret:
     secretName: {{ . }}
 {{- end }}
+{{- range .Values.persistentVolumes }}
+- name: {{ .claimName }}
+  persistentVolumeClaim:
+    claimName: {{ .claimName }}
+{{- end }}
 {{- end -}}
 
 {{- define "kong.volumeMounts" -}}
@@ -292,6 +297,11 @@ The name of the service used for the ingress controller's validation webhook
   readOnly: true
 {{- end }}
 {{- end }}
+{{- range .Values.persistentVolumes }}
+- name: {{ .claimName }}
+  mountPath: {{ .mountPath }}
+  readOnly: true
+{{- end }}
 {{- end -}}
 
 {{- define "kong.plugins" -}}
@@ -300,8 +310,11 @@ The name of the service used for the ingress controller's validation webhook
 {{- $myList = append $myList .pluginName -}}
 {{- end -}}
 {{- range .Values.plugins.secrets -}}
-  {{ $myList = append $myList .pluginName -}}
-{{- end }}
+{{- $myList = append $myList .pluginName -}}
+{{- end -}}
+{{- range .Values.plugins.local -}}
+{{- $myList = append $myList .pluginName -}}
+{{- end -}}
 {{- $myList | join "," -}}
 {{- end -}}
 

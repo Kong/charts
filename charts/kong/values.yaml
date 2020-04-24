@@ -198,6 +198,12 @@ proxy:
 # Subdirectories (which are optional) require separate ConfigMaps/Secrets.
 # "path" indicates their directory under the main plugin directory: the example
 # below will mount the contents of kong-plugin-rewriter-migrations at "/opt/kong/rewriter/migrations".
+# Additionally, it is possible to load plugins injected earlier (e.g. by persistent volume)
+# to file-system of Kong container. The `local` property allows to take advantage of this
+# feature. This may be useful for plugins written in Go programming language,
+# which are too large to store them in ConfigMap or Secret.
+# Rembember to set `go_plugins_dir` and/or `lua_package_path` configuration properties
+# in `env` section to make loaded plugins available to Kong.
 plugins: {}
   # configMaps:
   # - pluginName: rewriter
@@ -208,6 +214,8 @@ plugins: {}
   # secrets:
   # - pluginName: rewriter
   #   name: kong-plugin-rewriter
+  # local:
+  # - pluginName: rewriter
 # Inject specified secrets as a volume in Kong Container at path /etc/secrets/{secret-name}/
 # This can be used to override default SSL certificates.
 # Be aware that the secret name will be used verbatim, and that certain types
@@ -217,6 +225,13 @@ plugins: {}
 # - kong-proxy-tls
 # - kong-admin-tls
 secretVolumes: []
+# Mount existing PVC as a volume in Kong Container. Can be used for injecting
+# plugins, complex nginx configuration snippets, etc.
+# Example configuration
+# persistentVolumes
+# - claimName: kong-plugins
+#   mountPath: /plugins
+persistentVolumes: []
 
 # Enable/disable migration jobs, and set annotations for them
 migrations:
