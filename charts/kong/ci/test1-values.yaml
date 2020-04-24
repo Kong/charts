@@ -17,6 +17,10 @@ ingressController:
   serviceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::AWS_ACCOUNT_ID:role/IAM_ROLE_NAME
+# - pod labels can be added to the deployment template
+podLabels:
+  app: kong
+  environment: test
 # - podSecurityPolicies are enabled
 podSecurityPolicy:
   enabled: true
