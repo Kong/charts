@@ -36,6 +36,9 @@ spec:
       labels:
         {{- include "kong.metaLabels" . | nindent 8 }}
         app.kubernetes.io/component: app
+        {{- if .Values.podLabels }}
+        {{ toYaml .Values.podLabels | nindent 8 }}
+        {{- end }}
     spec:
       {{- if .Values.priorityClassName }}
       priorityClassName: "{{ .Values.priorityClassName }}"

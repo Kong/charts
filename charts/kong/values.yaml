@@ -419,6 +419,9 @@ nodeSelector: {}
 # Annotation to be added to Kong pods
 podAnnotations: {}
 
+# Labels to be added to Kong pods
+podLabels: {}
+
 # Kong pod count
 replicaCount: 1
 
