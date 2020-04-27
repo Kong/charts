@@ -24,5 +24,6 @@ spec:
     - {{ .Release.Namespace }}
   selector:
     matchLabels:
+      enable-metrics: "true"
       {{- include "kong.metaLabels" . | nindent 6 }}
 {{- end }}
