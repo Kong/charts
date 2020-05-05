@@ -314,8 +314,8 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- define "kong.wait-for-db" -}}
 - name: wait-for-db
-{{- if .Values.image.single }}
-  image: "{{ .Values.image.single }}"
+{{- if .Values.image.unifiedRepoTag }}
+  image: "{{ .Values.image.unifiedRepoTag }}"
 {{- else }}
   image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
 {{- end }}
@@ -348,8 +348,8 @@ The name of the service used for the ingress controller's validation webhook
         apiVersion: v1
         fieldPath: metadata.namespace
 {{- include "kong.ingressController.env" .  | indent 2 }}
-{{- if .Values.ingressController.image.single }}
-  image: "{{ .Values.ingressController.image.single }}"
+{{- if .Values.ingressController.image.unifiedRepoTag }}
+  image: "{{ .Values.ingressController.image.unifiedRepoTag }}"
 {{- else }}
   image: "{{ .Values.ingressController.image.repository }}:{{ .Values.ingressController.image.tag }}"
 {{- end }}
@@ -578,8 +578,8 @@ Environment variables are sorted alphabetically
 
 {{- define "kong.wait-for-postgres" -}}
 - name: wait-for-postgres
-{{- if .Values.waitImage.single }}
-  image: "{{ .Values.waitImage.single }}"
+{{- if .Values.waitImage.unifiedRepoTag }}
+  image: "{{ .Values.waitImage.unifiedRepoTag }}"
 {{- else }}
   image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
 {{- end }}

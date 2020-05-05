@@ -38,8 +38,8 @@ spec:
       {{- end }}
       containers:
       - name: {{ template "kong.name" . }}-post-upgrade-migrations
-        {{- if .Values.image.single }}
-        image: "{{ .Values.image.single }}"
+        {{- if .Values.image.unifiedRepoTag }}
+        image: "{{ .Values.image.unifiedRepoTag }}"
         {{- else }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         {{- end }}
