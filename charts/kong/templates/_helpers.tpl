@@ -579,7 +579,7 @@ Environment variables are sorted alphabetically
 {{- define "kong.wait-for-postgres" -}}
 - name: wait-for-postgres
 {{- if .Values.waitImage.single }}
-  image: "{{ .Values.ingressController.image.single }}"
+  image: "{{ .Values.waitImage.single }}"
 {{- else }}
   image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
 {{- end }}
