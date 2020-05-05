@@ -348,7 +348,7 @@ The name of the service used for the ingress controller's validation webhook
         apiVersion: v1
         fieldPath: metadata.namespace
 {{- include "kong.ingressController.env" .  | indent 2 }}
-{{- if .Values.image.single }}
+{{- if .Values.ingressController.image.single }}
   image: "{{ .Values.ingressController.image.single }}"
 {{- else }}
   image: "{{ .Values.ingressController.image.repository }}:{{ .Values.ingressController.image.tag }}"
