@@ -61,7 +61,11 @@ spec:
       {{- include "kong.controller-container" . | nindent 6 }}
       {{ end }}
       - name: "proxy"
+        {{- if .Values.image.unifiedRepoTag }}
+        image: "{{ .Values.image.unifiedRepoTag }}"
+        {{- else }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        {{- end }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         {{- include "kong.no_daemon_env" . | nindent 8 }}
