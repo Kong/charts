@@ -398,7 +398,7 @@ postgresql:
 # -----------------------------------------------------------------------------
 
 waitImage:
-  repository: busybox
+  repository: centos
   tag: latest
   pullPolicy: IfNotPresent
 
