@@ -13,6 +13,7 @@ install/status/upgrade`.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [1.6.0](#160)
 - [1.5.0](#150)
 - [1.4.0](#140)
 - [1.3.0](#130)
@@ -46,6 +47,38 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 1.6.0
+
+### Changes to Custom Resource Definitions
+
+The KongPlugin and KongClusterPlugin resources have changed. Helm 3's CRD
+management system does not modify CRDs during `helm upgrade`, and these must be
+updated manually:
+
+```
+kubectl apply -f https://raw.githubusercontent.com/Kong/charts/kong-1.6.0/charts/kong/crds/custom-resource-definitions.yaml
+```
+
+Existing plugin resources do not require changes; the CRD update only adds new
+fields.
+
+### Removal of default security context UID setting
+
+Versions of Kong prior to 2.0 and Kong Enterprise prior to 1.3 use Docker
+images that required setting a UID via Kubernetes in some environments
+(primarily OpenShift). This is no longer necessary with modern Docker images
+and can cause issues depending on other environment settings, so it was
+removed.
+
+Most users should not need to take any action, but if you encounter permissions
+errors when upgrading (`kubectl describe pod PODNAME` should contain any), you
+can restore it by adding the following to your values.yaml:
+
+```
+securityContext:
+  runAsUser: 1000
+```
 
 ## 1.5.0
 
