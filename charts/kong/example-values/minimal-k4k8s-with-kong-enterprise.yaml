@@ -1,0 +1,41 @@
+# The minimum values.yaml configuration necessary for Kong for Kubernetes with Kong Enterprise
+# Several settings (search for the string "you-must") require user-provided
+# Secrets. These Secrets must be created before installation.
+
+image:
+  repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
+  tag: 1.5.0.2-alpine
+  pullSecrets:
+    - you-must-create-a-registry-secret
+
+enterprise:
+  enabled: true
+  license_secret: you-must-create-a-license-secret
+  vitals:
+    enabled: false
+  portal:
+    enabled: false
+  rbac:
+    enabled: false
+  smtp:
+    enabled: false
+
+env:
+  prefix: /kong_prefix/
+  database: postgres
+  password:
+    valueFrom:
+      secretKeyRef:
+        name: you-must-create-an-rbac-bootstrap-secret
+        key: you-must-replace-with-your-key
+
+postgresql:
+  enabled: true
+  postgresqlUsername: kong
+  postgresqlDatabase: kong
+  service:
+    port: 5432
+
+ingressController:
+  enabled: true
+  installCRDs: false

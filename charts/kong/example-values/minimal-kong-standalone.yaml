@@ -1,0 +1,19 @@
+# The minimum values.yaml configuration necessary for Kong without the ingress controller, using the Postgres subchart
+image:
+  repository: kong
+  tag: "2.0"
+
+env:
+  prefix: /kong_prefix/
+  database: postgres
+
+postgresql:
+  enabled: true
+  postgresqlUsername: kong
+  postgresqlDatabase: kong
+  service:
+    port: 5432
+
+ingressController:
+  enabled: false
+  installCRDs: false

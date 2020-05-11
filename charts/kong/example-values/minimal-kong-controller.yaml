@@ -1,0 +1,12 @@
+# The minimum values.yaml configuration necessary for Kong with the ingress controller
+image:
+  repository: kong
+  tag: "2.0"
+
+env:
+  prefix: /kong_prefix/
+  database: "off"
+
+ingressController:
+  enabled: true
+  installCRDs: false
