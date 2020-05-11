@@ -467,11 +467,10 @@ configuration can be placed under the `.env` key.
 
 All Kong Enterprise deployments require a license. If you do not have a copy
 of yours, please contact Kong Support. Once you have it, you will need to
-store it in a Secret. Save your secret in a file named `license` (no extension)
-and then create and inspect your secret:
+store it in a Secret:
 
 ```bash
-$ kubectl create secret generic kong-enterprise-license --from-file=./license
+$ kubectl create secret generic kong-enterprise-license --from-file=license=./license.json
 ```
 
 Set the secret name in `values.yaml`, in the `.enterprise.license_secret` key.
