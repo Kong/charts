@@ -1,3 +1,4 @@
+{{- if .Values.enabled }}
 {{- if .Values.admin.ingress.enabled -}}
 {{- if .Values.admin.containerPort -}} {{/* TODO: remove legacy admin handling */}}
 {{- $serviceName := include "kong.fullname" . -}}
@@ -61,5 +62,6 @@ spec:
     - {{ $hostname }}
     secretName: {{ $tls }}
   {{- end -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}

@@ -1,3 +1,4 @@
+{{- if .Values.enabled }}
 {{- if .Values.proxy.ingress.enabled -}}
 {{- $serviceName := include "kong.fullname" . -}}
 {{- $servicePort := include "kong.ingress.servicePort" .Values.proxy -}}
@@ -37,4 +38,5 @@ spec:
   tls:
 {{ toYaml .Values.proxy.ingress.tls | indent 4 }}
   {{- end -}}
+{{- end -}}
 {{- end -}}

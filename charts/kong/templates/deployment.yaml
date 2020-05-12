@@ -53,13 +53,16 @@ spec:
       {{- end }}
       {{- end }}
       {{- if not (eq .Values.env.database "off") }}
+      {{- if .Values.enabled }}
       initContainers:
       {{- include "kong.wait-for-db" . | nindent 6 }}
+      {{ end }}
       {{ end }}
       containers:
       {{- if .Values.ingressController.enabled }}
       {{- include "kong.controller-container" . | nindent 6 }}
       {{ end }}
+      {{- if .Values.enabled }}
       - name: "proxy"
         {{- if .Values.image.unifiedRepoTag }}
         image: "{{ .Values.image.unifiedRepoTag }}"
@@ -193,6 +196,7 @@ spec:
           hostPort: {{ .Values.portalapi.tls.hostPort }}
           {{- end}}
           protocol: TCP
+        {{- end }}
         {{- end }}
         {{- end }}
         volumeMounts:

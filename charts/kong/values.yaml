@@ -12,6 +12,11 @@
 # Kong parameters
 # -----------------------------------------------------------------------------
 
+# Enable or disable Kong itself
+# Setting this to false with ingressController.enabled=true will create a
+# controller-only release.
+enabled: true
+
 # Specify Kong configurations
 # Kong configurations guide https://docs.konghq.com/latest/configuration
 # Values here take precedence over values from other sections of values.yaml,

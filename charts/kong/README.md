@@ -34,8 +34,7 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
-  - [CRDs only](#crds-only)
-  - [Example configurations](#example-configurations)
+  - [Standalone controller nodes](#standalone-controller-nodes)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
@@ -265,7 +264,29 @@ helm install proxy-only -f shared-values.yaml -f only-proxy.yaml kong/kong
 helm install admin-only -f shared-values.yaml -f only-admin.yaml kong/kong
 ```
 
-### CRDs only
+### Standalone controller nodes
+
+The chart can deploy releases that contain the controller only, with no Kong
+container, by setting `enabled: false` in values.yaml. There are several
+controller settings that must be populated manually in this scenario and
+several settings that are useful when using multiple controllers:
+
+* `ingressController.env.kong_admin_url` must be set to the Kong Admin API URL.
+  If the Admin API is exposed by a service in the cluster, this should look
+  something like `https://my-release-kong-admin.kong-namespace.svc:8444`
+* `ingressController.env.publish_service` must be set to the Kong proxy
+  service, e.g. `namespace/my-release-kong-proxy`.
+* `ingressController.ingressClass` should be set to a different value for each
+  instance of the controller.
+* `ingressController.env.admin_filter_tag` should be set to a different value
+  for each instance of the controller.
+* If using Kong Enterprise, `ingressController.env.kong_workspace` can
+  optionally create configuration in a workspace other than `default`.
+
+Standalone controllers require a database-backed Kong instance, as DB-less mode
+requires that a single controller generate a complete Kong configuration.
+
+### Configuration method
 
 For Helm 2 installations, CRDs are managed as part of a release, and are
 deleted if the release is. This can cause issues for clusters with multiple
@@ -289,6 +310,7 @@ directory.
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| enabled                            | Enable or disable deploying Kong                                                      | `true`              |
 | image.repository                   | Kong image                                                                            | `kong`              |
 | image.tag                          | Kong image version                                                                    | `2.0`               |
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
