@@ -8,6 +8,13 @@ image:
   pullSecrets:
     - you-must-create-a-registry-secret
 
+admin:
+  enabled: true
+  http:
+    enabled: true
+    servicePort: 8001
+    containerPort: 8001
+
 enterprise:
   enabled: true
   license_secret: you-must-create-a-license-secret

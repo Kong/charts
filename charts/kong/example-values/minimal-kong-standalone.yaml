@@ -7,6 +7,13 @@ env:
   prefix: /kong_prefix/
   database: postgres
 
+admin:
+  enabled: true
+  http:
+    enabled: true
+    servicePort: 8001
+    containerPort: 8001
+
 postgresql:
   enabled: true
   postgresqlUsername: kong
