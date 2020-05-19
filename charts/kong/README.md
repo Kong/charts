@@ -34,6 +34,7 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
+  - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
@@ -262,6 +263,12 @@ then create releases with:
 helm install proxy-only -f shared-values.yaml -f only-proxy.yaml kong/kong
 helm install admin-only -f shared-values.yaml -f only-admin.yaml kong/kong
 ```
+
+### Example configurations
+
+Several example values.yaml are available in the
+[example-values](https://github.com/Kong/charts/blob/master/charts/kong/example-values/)
+directory.
 
 ## Configuration
 
