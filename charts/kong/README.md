@@ -205,6 +205,25 @@ The package to run can be changed via `image.repository` and `image.tag`
 parameters. If you would like to run the Enterprise package, please read
 the [Kong Enterprise Parameters](#kong-enterprise-parameters) section.
 
+### Configuration method
+
+Kong can be configured via two methods:
+- **Ingress and CRDs**\
+  The configuration for Kong is done via `kubectl` and Kubernetes-native APIs.
+  This is also known as Kong Ingress Controller or Kong for Kubernetes and is
+  the default deployment pattern for this Helm Chart. The configuration
+  for Kong is managed via Ingress and a few
+  [Custom Resources](https://github.com/Kong/kubernetes-ingress-controller/blob/master/docs/concepts/custom-resources.md).
+  For more details, please read the
+  [documentation](https://github.com/Kong/kubernetes-ingress-controller/tree/master/docs)
+  on Kong Ingress Controller.
+  To configure and fine-tune the controller, please read the
+  [Ingress Controller Parameters](#ingress-controller-parameters) section.
+- **Admin API**\
+  This is the traditional method of running and configuring Kong.
+  By default, the Admin API of Kong is not exposed as a Service. This
+  can be controlled via `admin.enabled` and `env.admin_listen` parameters.
+
 ### Separate admin and proxy nodes
 
 Users may wish to split their Kong deployment into multiple instances that only
@@ -243,25 +262,6 @@ then create releases with:
 helm install proxy-only -f shared-values.yaml -f only-proxy.yaml kong/kong
 helm install admin-only -f shared-values.yaml -f only-admin.yaml kong/kong
 ```
-
-### Configuration method
-
-Kong can be configured via two methods:
-- **Ingress and CRDs**\
-  The configuration for Kong is done via `kubectl` and Kubernetes-native APIs.
-  This is also known as Kong Ingress Controller or Kong for Kubernetes and is
-  the default deployment pattern for this Helm Chart. The configuration
-  for Kong is managed via Ingress and a few
-  [Custom Resources](https://github.com/Kong/kubernetes-ingress-controller/blob/master/docs/concepts/custom-resources.md).
-  For more details, please read the
-  [documentation](https://github.com/Kong/kubernetes-ingress-controller/tree/master/docs)
-  on Kong Ingress Controller.
-  To configure and fine-tune the controller, please read the
-  [Ingress Controller Parameters](#ingress-controller-parameters) section.
-- **Admin API**\
-  This is the traditional method of running and configuring Kong.
-  By default, the Admin API of Kong is not exposed as a Service. This
-  can be controlled via `admin.enabled` and `env.admin_listen` parameters.
 
 ## Configuration
 
