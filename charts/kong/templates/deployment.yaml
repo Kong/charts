@@ -1,3 +1,4 @@
+{{- if or .Values.enabled .Values.ingressController.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -221,3 +222,4 @@ spec:
 {{ toYaml .Values.tolerations | indent 8 }}
       volumes:
       {{- include "kong.volumes" . | nindent 8 -}}
+{{- end }}
