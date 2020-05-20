@@ -2,7 +2,7 @@
 # exposed via TLS-enabled Ingresses. Before installing:
 # * Several settings (search for the string "CHANGEME") require user-provided
 #   Secrets. These Secrets must be created before installation.
-# * Ingresses reference example "<service>.kong.example" hostnames. These must
+# * Ingresses reference example "<service>.kong.CHANGEME.example" hostnames. These must
 #   be changed to an actual hostname that resolve to your proxy.
 # * Ensure that your session configurations create cookies that are usable
 #   across your services. The admin session configuration must create cookies
@@ -42,7 +42,7 @@ admin:
   ingress:
     enabled: true
     tls: CHANGEME-admin-tls-secret
-    hostname: admin.kong.example
+    hostname: admin.kong.CHANGEME.example
     annotations:
       kubernetes.io/ingress.class: "kong"
     path: /
@@ -123,7 +123,7 @@ manager:
   ingress:
     enabled: true
     tls: CHANGEME-manager-tls-secret
-    hostname: manager.kong.example
+    hostname: manager.kong.CHANGEME.example
     annotations: {}
     path: /
 
@@ -151,7 +151,7 @@ portal:
   ingress:
     enabled: true
     tls: CHANGEME-portal-tls-secret
-    hostname: portal.kong.example
+    hostname: portal.kong.CHANGEME.example
     annotations:
       kubernetes.io/ingress.class: "kong"
     path: /
@@ -182,7 +182,7 @@ portalapi:
   ingress:
     enabled: true
     tls: CHANGEME-portalapi-tls-secret
-    hostname: portalapi.kong.example
+    hostname: portalapi.kong.CHANGEME.example
     annotations:
       kubernetes.io/ingress.class: "kong"
     path: /
