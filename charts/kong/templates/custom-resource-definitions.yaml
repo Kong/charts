@@ -1,4 +1,4 @@
-{{- if (or (and .Values.ingressController.enabled .Values.ingressController.installCRDs) (not (or .Values.enabled .Values.ingressController.enabled))) -}}
+{{- if (or (and .Values.ingressController.enabled .Values.ingressController.installCRDs) (and (not (or .Values.enabled .Values.ingressController.enabled )) .Values.ingressController.installCRDs)) -}}
 {{- range $path, $bytes := .Files.Glob "crds/*.yaml" }}
 {{ $.Files.Get $path }}
 ---
