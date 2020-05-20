@@ -1,17 +1,18 @@
 # Basic values.yaml for Kong for Kubernetes Enterprise
-# Several settings (search for the string "you-must") require user-provided
+# Several settings (search for the string "CHANGEME") require user-provided
 # Secrets. These Secrets must be created before installation.
 
 image:
   repository: kong-docker-kong-enterprise-k8s.bintray.io/kong-enterprise-k8s
   tag: 2.0.4.1-centos
   pullSecrets:
-    # you-must add this: https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-docker-registry-access
+    # CHANGEME: https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-docker-registry-access
     - kong-enterprise-k8s-docker
 
 enterprise:
   enabled: true
-  license_secret: you-must-create-a-license-secret
+  # CHANGEME: https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-license
+  license_secret: kong-enterprise-license
 
 env:
   database: "off"

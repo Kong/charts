@@ -1,6 +1,6 @@
 # Kong for Kubernetes with Kong Enterprise with Enterprise features enabled and
 # exposed via TLS-enabled Ingresses. Before installing:
-# * Several settings (search for the string "you-must") require user-provided
+# * Several settings (search for the string "CHANGEME") require user-provided
 #   Secrets. These Secrets must be created before installation.
 # * Ingresses reference example "<service>.kong.example" hostnames. These must
 #   be changed to an actual hostname that resolve to your proxy.
@@ -14,7 +14,7 @@ image:
   repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
   tag: 1.5.0.2-alpine
   pullSecrets:
-    # you-must add this: https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-docker-registry-access
+    # CHANGEME: https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-docker-registry-access
     - kong-enterprise-edition-docker
 
 env:
@@ -24,8 +24,8 @@ env:
   password:
     valueFrom:
       secretKeyRef:
-        name: you-must-create-an-rbac-bootstrap-secret
-        key: you-must-replace-with-your-key
+        name: CHANGEME-admin-token-secret
+        key: CHANGEME-admin-token-key
 
 admin:
   enabled: true
@@ -41,7 +41,7 @@ admin:
 
   ingress:
     enabled: true
-    tls: you-must-create-an-admin-tls-secret
+    tls: CHANGEME-admin-tls-secret
     hostname: admin.kong.example
     annotations:
       kubernetes.io/ingress.class: "kong"
@@ -77,7 +77,8 @@ proxy:
 
 enterprise:
   enabled: true
-  license_secret: you-must-create-a-kong-license-secret
+  # CHANGEME: https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-license
+  license_secret: kong-enterprise-license
   vitals:
     enabled: true
   portal:
@@ -85,8 +86,8 @@ enterprise:
   rbac:
     enabled: true
     admin_gui_auth: basic-auth
-    session_conf_secret: you-must-create-an-rbac-session-conf-secret
-    admin_gui_auth_conf_secret: you-must-create-an-admin-gui-auth-conf-secret
+    session_conf_secret: kong-session-config
+    admin_gui_auth_conf_secret: CHANGEME-admin-gui-auth-conf-secret
   smtp:
     enabled: false
     portal_emails_from: none@example.com
@@ -101,7 +102,7 @@ enterprise:
     smtp_starttls: true
     auth:
       smtp_username: ''  # e.g. postmaster@example.com
-      smtp_password_secret: you-must-create-an-smtp-password
+      smtp_password_secret: CHANGEME-smtp-password
 
 manager:
   enabled: true
@@ -121,7 +122,7 @@ manager:
 
   ingress:
     enabled: true
-    tls: you-must-create-a-manager-tls-secret
+    tls: CHANGEME-manager-tls-secret
     hostname: manager.kong.example
     annotations: {}
     path: /
@@ -149,7 +150,7 @@ portal:
 
   ingress:
     enabled: true
-    tls: you-must-create-a-portal-tls-secret
+    tls: CHANGEME-portal-tls-secret
     hostname: portal.kong.example
     annotations:
       kubernetes.io/ingress.class: "kong"
@@ -180,7 +181,7 @@ portalapi:
 
   ingress:
     enabled: true
-    tls: you-must-create-a-portalapi-tls-secret
+    tls: CHANGEME-portalapi-tls-secret
     hostname: portalapi.kong.example
     annotations:
       kubernetes.io/ingress.class: "kong"
@@ -202,5 +203,5 @@ ingressController:
     kong_admin_token:
       valueFrom:
         secretKeyRef:
-          name: you-must-create-an-rbac-bootstrap-secret
-          key: you-must-replace-with-your-key
+          name: CHANGEME-admin-token-secret
+          key: CHANGEME-admin-token-key
