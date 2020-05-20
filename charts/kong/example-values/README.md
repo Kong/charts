@@ -16,8 +16,8 @@ change this value to `true` if you use Helm 2).
 
 * [minimal-k4k8s-with-kong-enterprise.yaml](minimal-k4k8s-with-kong-enterprise.yaml)
   installs Kong for Kubernetes with Kong Enterprise with the ingress controller
-  and PostgreSQL. It does not enable Enterprise services (Kong Manager, the Dev
-  Portal, etc.) and does not expose the admin API outside the Pod.
+  and PostgreSQL. It does not enable Enterprise features other than Kong
+  Manager, and does not expose it or the Admin API via a TLS-secured ingress.
 
 * [full-k4k8s-with-kong-enterprise.yaml](full-k4k8s-with-kong-enterprise.yaml)
   installs Kong for Kubernetes with Kong Enterprise with the ingress controller
