@@ -34,6 +34,7 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
+  - [CRDs only](#crds-only)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
@@ -263,6 +264,18 @@ then create releases with:
 helm install proxy-only -f shared-values.yaml -f only-proxy.yaml kong/kong
 helm install admin-only -f shared-values.yaml -f only-admin.yaml kong/kong
 ```
+
+### CRDs only
+
+For Helm 2 installations, CRDs are managed as part of a release, and are
+deleted if the release is. This can cause issues for clusters with multiple
+Kong installations, as one release must remain in place for the rest to
+function. To avoid this, you can create a CRD-only release by setting
+`deployment.kong.enabled: false` and `ingressController.enabled: false`.
+
+On Helm 3, CRDs are created if necessary, but are not managed along with the
+release. Releases can be deleted without affecting CRDs; CRDs are only removed
+if you delete them manually.
 
 ### Example configurations
 
