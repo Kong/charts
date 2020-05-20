@@ -1,4 +1,4 @@
-{{- if .Values.enabled }}
+{{- if .Values.deployment.kong.enabled }}
 {{- if .Values.proxy.ingress.enabled -}}
 {{- $serviceName := include "kong.fullname" . -}}
 {{- $servicePort := include "kong.ingress.servicePort" .Values.proxy -}}

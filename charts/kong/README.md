@@ -310,7 +310,6 @@ directory.
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| enabled                            | Enable or disable deploying Kong                                                      | `true`              |
 | image.repository                   | Kong image                                                                            | `kong`              |
 | image.tag                          | Kong image version                                                                    | `2.0`               |
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
@@ -422,6 +421,7 @@ For a complete list of all configuration values you can set in the
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
 | autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
 | autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |

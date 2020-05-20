@@ -1,4 +1,4 @@
-{{- if .Values.enabled }}
+{{- if .Values.deployment.kong.enabled }}
 {{- if .Release.IsInstall -}}
 {{/* .migrations.init isn't normally exposed in values.yaml. In testing,
 however, adding it with value "false" didn't actually disable this job. Not

@@ -1,4 +1,4 @@
-{{- if or .Values.enabled .Values.ingressController.enabled }}
+{{- if or .Values.deployment.kong.enabled .Values.ingressController.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -54,7 +54,7 @@ spec:
       {{- end }}
       {{- end }}
       {{- if not (eq .Values.env.database "off") }}
-      {{- if .Values.enabled }}
+      {{- if .Values.deployment.kong.enabled }}
       initContainers:
       {{- include "kong.wait-for-db" . | nindent 6 }}
       {{ end }}
@@ -63,7 +63,7 @@ spec:
       {{- if .Values.ingressController.enabled }}
       {{- include "kong.controller-container" . | nindent 6 }}
       {{ end }}
-      {{- if .Values.enabled }}
+      {{- if .Values.deployment.kong.enabled }}
       - name: "proxy"
         {{- if .Values.image.unifiedRepoTag }}
         image: "{{ .Values.image.unifiedRepoTag }}"

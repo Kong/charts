@@ -1,4 +1,4 @@
-{{- if .Values.enabled }}
+{{- if .Values.deployment.kong.enabled }}
 {{- if .Values.enterprise.enabled }}
 {{- if .Values.manager.ingress.enabled -}}
 {{- $serviceName := include "kong.fullname" . -}}

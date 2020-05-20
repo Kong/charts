@@ -1,4 +1,4 @@
-{{- if .Values.enabled }}
+{{- if .Values.deployment.kong.enabled }}
 {{- if .Values.admin.containerPort -}} {{/* TODO: remove legacy admin handling */}}
 {{- if .Values.admin.enabled -}}
 apiVersion: v1

@@ -1,4 +1,4 @@
-{{- if .Values.enabled }}
+{{- if .Values.deployment.kong.enabled }}
 {{- if .Values.enterprise.enabled }}
 {{- if and .Values.portalapi.enabled (or .Values.portalapi.http.enabled .Values.portalapi.tls.enabled) -}}
 apiVersion: v1

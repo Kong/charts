@@ -2,6 +2,7 @@
 # Declare variables to be passed into your templates.
 #
 # Sections:
+# - Deployment parameters
 # - Kong parameters
 # - Ingress Controller parameters
 # - Postgres sub-chart parameters
@@ -9,13 +10,19 @@
 # - Kong Enterprise parameters
 
 # -----------------------------------------------------------------------------
-# Kong parameters
+# Deployment parameters
 # -----------------------------------------------------------------------------
 
-# Enable or disable Kong itself
-# Setting this to false with ingressController.enabled=true will create a
-# controller-only release.
-enabled: true
+deployment:
+  kong:
+    # Enable or disable Kong itself
+    # Setting this to false with ingressController.enabled=true will create a
+    # controller-only release.
+    enabled: true
+
+# -----------------------------------------------------------------------------
+# Kong parameters
+# -----------------------------------------------------------------------------
 
 # Specify Kong configurations
 # Kong configurations guide https://docs.konghq.com/latest/configuration

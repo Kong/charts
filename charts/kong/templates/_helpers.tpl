@@ -238,7 +238,7 @@ The name of the service used for the ingress controller's validation webhook
     secretName: {{ .name }}
 {{- end }}
 {{- end }}
-{{- if .Values.enabled }}
+{{- if .Values.deployment.kong.enabled }}
 - name: custom-nginx-template-volume
   configMap:
     name: {{ template "kong.fullname" . }}-default-custom-server-blocks
