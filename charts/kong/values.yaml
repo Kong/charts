@@ -505,7 +505,7 @@ enterprise:
   # Kong Enterprise license secret name
   # This secret must contain a single 'license' key, containing your base64-encoded license data
   # The license secret is required for all Kong Enterprise deployments
-  license_secret: you-must-create-a-kong-license-secret
+  license_secret: kong-enterprise-license
   vitals:
     enabled: true
   portal:
@@ -516,10 +516,10 @@ enterprise:
     # If RBAC is enabled, this Secret must contain an admin_gui_session_conf key
     # The key value must be a secret configuration, following the example at
     # https://docs.konghq.com/enterprise/latest/kong-manager/authentication/sessions
-    session_conf_secret: you-must-create-an-rbac-session-conf-secret
+    session_conf_secret: kong-session-config
     # If admin_gui_auth is not set to basic-auth, provide a secret name which
     # has an admin_gui_auth_conf key containing the plugin config JSON
-    admin_gui_auth_conf_secret: you-must-create-an-admin-gui-auth-conf-secret
+    admin_gui_auth_conf_secret: CHANGEME-admin-gui-auth-conf-secret
   # For configuring emails and SMTP, please read through:
   # https://docs.konghq.com/enterprise/latest/developer-portal/configuration/smtp
   # https://docs.konghq.com/enterprise/latest/kong-manager/networking/email
@@ -541,7 +541,7 @@ enterprise:
       # string, you must create a Secret with an smtp_password key containing
       # your SMTP password and specify its name here.
       smtp_username: ''  # e.g. postmaster@example.com
-      smtp_password_secret: you-must-create-an-smtp-password
+      smtp_password_secret: CHANGEME-smtp-password
 
 manager:
   # Enable creating a Kubernetes service for Kong Manager
