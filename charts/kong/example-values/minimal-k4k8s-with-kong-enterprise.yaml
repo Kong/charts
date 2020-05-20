@@ -3,9 +3,9 @@
 # Secrets. These Secrets must be created before installation.
 #
 # This installation does not create an Ingress or LoadBalancer Service for
-# the Admin API. It requires port-forwards to access without further
-# configuration to add them, e.g.:
-# kubectl port-forward deploy/your-deployment-kong 8001:8001
+# the Admin API or Kong Manager. They require port-forwards to access without
+# further configuration to add them:
+# kubectl port-forward deploy/your-deployment-kong 8001:8001 8002:8002
 
 image:
   repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
