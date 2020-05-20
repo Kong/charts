@@ -1,12 +1,18 @@
-# The minimum values.yaml configuration necessary for Kong for Kubernetes with Kong Enterprise
+# Basic values.yaml for Kong for Kubernetes with Kong Enterprise
 # Several settings (search for the string "you-must") require user-provided
 # Secrets. These Secrets must be created before installation.
+#
+# This installation does not create an Ingress or LoadBalancer Service for
+# the Admin API. It requires port-forwards to access without further
+# configuration to add them, e.g.:
+# kubectl port-forward deploy/your-deployment-kong 8001:8001
 
 image:
   repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
   tag: 1.5.0.2-alpine
   pullSecrets:
-    - you-must-create-a-registry-secret
+    # you-must add this: https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-docker-registry-access
+    - kong-enterprise-edition-docker
 
 admin:
   enabled: true

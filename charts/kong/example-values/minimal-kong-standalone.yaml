@@ -1,4 +1,9 @@
-# The minimum values.yaml configuration necessary for Kong without the ingress controller, using the Postgres subchart
+# Basic configuration for Kong without the ingress controller, using the Postgres subchart
+# This installation does not create an Ingress or LoadBalancer Service for
+# the Admin API. It requires port-forwards to access without further
+# configuration to add them, e.g.:
+# kubectl port-forward deploy/your-deployment-kong 8001:8001
+
 image:
   repository: kong
   tag: "2.0"
