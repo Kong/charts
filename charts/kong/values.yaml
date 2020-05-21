@@ -481,8 +481,7 @@ podSecurityPolicy:
 priorityClassName: ""
 
 # securityContext for Kong pods.
-securityContext:
-  runAsUser: 1000
+securityContext: {}
 
 serviceMonitor:
   # Specifies whether ServiceMonitor for Prometheus operator should be created
