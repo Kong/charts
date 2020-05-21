@@ -24,8 +24,8 @@ env:
   password:
     valueFrom:
       secretKeyRef:
-        name: CHANGEME-admin-token-secret
-        key: CHANGEME-admin-token-key
+        name: kong-enterprise-superuser-password #CHANGEME
+        key: password #CHANGEME
 
 admin:
   enabled: true
@@ -203,5 +203,5 @@ ingressController:
     kong_admin_token:
       valueFrom:
         secretKeyRef:
-          name: CHANGEME-admin-token-secret
-          key: CHANGEME-admin-token-key
+          name: kong-enterprise-superuser-password #CHANGEME
+          key: password #CHANGEME

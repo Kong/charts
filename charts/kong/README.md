@@ -553,8 +553,8 @@ env:
  password:
    valueFrom:
      secretKeyRef:
-        name: CHANGEME-admin-token-secret
-        key: CHANGEME-admin-token-key
+        name: kong-enterprise-superuser-password
+        key: password
 ```
 
 If using the ingress controller, it needs access to the token as well, by
@@ -566,8 +566,8 @@ ingressController:
    kong_admin_token:
      valueFrom:
        secretKeyRef:
-          name: CHANGEME-admin-token-secret
-          key: CHANGEME-admin-token-key
+          name: kong-enterprise-superuser-password
+          key: password
 ```
 
 Although the above examples both use the initial super-admin, we recommend

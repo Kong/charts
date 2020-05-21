@@ -40,8 +40,8 @@ env:
   password:
     valueFrom:
       secretKeyRef:
-        name: CHANGEME-admin-token-secret
-        key: CHANGEME-admin-token-key
+        name: kong-enterprise-superuser-password #CHANGEME
+        key: password #CHANGEME
 
 postgresql:
   enabled: true
