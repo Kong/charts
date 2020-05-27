@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1
+
+This release contains no changes other than the version. This is to address an
+issue with our release automation.
+
 ## 1.6.0
 
 ### Improvements
