@@ -35,6 +35,8 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
   - [Standalone controller nodes](#standalone-controller-nodes)
+  - [CRDs only](#crds-only)
+  - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
@@ -267,9 +269,9 @@ helm install admin-only -f shared-values.yaml -f only-admin.yaml kong/kong
 ### Standalone controller nodes
 
 The chart can deploy releases that contain the controller only, with no Kong
-container, by setting `enabled: false` in values.yaml. There are several
-controller settings that must be populated manually in this scenario and
-several settings that are useful when using multiple controllers:
+container, by setting `deployment.kong.enabled: false` in values.yaml. There
+are several controller settings that must be populated manually in this
+scenario and several settings that are useful when using multiple controllers:
 
 * `ingressController.env.kong_admin_url` must be set to the Kong Admin API URL.
   If the Admin API is exposed by a service in the cluster, this should look
@@ -286,7 +288,7 @@ several settings that are useful when using multiple controllers:
 Standalone controllers require a database-backed Kong instance, as DB-less mode
 requires that a single controller generate a complete Kong configuration.
 
-### Configuration method
+### CRDs only
 
 For Helm 2 installations, CRDs are managed as part of a release, and are
 deleted if the release is. This can cause issues for clusters with multiple
