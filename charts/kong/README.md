@@ -34,6 +34,8 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
+  - [CRDs only](#crds-only)
+  - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
@@ -205,6 +207,25 @@ The package to run can be changed via `image.repository` and `image.tag`
 parameters. If you would like to run the Enterprise package, please read
 the [Kong Enterprise Parameters](#kong-enterprise-parameters) section.
 
+### Configuration method
+
+Kong can be configured via two methods:
+- **Ingress and CRDs**\
+  The configuration for Kong is done via `kubectl` and Kubernetes-native APIs.
+  This is also known as Kong Ingress Controller or Kong for Kubernetes and is
+  the default deployment pattern for this Helm Chart. The configuration
+  for Kong is managed via Ingress and a few
+  [Custom Resources](https://github.com/Kong/kubernetes-ingress-controller/blob/master/docs/concepts/custom-resources.md).
+  For more details, please read the
+  [documentation](https://github.com/Kong/kubernetes-ingress-controller/tree/master/docs)
+  on Kong Ingress Controller.
+  To configure and fine-tune the controller, please read the
+  [Ingress Controller Parameters](#ingress-controller-parameters) section.
+- **Admin API**\
+  This is the traditional method of running and configuring Kong.
+  By default, the Admin API of Kong is not exposed as a Service. This
+  can be controlled via `admin.enabled` and `env.admin_listen` parameters.
+
 ### Separate admin and proxy nodes
 
 Users may wish to split their Kong deployment into multiple instances that only
@@ -244,24 +265,23 @@ helm install proxy-only -f shared-values.yaml -f only-proxy.yaml kong/kong
 helm install admin-only -f shared-values.yaml -f only-admin.yaml kong/kong
 ```
 
-### Configuration method
+### CRDs only
 
-Kong can be configured via two methods:
-- **Ingress and CRDs**\
-  The configuration for Kong is done via `kubectl` and Kubernetes-native APIs.
-  This is also known as Kong Ingress Controller or Kong for Kubernetes and is
-  the default deployment pattern for this Helm Chart. The configuration
-  for Kong is managed via Ingress and a few
-  [Custom Resources](https://github.com/Kong/kubernetes-ingress-controller/blob/master/docs/concepts/custom-resources.md).
-  For more details, please read the
-  [documentation](https://github.com/Kong/kubernetes-ingress-controller/tree/master/docs)
-  on Kong Ingress Controller.
-  To configure and fine-tune the controller, please read the
-  [Ingress Controller Parameters](#ingress-controller-parameters) section.
-- **Admin API**\
-  This is the traditional method of running and configuring Kong.
-  By default, the Admin API of Kong is not exposed as a Service. This
-  can be controlled via `admin.enabled` and `env.admin_listen` parameters.
+For Helm 2 installations, CRDs are managed as part of a release, and are
+deleted if the release is. This can cause issues for clusters with multiple
+Kong installations, as one release must remain in place for the rest to
+function. To avoid this, you can create a CRD-only release by setting
+`deployment.kong.enabled: false` and `ingressController.enabled: false`.
+
+On Helm 3, CRDs are created if necessary, but are not managed along with the
+release. Releases can be deleted without affecting CRDs; CRDs are only removed
+if you delete them manually.
+
+### Example configurations
+
+Several example values.yaml are available in the
+[example-values](https://github.com/Kong/charts/blob/master/charts/kong/example-values/)
+directory.
 
 ## Configuration
 
@@ -534,8 +554,8 @@ env:
  password:
    valueFrom:
      secretKeyRef:
-        name: CHANGEME-admin-token-secret
-        key: CHANGEME-admin-token-key
+        name: kong-enterprise-superuser-password
+        key: password
 ```
 
 If using the ingress controller, it needs access to the token as well, by
@@ -547,8 +567,8 @@ ingressController:
    kong_admin_token:
      valueFrom:
        secretKeyRef:
-          name: CHANGEME-admin-token-secret
-          key: CHANGEME-admin-token-key
+          name: kong-enterprise-superuser-password
+          key: password
 ```
 
 Although the above examples both use the initial super-admin, we recommend
