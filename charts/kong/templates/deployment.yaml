@@ -1,3 +1,4 @@
+{{- if or .Values.deployment.kong.enabled .Values.ingressController.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -53,13 +54,16 @@ spec:
       {{- end }}
       {{- end }}
       {{- if not (eq .Values.env.database "off") }}
+      {{- if .Values.deployment.kong.enabled }}
       initContainers:
       {{- include "kong.wait-for-db" . | nindent 6 }}
+      {{ end }}
       {{ end }}
       containers:
       {{- if .Values.ingressController.enabled }}
       {{- include "kong.controller-container" . | nindent 6 }}
       {{ end }}
+      {{- if .Values.deployment.kong.enabled }}
       - name: "proxy"
         {{- if .Values.image.unifiedRepoTag }}
         image: "{{ .Values.image.unifiedRepoTag }}"
@@ -195,6 +199,7 @@ spec:
           protocol: TCP
         {{- end }}
         {{- end }}
+        {{- end }}
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 10 }}
         readinessProbe:
@@ -217,3 +222,4 @@ spec:
 {{ toYaml .Values.tolerations | indent 8 }}
       volumes:
       {{- include "kong.volumes" . | nindent 8 -}}
+{{- end }}

@@ -1,3 +1,4 @@
+{{- if .Values.deployment.kong.enabled }}
 {{- if .Values.enterprise.enabled }}
 {{- if .Values.portalapi.ingress.enabled -}}
 {{- $serviceName := include "kong.fullname" . -}}
@@ -30,5 +31,6 @@ spec:
     - {{ $hostname }}
     secretName: {{ $tls }}
   {{- end -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
