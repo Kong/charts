@@ -3,6 +3,23 @@ entries:
   kong:
   - apiVersion: v1
     appVersion: "2"
+    created: "2020-06-02T23:48:21.28670209Z"
+    description: The Cloud-Native Ingress and API-management
+    digest: 2eed2b4708640cffd35e7e6e69b11035e7b4293a467712e6325dc656520d48f9
+    engine: gotpl
+    home: https://konghq.com/
+    icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
+    maintainers:
+    - email: harry@konghq.com
+      name: hbagdi
+    - email: traines@konghq.com
+      name: rainest
+    name: kong
+    urls:
+    - https://github.com/Kong/charts/releases/download/kong-1.7.0/kong-1.7.0.tgz
+    version: 1.7.0
+  - apiVersion: v1
+    appVersion: "2"
     created: "2020-05-27T21:42:40.131966209Z"
     description: The Cloud-Native Ingress and API-management
     digest: c301aacbadd530b7845fb91d60eb66aafb08683408b1c4d45f9da83eb4716895
