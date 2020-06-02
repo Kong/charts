@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.7.0
+
+### Improvements
+
+* Added support for
+  [CRD-only](https://github.com/Kong/charts/blob/1.7.0/charts/kong/README.md#crds-only)
+  and [controller-only releases](https://github.com/Kong/charts/blob/next/charts/kong/README.md#standalone-controller-nodes).
+  ([#136](https://github.com/Kong/charts/pull/136))
+
+### Documentation
+
+* Added a set of [example
+  values.yamls](https://github.com/Kong/charts/tree/master/charts/kong/example-values)
+  for various configurations of Kong and Kong Enterprise.
+  ([#134](https://github.com/Kong/charts/pull/134))
+
 ## 1.6.1
 
 This release contains no changes other than the version. This is to address an
