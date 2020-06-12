@@ -437,6 +437,16 @@ podLabels: {}
 # Kong pod count
 replicaCount: 1
 
+# Enable SSL connection to Postgres. To be used when env database: "postgres"
+pgSSL:
+  # Enable SSL connections to Postgres.
+  # Enabling this will start kong with KONG_PG_SSL: 'on' and KONG_PG_SSL_VERIFY: 'on'
+  enabled: false
+  # A secret containing the ssl certificate should be created in advance.
+  # This is required in order to specify the KONG_LUA_SSL_TRUSTED_CERTIFICATE
+  pgCertSecretName: ""
+  pgCertSecretDataKeyName: ""
+
 # Annotations to be added to Kong deployment
 deploymentAnnotations:
   kuma.io/gateway: enabled

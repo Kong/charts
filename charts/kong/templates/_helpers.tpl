@@ -41,6 +41,11 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "kong.postgresql.cert.path" -}}
+{{- $certName := default "undefined" .Values.pgSSL.pgCertSecretDataKeyName -}}
+{{- printf "/var/app/%s" $certName -}}
+{{- end -}}
+
 {{/*
 Create the name of the service account to use
 */}}
@@ -214,6 +219,11 @@ The name of the service used for the ingress controller's validation webhook
 {{- end -}}
 
 {{- define "kong.volumes" -}}
+{{- if .Values.pgSSL.enabled }}
+- name: pg-cert
+  secret:
+    secretName: {{ .Values.pgSSL.pgCertSecretName }}
+{{- end }}
 - name: {{ template "kong.fullname" . }}-prefix-dir
   emptyDir: {}
 - name: {{ template "kong.fullname" . }}-tmp
@@ -271,6 +281,12 @@ The name of the service used for the ingress controller's validation webhook
   mountPath: /tmp
 - name: custom-nginx-template-volume
   mountPath: /kong
+{{- if .Values.pgSSL.enabled }}
+- name: pg-cert
+  mountPath: /var/app/{{- .Values.pgSSL.pgCertSecretDataKeyName }}
+  subPath: {{ .Values.pgSSL.pgCertSecretDataKeyName }}
+  readOnly: true
+{{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
   mountPath: /kong_dbless/
@@ -522,6 +538,11 @@ TODO: remove legacy admin listen behavior at a future date
   {{- $_ := set $autoEnv "KONG_PG_PASSWORD" $pgPassword -}}
 {{- else if eq .Values.env.database "postgres" }}
   {{- $_ := set $autoEnv "KONG_PG_PORT" "5432" }}
+{{- if .Values.pgSSL.enabled }}
+  {{- $_ := set $autoEnv "KONG_LUA_SSL_TRUSTED_CERTIFICATE" (include "kong.postgresql.cert.path" .) -}}
+  {{- $_ := set $autoEnv "KONG_PG_SSL" "on" -}}
+  {{- $_ := set $autoEnv "KONG_PG_SSL_VERIFY" "on" -}}
+{{- end }}
 {{- end }}
 
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}

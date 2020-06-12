@@ -172,6 +172,15 @@ the support has now been dropped due to stability issues.
 You can still deploy Cassandra on your own and configure Kong to use
 that via the `env.database` parameter.
 
+### Enabling SSL for Postgres connections
+
+For Postgres SSL connections you will need to provide the client certificate.
+This can be done via a secret that needs to be created in advance. More information about kubernetes secrets can be found
+[here](https://kubernetes.io/docs/concepts/configuration/secret/).
+
+Once the secret has been created, SSL can be enabled using the `pgSSL.enabled` parameter. The secret name and the key 
+name can be specified via the `pgCertSecretName` and `pgCertSecretDataKeyName` parameters. 
+
 #### DB-less  deployment
 
 When deploying Kong in DB-less mode(`env.database: "off"`)
