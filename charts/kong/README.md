@@ -303,21 +303,15 @@ Kong Enterprise 2.1.0. These deployments split Kong nodes into control plane
 data plane (DP) nodes, which provide the proxy and receive configuration from
 control plane nodes.
 
-The chart does not support deploying control and data plane nodes in a single
-release. Users should [create separate releases for each node
+You can deploy hybrid mode Kong clusters by [creating separate releases for each node
 type](#separate-admin-and-proxy-nodes), i.e. use separate control and data
-plane values.yamls that are installed separately.
+plane values.yamls that are then installed separately. The [control
+plane](#control-plane-node-configuration) and [data
+plane](#data-plane-node-configuration) configuration sections below cover the
+values.yaml specifics for each.
 
-* If `.Values.env.role="control_plane"`, the release will create a Service
-  named `RELEASE-NAME-kong-cluster`.
-* Cluster certificates are not yet generated automatically. You must create a
-  certificate/key pair from a local instance, create a Secret containing them,
-  add the Secret to `.Values.secretVolumes`, and add
-  `cluster_cert`/`cluster_cert_key` values indicating its location under
-  `/etc/secrets` to `env`.
-* Note that data plane nodes do not default to using the default port (8005)
-  for `cluster_control_plane`. You should use `RELEASE-NAME-kong-cluster:8005`
-  as the `cluster_control_plane` value if using the default port.
+Cluster certificates are not generated automatically. You must [create a
+certificate and key pair](#certificates) for intra-cluster communication.
 
 #### Certificates
 
