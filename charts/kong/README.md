@@ -401,7 +401,7 @@ section of `values.yaml` file:
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | enabled                            | Deploy the ingress controller, rbac and crd                                           | true                                                                         |
 | image.repository                   | Docker image with the ingress controller                                              | kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller |
-| image.tag                          | Version of the ingress controller                                                     | 0.9.0                                                                        |
+| image.tag                          | Version of the ingress controller                                                     | 0.9.1                                                                        |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
 | installCRDs                        | Create CRDs. **FOR HELM3, MAKE SURE THIS VALUE IS SET TO `false`.**  Regardless of value of this, Helm v3+ will install the CRDs if those are not present already. Use `--skip-crds` with `helm install` if you want to skip CRD creation.                 | true                                                                         |
@@ -452,6 +452,7 @@ For a complete list of all configuration values you can set in the
 | serviceMonitor.interval            | Scraping interval                                                                     | `30s`               |
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
 | serviceMonitor.labels              | ServiceMonitor labels                                                                 | `{}`                |
+| serviceMonitor.targetLabels        | ServiceMonitor targetLabels                                                           | `{}`                |
 
 #### The `env` section
 
