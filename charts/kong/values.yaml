@@ -25,6 +25,9 @@ deployment:
 # -----------------------------------------------------------------------------
 
 # Specify Kong configurations
+# This chart takes all entries defined under `.env`, transforms them into into KONG_*
+# environment variables (interpreted by Kong as configuration value overrides) and
+# passes them to Kong containers.
 # Kong configurations guide https://docs.konghq.com/latest/configuration
 # Values here take precedence over values from other sections of values.yaml,
 # e.g. setting pg_user here will override the value normally set when postgresql.enabled
