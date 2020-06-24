@@ -319,7 +319,7 @@ Hybrid mode uses TLS to secure the CP/DP node communication channel, and
 requires certificates for it. You can generate these either using `kong hybrid
 gen_cert` on a local Kong installation or using OpenSSL:
 
-```
+```bash
 openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp384r1) \
   -keyout /tmp/cluster.key -out /tmp/cluster.crt \
   -days 1095 -subj "/CN=kong_clustering"
@@ -327,7 +327,7 @@ openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp384r1) \
 
 You must then place these certificates in a Secret:
 
-```
+```bash
 kubectl create secret tls kong-cluster-cert --cert=/tmp/cluster.crt --key=/tmp/cluster.key
 ```
 
@@ -351,7 +351,7 @@ env:
 Furthermore, you must enable the cluster listen and Kubernetes Service, and
 should typically disable the proxy:
 
-```
+```yaml
 cluster:
   enabled: false
   tls:
@@ -372,8 +372,8 @@ another.
 
 Data plane configuration also requires the certificate and `role`
 configuration, and the database should always be set to `off`. You must also
-trust the cluster certificate and indicate what hostname/port it should use to
-find control plane nodes.
+trust the cluster certificate and indicate what hostname/port Kong should use
+to find control plane nodes.
 
 Though not strictly required, you should disable the admin service (it will not
 work on DP nodes anyway, but should be disabled to avoid creating an invalid

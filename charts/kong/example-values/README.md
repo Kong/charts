@@ -27,8 +27,9 @@ change this value to `true` if you use Helm 2).
   [minimal-kong-hybrid-data.yaml](minimal-kong-hybrid-data.yaml) install
   separate releases for hybrid mode control and data plane nodes, using the
   built-in PostgreSQL chart on the control plane release. They require some
-  pre-work to create certificates and configure the control plane location. See
-  comments in the file headers for details.
+  pre-work to [create certificates](https://github.com/Kong/charts/blob/master/charts/kong/README.md#certificates)
+  and configure the control plane location. See comments in the file headers
+  for additional details.
 
   Note that you should install the control plane release before the data plane
   release if possible: data planes must be able to talk with a control plane
