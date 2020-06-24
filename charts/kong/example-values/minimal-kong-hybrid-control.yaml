@@ -23,7 +23,7 @@ admin:
     containerPort: 8001
 
 cluster:
-  enabled: false
+  enabled: true
   tls:
     enabled: true
     servicePort: 8005

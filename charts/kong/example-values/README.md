@@ -31,11 +31,12 @@ change this value to `true` if you use Helm 2).
   and configure the control plane location. See comments in the file headers
   for additional details.
 
-  Note that you should install the control plane release before the data plane
-  release if possible: data planes must be able to talk with a control plane
-  node before they can come online. Data plane nodes will retry this for a time
-  before evicted by liveness checks, however, so starting them second isn't
-  strictly required so long as the control nodes come online shortly after.
+  Note that you should install the control plane release first if possible:
+  data planes must be able to talk with a control plane node before they can
+  come online. Starting control planes first is not strictly required (data
+  plane nodes will retry their connection for a while before Kubernetes
+  restarts them, so starting control planes second, but around the same time
+  will usually work), but is the smoothest option.
 
 All Enterprise examples require some level of additional user configuration to
 install properly. Read the comments at the top of each file for instructions.

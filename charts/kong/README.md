@@ -353,7 +353,7 @@ should typically disable the proxy:
 
 ```yaml
 cluster:
-  enabled: false
+  enabled: true
   tls:
     enabled: true
     servicePort: 8005
@@ -470,7 +470,9 @@ service or ingress. It supports the settings under `SVC.http` and `SVC.tls`
 only.
 
 `cluster` is used on hybrid mode control plane nodes. It does not support the
-`SVC.http.*` settings, as cluster communications must be TLS-only.
+`SVC.http.*` settings (cluster communications must be TLS-only) or the
+`SVC.ingress.*` settings (cluster communication requires TLS client
+authentication, which cannot pass through an ingress proxy).
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |

@@ -130,9 +130,18 @@ status:
     enabled: false
     containerPort: 8543
 
-# Specify Kong proxy service and listener configuration
+# Specify Kong cluster service and listener configuration
+#
+# The cluster service *must* use TLS. It does not support the "http" block
+# available on other services.
+#
+# The cluster service cannot be exposed through an Ingress, as it must perform
+# TLS client validation directly and is not compatible with TLS-terminating
+# proxies. If you need to expose it externally, you must use "type:
+# LoadBalancer" and use a TCP-only load balancer (check your Kubernetes
+# provider's documentation, as the configuration required for this varies).
 cluster:
-  # If you want to specify annotations for the Manager service, uncomment the following
+  # If you want to specify annotations for the cluster service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
@@ -141,26 +150,9 @@ cluster:
     enabled: false
     servicePort: 8005
     containerPort: 8005
-    # Set a nodePort which is available if service type is NodePort
-    # nodePort: 32443
+    parameters: []
 
-  type: NodePort
-
-  # Kong cluster ingress settings.
-  # TODO: have left this in for now, but there is no corresponding template, and it doesn't work
-  # unsure if it makes sense to have a standard ingress setup, since it's of questionable use and
-  # the hybrid mTLS presumably cannot work through an ingress proxy without considerable work
-  ingress:
-    # Enable/disable exposure using ingress.
-    enabled: false
-    # TLS secret name.
-    # tls: kong-proxy.example.com-tls
-    # Ingress hostname
-    hostname:
-    # Map of ingress annotations.
-    annotations: {}
-    # Ingress path.
-    path: /
+  type: ClusterIP
 
   externalIPs: []
 
