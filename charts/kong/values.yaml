@@ -503,6 +503,8 @@ serviceMonitor:
   # namespace: monitoring
   # labels:
   #   foo: bar
+  # targetLabels:
+  #   - foo
 
 # -----------------------------------------------------------------------------
 # Kong Enterprise parameters

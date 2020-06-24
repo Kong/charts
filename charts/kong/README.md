@@ -452,6 +452,7 @@ For a complete list of all configuration values you can set in the
 | serviceMonitor.interval            | Scraping interval                                                                     | `30s`               |
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
 | serviceMonitor.labels              | ServiceMonitor labels                                                                 | `{}`                |
+| serviceMonitor.targetLabels        | ServiceMonitor targetLabels                                                           | `{}`                |
 
 #### The `env` section
 
