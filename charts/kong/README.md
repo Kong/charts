@@ -363,10 +363,17 @@ proxy:
   enabled: false
 ```
 
-Note that this does not enable an Ingress for the cluster listen or configure
-the cert on the Ingress. This may be necessary if you run CP and DP nodes in
-separate clusters depending on how you expose the clusters' networks to one
-another.
+If using the ingress controller, you must also specify the DP proxy service as
+its publish target to keep Ingress status information up to date:
+
+```
+ingressController:
+  env:
+    publish_service: hybrid/example-release-data-kong-proxy
+```
+
+Replace `hybrid` with your DP nodes' namespace and `example-release-data` with
+the name of the DP release.
 
 #### Data plane node configuration
 
