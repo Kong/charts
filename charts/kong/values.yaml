@@ -141,6 +141,7 @@ status:
 # LoadBalancer" and use a TCP-only load balancer (check your Kubernetes
 # provider's documentation, as the configuration required for this varies).
 cluster:
+  enabled: false
   # If you want to specify annotations for the cluster service, uncomment the following
   # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
   annotations: {}
