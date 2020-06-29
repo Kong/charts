@@ -59,11 +59,17 @@ subjects:
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- if .Values.ingressController.rbac.clusterroles.enabled }}
 kind: ClusterRole
 metadata:
+  name:  {{ template "kong.fullname" . }}
+{{- else }}
+kind: Role
+metadata:
+  name:  {{ template "kong.fullname" . }}-role
+{{- end }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
-  name:  {{ template "kong.fullname" . }}
 rules:
   - apiGroups:
       - ""
@@ -135,15 +141,26 @@ rules:
       - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
+{{- if .Values.ingressController.rbac.clusterroles.enabled }}
 kind: ClusterRoleBinding
 metadata:
   name:  {{ template "kong.fullname" . }}
+{{- else }}
+kind: RoleBinding
+metadata:
+  name:  {{ template "kong.fullname" . }}-rolebind
+{{- end }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
+{{- if .Values.ingressController.rbac.clusterroles.enabled }}
   kind: ClusterRole
   name:  {{ template "kong.fullname" . }}
+{{- else }}
+  kind: Role
+  name:  {{ template "kong.fullname" . }}-role
+{{- end }}
 subjects:
   - kind: ServiceAccount
     name: {{ template "kong.serviceAccountName" . }}

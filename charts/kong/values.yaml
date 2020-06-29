@@ -302,6 +302,9 @@ ingressController:
   rbac:
     # Specifies whether RBAC resources should be created
     create: true
+    # Restricted clusters won't allow clusterroles
+    clusterroles:
+      enabled: true
 
   serviceAccount:
     # Specifies whether a ServiceAccount should be created
