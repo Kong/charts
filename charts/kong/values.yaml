@@ -302,7 +302,11 @@ ingressController:
   rbac:
     # Specifies whether RBAC resources should be created
     create: true
-    # Restricted clusters won't allow clusterroles
+    # Create cluster roles
+    # Cluster roles allow the controller to use resources from all namespaces for Kong configuration
+    # Depending on your K8S cluster configuration, you may not be able to create cluster roles, and can
+    # disable this setting if so. This limits the controller to resources in the namespace it's installed in,
+    # and should be used along with "ingressController.env.watch_namespace: INSTALL_NAMEPSACE"
     clusterroles:
       enabled: true
 
