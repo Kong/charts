@@ -17,6 +17,6 @@ when it is merged.
 
 #### Checklist
 [Place an '[x]' (no spaces) in all applicable fields. Please remove unrelated fields.]
-- [ ] PR is based off the current tip of the `next` branch and targets `next`, not `master`
+- [ ] The PR is a non-breaking change and it targets `master` **OR** the PR is a breaking change and it targets `next`
 - [ ] New or modified sections of values.yaml are documented in the README.md
 - [ ] Title of the PR and commit headers start with chart name (e.g. `[kong]`)
