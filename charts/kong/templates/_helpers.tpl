@@ -92,6 +92,25 @@ Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
 {{- end -}}
 
 {{/*
+Create KONG_PORT_MAPS string
+Parameters: takes a service (e.g. .Values.proxy) as its argument and returns KONG_PORT_MAPS for that service.
+*/}}
+{{- define "kong.port_maps" -}}
+  {{- $portMaps := list -}}
+
+  {{- if .http.enabled -}}
+		{{- $portMaps = append $portMaps (printf "%d:%d" (int64 .http.servicePort) (int64 .http.containerPort)) -}}
+  {{- end -}}
+
+  {{- if .tls.enabled -}}
+		{{- $portMaps = append $portMaps (printf "%d:%d" (int64 .tls.servicePort) (int64 .tls.containerPort)) -}}
+  {{- end -}}
+
+  {{- $portMapsString := ($portMaps | join ", ") -}}
+  {{- $portMapsString -}}
+{{- end -}}
+
+{{/*
 Create KONG_STREAM_LISTEN string
 */}}
 {{- define "kong.streamListen" -}}
@@ -438,6 +457,10 @@ TODO: remove legacy admin listen behavior at a future date
 {{- $_ := set $autoEnv "KONG_STREAM_LISTEN" (include "kong.streamListen" .Values.proxy) -}}
 
 {{- $_ := set $autoEnv "KONG_STATUS_LISTEN" (include "kong.listen" .Values.status) -}}
+
+{{- if .Values.proxy.enabled -}}
+  {{- $_ := set $autoEnv "KONG_PORT_MAPS" (include "kong.port_maps" .Values.proxy) -}}
+{{- end -}}
 
 {{- if .Values.enterprise.enabled }}
   {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.listen" .Values.manager) -}}
