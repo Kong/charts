@@ -35,6 +35,7 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
   - [Standalone controller nodes](#standalone-controller-nodes)
+  - [Hybrid mode](#hybrid-mode)
   - [CRDs only](#crds-only)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
@@ -229,11 +230,16 @@ Kong can be configured via two methods:
 
 ### Separate admin and proxy nodes
 
+*Note: although this section is titled "Separate admin and proxy nodes", this
+split release technique is generally applicable to any deployment with
+different types of Kong nodes. Separating Admin API and proxy nodes is one of
+the more common use cases for splitting across multiple releases, but you can
+also split releases for hybrid mode CP/DP nodes, split proxy and Developer
+Portal nodes, etc.*
+
 Users may wish to split their Kong deployment into multiple instances that only
-run some of Kong's services, e.g. where some nodes only run the proxy and other
-only run the admin API, or where some nodes only run Developer Portal services.
-These require separate Helm releases (i.e. you run `helm install` once for
-every instance type you wish to create).
+run some of Kong's services (i.e. you run `helm install` once for every
+instance type you wish to create).
 
 To disable Kong services on an instance, you should set `SVC.enabled`,
 `SVC.http.enabled`, `SVC.tls.enabled`, and `SVC.ingress.enabled` all to
@@ -261,7 +267,7 @@ environment variables and other common settings, and then several
 instance-specific values.yamls that contain service configuration only. You can
 then create releases with:
 
-```
+```bash
 helm install proxy-only -f shared-values.yaml -f only-proxy.yaml kong/kong
 helm install admin-only -f shared-values.yaml -f only-admin.yaml kong/kong
 ```
@@ -287,6 +293,125 @@ scenario and several settings that are useful when using multiple controllers:
 
 Standalone controllers require a database-backed Kong instance, as DB-less mode
 requires that a single controller generate a complete Kong configuration.
+
+### Hybrid mode
+
+Kong supports [hybrid mode
+deployments](https://docs.konghq.com/2.0.x/hybrid-mode/) as of Kong 2.0.0 and
+Kong Enterprise 2.1.0. These deployments split Kong nodes into control plane
+(CP) nodes, which provide the admin API and interact with the database, and
+data plane (DP) nodes, which provide the proxy and receive configuration from
+control plane nodes.
+
+You can deploy hybrid mode Kong clusters by [creating separate releases for each node
+type](#separate-admin-and-proxy-nodes), i.e. use separate control and data
+plane values.yamls that are then installed separately. The [control
+plane](#control-plane-node-configuration) and [data
+plane](#data-plane-node-configuration) configuration sections below cover the
+values.yaml specifics for each.
+
+Cluster certificates are not generated automatically. You must [create a
+certificate and key pair](#certificates) for intra-cluster communication.
+
+#### Certificates
+
+Hybrid mode uses TLS to secure the CP/DP node communication channel, and
+requires certificates for it. You can generate these either using `kong hybrid
+gen_cert` on a local Kong installation or using OpenSSL:
+
+```bash
+openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp384r1) \
+  -keyout /tmp/cluster.key -out /tmp/cluster.crt \
+  -days 1095 -subj "/CN=kong_clustering"
+```
+
+You must then place these certificates in a Secret:
+
+```bash
+kubectl create secret tls kong-cluster-cert --cert=/tmp/cluster.crt --key=/tmp/cluster.key
+```
+
+#### Control plane node configuration
+
+You must configure the control plane nodes to mount the certificate secret on
+the container filesystem is serve it from the cluster listen. In values.yaml:
+
+```yaml
+secretVolumes:
+- kong-cluster-cert
+```
+
+```yaml
+env:
+  role: control_plane
+  cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
+  cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
+```
+
+Furthermore, you must enable the cluster listen and Kubernetes Service, and
+should typically disable the proxy:
+
+```yaml
+cluster:
+  enabled: true
+  tls:
+    enabled: true
+    servicePort: 8005
+    containerPort: 8005
+
+proxy:
+  enabled: false
+```
+
+If using the ingress controller, you must also specify the DP proxy service as
+its publish target to keep Ingress status information up to date:
+
+```
+ingressController:
+  env:
+    publish_service: hybrid/example-release-data-kong-proxy
+```
+
+Replace `hybrid` with your DP nodes' namespace and `example-release-data` with
+the name of the DP release.
+
+#### Data plane node configuration
+
+Data plane configuration also requires the certificate and `role`
+configuration, and the database should always be set to `off`. You must also
+trust the cluster certificate and indicate what hostname/port Kong should use
+to find control plane nodes.
+
+Though not strictly required, you should disable the admin service (it will not
+work on DP nodes anyway, but should be disabled to avoid creating an invalid
+Service resource).
+
+```yaml
+secretVolumes:
+- kong-cluster-cert
+```
+
+```yaml
+admin:
+  enabled: false
+```
+
+```yaml
+env:
+  role: data_plane
+  database: off
+  cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
+  cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
+  lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
+  cluster_control_plane: control-plane-release-name-kong-cluster.hybrid.svc.cluster.local:8005
+```
+
+Note that the `cluster_control_plane` value will differ depending on your
+environment. `control-plane-release-name` will change to your CP release name,
+`hybrid` will change to whatever namespace it resides in. See [Kubernetes'
+documentation on Service
+DNS](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+for more detail.
 
 ### CRDs only
 
@@ -343,12 +468,18 @@ individual services: see values.yaml for their individual default values.
 * `manager`
 * `portal`
 * `portalapi`
+* `cluster`
 * `status`
 
 `status` is intended for internal use within the cluster. Unlike other
 services it cannot be exposed externally, and cannot create a Kubernetes
 service or ingress. It supports the settings under `SVC.http` and `SVC.tls`
 only.
+
+`cluster` is used on hybrid mode control plane nodes. It does not support the
+`SVC.http.*` settings (cluster communications must be TLS-only) or the
+`SVC.ingress.*` settings (cluster communication requires TLS client
+authentication, which cannot pass through an ingress proxy).
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |

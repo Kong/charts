@@ -59,29 +59,37 @@ Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
 {{- define "kong.listen" -}}
   {{- $unifiedListen := list -}}
 
-  {{- if .http.enabled -}}
-    {{- $listenConfig := dict -}}
-    {{- $listenConfig := merge $listenConfig .http -}}
-    {{- $_ := set $listenConfig "address" (default "0.0.0.0" .address) -}}
-    {{- $httpListen := (include "kong.singleListen" $listenConfig) -}}
-    {{- $unifiedListen = append $unifiedListen $httpListen -}}
+  {{/* Some services do not support these blocks at all, so these checks are a
+       two-stage "is it safe to evaluate this?" and then "should we evaluate
+       this?"
+  */}}
+  {{- if .http -}}
+    {{- if .http.enabled -}}
+      {{- $listenConfig := dict -}}
+      {{- $listenConfig := merge $listenConfig .http -}}
+      {{- $_ := set $listenConfig "address" (default "0.0.0.0" .address) -}}
+      {{- $httpListen := (include "kong.singleListen" $listenConfig) -}}
+      {{- $unifiedListen = append $unifiedListen $httpListen -}}
+    {{- end -}}
   {{- end -}}
 
-  {{- if .tls.enabled -}}
-    {{/*
-    This is a bit of a hack to support always including "ssl" in the parameter
-    list for TLS listens. It's not possible to set a variable to an object from
-    .Values and then modify one of the objects values locally, although
-    https://github.com/helm/helm/issues/4987 indicates it should be. Instead,
-    this creates a new object and new parameters list built from the original.
-    */}}
-    {{- $listenConfig := dict -}}
-    {{- $listenConfig := merge $listenConfig .tls -}}
-    {{- $parameters := append .tls.parameters "ssl" -}}
-    {{- $_ := set $listenConfig "parameters" $parameters -}}
-    {{- $_ := set $listenConfig "address" (default "0.0.0.0" .address) -}}
-    {{- $tlsListen := (include "kong.singleListen" $listenConfig) -}}
-    {{- $unifiedListen = append $unifiedListen $tlsListen -}}
+  {{- if .tls -}}
+    {{- if .tls.enabled -}}
+      {{/*
+      This is a bit of a hack to support always including "ssl" in the parameter
+      list for TLS listens. It's not possible to set a variable to an object from
+      .Values and then modify one of the objects values locally, although
+      https://github.com/helm/helm/issues/4987 indicates it should be. Instead,
+      this creates a new object and new parameters list built from the original.
+      */}}
+      {{- $listenConfig := dict -}}
+      {{- $listenConfig := merge $listenConfig .tls -}}
+      {{- $parameters := append .tls.parameters "ssl" -}}
+      {{- $_ := set $listenConfig "parameters" $parameters -}}
+      {{- $_ := set $listenConfig "address" (default "0.0.0.0" .address) -}}
+      {{- $tlsListen := (include "kong.singleListen" $listenConfig) -}}
+      {{- $unifiedListen = append $unifiedListen $tlsListen -}}
+    {{- end -}}
   {{- end -}}
 
   {{- $listenString := ($unifiedListen | join ", ") -}}
@@ -461,6 +469,8 @@ TODO: remove legacy admin listen behavior at a future date
 {{- if .Values.proxy.enabled -}}
   {{- $_ := set $autoEnv "KONG_PORT_MAPS" (include "kong.port_maps" .Values.proxy) -}}
 {{- end -}}
+
+{{- $_ := set $autoEnv "KONG_CLUSTER_LISTEN" (include "kong.listen" .Values.cluster) -}}
 
 {{- if .Values.enterprise.enabled }}
   {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.listen" .Values.manager) -}}
