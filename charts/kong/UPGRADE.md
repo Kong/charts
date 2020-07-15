@@ -10,6 +10,10 @@ entirely. While support for the old functionality remains, the chart will show
 a warning about the outdated configuration when running `helm
 install/status/upgrade`.
 
+Note that not all versions contain breaking changes. If a version is not
+present in the table of contents, it requires no version-specific changes when
+upgrading from a previous version.
+
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
