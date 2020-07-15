@@ -48,13 +48,13 @@ env:
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.0"
+  tag: "2.1"
   # kong-enterprise-k8s image (Kong OSS + Enterprise plugins)
   # repository: kong-docker-kong-enterprise-k8s.bintray.io/kong-enterprise-k8s
-  # tag: "2.0.4.1-alpine"
+  # tag: "2.0.4.2-alpine"
   # kong-enterprise image
   # repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-  # tag: "1.5.0.2-alpine"
+  # tag: "1.5.0.4-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
