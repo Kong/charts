@@ -2,6 +2,16 @@
 
 ## 1.8.0
 
+**Kong Enterprise users:** please review documentation for the [Kong Enterprise
+2.1.x beta
+release](https://docs.konghq.com/enterprise/2.1.x/release-notes/#coming-soon)
+and [hybrid mode on Kong
+Enterprise](https://docs.konghq.com/enterprise/2.1.x/deployment/hybrid-mode/#kubernetes-support)
+as well. Version 1.8 of the Kong Helm chart adds support for hybrid mode, which
+is currently only available in the 2.1.x beta. Production systems should
+continue to use the Kong Enterprise 1.5.x stable releases, which do not support
+hybrid mode.
+
 ### Improvements
 
 * Update default Kong version to 2.1.
