@@ -298,10 +298,10 @@ requires that a single controller generate a complete Kong configuration.
 
 Kong supports [hybrid mode
 deployments](https://docs.konghq.com/2.0.x/hybrid-mode/) as of Kong 2.0.0 and
-Kong Enterprise 2.1.0. These deployments split Kong nodes into control plane
-(CP) nodes, which provide the admin API and interact with the database, and
-data plane (DP) nodes, which provide the proxy and receive configuration from
-control plane nodes.
+[Kong Enterprise 2.1.0](https://docs.konghq.com/enterprise/2.1.x/deployment/hybrid-mode/).
+These deployments split Kong nodes into control plane (CP) nodes, which provide
+the admin API and interact with the database, and data plane (DP) nodes, which
+provide the proxy and receive configuration from control plane nodes.
 
 You can deploy hybrid mode Kong clusters by [creating separate releases for each node
 type](#separate-admin-and-proxy-nodes), i.e. use separate control and data
