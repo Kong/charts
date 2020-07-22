@@ -24,8 +24,11 @@ deployment:
 # Kong parameters
 # -----------------------------------------------------------------------------
 
-# Specify Kong configurations
-# Kong configurations guide https://docs.konghq.com/latest/configuration
+# Specify Kong configuration
+# This chart takes all entries defined under `.env` and transforms them into into `KONG_*`
+# environment variables for Kong containers.
+# Their names here should match the names used in https://github.com/Kong/kong/blob/master/kong.conf.default
+# See https://docs.konghq.com/latest/configuration also for additional details
 # Values here take precedence over values from other sections of values.yaml,
 # e.g. setting pg_user here will override the value normally set when postgresql.enabled
 # is set below. In general, you should not set values here if they are set elsewhere.
@@ -45,13 +48,13 @@ env:
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.0"
+  tag: "2.1"
   # kong-enterprise-k8s image (Kong OSS + Enterprise plugins)
   # repository: kong-docker-kong-enterprise-k8s.bintray.io/kong-enterprise-k8s
-  # tag: "2.0.4.1-alpine"
+  # tag: "2.0.4.2-alpine"
   # kong-enterprise image
   # repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-  # tag: "1.5.0.2-alpine"
+  # tag: "1.5.0.4-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -127,7 +130,34 @@ status:
     enabled: false
     containerPort: 8543
 
-# Specify Kong proxy service and listener configuration
+# Specify Kong cluster service and listener configuration
+#
+# The cluster service *must* use TLS. It does not support the "http" block
+# available on other services.
+#
+# The cluster service cannot be exposed through an Ingress, as it must perform
+# TLS client validation directly and is not compatible with TLS-terminating
+# proxies. If you need to expose it externally, you must use "type:
+# LoadBalancer" and use a TCP-only load balancer (check your Kubernetes
+# provider's documentation, as the configuration required for this varies).
+cluster:
+  enabled: false
+  # If you want to specify annotations for the cluster service, uncomment the following
+  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  annotations: {}
+  #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+
+  tls:
+    enabled: false
+    servicePort: 8005
+    containerPort: 8005
+    parameters: []
+
+  type: ClusterIP
+
+  externalIPs: []
+
+# Specify Kong proxy service configuration
 proxy:
   # Enable creating a Kubernetes service for the proxy
   enabled: true
@@ -272,7 +302,7 @@ ingressController:
   enabled: true
   image:
     repository: kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller
-    tag: 0.9.0
+    tag: 0.9.1
   args: []
 
   # Specify Kong Ingress Controller configuration via environment variables
@@ -503,6 +533,8 @@ serviceMonitor:
   # namespace: monitoring
   # labels:
   #   foo: bar
+  # targetLabels:
+  #   - foo
 
 # -----------------------------------------------------------------------------
 # Kong Enterprise parameters

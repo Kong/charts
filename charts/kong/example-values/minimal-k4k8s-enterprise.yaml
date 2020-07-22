@@ -4,7 +4,7 @@
 
 image:
   repository: kong-docker-kong-enterprise-k8s.bintray.io/kong-enterprise-k8s
-  tag: 2.0.4.1-centos
+  tag: 2.0.4.2-centos
   pullSecrets:
     # CHANGEME: https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-docker-registry-access
     - kong-enterprise-k8s-docker

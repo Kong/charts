@@ -1,5 +1,45 @@
 # Changelog
 
+## 1.8.0
+
+**Kong Enterprise users:** please review documentation for the [Kong Enterprise
+2.1.x beta
+release](https://docs.konghq.com/enterprise/2.1.x/release-notes/#coming-soon)
+and [hybrid mode on Kong
+Enterprise](https://docs.konghq.com/enterprise/2.1.x/deployment/hybrid-mode/#kubernetes-support)
+as well. Version 1.8 of the Kong Helm chart adds support for hybrid mode, which
+is currently only available in the 2.1.x beta. Production systems should
+continue to use the Kong Enterprise 1.5.x stable releases, which do not support
+hybrid mode.
+
+### Improvements
+
+* Update default Kong version to 2.1.
+* Update Kong Enterprise images to 1.5.0.4 (kong-enterprise-edition) and
+  2.0.4.2 (kong-enterprise-k8s).
+* Updated default controller version to 0.9.1.
+  ([#150](https://github.com/Kong/charts/pull/150))
+* Added support for ServiceMonitor targetLabels (for use with the Prometheus
+  Operator).
+  ([#162](https://github.com/Kong/charts/pull/162))
+* Automatically handle the [new port_maps
+  setting](https://github.com/Kong/kong/pull/5861) for the proxy service.
+  ([#169](https://github.com/Kong/charts/pull/169))
+* Add support for [hybrid mode
+  deployments](https://docs.konghq.com/latest/hybrid-mode/).
+  ([#160](https://github.com/Kong/charts/pull/160))
+
+
+### Fixed
+
+* Fixed an issue with improperly-rendered listen strings.
+  ([#155](https://github.com/Kong/charts/pull/155))
+
+### Documentation
+
+* Improved inline documentation of `env` in values.yaml.
+  ([#163](https://github.com/Kong/charts/pull/163))
+
 ## 1.7.0
 
 ### Improvements

@@ -11,6 +11,9 @@ image:
 env:
   prefix: /kong_prefix/
   database: postgres
+  role: control_plane
+  cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
+  cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
 
 admin:
   enabled: true
@@ -18,6 +21,19 @@ admin:
     enabled: true
     servicePort: 8001
     containerPort: 8001
+
+cluster:
+  enabled: true
+  tls:
+    enabled: true
+    servicePort: 8005
+    containerPort: 8005
+
+proxy:
+  enabled: false
+
+secretVolumes:
+- kong-cluster-cert
 
 postgresql:
   enabled: true
