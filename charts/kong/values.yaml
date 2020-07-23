@@ -19,6 +19,10 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
+  ## Optionally specify any extra sidecar containers to be included in the deployment
+  # sidecarContainers:
+  #   - name: sidecar
+  #     image: sidecar:latest
 
 # -----------------------------------------------------------------------------
 # Kong parameters
