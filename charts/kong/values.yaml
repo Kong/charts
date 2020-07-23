@@ -20,6 +20,7 @@ deployment:
     # controller-only release.
     enabled: true
   ## Optionally specify any extra sidecar containers to be included in the deployment
+  ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
   # sidecarContainers:
   #   - name: sidecar
   #     image: sidecar:latest
