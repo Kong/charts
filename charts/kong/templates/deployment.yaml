@@ -63,6 +63,9 @@ spec:
       {{- if .Values.ingressController.enabled }}
       {{- include "kong.controller-container" . | nindent 6 }}
       {{ end }}
+      {{- if .Values.deployment.sidecarContainers }}
+      {{- toYaml .Values.deployment.sidecarContainers | nindent 6 }}
+      {{- end }}
       {{- if .Values.deployment.kong.enabled }}
       - name: "proxy"
         {{- if .Values.image.unifiedRepoTag }}
