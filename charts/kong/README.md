@@ -425,6 +425,15 @@ On Helm 3, CRDs are created if necessary, but are not managed along with the
 release. Releases can be deleted without affecting CRDs; CRDs are only removed
 if you delete them manually.
 
+### Sidecar Containers
+
+The chart can deploy additional containers along with the Kong and Ingress
+Controller containers, sometimes referred to as "sidecar containers".  This can
+be useful to include network proxies or logging services along with Kong.  The
+`deployment.sidecarContainers` field in values.yaml takes an array of objects
+that get appended as-is to the existing `spec.template.spec.containers` array
+in the Kong deployment resource.
+
 ### Example configurations
 
 Several example values.yaml are available in the
