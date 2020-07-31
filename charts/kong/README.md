@@ -52,8 +52,8 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [RBAC](#rbac)
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
-- [Changelog](https://github.com/Kong/charts/blob/master/charts/kong/CHANGELOG.md)
-- [Upgrading](https://github.com/Kong/charts/blob/master/charts/kong/UPGRADE.md)
+- [Changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
+- [Upgrading](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
@@ -117,7 +117,7 @@ chart and deletes the release.
 ## FAQs
 
 Please read the
-[FAQs](https://github.com/Kong/charts/blob/master/charts/kong/FAQs.md)
+[FAQs](https://github.com/Kong/charts/blob/main/charts/kong/FAQs.md)
 document.
 
 ## Kong Enterprise
@@ -428,7 +428,7 @@ if you delete them manually.
 ### Example configurations
 
 Several example values.yaml are available in the
-[example-values](https://github.com/Kong/charts/blob/master/charts/kong/example-values/)
+[example-values](https://github.com/Kong/charts/blob/main/charts/kong/example-values/)
 directory.
 
 ## Configuration

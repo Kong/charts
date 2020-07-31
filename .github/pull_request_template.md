@@ -1,6 +1,6 @@
 <!--
 Thank you for contributing to Kong/charts. Please read through our contribution
-guidelines to understand our review process: https://github.com/Kong/charts/blob/master/CONTRIBUTING.md
+guidelines to understand our review process: https://github.com/Kong/charts/blob/main/CONTRIBUTING.md
 
 When updates to your PR are requested, please add new commits and do not squash the
 history. This will make it easier to identify new changes. The PR will be squashed
@@ -17,6 +17,6 @@ when it is merged.
 
 #### Checklist
 [Place an '[x]' (no spaces) in all applicable fields. Please remove unrelated fields.]
-- [ ] PR is based off the current tip of the `next` branch and targets `next`, not `master`
+- [ ] PR is based off the current tip of the `next` branch and targets `next`, not `main`
 - [ ] New or modified sections of values.yaml are documented in the README.md
 - [ ] Title of the PR and commit headers start with chart name (e.g. `[kong]`)

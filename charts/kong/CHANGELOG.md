@@ -52,7 +52,7 @@ hybrid mode.
 ### Documentation
 
 * Added a set of [example
-  values.yamls](https://github.com/Kong/charts/tree/master/charts/kong/example-values)
+  values.yamls](https://github.com/Kong/tree/blob/main/charts/kong/example-values)
   for various configurations of Kong and Kong Enterprise.
   ([#134](https://github.com/Kong/charts/pull/134))
 
@@ -221,7 +221,7 @@ issue with our release automation.
   modern versions. **The `enterprise.portal.portal_auth` and
   `enterprise.portal.session_conf_secret` settings in values.yaml are
   deprecated and will be removed in a future release.** See the [upgrade
-  guide](https://github.com/Kong/charts/blob/master/charts/kong/UPGRADE.md#removal-of-dedicated-portal-authentication-configuration-parameters)
+  guide](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#removal-of-dedicated-portal-authentication-configuration-parameters)
   for instructions on migrating them to environment variables.
   ([#55](https://github.com/Kong/charts/pull/55))
 

@@ -3,7 +3,7 @@ name: Release Charts
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   lint-test:
@@ -19,7 +19,7 @@ jobs:
         id: lint
         uses: helm/chart-testing-action@v1.0.0-alpha.3
         with:
-          command: lint --config=ct-master.yaml
+          command: lint --config=ct-main.yaml
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.0.0-alpha.3
@@ -30,7 +30,7 @@ jobs:
       - name: Run chart-testing (install)
         uses: helm/chart-testing-action@v1.0.0-alpha.3
         with:
-          command: install --config=ct-master.yaml
+          command: install --config=ct-main.yaml
   release:
     needs: lint-test
     runs-on: ubuntu-latest
