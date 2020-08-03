@@ -36,7 +36,7 @@ changes; the maintainers will squash as needed when merging the pull request.
 
 Accepted pull requests are merged into the `next` branch and are not typically
 released immediately. The chart maintainers periodically bundle all changes in
-`next` together and merge them into `master` with a version bump to create a
+`next` together and merge them into `main` with a version bump to create a
 release.
 
 ## Commit message format
