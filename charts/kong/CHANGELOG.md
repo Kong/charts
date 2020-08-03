@@ -52,7 +52,7 @@ hybrid mode.
 ### Documentation
 
 * Added a set of [example
-  values.yamls](https://github.com/Kong/tree/blob/main/charts/kong/example-values)
+  values.yamls](https://github.com/Kong/charts/tree/main/charts/kong/example-values)
   for various configurations of Kong and Kong Enterprise.
   ([#134](https://github.com/Kong/charts/pull/134))
 
