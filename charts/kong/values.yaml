@@ -578,6 +578,8 @@ enterprise:
     smtp_auth_type: nil
     smtp_ssl: nil
     smtp_starttls: true
+    smtp_mock: on
+    smtp_auth_type: nil
     auth:
       # If your SMTP server does not require authentication, this section can
       # be left as-is. If smtp_username is set to anything other than an empty
