@@ -157,7 +157,7 @@ issue with our release automation.
   KongClusterPlugin and TCPIngress CRDs and RBAC permissions for them. Users
   should also note that `strip_path` now defaults to disabled, which will
   likely break existing configuration. See [the controller
-  changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/master/CHANGELOG.md#080---20200325)
+  changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md#080---20200325)
   and [upgrade-guide](https://github.com/Kong/charts/blob/next/charts/kong/UPGRADE.md#strip_path-now-defaults-to-false-for-controller-managed-routes)
   for full details.
   ([#77](https://github.com/Kong/charts/pull/77))

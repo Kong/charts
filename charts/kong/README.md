@@ -217,9 +217,9 @@ Kong can be configured via two methods:
   This is also known as Kong Ingress Controller or Kong for Kubernetes and is
   the default deployment pattern for this Helm Chart. The configuration
   for Kong is managed via Ingress and a few
-  [Custom Resources](https://github.com/Kong/kubernetes-ingress-controller/blob/master/docs/concepts/custom-resources.md).
+  [Custom Resources](https://github.com/Kong/kubernetes-ingress-controller/blob/main/docs/concepts/custom-resources.md).
   For more details, please read the
-  [documentation](https://github.com/Kong/kubernetes-ingress-controller/tree/master/docs)
+  [documentation](https://github.com/Kong/kubernetes-ingress-controller/tree/main/docs)
   on Kong Ingress Controller.
   To configure and fine-tune the controller, please read the
   [Ingress Controller Parameters](#ingress-controller-parameters) section.
@@ -557,7 +557,7 @@ section of `values.yaml` file:
 
 For a complete list of all configuration values you can set in the
 `env` section, please read the Kong Ingress Controller's
-[configuration document](https://github.com/Kong/kubernetes-ingress-controller/blob/master/docs/references/cli-arguments.md).
+[configuration document](https://github.com/Kong/kubernetes-ingress-controller/blob/main/docs/references/cli-arguments.md).
 
 ### General Parameters
 
