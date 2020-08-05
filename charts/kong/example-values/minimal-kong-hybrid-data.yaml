@@ -1,12 +1,12 @@
 # Basic configuration for Kong as a hybrid mode data plane node.
 # It depends on the presence of a control plane release, as shown in
-# https://github.com/Kong/charts/blob/master/charts/kong/example-values/minimal-kong-hybrid-control.yaml
+# https://github.com/Kong/charts/blob/main/charts/kong/example-values/minimal-kong-hybrid-control.yaml
 #
 # The "env.cluster_control_plane" value must be changed to your control plane
 # instance's cluster Service hostname. Search "CHANGEME" to find it in this
 # example.
 #
-# Hybrid mode requires a certificate. See https://github.com/Kong/charts/blob/master/charts/kong/README.md#certificates
+# Hybrid mode requires a certificate. See https://github.com/Kong/charts/blob/main/charts/kong/README.md#certificates
 # to create one.
 
 image:
