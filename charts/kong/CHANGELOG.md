@@ -52,7 +52,7 @@ hybrid mode.
 ### Documentation
 
 * Added a set of [example
-  values.yamls](https://github.com/Kong/charts/tree/master/charts/kong/example-values)
+  values.yamls](https://github.com/Kong/charts/tree/main/charts/kong/example-values)
   for various configurations of Kong and Kong Enterprise.
   ([#134](https://github.com/Kong/charts/pull/134))
 
@@ -157,7 +157,7 @@ issue with our release automation.
   KongClusterPlugin and TCPIngress CRDs and RBAC permissions for them. Users
   should also note that `strip_path` now defaults to disabled, which will
   likely break existing configuration. See [the controller
-  changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/master/CHANGELOG.md#080---20200325)
+  changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md#080---20200325)
   and [upgrade-guide](https://github.com/Kong/charts/blob/next/charts/kong/UPGRADE.md#strip_path-now-defaults-to-false-for-controller-managed-routes)
   for full details.
   ([#77](https://github.com/Kong/charts/pull/77))
@@ -221,7 +221,7 @@ issue with our release automation.
   modern versions. **The `enterprise.portal.portal_auth` and
   `enterprise.portal.session_conf_secret` settings in values.yaml are
   deprecated and will be removed in a future release.** See the [upgrade
-  guide](https://github.com/Kong/charts/blob/master/charts/kong/UPGRADE.md#removal-of-dedicated-portal-authentication-configuration-parameters)
+  guide](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#removal-of-dedicated-portal-authentication-configuration-parameters)
   for instructions on migrating them to environment variables.
   ([#55](https://github.com/Kong/charts/pull/55))
 

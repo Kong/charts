@@ -18,7 +18,7 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
 ## Documentation
 
 The documentation for Kong's Helm Chart is available at
-[here](https://github.com/Kong/charts/blob/master/charts/kong/README.md).
+[here](https://github.com/Kong/charts/blob/main/charts/kong/README.md).
 
 ## Seeking help
 
