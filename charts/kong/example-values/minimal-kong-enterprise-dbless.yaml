@@ -13,8 +13,8 @@ image:
 
 enterprise:
   enabled: true
-  # CHANGEME: https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-license
-  license_secret: kong-enterprise-license
+  # See instructions regarding enterprise licenses at https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-license
+  license_secret: kong-enterprise-license # CHANGEME
   vitals:
     enabled: false
   portal:
