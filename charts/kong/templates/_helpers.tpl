@@ -627,7 +627,7 @@ Environment variables are sorted alphabetically
   imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
   env:
   {{- include "kong.no_daemon_env" . | nindent 2 }}
-  command: [ "/bin/bash", "/wait_postgres/wait.sh" ]
+  command: [ "/usr/local/bin/bash", "/wait_postgres/wait.sh" ]
   volumeMounts:
   - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
     mountPath: /wait_postgres
