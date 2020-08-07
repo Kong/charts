@@ -456,8 +456,8 @@ directory.
 | migrations.preUpgrade              | Run "kong migrations up" jobs                                                         | `true`              |
 | migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
 | migrations.annotations             | Annotations for migration jobs                                                        | `{"sidecar.istio.io/inject": "false", "kuma.io/sidecar-injection": "disabled"}` |
-| waitImage.repository               | Image used to wait for database to become ready                                       | `busybox`           |
-| waitImage.tag                      | Tag for image used to wait for database to become ready                               | `latest`            |
+| waitImage.repository               | Image used to wait for database to become ready                                       | `bash`              |
+| waitImage.tag                      | Tag for image used to wait for database to become ready                               | `5`                 |
 | waitImage.pullPolicy               | Wait image pull policy                                                                | `IfNotPresent`      |
 | postgresql.enabled                 | Spin up a new postgres instance for Kong                                              | `false`             |
 | dblessConfig.configMap             | Name of an existing ConfigMap containing the `kong.yml` file. This must have the key `kong.yml`.| `` |
