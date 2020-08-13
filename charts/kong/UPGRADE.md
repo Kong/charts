@@ -66,8 +66,15 @@ script](https://github.com/Kong/charts/blob/kong-1.9.0/charts/kong/templates/wai
 to perform the same connectivity check. The default `waitImage.repository` value
 is now `bash` rather than `busybox`.
 
+The Helm upgrade cycle requires this script be available for upgrade jobs. On
+existing installations, you must first perform an initial `helm upgrade --set
+migrations.preUpgrade=false --migrations.postUpgrade=false` to chart 1.9.0.
+Perform this initial upgrade without making changes to your Kong image version:
+if you are upgrading Kong along with the chart, perform a separate upgrade
+after with the migration jobs re-enabled.
+
 If you do not override `waitImage.repository` in your releases, you do not need
-to make any changes when upgrading to 1.9.0.
+to make any other configuration changes when upgrading to 1.9.0.
 
 If you do override `waitImage.repository` to use a custom image, you must
 switch to a custom image that provides a `bash` executable. Note that busybox
