@@ -398,8 +398,8 @@ postgresql:
 # -----------------------------------------------------------------------------
 
 waitImage:
-  repository: busybox
-  tag: latest
+  repository: bash
+  tag: 5
   pullPolicy: IfNotPresent
 
 # update strategy
