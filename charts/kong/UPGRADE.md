@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [1.9.0](#190)
 - [1.6.0](#160)
 - [1.5.0](#150)
 - [1.4.0](#140)
@@ -51,6 +52,35 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 1.9.0
+
+### Changes to wait-for-postgres image
+
+Prior to 1.9.0, the chart launched a busybox initContainer for migration Pods
+to check Postgres' reachability [using
+netcat](https://github.com/Kong/charts/blob/kong-1.8.0/charts/kong/templates/_helpers.tpl#L626).
+
+As of 1.9.0, the chart uses a [bash
+script](https://github.com/Kong/charts/blob/kong-1.9.0/charts/kong/templates/wait-for-postgres-script.yaml)
+to perform the same connectivity check. The default `waitImage.repository` value
+is now `bash` rather than `busybox`.
+
+The Helm upgrade cycle requires this script be available for upgrade jobs. On
+existing installations, you must first perform an initial `helm upgrade --set
+migrations.preUpgrade=false --migrations.postUpgrade=false` to chart 1.9.0.
+Perform this initial upgrade without making changes to your Kong image version:
+if you are upgrading Kong along with the chart, perform a separate upgrade
+after with the migration jobs re-enabled.
+
+If you do not override `waitImage.repository` in your releases, you do not need
+to make any other configuration changes when upgrading to 1.9.0.
+
+If you do override `waitImage.repository` to use a custom image, you must
+switch to a custom image that provides a `bash` executable. Note that busybox
+images, or images derived from it, do _not_ include a `bash` executable. We
+recommend switching to an image derived from the public bash Docker image or a
+base operating system image that provides a `bash` executable.
 
 ## 1.6.0
 
