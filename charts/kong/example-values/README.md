@@ -14,6 +14,11 @@ change this value to `true` if you use Helm 2).
 * [minimal-k4k8s-enterprise.yaml](minimal-k4k8s-enterprise.yaml) installs Kong
   for Kubernetes Enterprise with the ingress controller in DB-less mode.
 
+* [minimal-kong-enterprise-dbless.yaml](minimal-kong-enterprise-dbless.yaml)
+  installs Kong for Kubernetes with Kong Enterprise with the ingress controller
+  in DB-less mode. **This deployment option is in beta and is not suited for
+  production environments.**
+
 * [minimal-k4k8s-with-kong-enterprise.yaml](minimal-k4k8s-with-kong-enterprise.yaml)
   installs Kong for Kubernetes with Kong Enterprise with the ingress controller
   and PostgreSQL. It does not enable Enterprise features other than Kong
