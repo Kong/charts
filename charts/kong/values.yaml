@@ -722,3 +722,20 @@ portalapi:
     path: /
 
   externalIPs: []
+
+clustertelemetry:
+  enabled: false
+  # If you want to specify annotations for the cluster telemetry service, uncomment the following
+  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  annotations: {}
+  #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+
+  tls:
+    enabled: false
+    servicePort: 8006
+    containerPort: 8006
+    parameters: []
+
+  type: ClusterIP
+
+  externalIPs: []
