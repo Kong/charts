@@ -11,13 +11,9 @@ change this value to `true` if you use Helm 2).
 * [minimal-kong-standalone.yaml](minimal-kong-standalone.yaml) installs Kong
   open source and Postgres with no controller.
 
-* [minimal-k4k8s-enterprise.yaml](minimal-k4k8s-enterprise.yaml) installs Kong
-  for Kubernetes Enterprise with the ingress controller in DB-less mode.
-
 * [minimal-kong-enterprise-dbless.yaml](minimal-kong-enterprise-dbless.yaml)
   installs Kong for Kubernetes with Kong Enterprise with the ingress controller
-  in DB-less mode. **This deployment option is in beta and is not suited for
-  production environments.**
+  in DB-less mode.
 
 * [minimal-k4k8s-with-kong-enterprise.yaml](minimal-k4k8s-with-kong-enterprise.yaml)
   installs Kong for Kubernetes with Kong Enterprise with the ingress controller
