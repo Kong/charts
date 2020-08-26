@@ -485,6 +485,7 @@ TODO: remove legacy admin listen behavior at a future date
   {{- if not .Values.enterprise.vitals.enabled }}
     {{- $_ := set $autoEnv "KONG_VITALS" "off" -}}
   {{- end }}
+  {{- $_ := set $autoEnv "KONG_CLUSTER_TELEMETRY_LISTEN" (include "kong.listen" .Values.clustertelemetry) -}}
 
   {{- if .Values.enterprise.portal.enabled }}
     {{- $_ := set $autoEnv "KONG_PORTAL" "on" -}}

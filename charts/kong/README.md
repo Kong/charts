@@ -363,6 +363,18 @@ proxy:
   enabled: false
 ```
 
+Enterprise users with Vitals enabled must also enable the cluster telemetry
+service:
+
+```yaml
+clustertelemetry:
+  enabled: true
+  tls:
+    enabled: true
+    servicePort: 8006
+    containerPort: 8006
+```
+
 If using the ingress controller, you must also specify the DP proxy service as
 its publish target to keep Ingress status information up to date:
 
@@ -404,6 +416,7 @@ env:
   cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
   lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
   cluster_control_plane: control-plane-release-name-kong-cluster.hybrid.svc.cluster.local:8005
+  cluster_telemetry_endpoint: control-plane-release-name-kong-clustertelemetry.hybrid.svc.cluster.local:8006 # Enterprise-only
 ```
 
 Note that the `cluster_control_plane` value will differ depending on your
@@ -478,6 +491,7 @@ individual services: see values.yaml for their individual default values.
 * `portal`
 * `portalapi`
 * `cluster`
+* `clustertelemetry`
 * `status`
 
 `status` is intended for internal use within the cluster. Unlike other
@@ -488,7 +502,9 @@ only.
 `cluster` is used on hybrid mode control plane nodes. It does not support the
 `SVC.http.*` settings (cluster communications must be TLS-only) or the
 `SVC.ingress.*` settings (cluster communication requires TLS client
-authentication, which cannot pass through an ingress proxy).
+authentication, which cannot pass through an ingress proxy). `clustertelemetry`
+is similar, and used when Vitals is enabled on Kong Enterprise control plane
+nodes.
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
@@ -514,7 +530,7 @@ authentication, which cannot pass through an ingress proxy).
 | SVC.externalTrafficPolicy          | k8s service's externalTrafficPolicy. Options: Cluster, Local                          |                     |
 | SVC.ingress.enabled                | Enable ingress resource creation (works with SVC.type=ClusterIP)                      | `false`             |
 | SVC.ingress.tls                    | Name of secret resource, containing TLS secret                                        |                     |
-| SVC.ingress.hosts                  | List of ingress hosts.                                                                | `[]`                |
+| SVC.ingress.hostname               | Ingress hostname                                                                      | `""`                |
 | SVC.ingress.path                   | Ingress path.                                                                         | `/`                 |
 | SVC.ingress.annotations            | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
 | SVC.annotations                    | Service annotations                                                                   | `{}`                |
