@@ -502,7 +502,7 @@ only.
 `cluster` is used on hybrid mode control plane nodes. It does not support the
 `SVC.http.*` settings (cluster communications must be TLS-only) or the
 `SVC.ingress.*` settings (cluster communication requires TLS client
-authentication, which cannot pass through an ingress proxy). `clustertelemetry
+authentication, which cannot pass through an ingress proxy). `clustertelemetry`
 is similar, and used when Vitals is enabled on Kong Enterprise control plane
 nodes.
 
