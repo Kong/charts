@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.9.0
+
+### Breaking changes
+
+Changes to the pre-migration database check require [performing an initial chart version upgrade with migrations disabled](https://github.com/Kong/charts/blob/next/charts/kong/UPGRADE.md#changes-to-wait-for-postgres-image).
+
+If you use a custom image for this check, you will need to change it to an image that provides a `bash` executable.
+
+### Improvements
+
+* Added support for sidecar injection.
+  ([#174](https://github.com/Kong/charts/pull/174))
+* Changed to a bash-based pre-migration database availability check.
+  ([#179](https://github.com/Kong/charts/pull/179))
+* Changed to a bash-based pre-migration database availability check.
+  ([#179](https://github.com/Kong/charts/pull/179))
+* Updated default Kong Enterprise version to 2.1.3.0.
+
+### Fixed
+
+* Added missing cluster telemetry service and fixed missing cluster service
+  port.
+  ([#185](https://github.com/Kong/charts/pull/185))
+
+### Documentation
+
+* Added an example Enterprise controller-managed DB-less values.yaml.
+  ([#175](https://github.com/Kong/charts/pull/175))
+
 ## 1.8.0
 
 **Kong Enterprise users:** please review documentation for the [Kong Enterprise

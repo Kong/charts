@@ -55,6 +55,19 @@ clear it.
 
 ## 1.9.0
 
+### New image for Enterprise controller-managed DB-less deployments
+
+As of Kong Enterprise 2.1.3.0, there is no longer a separate image
+(`kong-enterprise-k8s`) for controller-managed DB-less deployments. All Kong
+Enterprise deployments now use the `kong-enterprise-edition` image.
+
+Existing users of the `kong-enterprise-k8s` image can use the latest
+`kong-enterprise-edition` image as a drop-in replacement for the
+`kong-enterprise-k8s` image. You will also need to [create a Docker registry
+secret](https://github.com/Kong/charts/blob/main/charts/kong/README.md#kong-enterprise-docker-registry-access)
+for the `kong-enterprise-edition` registry and add it to `image.pullSecrets` in
+values.yaml if you do not have one already.
+
 ### Changes to wait-for-postgres image
 
 Prior to 1.9.0, the chart launched a busybox initContainer for migration Pods

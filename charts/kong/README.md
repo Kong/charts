@@ -691,12 +691,6 @@ from \<your username\> \> Edit Profile \> API Key. Use this to create registry
 secrets:
 
 ```bash
-$ kubectl create secret docker-registry kong-enterprise-k8s-docker \
-    --docker-server=kong-docker-kong-enterprise-k8s.bintray.io \
-    --docker-username=<your-bintray-username@kong> \
-    --docker-password=<your-bintray-api-key>
-secret/kong-enterprise-k8s-docker created
-
 $ kubectl create secret docker-registry kong-enterprise-edition-docker \
     --docker-server=kong-docker-kong-enterprise-edition-docker.bintray.io \
     --docker-username=<your-bintray-username@kong> \
