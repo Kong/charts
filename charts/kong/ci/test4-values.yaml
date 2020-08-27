@@ -3,6 +3,7 @@
 # - disable ingress controller
 ingressController:
   enabled: false
+  installCRDs: false
   env:
     anonymous_reports: "false"
 # - use legacy admin listen config
