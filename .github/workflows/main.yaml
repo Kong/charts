@@ -17,9 +17,10 @@ jobs:
 
       - name: Run chart-testing (lint)
         id: lint
-        uses: helm/chart-testing-action@v1.0.0-alpha.3
+        uses: helm/chart-testing-action@v1.0.0
         with:
-          command: lint --config=ct-main.yaml
+          command: lint
+          config: ct-main.yaml
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.0.0-alpha.3
@@ -28,9 +29,10 @@ jobs:
         if: steps.lint.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
-        uses: helm/chart-testing-action@v1.0.0-alpha.3
+        uses: helm/chart-testing-action@v1.0.0
         with:
-          command: install --config=ct-main.yaml
+          command: install
+          config: ct-main.yaml
   release:
     needs: lint-test
     runs-on: ubuntu-latest
