@@ -443,9 +443,3 @@ spec:
                         type: integer
         status:
           type: object
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
