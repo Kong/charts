@@ -13,3 +13,4 @@ ingressController:
     anonymous_reports: "false"
   image:
     single: kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller:0.8.1
+  installCRDs: false

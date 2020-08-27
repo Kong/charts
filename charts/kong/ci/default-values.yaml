@@ -7,3 +7,4 @@ env:
 ingressController:
   env:
     anonymous_reports: "false"
+  installCRDs: false

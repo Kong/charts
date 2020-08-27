@@ -7,6 +7,7 @@ autoscaling:
 # - ingressController deploys without a database (default)
 ingressController:
   enabled: true
+  installCRDs: false
 # - webhook is enabled and deploys
   admissionWebhook:
     enabled: true
