@@ -1,12 +1,27 @@
 # Changelog
 
+## 1.9.1
+
+### Documentation
+
+* Clarified documentation for [breaking changes in 1.9.0](#190) to indicate
+  that any values.yaml that sets `waitImage.repository` requires changes,
+  including those that set the old default.
+* Updated Enterprise examples to use latest Enterprise image version.
+
 ## 1.9.0
 
 ### Breaking changes
 
-Changes to the pre-migration database check require [performing an initial chart version upgrade with migrations disabled](https://github.com/Kong/charts/blob/next/charts/kong/UPGRADE.md#changes-to-wait-for-postgres-image).
+1.9.0 now uses a bash-based pre-migration database availability check. If you
+set `waitImage.repository` in values.yaml, either to the previous default
+(`busybox`) or to a custom image, you must change it to an image that includes
+a `bash` executable.
 
-If you use a custom image for this check, you will need to change it to an image that provides a `bash` executable.
+Once you have `waitImage.repository` set to an image with bash, [perform an
+initial chart version upgrade with migrations disabled](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#changes-to-wait-for-postgres-image)
+before re-enabling migrations, updating your Kong image version, and performing
+a second release upgrade.
 
 ### Improvements
 
