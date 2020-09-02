@@ -6,6 +6,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ template "kong.fullname" . }}-pre-upgrade-migrations
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: pre-upgrade-migrations

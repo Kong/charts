@@ -10,6 +10,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "kong.fullname" . }}-portalapi
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
   annotations:
