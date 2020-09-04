@@ -16,7 +16,7 @@ metadata:
     {{- include "kong.metaLabels" . | nindent 4 }}
 rules:
   - apiGroups:
-      - extensions
+      - policy
     resources:
       - podsecuritypolicies
     verbs:
