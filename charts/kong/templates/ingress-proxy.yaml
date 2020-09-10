@@ -10,10 +10,12 @@ metadata:
   name: {{ template "kong.fullname" . }}-proxy
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
+  {{- if .Values.proxy.ingress.annotations }}
   annotations:
-    {{- range $key, $value := .Values.proxy.ingress.annotations }}
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
+  {{- range $key, $value := .Values.proxy.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   rules:
     {{- if eq $hosts_count 0 }}

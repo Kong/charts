@@ -12,10 +12,12 @@ metadata:
   name: {{ template "kong.fullname" . }}-portal
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
+  {{- if .Values.portal.ingress.annotations }}
   annotations:
-    {{- range $key, $value := .Values.portal.ingress.annotations }}
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
+  {{- range $key, $value := .Values.portal.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   rules:
   - host: {{ $hostname }}
