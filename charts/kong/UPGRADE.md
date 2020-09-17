@@ -76,8 +76,10 @@ netcat](https://github.com/Kong/charts/blob/kong-1.8.0/charts/kong/templates/_he
 
 As of 1.9.0, the chart uses a [bash
 script](https://github.com/Kong/charts/blob/kong-1.9.0/charts/kong/templates/wait-for-postgres-script.yaml)
-to perform the same connectivity check. The default `waitImage.repository` value
-is now `bash` rather than `busybox`.
+to perform the same connectivity check. The default `waitImage.repository`
+value is now `bash` rather than `busybox`. Double-check your values.yaml to
+confirm that you do not set `waitImage.repository` and `waitImage.tag` to the
+old defaults: if you do, remove that configuration before upgrading.
 
 The Helm upgrade cycle requires this script be available for upgrade jobs. On
 existing installations, you must first perform an initial `helm upgrade --set
