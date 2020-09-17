@@ -53,6 +53,16 @@ text ending with `field is immutable`. This is typically due to a bug with the
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
 
+## 1.10.0
+
+### `KongClusterPlugin` replaces global `KongPlugin`s
+
+Kong Ingress Controller 0.10.0 no longer supports `KongPlugin`s with a `global: true` label. See the [KIC changelog for 0.10.0](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md#0100---20200915) for migration hints.
+
+### Dropping support for resources not specifying an ingress class
+
+Kong Ingress Controller 0.10.0 drops support for certain kinds of resources without a `kubernetes.io/ingress.class` annotation. See the [KIC changelog for 0.10.0](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md#0100---20200915) for the exact list of those kinds, and for possible migration paths.
+
 ## 1.9.0
 
 ### New image for Enterprise controller-managed DB-less deployments
@@ -227,7 +237,7 @@ This is a new annotation that is equivalent to the `route.strip_path` setting
 in KongIngress resources. Note that if you have already set this to `false`,
 you should leave it as-is and not add an annotation to the ingress.
 
-### Changes to Kong service configuration 
+### Changes to Kong service configuration
 
 1.4.0 reworks the templates and configuration used to generate Kong
 configuration and Kuberenetes resources for Kong's services (the admin API,
