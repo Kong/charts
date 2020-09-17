@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.10.0
+
+### Breaking changes
+
+* Kong Ingress Controller 0.10.0 comes with breaking changes to global `KongPlugin`s and to resources without an ingress class defined. Refer to the [`UPGRADE.md notes for chart 1.10.0`](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#1100) for details.
+
+### Improvements
+
+* Updated default controller version to 0.10.0.
+
+### Fixed
+
+* Removed the `status` field from the `TCPIngress` CRD.
+  ([#188](https://github.com/Kong/charts/pull/188))
+
 ## 1.9.1
 
 ### Documentation
@@ -118,11 +133,11 @@ issue with our release automation.
 * Added ability to apply user-defined labels to pods.
   ([#121](https://github.com/Kong/charts/pull/121))
 * Filtered serviceMonitor to disable metrics collection from non-proxy
-  services. 
+  services.
   ([#112](https://github.com/Kong/charts/pull/112))
 * Set admin API to listen on localhost only if possible.
   ([#125](https://github.com/Kong/charts/pull/125))
-* Add `auth_type` and `ssl` settings to `smtp` block. 
+* Add `auth_type` and `ssl` settings to `smtp` block.
   ([#127](https://github.com/Kong/charts/pull/127))
 * Remove UID from default securityContext.
   ([#138](https://github.com/Kong/charts/pull/138))
