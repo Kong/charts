@@ -12,10 +12,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "kong.fullname" . }}-cluster
+  {{- if .Values.cluster.annotations }}
   annotations:
-    {{- range $key, $value := .Values.cluster.annotations }}
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
+  {{- range $key, $value := .Values.cluster.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:

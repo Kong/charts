@@ -5,10 +5,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "kong.fullname" . }}-portal
+  {{- if .Values.portal.annotations }}
   annotations:
-    {{- range $key, $value := .Values.portal.annotations }}
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
+  {{- range $key, $value := .Values.portal.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
