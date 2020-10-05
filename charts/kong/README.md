@@ -609,6 +609,9 @@ For a complete list of all configuration values you can set in the
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
 | serviceMonitor.labels              | ServiceMonitor labels                                                                 | `{}`                |
 | serviceMonitor.targetLabels        | ServiceMonitor targetLabels                                                           | `{}`                |
+| extraConfigMaps                    | ConfigMaps to add to mounted volumes                                                  | `[]`                |
+| extraSecrets                       | Secrets to add to mounted volumes                                                     | `[]`                |
+
 
 #### The `env` section
 

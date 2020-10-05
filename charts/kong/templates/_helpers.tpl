@@ -293,6 +293,16 @@ The name of the service used for the ingress controller's validation webhook
   secret:
     secretName: {{ . }}
 {{- end }}
+{{- range .Values.extraConfigMaps }}
+- name: {{ .name }}
+  configMap:
+    name: {{ .name }}
+{{- end }}
+{{- range .Values.extraSecrets }}
+- name: {{ .name }}
+  secret:
+    secretName: {{ .name }}
+{{- end }}
 {{- end -}}
 
 {{- define "kong.volumeMounts" -}}
@@ -332,6 +342,32 @@ The name of the service used for the ingress controller's validation webhook
   readOnly: true
 {{- end }}
 {{- end }}
+
+{{- range .Values.extraConfigMaps }}
+- name:  {{ .name }}
+  mountPath: {{ .mountPath }}
+
+  {{- if .subPath }}
+  subPath: {{ .subPath }}
+  {{- end }}
+
+  {{- if .readOnly }}
+  readOnly: {{ .readOnly }}
+  {{- end }}
+{{- end }}
+{{- range .Values.extraSecrets }}
+- name:  {{ .name }}
+  mountPath: {{ .mountPath }}
+
+  {{- if .subPath }}
+  subPath: {{ .subPath }}
+  {{- end }}
+
+  {{- if .readOnly }}
+  readOnly: {{ .readOnly }}
+  {{- end }}
+{{- end }}
+
 {{- end -}}
 
 {{- define "kong.plugins" -}}

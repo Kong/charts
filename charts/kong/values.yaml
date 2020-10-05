@@ -736,3 +736,17 @@ clustertelemetry:
   type: ClusterIP
 
   externalIPs: []
+
+extraConfigMaps: []
+# extraConfigMaps:
+# - name: my-config-map
+#   mountPath: /mount/to/my/location
+#   subPath: my-subpath [OPTIONAL]
+#   readOnly: true [OPTIONAL]
+
+extraSecrets: []
+# extraSecrets:
+# - name: my-secret
+#   mountPath: /mount/to/my/location
+#   subPath: my-subpath [OPTIONAL]
+#   readOnly: true [OPTIONAL]
