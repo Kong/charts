@@ -1,6 +1,5 @@
 # Changelog
 
-## 1.11.0
 
 ### Breaking changes
 
@@ -31,8 +30,6 @@
   ([#200](https://github.com/Kong/charts/pull/200))
 
 ## 1.10.0
-
-### Breaking changes
 
 * Kong Ingress Controller 0.10.0 comes with breaking changes to global
   `KongPlugin`s and to resources without an ingress class defined. Refer to the
