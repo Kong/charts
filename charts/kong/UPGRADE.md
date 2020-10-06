@@ -17,6 +17,8 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [1.11.0](#1111)
+- [1.10.0](#1100)
 - [1.9.0](#190)
 - [1.6.0](#160)
 - [1.5.0](#150)
@@ -52,6 +54,62 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 1.11.0
+
+### `KongCredential` custom resources no longer supported
+
+1.11.0 updates the default Kong Ingress Controller version to 1.0. Controller
+1.0 removes support for the deprecated KongCredential resource. Before
+upgrading to chart 1.11.0, you must convert existing KongCredential resources
+to [credential Secrets](https://github.com/Kong/kubernetes-ingress-controller/blob/next/docs/guides/using-consumer-credential-resource.md#provision-a-consumer).
+
+Custom resource management varies depending on your exact chart configuration.
+By default, Helm 3 only creates CRDs in the `crds` directory if they are not
+already present, and does not modify or remove them after. If you use this
+management method, you should create a manifest file that contains [only the
+KongCredential CRD](https://github.com/Kong/charts/blob/kong-1.10.0/charts/kong/crds/custom-resource-definitions.yaml#L35-L68)
+and then [delete it](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#delete-a-customresourcedefinition).
+
+Helm 2 and Helm 3 both allow managing CRDs via the chart. In Helm 2, this is
+required; in Helm 3, it is optional. When using this method, only a single
+release will actually manage the CRD. Check to see which release has
+`ingressController.installCRDs: true` to determine which does so if you have
+multiple releases. When using this management method, upgrading a release to
+chart 1.11.0 will delete the KongCredential CRD during the upgrade, which will
+_delete any existing KongCredential resources_. To avoid losing configuration,
+check to see if your CRD is managed:
+
+```
+kubectl get crd kongcredentials.configuration.konghq.com -o yaml | grep "app.kubernetes.io/managed-by: Helm"
+```
+
+If that command returns output, your CRD is managed and you must convert to
+credential Secrets before upgrading (you should do so regardless, but are not
+at risk of losing data, and can downgrade to an older chart version if you have
+issues).
+
+### Changes to CRDs
+
+Controller 1.0 [introduces a status field](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md#added)
+for its custom resources. By default, Helm 3 does not apply updates to custom
+resource definitions if those definitions are already present on the Kubernetes
+API server (and they will be if you are upgrading a release from a previous
+chart version). To update your custom resources:
+
+```
+kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/crds/custom-resource-definitions.yaml
+```
+
+### Deprecated controller flags/environment variables and annotations removed
+
+Kong Ingress Controller 0.x versions had a number of deprecated
+flags/environment variables and annotations. Version 1.0 removes support for
+these, and you must update your configuration to use their modern equivalents
+before upgrading to chart 1.11.0.
+
+The [controller changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/master/CHANGELOG.md#breaking-changes)
+provides links to lists of deprecated configuration and their replacements.
 
 ## 1.10.0
 
