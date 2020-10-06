@@ -10,12 +10,15 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "kong.fullname" . }}-admin
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
+  {{- if .Values.admin.ingress.annotations }}
   annotations:
-    {{- range $key, $value := .Values.admin.ingress.annotations }}
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
+  {{- range $key, $value := .Values.admin.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   rules:
   - host: {{ $hostname }}
@@ -43,10 +46,12 @@ metadata:
   name: {{ template "kong.fullname" . }}-admin
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
+  {{- if .Values.admin.ingress.annotations }}
   annotations:
-    {{- range $key, $value := .Values.admin.ingress.annotations }}
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
+  {{- range $key, $value := .Values.admin.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   rules:
   - host: {{ $hostname }}

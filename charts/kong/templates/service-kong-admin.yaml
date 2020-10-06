@@ -5,10 +5,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "kong.fullname" . }}-admin
+  namespace: {{ .Release.Namespace }}
+  {{- if .Values.admin.annotations }}
   annotations:
-    {{- range $key, $value := .Values.admin.annotations }}
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
+  {{- range $key, $value := .Values.admin.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
@@ -41,10 +44,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "kong.fullname" . }}-admin
+  {{- if .Values.admin.annotations }}
   annotations:
-    {{- range $key, $value := .Values.admin.annotations }}
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
+  {{- range $key, $value := .Values.admin.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:

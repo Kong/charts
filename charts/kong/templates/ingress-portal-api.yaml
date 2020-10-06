@@ -10,12 +10,15 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "kong.fullname" . }}-portalapi
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
+  {{- if .Values.portalapi.ingress.annotations }}
   annotations:
-    {{- range $key, $value := .Values.portalapi.ingress.annotations }}
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
+  {{- range $key, $value := .Values.portalapi.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   rules:
   - host: {{ $hostname }}
