@@ -350,10 +350,6 @@ The name of the service used for the ingress controller's validation webhook
   {{- if .subPath }}
   subPath: {{ .subPath }}
   {{- end }}
-
-  {{- if .readOnly }}
-  readOnly: {{ .readOnly }}
-  {{- end }}
 {{- end }}
 {{- range .Values.extraSecrets }}
 - name:  {{ .name }}
@@ -361,10 +357,6 @@ The name of the service used for the ingress controller's validation webhook
 
   {{- if .subPath }}
   subPath: {{ .subPath }}
-  {{- end }}
-
-  {{- if .readOnly }}
-  readOnly: {{ .readOnly }}
   {{- end }}
 {{- end }}
 

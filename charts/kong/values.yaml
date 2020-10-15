@@ -741,12 +741,10 @@ extraConfigMaps: []
 # extraConfigMaps:
 # - name: my-config-map
 #   mountPath: /mount/to/my/location
-#   subPath: my-subpath [OPTIONAL]
-#   readOnly: true [OPTIONAL]
+#   subPath: my-subpath # Optional, if you wish to mount a single key and not the entire ConfigMap
 
 extraSecrets: []
 # extraSecrets:
 # - name: my-secret
 #   mountPath: /mount/to/my/location
-#   subPath: my-subpath [OPTIONAL]
-#   readOnly: true [OPTIONAL]
+#   subPath: my-subpath # Optional, if you wish to mount a single key and not the entire ConfigMap
