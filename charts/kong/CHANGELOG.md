@@ -1,5 +1,53 @@
 # Changelog
 
+## 1.11.0
+
+### Breaking changes
+
+* Kong Ingress Controller 1.0 removes support for several deprecated flags and
+  the KongCredential custom resource. Please see the [controller changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md#breaking-changes)
+  for details. Note that Helm 3 will not remove the KongCredential CRD by
+  default: you should delete it manually after converting KongCredentials to
+  [credential Secrets](https://github.com/Kong/kubernetes-ingress-controller/blob/next/docs/guides/using-consumer-credential-resource.md#provision-a-consumer).
+  If you manage CRDs using Helm (check to see if your KongCredential CRD has a
+  `app.kubernetes.io/managed-by: Helm` label), perform the credential Secret
+  conversion **before** upgrading to chart 1.11.0 to avoid losing credential
+  configuration.
+* The chart no longer uses the `extensions` API for PodSecurityPolicy, and now
+  uses the modern `policy` API. This breaks compatibility with Kubernetes
+  versions 1.11 and older.
+  ([#195](https://github.com/Kong/charts/pull/195))
+
+### Improvements
+
+* Updated default controller version to 1.0.
+* The chart now adds namespace information to manifests explicitly. This
+  simplifies workflows that use `helm template`.
+  ([#193](https://github.com/Kong/charts/pull/193))
+
+### Fixed
+* Changes to annotation block generation prevent incorrect YAML indentation
+  when specifying annotations via command line arguments to Helm commands.
+  ([#200](https://github.com/Kong/charts/pull/200))
+
+## 1.10.0
+
+### Breaking changes
+
+* Kong Ingress Controller 0.10.0 comes with breaking changes to global
+  `KongPlugin`s and to resources without an ingress class defined. Refer to the
+  [`UPGRADE.md notes for chart 1.10.0`](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#1100)
+  for details.
+
+### Improvements
+
+* Updated default controller version to 0.10.0.
+
+### Fixed
+
+* Removed the `status` field from the `TCPIngress` CRD.
+  ([#188](https://github.com/Kong/charts/pull/188))
+
 ## 1.9.1
 
 ### Documentation
@@ -118,11 +166,11 @@ issue with our release automation.
 * Added ability to apply user-defined labels to pods.
   ([#121](https://github.com/Kong/charts/pull/121))
 * Filtered serviceMonitor to disable metrics collection from non-proxy
-  services. 
+  services.
   ([#112](https://github.com/Kong/charts/pull/112))
 * Set admin API to listen on localhost only if possible.
   ([#125](https://github.com/Kong/charts/pull/125))
-* Add `auth_type` and `ssl` settings to `smtp` block. 
+* Add `auth_type` and `ssl` settings to `smtp` block.
   ([#127](https://github.com/Kong/charts/pull/127))
 * Remove UID from default securityContext.
   ([#138](https://github.com/Kong/charts/pull/138))
