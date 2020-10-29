@@ -558,12 +558,12 @@ enterprise:
   rbac:
     enabled: false
     admin_gui_auth: basic-auth
-    # If RBAC is enabled, this Secret must contain an admin_gui_session_conf key
+    # If RBAC is enabled, this Secret must contain an admin-gui-session-conf key
     # The key value must be a secret configuration, following the example at
     # https://docs.konghq.com/enterprise/latest/kong-manager/authentication/sessions
     session_conf_secret: kong-session-config
     # If admin_gui_auth is not set to basic-auth, provide a secret name which
-    # has an admin_gui_auth_conf key containing the plugin config JSON
+    # has an admin-gui-auth-conf key containing the plugin config JSON
     admin_gui_auth_conf_secret: CHANGEME-admin-gui-auth-conf-secret
   # For configuring emails and SMTP, please read through:
   # https://docs.konghq.com/enterprise/latest/developer-portal/configuration/smtp
@@ -583,7 +583,7 @@ enterprise:
     auth:
       # If your SMTP server does not require authentication, this section can
       # be left as-is. If smtp_username is set to anything other than an empty
-      # string, you must create a Secret with an smtp_password key containing
+      # string, you must create a Secret with an smtp-password key containing
       # your SMTP password and specify its name here.
       smtp_username: ''  # e.g. postmaster@example.com
       smtp_password_secret: CHANGEME-smtp-password

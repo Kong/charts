@@ -775,7 +775,7 @@ $ cat admin_gui_session_conf
 {"cookie_name":"admin_session","cookie_samesite":"off","secret":"admin-secret-CHANGEME","cookie_secure":true,"storage":"kong"}
 $ cat portal_session_conf
 {"cookie_name":"portal_session","cookie_samesite":"off","secret":"portal-secret-CHANGEME","cookie_secure":true,"storage":"kong"}
-$ kubectl create secret generic kong-session-config --from-file=admin_gui_session_conf --from-file=portal_session_conf
+$ kubectl create secret generic kong-session-config --from-file=admin-gui-session-conf=admin_gui_session_conf --from-file=portal-session-conf=portal_session_conf
 secret/kong-session-config created
 ```
 The exact plugin settings may vary in your environment. The `secret` should
@@ -784,6 +784,15 @@ always be changed for both configurations.
 After creating your secret, set its name in values.yaml in
 `.enterprise.rbac.session_conf_secret`. If you create a Portal configuration,
 add it at `env.portal_session_conf` using a secretKeyRef.
+
+```yaml
+env:
+  portal_session_conf:
+    valueFrom:
+      secretKeyRef:
+        key: kong-session-config
+        name: portal-session-conf
+```
 
 ### Email/SMTP
 
@@ -797,7 +806,7 @@ Setting `.enterprise.smtp.disabled: true` will set `KONG_SMTP_MOCK=on` and
 allow Admin/Developer invites to proceed without sending email. Note, however,
 that these have limited functionality without sending email.
 
-If your SMTP server requires authentication, you must provide the `username` and `smtp_password_secret` keys under `.enterprise.smtp.auth`. `smtp_password_secret` must be a Secret containing an `smtp_password` key whose value is your SMTP password.
+If your SMTP server requires authentication, you must provide the `username` and `smtp_password_secret` keys under `.enterprise.smtp.auth`. `smtp_password_secret` must be a Secret containing an `smtp-password` key whose value is your SMTP password.
 
 By default, SMTP uses `AUTH` `PLAIN` when you provide credentials. If your provider requires `AUTH LOGIN`, set `smtp_auth_type: login`.
 

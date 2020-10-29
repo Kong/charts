@@ -535,7 +535,7 @@ TODO: remove legacy admin listen behavior at a future date
 
     {{- if .Values.enterprise.portal.portal_auth }} {{/* TODO: deprecated, remove in a future version */}}
       {{- $_ := set $autoEnv "KONG_PORTAL_AUTH" .Values.enterprise.portal.portal_auth -}}
-      {{- $portalSession := include "secretkeyref" (dict "name" .Values.enterprise.portal.session_conf_secret "key" "portal_session_conf") -}}
+      {{- $portalSession := include "secretkeyref" (dict "name" .Values.enterprise.portal.session_conf_secret "key" "portal-session-conf") -}}
       {{- $_ := set $autoEnv "KONG_PORTAL_SESSION_CONF" $portalSession -}}
     {{- end }}
   {{- end }}
@@ -545,11 +545,11 @@ TODO: remove legacy admin listen behavior at a future date
     {{- $_ := set $autoEnv "KONG_ADMIN_GUI_AUTH" .Values.enterprise.rbac.admin_gui_auth | default "basic-auth" -}}
 
     {{- if not (eq .Values.enterprise.rbac.admin_gui_auth "basic-auth") }}
-      {{- $guiAuthConf := include "secretkeyref" (dict "name" .Values.enterprise.rbac.admin_gui_auth_conf_secret "key" "admin_gui_auth_conf") -}}
+      {{- $guiAuthConf := include "secretkeyref" (dict "name" .Values.enterprise.rbac.admin_gui_auth_conf_secret "key" "admin-gui-auth-conf") -}}
       {{- $_ := set $autoEnv "KONG_ADMIN_GUI_AUTH_CONF" $guiAuthConf -}}
     {{- end }}
 
-    {{- $guiSessionConf := include "secretkeyref" (dict "name" .Values.enterprise.rbac.session_conf_secret "key" "admin_gui_session_conf") -}}
+    {{- $guiSessionConf := include "secretkeyref" (dict "name" .Values.enterprise.rbac.session_conf_secret "key" "admin-gui-session-conf") -}}
     {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SESSION_CONF" $guiSessionConf -}}
   {{- end }}
 
@@ -567,7 +567,7 @@ TODO: remove legacy admin listen behavior at a future date
     {{- $_ := set $autoEnv "KONG_SMTP_STARTTLS" (quote .Values.enterprise.smtp.smtp_starttls) -}}
     {{- if .Values.enterprise.smtp.auth.smtp_username }}
       {{- $_ := set $autoEnv "KONG_SMTP_USERNAME" .Values.enterprise.smtp.auth.smtp_username -}}
-      {{- $smtpPassword := include "secretkeyref" (dict "name" .Values.enterprise.smtp.auth.smtp_password_secret "key" "smtp_password") -}}
+      {{- $smtpPassword := include "secretkeyref" (dict "name" .Values.enterprise.smtp.auth.smtp_password_secret "key" "smtp-password") -}}
       {{- $_ := set $autoEnv "KONG_SMTP_PASSWORD" $smtpPassword -}}
     {{- end }}
   {{- else }}

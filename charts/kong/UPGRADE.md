@@ -387,5 +387,5 @@ env:
     valueFrom:
       secretKeyRef:
         name: portal-session
-        key: portal_session_conf
+        key: portal-session-conf
 ```
