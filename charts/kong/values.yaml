@@ -274,10 +274,10 @@ migrations:
   annotations:
     sidecar.istio.io/inject: false
     kuma.io/sidecar-injection: "disabled"
-  # Annotations to apply to the init migration job
+  # Additional annotations to apply to migration jobs
   # This is helpful in certain non-Helm installation situations such as GitOps
   # where additional control is required around this job creation.
-  initAnnotations: {}
+  jobAnnotations: {}
 
 # Kong's configuration for DB-less mode
 # Note: Use this section only if you are deploying Kong in DB-less mode

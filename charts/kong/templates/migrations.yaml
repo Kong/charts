@@ -13,7 +13,7 @@ metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: init-migrations
-  {{- range $key, $value := .Values.migrations.initAnnotations }}
+  {{- range $key, $value := .Values.migrations.jobAnnotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
