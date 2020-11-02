@@ -268,12 +268,16 @@ migrations:
   preUpgrade: true
   # Enable post-upgrade migrations (run "kong migrations finish")
   postUpgrade: true
-  # Annotations to apply to migrations jobs
+  # Annotations to apply to migrations job pods
   # By default, these disable service mesh sidecar injection for Istio and Kuma,
   # as the sidecar containers do not terminate and prevent the jobs from completing
   annotations:
     sidecar.istio.io/inject: false
     kuma.io/sidecar-injection: "disabled"
+  # Additional annotations to apply to migration jobs
+  # This is helpful in certain non-Helm installation situations such as GitOps
+  # where additional control is required around this job creation.
+  jobAnnotations: {}
 
 # Kong's configuration for DB-less mode
 # Note: Use this section only if you are deploying Kong in DB-less mode
