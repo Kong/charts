@@ -391,10 +391,6 @@ The name of the service used for the ingress controller's validation webhook
 {{ toYaml .Values.ingressController.readinessProbe | indent 4 }}
   livenessProbe:
 {{ toYaml .Values.ingressController.livenessProbe | indent 4 }}
-{{- if .Values.ingressController.runAsUser }}
-  securityContext:
-    runAsUser: {{.Values.ingressController.runAsUser }}
-{{- end }}
   resources:
 {{ toYaml .Values.ingressController.resources | indent 4 }}
 {{- if .Values.ingressController.admissionWebhook.enabled }}
