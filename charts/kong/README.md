@@ -23,40 +23,28 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
 
 ## Table of contents
 
-- [Kong for Kubernetes](#kong-for-kubernetes)
-- [TL;DR;](#tldr)
-- [Table of contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
-- [Important: Helm 2 vs Helm 3](#important-helm-2-vs-helm-3)
-    - [Helm 2](#helm-2)
-    - [Helm 3](#helm-3)
+- [Helm 2 vs Helm 3](#important-helm-2-vs-helm-3)
 - [Install](#install)
 - [Uninstall](#uninstall)
-- [FAQs](#faqs)
 - [Kong Enterprise](#kong-enterprise)
+- [FAQs](#faqs)
 - [Deployment Options](#deployment-options)
   - [Database](#database)
-    - [DB-less  deployment](#db-less-deployment)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
   - [Standalone controller nodes](#standalone-controller-nodes)
   - [Hybrid mode](#hybrid-mode)
-    - [Certificates](#certificates)
-    - [Control plane node configuration](#control-plane-node-configuration)
-    - [Data plane node configuration](#data-plane-node-configuration)
   - [CRDs only](#crds-only)
-  - [Sidecar Containers](#sidecar-containers)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
-  - [Kong parameters](#kong-parameters)
+  - [Kong Parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
-    - [Stream listens](#stream-listens)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
-    - [The `env` section](#the-env-section)
+  - [The `env` section](#the-env-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
-  - [Overview](#overview)
   - [Prerequisites](#prerequisites-1)
     - [Kong Enterprise License](#kong-enterprise-license)
     - [Kong Enterprise Docker registry access](#kong-enterprise-docker-registry-access)
@@ -64,6 +52,8 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [RBAC](#rbac)
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
+- [Changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
+- [Upgrading](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
@@ -580,7 +570,6 @@ section of `values.yaml` file:
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
 | admissionWebhook.failurePolicy     | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)      | Fail                                                                         |
 | admissionWebhook.port              | The port the ingress controller will listen on for admission webhooks                 | 8080                                                                         |
-| securityContext                    | Set the securityContext for ingress controller                                        | `{}`                                                                         |
 
 For a complete list of all configuration values you can set in the
 `env` section, please read the Kong Ingress Controller's
