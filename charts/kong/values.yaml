@@ -365,6 +365,7 @@ ingressController:
     successThreshold: 1
     failureThreshold: 3
   resources: {}
+  securityContext: {}
 
 # -----------------------------------------------------------------------------
 # Postgres sub-chart parameters
