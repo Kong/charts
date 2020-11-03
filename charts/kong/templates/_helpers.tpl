@@ -393,6 +393,8 @@ The name of the service used for the ingress controller's validation webhook
 {{ toYaml .Values.ingressController.livenessProbe | indent 4 }}
   resources:
 {{ toYaml .Values.ingressController.resources | indent 4 }}
+  securityContext:
+{{ toYaml .Values.ingressController.securityContext | indent 4 }}
 {{- if .Values.ingressController.admissionWebhook.enabled }}
   volumeMounts:
   - name: webhook-cert
