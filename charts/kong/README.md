@@ -570,6 +570,7 @@ section of `values.yaml` file:
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
 | admissionWebhook.failurePolicy     | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)      | Fail                                                                         |
 | admissionWebhook.port              | The port the ingress controller will listen on for admission webhooks                 | 8080                                                                         |
+| securityContext                    | Set the securityContext for ingress controller                                        | `{}`                                                                         |
 
 For a complete list of all configuration values you can set in the
 `env` section, please read the Kong Ingress Controller's
