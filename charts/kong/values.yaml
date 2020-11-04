@@ -470,7 +470,8 @@ podAnnotations: {}
 # Labels to be added to Kong pods
 podLabels: {}
 
-# Kong pod count
+# Kong pod count.
+# It has no effect when autoscaling.enabled is set to true
 replicaCount: 1
 
 # Annotations to be added to Kong deployment
