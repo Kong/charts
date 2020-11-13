@@ -56,7 +56,7 @@ image:
   tag: "2.2"
   # Kong Enterprise
   # repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-  # tag: "2.1.3.0-alpine"
+  # tag: "2.1.4.1-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
