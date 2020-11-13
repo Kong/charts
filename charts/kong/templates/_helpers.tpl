@@ -661,3 +661,13 @@ Environment variables are sorted alphabetically
   - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
     mountPath: /wait_postgres
 {{- end -}}
+
+{{- define "kong.deprecation-warnings" -}}
+  {{- $warnings := list -}}
+  {{- range $warning := . }}
+    {{- $warnings = append $warnings (wrap 80 (printf "WARNING: %s" $warning)) -}}
+    {{- $warnings = append $warnings "\n\n" -}}
+  {{- end -}}
+  {{- $warningString := ($warnings | join "") -}}
+  {{- $warningString -}}
+{{- end -}}
