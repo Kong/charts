@@ -2,6 +2,29 @@
 
 ## 1.11.0
 
+### Improvements
+
+* Increased default worker count to 2 to avoid issues with latency during
+  blocking tasks, such as DB-less config updates. This change increases memory
+  usage, but the increase should not be a concern for any but the smallest
+  deployments (deployments with memory limits below 512MB).
+* Updated default Kong version to 2.2.
+  ([#221](https://github.com/Kong/charts/pull/221))
+* Updated default Kong Enterprise version to 2.1.4.1.
+* Added a means to mount extra ConfigMap and Secret resources.
+  ([#208](https://github.com/Kong/charts/pull/208))
+* Added configurable annotations for migration Jobs.
+  ([#219](https://github.com/Kong/charts/pull/219))
+* Added template for deprecation warnings to automate formatting and avoid
+  excess newlines.
+
+### Fixed
+
+* Upgrades no longer force auto-scaling Deployments back to the replica count.
+  ([#222](https://github.com/Kong/charts/pull/222))
+
+## 1.11.0
+
 ### Breaking changes
 
 * Kong Ingress Controller 1.0 removes support for several deprecated flags and
