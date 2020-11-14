@@ -25,6 +25,9 @@ deployment:
   #   - name: sidecar
   #     image: sidecar:latest
 
+# Namespace to deploy Kong.
+namespace: ""
+
 # -----------------------------------------------------------------------------
 # Kong parameters
 # -----------------------------------------------------------------------------

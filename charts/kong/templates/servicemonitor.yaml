@@ -21,7 +21,7 @@ spec:
   jobLabel: {{ .Release.Name }}
   namespaceSelector:
     matchNames:
-    - {{ .Release.Namespace }}
+    - {{ template "kong.namespace" . }}
   selector:
     matchLabels:
       enable-metrics: "true"
