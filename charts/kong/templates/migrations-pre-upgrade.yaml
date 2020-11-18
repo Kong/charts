@@ -13,6 +13,9 @@ metadata:
   annotations:
     helm.sh/hook: "pre-upgrade"
     helm.sh/hook-delete-policy: "before-hook-creation"
+  {{- range $key, $value := .Values.migrations.jobAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
 spec:
   template:
     metadata:

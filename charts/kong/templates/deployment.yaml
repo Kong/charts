@@ -14,7 +14,9 @@ metadata:
   {{- end }}
   {{- end }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "kong.selectorLabels" . | nindent 6 }}

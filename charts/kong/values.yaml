@@ -39,7 +39,7 @@ deployment:
 # is set below. In general, you should not set values here if they are set elsewhere.
 env:
   database: "off"
-  nginx_worker_processes: "1"
+  nginx_worker_processes: "2"
   proxy_access_log: /dev/stdout
   admin_access_log: /dev/stdout
   admin_gui_access_log: /dev/stdout
@@ -53,10 +53,10 @@ env:
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.1"
+  tag: "2.2"
   # Kong Enterprise
   # repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-  # tag: "2.1.3.0-alpine"
+  # tag: "2.1.4.1-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -268,12 +268,16 @@ migrations:
   preUpgrade: true
   # Enable post-upgrade migrations (run "kong migrations finish")
   postUpgrade: true
-  # Annotations to apply to migrations jobs
+  # Annotations to apply to migrations job pods
   # By default, these disable service mesh sidecar injection for Istio and Kuma,
   # as the sidecar containers do not terminate and prevent the jobs from completing
   annotations:
     sidecar.istio.io/inject: false
     kuma.io/sidecar-injection: "disabled"
+  # Additional annotations to apply to migration jobs
+  # This is helpful in certain non-Helm installation situations such as GitOps
+  # where additional control is required around this job creation.
+  jobAnnotations: {}
 
 # Kong's configuration for DB-less mode
 # Note: Use this section only if you are deploying Kong in DB-less mode
@@ -411,10 +415,10 @@ updateStrategy: {}
 resources: {}
   # limits:
   #  cpu: 100m
-  #  memory: 128Mi
+  #  memory: 256Mi
   # requests:
   #  cpu: 100m
-  #  memory: 128Mi
+  #  memory: 256Mi
 
 # readinessProbe for Kong pods
 # If using Kong Enterprise with RBAC, you must add a Kong-Admin-Token header
@@ -466,7 +470,8 @@ podAnnotations: {}
 # Labels to be added to Kong pods
 podLabels: {}
 
-# Kong pod count
+# Kong pod count.
+# It has no effect when autoscaling.enabled is set to true
 replicaCount: 1
 
 # Annotations to be added to Kong deployment
@@ -736,3 +741,15 @@ clustertelemetry:
   type: ClusterIP
 
   externalIPs: []
+
+extraConfigMaps: []
+# extraConfigMaps:
+# - name: my-config-map
+#   mountPath: /mount/to/my/location
+#   subPath: my-subpath # Optional, if you wish to mount a single key and not the entire ConfigMap
+
+extraSecrets: []
+# extraSecrets:
+# - name: my-secret
+#   mountPath: /mount/to/my/location
+#   subPath: my-subpath # Optional, if you wish to mount a single key and not the entire ConfigMap

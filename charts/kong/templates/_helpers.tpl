@@ -293,6 +293,16 @@ The name of the service used for the ingress controller's validation webhook
   secret:
     secretName: {{ . }}
 {{- end }}
+{{- range .Values.extraConfigMaps }}
+- name: {{ .name }}
+  configMap:
+    name: {{ .name }}
+{{- end }}
+{{- range .Values.extraSecrets }}
+- name: {{ .name }}
+  secret:
+    secretName: {{ .name }}
+{{- end }}
 {{- end -}}
 
 {{- define "kong.volumeMounts" -}}
@@ -332,6 +342,24 @@ The name of the service used for the ingress controller's validation webhook
   readOnly: true
 {{- end }}
 {{- end }}
+
+{{- range .Values.extraConfigMaps }}
+- name:  {{ .name }}
+  mountPath: {{ .mountPath }}
+
+  {{- if .subPath }}
+  subPath: {{ .subPath }}
+  {{- end }}
+{{- end }}
+{{- range .Values.extraSecrets }}
+- name:  {{ .name }}
+  mountPath: {{ .mountPath }}
+
+  {{- if .subPath }}
+  subPath: {{ .subPath }}
+  {{- end }}
+{{- end }}
+
 {{- end -}}
 
 {{- define "kong.plugins" -}}
@@ -632,4 +660,14 @@ Environment variables are sorted alphabetically
   volumeMounts:
   - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
     mountPath: /wait_postgres
+{{- end -}}
+
+{{- define "kong.deprecation-warnings" -}}
+  {{- $warnings := list -}}
+  {{- range $warning := . }}
+    {{- $warnings = append $warnings (wrap 80 (printf "WARNING: %s" $warning)) -}}
+    {{- $warnings = append $warnings "\n\n" -}}
+  {{- end -}}
+  {{- $warningString := ($warnings | join "") -}}
+  {{- $warningString -}}
 {{- end -}}

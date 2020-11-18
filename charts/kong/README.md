@@ -463,12 +463,13 @@ directory.
 | image.tag                          | Kong image version                                                                    | `2.0`               |
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
-| replicaCount                       | Kong instance count                                                                   | `1`                 |
+| replicaCount                       | Kong instance count. It has no effect when `autoscaling.enabled` is set to true         | `1`                 |
 | plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
 | migrations.preUpgrade              | Run "kong migrations up" jobs                                                         | `true`              |
 | migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
-| migrations.annotations             | Annotations for migration jobs                                                        | `{"sidecar.istio.io/inject": "false", "kuma.io/sidecar-injection": "disabled"}` |
+| migrations.annotations             | Annotations for migration job pods                                                    | `{"sidecar.istio.io/inject": "false", "kuma.io/sidecar-injection": "disabled"}` |
+| migrations.jobAnnotations          | Additional annotations for migration jobs                                             | `{}`                |
 | waitImage.repository               | Image used to wait for database to become ready                                       | `bash`              |
 | waitImage.tag                      | Tag for image used to wait for database to become ready                               | `5`                 |
 | waitImage.pullPolicy               | Wait image pull policy                                                                | `IfNotPresent`      |
@@ -609,6 +610,9 @@ For a complete list of all configuration values you can set in the
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
 | serviceMonitor.labels              | ServiceMonitor labels                                                                 | `{}`                |
 | serviceMonitor.targetLabels        | ServiceMonitor targetLabels                                                           | `{}`                |
+| extraConfigMaps                    | ConfigMaps to add to mounted volumes                                                  | `[]`                |
+| extraSecrets                       | Secrets to add to mounted volumes                                                     | `[]`                |
+
 
 #### The `env` section
 
