@@ -5,7 +5,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "kong.fullname" . }}-portalapi
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ template "kong.namespace" . }}
   {{- if .Values.portalapi.annotations }}
   annotations:
   {{- range $key, $value := .Values.portalapi.annotations }}
