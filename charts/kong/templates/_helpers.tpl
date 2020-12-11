@@ -314,8 +314,10 @@ The name of the service used for the ingress controller's validation webhook
   mountPath: /kong_prefix/
 - name: {{ template "kong.fullname" . }}-tmp
   mountPath: /tmp
+{{- if .Values.deployment.kong.enabled }}
 - name: custom-nginx-template-volume
   mountPath: /kong
+{{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
   mountPath: /kong_dbless/
