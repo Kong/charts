@@ -368,14 +368,15 @@ ingressController:
     periodSeconds: 10
     successThreshold: 1
     failureThreshold: 3
-  # Remove "{}" and uncomment the block below to set controller resources
   resources: {}
-  # limits:
-  #  cpu: 100m
-  #  memory: 256Mi
-  # requests:
-  #  cpu: 50m
-  #  memory: 128Mi
+  # Example reasonable setting for "resources":
+  # resources:
+  #   limits:
+  #     cpu: 100m
+  #     memory: 256Mi
+  #   requests:
+  #     cpu: 50m
+  #     memory: 128Mi
 
 # -----------------------------------------------------------------------------
 # Postgres sub-chart parameters
@@ -487,7 +488,7 @@ deploymentAnnotations:
   traffic.sidecar.istio.io/includeInboundPorts: ""
 
 # Enable autoscaling using HorizontalPodAutoscaler
-# When configuring an HPA, you must set resource limits on all containers via
+# When configuring an HPA, you must set resource requests on all containers via
 # "resources" and, if using the controller, "ingressController.resources" in values.yaml
 autoscaling:
   enabled: false
