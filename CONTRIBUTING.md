@@ -66,3 +66,11 @@ changes. Ideally, if the change is significant, you should explain its
 motivation, the chosen implementation, and justify it.
 
 Lines in the commit messages should not exceed 72 characters.
+
+## Stale issue and pull request policy
+
+To ensure our backlog is organized and up to date, we will close issues and
+pull requests that have been inactive awaiting a community response for over 2
+weeks. Please feel free to reopen an inactive closed issue if you would like to
+continue work on it.
+
