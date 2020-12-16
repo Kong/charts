@@ -669,9 +669,10 @@ configuration can be placed under the `.env` key.
 
 ### Prerequisites
 
-Note that the steps below prescribe the creation of Kubernetes secrets with
-sensitive data in them. We recommend using some secret management system to
-store this data. You may consider 
+Note that the steps below prescribe the creation of
+[Kubernetes secrets](https://kubernetes.io/docs/concepts/configuration/secret/)
+with sensitive data in them. We recommend using some secret management system
+to store this data. You may consider 
 [external-secrets](https://github.com/external-secrets/kubernetes-external-secrets)
 for this purpose.
 
