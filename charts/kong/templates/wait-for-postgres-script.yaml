@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 data:

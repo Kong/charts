@@ -3,7 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
   name:  {{ template "kong.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 rules:
@@ -46,7 +46,7 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   name:  {{ template "kong.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 roleRef:
@@ -56,7 +56,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ template "kong.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+    namespace: {{ template "kong.namespace" . }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
@@ -147,5 +147,5 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ template "kong.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+    namespace: {{ template "kong.namespace" . }}
 {{- end -}}

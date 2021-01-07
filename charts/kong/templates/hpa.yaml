@@ -3,7 +3,7 @@ apiVersion: {{ .Capabilities.APIVersions.Has "autoscaling/v2beta2" | ternary "au
 kind: HorizontalPodAutoscaler
 metadata:
   name: "{{ template "kong.fullname" . }}"
-  namespace:  {{ .Release.Namespace }}
+  namespace:  {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:

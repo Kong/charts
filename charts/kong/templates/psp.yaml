@@ -28,13 +28,13 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ template "kong.serviceAccountName" . }}-psp
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 subjects:
   - kind: ServiceAccount
     name: {{ template "kong.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
+    namespace: {{ template "kong.namespace" . }}
 roleRef:
   kind: ClusterRole
   name: {{ template "kong.serviceAccountName" . }}-psp

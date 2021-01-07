@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.13.0
+
+### Improvements
+
+* Updated default Kong Enterprise version to 2.2.1.0-alpine.
+* Updated default Kong Ingress Controller version to 1.1.
+* Add `namespace` to values.yaml to override release namespace if desired.
+  ([#231](https://github.com/Kong/charts/pull/231))
+
+### Fixed
+
+* Migration Jobs now use the same nodeSelector configuration as the main Kong
+  Deployment.
+  ([#238](https://github.com/Kong/charts/pull/238))
+* Disabled custom Kong template mount if Kong is not enabled.
+  ([#240](https://github.com/Kong/charts/pull/240))
+* Changed YAML string to a YAML boolean.
+  ([#240](https://github.com/Kong/charts/pull/240))
+
+### Documentation
+
+* Clarify requirements for using horizontal pod autoscalers.
+  ([#236](https://github.com/Kong/charts/pull/236))
+
 ## 1.12.0
 
 ### Improvements

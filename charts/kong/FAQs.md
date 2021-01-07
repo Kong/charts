@@ -55,7 +55,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ template "kong.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ template "kong.namespace" . }}
   annotations:
     "helm.sh/hook": pre-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded

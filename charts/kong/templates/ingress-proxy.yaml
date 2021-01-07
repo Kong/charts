@@ -8,7 +8,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ template "kong.fullname" . }}-proxy
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
   {{- if .Values.proxy.ingress.annotations }}

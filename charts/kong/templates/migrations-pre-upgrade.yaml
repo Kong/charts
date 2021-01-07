@@ -6,7 +6,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ template "kong.fullname" . }}-pre-upgrade-migrations
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: pre-upgrade-migrations
@@ -58,6 +58,10 @@ spec:
         {{- include "kong.volumeMounts" . | nindent 8 }}
       securityContext:
       {{- include "kong.podsecuritycontext" . | nindent 8 }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+      {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
       restartPolicy: OnFailure
       volumes:
       {{- include "kong.volumes" . | nindent 6 -}}
