@@ -13,7 +13,7 @@
 {{- include "kong.service" $serviceConfig }}
 {{ if .Values.proxy.ingress.enabled }}
 ---
-{{ if (not (hasKey .Values "proxy.ingress.hosts"))  -}}
+{{ if (not (hasKey .Values.proxy.ingress "hosts"))  -}}
 {{ include "kong.ingress" $serviceConfig }}
 {{ else -}} {{/* TODO remove legacy proxy ingress handling */}}
 {{- $serviceName := include "kong.fullname" . -}}
@@ -46,7 +46,7 @@ spec:
     {{- end -}}
   {{- if .Values.proxy.ingress.tls }}
   tls:
-{{ toYaml .Values.proxy.ingress.tls | indent 4 }}
+  {{ toYaml .Values.proxy.ingress.tls | indent 4 }}
   {{- end -}}
 {{- end -}}
 {{- end -}}
