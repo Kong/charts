@@ -70,12 +70,12 @@ metadata:
   namespace: {{ .namespace }}
   labels:
    {{- .metaLabels | nindent 4 }}
- {{- if .ingress.annotations }}
+  {{- if .ingress.annotations }}
   annotations:
- {{- range $key, $value := .ingress.annotations }}
+    {{- range $key, $value := .ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
- {{- end }}
- {{- end }}
+    {{- end }}
+  {{- end }}
 spec:
   rules:
   - host: {{ $hostname }}
@@ -85,7 +85,7 @@ spec:
           backend:
             serviceName: {{ .fullName }}-{{ .serviceName }}
             servicePort: {{ $servicePort }}
- {{- if (hasKey .ingress "tls") }}
+  {{- if (hasKey .ingress "tls") }}
   tls:
   - hosts:
     - {{ $hostname }}
