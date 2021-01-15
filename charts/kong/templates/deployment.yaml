@@ -29,7 +29,9 @@ spec:
     metadata:
       annotations:
         {{- if .Values.ingressController.admissionWebhook.enabled }}
-        checksum/admission-webhook.yaml: {{ include (print $.Template.BasePath "/admission-webhook.yaml") . | sha256sum }}
+        {{/* Generating a checksum from the entire template causes the checksum to change depending on whether you install or upgrade
+             even though the resources do not actually change. Not sure why. Extracting the certificates only works around this. */}}
+        checksum/admission-webhook.yaml: {{ (regexFindAll "tls.crt: .*$" (include (print $.Template.BasePath "/admission-webhook.yaml") .) -1 | join ",") | sha256sum }}
         {{- end }}
         {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off" )) }}
         {{- if .Values.dblessConfig.config }}
