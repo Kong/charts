@@ -17,7 +17,8 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
-- [1.11.0](#1111)
+- [1.14.0](#1140)
+- [1.11.0](#1110)
 - [1.10.0](#1100)
 - [1.9.0](#190)
 - [1.6.0](#160)
@@ -54,6 +55,81 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 1.14.0
+
+### Removal of multi-host proxy Ingress
+
+Most of the chart's Ingress templates support a single hostname and TLS Secret.
+The proxy Ingress template originally differed, and allowed multiple hostnames
+and TLS configurations. As of chart 1.14.0, we have deprecated the unique proxy
+Ingress configuration; it is now identical to all other Kong services. If you
+do not need to configure multiple Ingress rules for your proxy, you will
+change:
+
+```
+ingress:
+  hosts: ["proxy.kong.example"]
+  tls:
+  - hosts:
+    - proxy.kong.example
+    secretName: example-tls-secret
+  path: /
+```
+to:
+
+```
+ingress:
+  tls: example-tls-secret
+  hostname: proxy.kong.example
+  path: /
+```
+We plan to remove support for the multi-host configuration entirely in version
+2.0 of the chart. If you currently use multiple hosts, we recommend that you
+either:
+- Define Ingresses for each application, e.g. if you proxy applicationA at
+  `foo.kong.example` and applicationB at `bar.kong.example`, you deploy those
+  applications with their own Ingress resources that target the proxy.
+- Define a multi-host Ingress manually. Before upgrading, save your current
+  proxy Ingress, delete labels from the saved copy, and set
+  `proxy.ingress.enabled=false`. After upgrading, create your Ingress from the
+  saved copy and edit it directly to add new rules.
+
+We expect that most users do not need a built-in multi-host proxy Ingress or
+even a proxy Ingress at all: the old configuration predates the Kong Ingress
+Controller and is most useful if you place Kong behind some other controller.
+If you are interested in preserving this functionality, please [discuss your
+use case with us](https://github.com/Kong/charts/issues/73). If there is
+sufficient interest, we will explore options for continuing to support the
+original proxy Ingress configuration format.
+
+### Default custom server block replaced with status listen
+
+Earlier versions of the chart included [a custom server block](https://github.com/Kong/charts/blob/kong-1.13.0/charts/kong/templates/config-custom-server-blocks.yaml)
+to provide `/status` and `/metrics` endpoints. This server block simplified
+RBAC-enabled Enterprise deployments by providing access to these endpoints
+outside the (protected) admin API.
+
+Current versions (Kong 1.4.0+ and Kong Enterprise 1.5.0+) have a built-in
+status listen that provides the same functionality, and chart 1.14.0 uses it
+for readiness/liveness probes and the Prometheus service monitor.
+
+If you are using a version that supports the new status endpoint, you do not
+need to make any changes to your values unless you include `readinessProbe` and
+`livenessProbe` in them. If you do, you must change the port from `metrics` to
+`status`.
+
+If you are using an older version that does not support the status listen, you
+will need to:
+- Create the server block ConfigMap independent of the chart. You will need to
+  set the ConfigMap name and namespace manually and remove the labels block.
+- Add an `extraConfigMaps` values entry for your ConfigMap.
+- Set `env.nginx_http_include` to `/path/to/your/mount/servers.conf`.
+- Add the [old readiness/liveness probe blocks](https://github.com/Kong/charts/blob/kong-1.13.0/charts/kong/values.yaml#L437-L458)
+  to your values.yaml.
+- If you use the Prometheus service monitor, edit it after installing the chart
+  and set `targetPort` to `9542`. This cannot be set from values.yaml, but Helm
+  3 will preserve the change on subsequent upgrades.
 
 ## 1.11.0
 
