@@ -273,11 +273,6 @@ The name of the service used for the ingress controller's validation webhook
     secretName: {{ .name }}
 {{- end }}
 {{- end }}
-{{- if .Values.deployment.kong.enabled }}
-- name: custom-nginx-template-volume
-  configMap:
-    name: {{ template "kong.fullname" . }}-default-custom-server-blocks
-{{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
   configMap:
@@ -314,10 +309,6 @@ The name of the service used for the ingress controller's validation webhook
   mountPath: /kong_prefix/
 - name: {{ template "kong.fullname" . }}-tmp
   mountPath: /tmp
-{{- if .Values.deployment.kong.enabled }}
-- name: custom-nginx-template-volume
-  mountPath: /kong
-{{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
   mountPath: /kong_dbless/
@@ -584,8 +575,6 @@ TODO: remove legacy admin listen behavior at a future date
   {{- $_ := set $autoEnv "KONG_LICENSE_DATA" $lic -}}
 
 {{- end }} {{/* End of the Enterprise settings block */}}
-
-{{- $_ := set $autoEnv "KONG_NGINX_HTTP_INCLUDE" "/kong/servers.conf" -}}
 
 {{- if .Values.postgresql.enabled }}
   {{- $_ := set $autoEnv "KONG_PG_HOST" (include "kong.postgresql.fullname" .) -}}
