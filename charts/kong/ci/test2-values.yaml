@@ -25,10 +25,9 @@ proxy:
   type: NodePort
   ingress:
     enabled: true
-    hosts: []
+    hostname: proxy.kong.example
     annotations: {}
     path: /
-  useTLS: true
 # - add stream listens
   stream:
   - containerPort: 9000
