@@ -125,6 +125,7 @@ admin:
 # Specify Kong status listener configuration
 # This listen is internal-only. It cannot be exposed through a service or ingress.
 status:
+  enabled: true
   http:
     # Enable plaintext HTTP listen for the status listen
     enabled: true
@@ -437,7 +438,7 @@ resources: {}
 readinessProbe:
   httpGet:
     path: "/status"
-    port: metrics
+    port: status
     scheme: HTTP
   initialDelaySeconds: 5
   timeoutSeconds: 5
@@ -449,7 +450,7 @@ readinessProbe:
 livenessProbe:
   httpGet:
     path: "/status"
-    port: metrics
+    port: status
     scheme: HTTP
   initialDelaySeconds: 5
   timeoutSeconds: 5
