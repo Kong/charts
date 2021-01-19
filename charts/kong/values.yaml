@@ -391,7 +391,7 @@ ingressController:
 #   along-with Kong as part of a single Helm release.
 
 # PostgreSQL chart documentation:
-# https://github.com/helm/charts/blob/main/stable/postgresql/README.md
+# https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md
 
 postgresql:
   enabled: false
