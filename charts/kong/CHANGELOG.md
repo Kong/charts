@@ -1,5 +1,38 @@
 # Changelog
 
+## 1.14.0
+
+### Breaking changes
+
+1.14 is the last planned 1.x version of the Kong chart. 2.x will remove support
+for Helm 2.x and all deprecated configuration. The chart prints a warning when
+upgrading or installing if it detects any configuration still using an old
+format.
+
+* All Ingress and Service resources now use the same template. This ensures
+  that all chart Ingresses and Services support the same configuration. The
+  proxy previously used a unique Ingress configuration, which is now
+  deprecated. If you use the proxy Ingress, [see the instructions in
+  UPGRADE.md](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#removal-of-multi-host-proxy-ingress)
+  to update your configuration. No changes are required for other Service and
+  Ingress configurations.
+  ([#251](https://github.com/Kong/charts/pull/251)).
+* The chart now uses the standard Kong status endpoint instead of custom
+  configuration, allowing users to specify their own custom configuration. The
+  status endpoint is no available in versions older than Kong 1.4.0 or Kong
+  Enterprise 1.5.0; if you use an older version, you will need to [add and load
+  the old custom configuration](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#default-custom-server-block-replaced-with-status-listen).
+
+  If you use a newer version and include Kong container readinessProbe and/or
+  livenessProbe configuration in your values.yaml, you must change the port
+  from `metrics` to `status`.
+  ([#255](https://github.com/Kong/charts/pull/255)).
+
+### Fixed
+
+* Correct an issue with migrations Job toggles.
+  ([#231](https://github.com/Kong/charts/pull/231))
+
 ## 1.13.0
 
 ### Improvements
