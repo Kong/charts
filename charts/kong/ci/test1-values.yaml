@@ -31,14 +31,14 @@ admin:
   type: NodePort
   ingress:
     enabled: true
-    hosts: ["test.com", "test2.com"]
+    hostname: admin.kong.example
     annotations: {}
     path: /
 proxy:
   type: NodePort
   ingress:
     enabled: true
-    hosts: ["test.com", "test2.com"]
+    hostname: proxy.kong.example
     annotations: {}
     path: /
 env:

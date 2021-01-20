@@ -125,6 +125,7 @@ admin:
 # Specify Kong status listener configuration
 # This listen is internal-only. It cannot be exposed through a service or ingress.
 status:
+  enabled: true
   http:
     # Enable plaintext HTTP listen for the status listen
     enabled: true
@@ -160,8 +161,6 @@ cluster:
     parameters: []
 
   type: ClusterIP
-
-  externalIPs: []
 
 # Specify Kong proxy service configuration
 proxy:
@@ -219,22 +218,17 @@ proxy:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
-    hosts: []
-    # TLS section. Unlike other ingresses, this follows the format at
-    # https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
-    # tls:
-    # - hosts:
-    #   - 1.example.com
-    #   secretName: example1-com-tls-secret
-    # - hosts:
-    #   - 2.example.net
-    #   secretName: example2-net-tls-secret
+    # Ingress hostname
+    # TLS secret name.
+    # tls: kong-admin.example.com-tls
+    hostname:
     # Map of ingress annotations.
     annotations: {}
     # Ingress path.
     path: /
 
-  externalIPs: []
+  # Optionally specify a static load balancer IP.
+  # loadBalancerIP:
 
 # Custom Kong plugins can be loaded into Kong by mounting the plugin code
 # into the file-system of Kong container.
@@ -397,7 +391,7 @@ ingressController:
 #   along-with Kong as part of a single Helm release.
 
 # PostgreSQL chart documentation:
-# https://github.com/helm/charts/blob/main/stable/postgresql/README.md
+# https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md
 
 postgresql:
   enabled: false
@@ -437,7 +431,7 @@ resources: {}
 readinessProbe:
   httpGet:
     path: "/status"
-    port: metrics
+    port: status
     scheme: HTTP
   initialDelaySeconds: 5
   timeoutSeconds: 5
@@ -449,7 +443,7 @@ readinessProbe:
 livenessProbe:
   httpGet:
     path: "/status"
-    port: metrics
+    port: status
     scheme: HTTP
   initialDelaySeconds: 5
   timeoutSeconds: 5
@@ -649,8 +643,6 @@ manager:
     # Ingress path.
     path: /
 
-  externalIPs: []
-
 portal:
   # Enable creating a Kubernetes service for the Developer Portal
   enabled: true
@@ -692,8 +684,6 @@ portal:
     annotations: {}
     # Ingress path.
     path: /
-
-  externalIPs: []
 
 portalapi:
   # Enable creating a Kubernetes service for the Developer Portal API
@@ -737,8 +727,6 @@ portalapi:
     # Ingress path.
     path: /
 
-  externalIPs: []
-
 clustertelemetry:
   enabled: false
   # If you want to specify annotations for the cluster telemetry service, uncomment the following
@@ -753,8 +741,6 @@ clustertelemetry:
     parameters: []
 
   type: ClusterIP
-
-  externalIPs: []
 
 extraConfigMaps: []
 # extraConfigMaps:

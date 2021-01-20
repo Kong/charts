@@ -25,6 +25,12 @@ Kong: https://bit.ly/k4k8s-get-started
 
 {{- if .Values.runMigrations -}}
 {{/* Legacy migration toggle */}}
-{{- $warnings = append $warnings "You are currently using the legacy runMigrations setting in values.yaml. Support for this will be removed in a future release. Please see the upgrade guide for instructions to update your configuration: https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#changes-to-migration job-configuration" -}}
+{{- $warnings = append $warnings "You are currently using the legacy runMigrations setting in values.yaml. Support for this will be removed in a future release. Please see the upgrade guide for instructions to update your configuration: https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#changes-to-migration-job-configuration" -}}
 {{- end -}}
+
+{{ if (hasKey .Values "proxy.ingress.hosts") -}}
+{{/* Legacy proxy ingress */}}
+{{- $warnings = append $warnings "You are currently using legacy proxy Ingress configuration in values.yaml. Support for this will be removed in a future release. Please see the upgrade guide for instructions to update your configuration: https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#removal-of-multi-host-proxy-ingress" -}}
+{{- end -}}
+
 {{- include "kong.deprecation-warnings" $warnings -}}

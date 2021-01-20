@@ -1,10 +1,19 @@
 {{- if .Values.deployment.kong.enabled }}
 {{- if .Release.IsInstall -}}
-{{/* .migrations.init isn't normally exposed in values.yaml. In testing,
-however, adding it with value "false" didn't actually disable this job. Not
-clear why, but not a major concern: this job should always be created if it
-meets the .Release.IsInstall condition for a DB-backed instance. */}}
-{{- if (and (or (.Values.runMigrations) (.Values.migrations.init | default true)) (not (eq .Values.env.database "off"))) }}
+{{/* .migrations.init isn't normally exposed in values.yaml, since it should
+     generally always run on install--there should never be any reason to
+     disable it, and at worst it's a no-op. However, https://github.com/helm/helm/issues/3308
+     means we cannot use the default function to create a hidden value, hence
+     the workaround with this $runInit variable.
+ */}}
+{{- $runInit := true -}}
+{{- if (hasKey .Values.migrations "init") -}}
+  {{- $runInit = .Values.migrations.init -}}
+{{- else if (hasKey .Values "runMigrations") -}}
+  {{- $runInit = .Values.runMigrations -}}
+{{- end -}}
+
+{{- if (and ($runInit) (not (eq .Values.env.database "off"))) }}
 apiVersion: batch/v1
 kind: Job
 metadata:

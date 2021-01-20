@@ -69,7 +69,6 @@ proxy:
 
   ingress:
     enabled: false
-    hosts: []
     annotations: {}
     path: /
 

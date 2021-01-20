@@ -57,6 +57,122 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
+Create Ingress resource for a Kong service
+*/}}
+{{- define "kong.ingress" -}}
+{{- $servicePort := include "kong.ingress.servicePort" . }}
+{{- $path := .ingress.path -}}
+{{- $hostname := .ingress.hostname -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .fullName }}-{{ .serviceName }}
+  namespace: {{ .namespace }}
+  labels:
+   {{- .metaLabels | nindent 4 }}
+  {{- if .ingress.annotations }}
+  annotations:
+    {{- range $key, $value := .ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  rules:
+  - host: {{ $hostname }}
+    http:
+      paths:
+        - path: {{ $path }}
+          backend:
+            serviceName: {{ .fullName }}-{{ .serviceName }}
+            servicePort: {{ $servicePort }}
+  {{- if (hasKey .ingress "tls") }}
+  tls:
+  - hosts:
+    - {{ $hostname }}
+    secretName: {{ .ingress.tls }}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Create Service resource for a Kong service
+*/}}
+{{- define "kong.service" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .fullName }}-{{ .serviceName }}
+  namespace: {{ .namespace }}
+  {{- if .annotations }}
+  annotations:
+  {{- range $key, $value := .annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
+  labels:
+    {{- .metaLabels | nindent 4 }}
+spec:
+  type: {{ .type }}
+  {{- if eq .type "LoadBalancer" }}
+  {{- if .loadBalancerIP }}
+  loadBalancerIP: {{ .loadBalancerIP }}
+  {{- end }}
+  {{- if .loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- range $cidr := .loadBalancerSourceRanges }}
+  - {{ $cidr }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- if .externalIPs }}
+  externalIPs:
+  {{- range $ip := .externalIPs }}
+  - {{ $ip }}
+  {{- end -}}
+  {{- end }}
+  ports:
+  {{- if .http }}
+  {{- if .http.enabled }}
+  - name: kong-{{ .serviceName }}
+    port: {{ .http.servicePort }}
+    targetPort: {{ .http.containerPort }}
+  {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .http.nodePort))) }}
+    nodePort: {{ .http.nodePort }}
+  {{- end }}
+    protocol: TCP
+  {{- end }}
+  {{- end }}
+  {{- if .tls.enabled }}
+  - name: kong-{{ .serviceName }}-tls
+    port: {{ .tls.servicePort }}
+    targetPort: {{ .tls.overrideServiceTargetPort | default .tls.containerPort }}
+  {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .tls.nodePort))) }}
+    nodePort: {{ .tls.nodePort }}
+  {{- end }}
+    protocol: TCP
+  {{- end }}
+  {{- if (hasKey . "stream") }}
+  {{- range .stream }}
+  - name: stream-{{ .containerPort }}
+    port: {{ .servicePort }}
+    targetPort: {{ .containerPort }}
+    {{- if (and (or (eq $.type "LoadBalancer") (eq $.type "NodePort")) (not (empty .nodePort))) }}
+    nodePort: {{ .nodePort }}
+    {{- end }}
+    protocol: TCP
+  {{- end }}
+  {{- end }}
+  {{- if .externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .externalTrafficPolicy }}
+  {{- end }}
+  {{- if .clusterIP }}
+  clusterIP: {{ .clusterIP }}
+  {{- end }}
+  selector:
+    {{- .selectorLabels | nindent 4 }}
+{{- end -}}
+
+
+{{/*
 Create KONG_SERVICE_LISTEN strings
 Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
 */}}
@@ -273,11 +389,6 @@ The name of the service used for the ingress controller's validation webhook
     secretName: {{ .name }}
 {{- end }}
 {{- end }}
-{{- if .Values.deployment.kong.enabled }}
-- name: custom-nginx-template-volume
-  configMap:
-    name: {{ template "kong.fullname" . }}-default-custom-server-blocks
-{{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
   configMap:
@@ -314,10 +425,6 @@ The name of the service used for the ingress controller's validation webhook
   mountPath: /kong_prefix/
 - name: {{ template "kong.fullname" . }}-tmp
   mountPath: /tmp
-{{- if .Values.deployment.kong.enabled }}
-- name: custom-nginx-template-volume
-  mountPath: /kong
-{{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
   mountPath: /kong_dbless/
@@ -584,8 +691,6 @@ TODO: remove legacy admin listen behavior at a future date
   {{- $_ := set $autoEnv "KONG_LICENSE_DATA" $lic -}}
 
 {{- end }} {{/* End of the Enterprise settings block */}}
-
-{{- $_ := set $autoEnv "KONG_NGINX_HTTP_INCLUDE" "/kong/servers.conf" -}}
 
 {{- if .Values.postgresql.enabled }}
   {{- $_ := set $autoEnv "KONG_PG_HOST" (include "kong.postgresql.fullname" .) -}}

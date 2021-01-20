@@ -12,6 +12,9 @@ admin:
   useTLS: true
   servicePort: 8444
   containerPort: 8444
+  ingress:
+    enabled: true
+    hostname: admin.kong.example
 
 # - disable DB for kong
 env:
@@ -47,3 +50,8 @@ proxy:
     servicePort: 9001
     parameters:
     - ssl
+  ingress:
+    enabled: true
+    hosts:
+    - foo.kong.example
+    - bar.kong.example
