@@ -13,7 +13,7 @@ format.
   that all chart Ingresses and Services support the same configuration. The
   proxy previously used a unique Ingress configuration, which is now
   deprecated. If you use the proxy Ingress, [see the instructions in
-  UPGRADE.md](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#removal-of-multi-host-proxy-ingress)
+  UPGRADE.md](https://github.com/Kong/charts/blob/kong-1.14.0/charts/kong/UPGRADE.md#removal-of-multi-host-proxy-ingress)
   to update your configuration. No changes are required for other Service and
   Ingress configurations.
   ([#251](https://github.com/Kong/charts/pull/251)).

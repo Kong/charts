@@ -67,7 +67,7 @@ Ingress configuration; it is now identical to all other Kong services. If you
 do not need to configure multiple Ingress rules for your proxy, you will
 change:
 
-```
+```yaml
 ingress:
   hosts: ["proxy.kong.example"]
   tls:
@@ -78,7 +78,7 @@ ingress:
 ```
 to:
 
-```
+```yaml
 ingress:
   tls: example-tls-secret
   hostname: proxy.kong.example
