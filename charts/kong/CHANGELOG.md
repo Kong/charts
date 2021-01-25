@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.14.1
+
+### Fixed
+
+* Moved several Kong container settings into the appropriate template block.
+  Previously these were rendered whether or not the Kong container was enabled,
+  which unintentionally applied them to the controller container.
+
 ## 1.14.0
 
 ### Breaking changes
