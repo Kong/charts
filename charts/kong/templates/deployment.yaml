@@ -222,7 +222,6 @@ spec:
           protocol: TCP
         {{- end }}
         {{- end }}
-        {{- end }}
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 10 }}
         readinessProbe:
@@ -231,6 +230,7 @@ spec:
 {{ toYaml .Values.livenessProbe | indent 10 }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+        {{- end }} {{/* End of Kong container spec */}}
     {{- if .Values.affinity }}
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
