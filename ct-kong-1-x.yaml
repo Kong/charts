@@ -1,5 +1,6 @@
 # See https://github.com/helm/chart-testing#configuration
 remote: origin
+target-branch: kong-1.x
 chart-dirs:
   - charts
 chart-repos:
