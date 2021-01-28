@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.14.2
+
+### Fixed
+
+* Corrected invalid default value for `enterprise.smtp.smtp_auth`.
+
 ## 1.14.1
 
 ### Fixed
