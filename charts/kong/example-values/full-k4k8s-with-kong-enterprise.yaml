@@ -96,7 +96,7 @@ enterprise:
     smtp_admin_emails: none@example.com
     smtp_host: smtp.example.com
     smtp_port: 587
-    smtp_auth_type: nil
+    smtp_auth_type: ''
     smtp_ssl: nil
     smtp_starttls: true
     auth:
