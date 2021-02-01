@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.14.3
+
+### Fixed
+
+* Fix issues with legacy proxy Ingress object template.
+
 ## 1.14.2
 
 ### Fixed
