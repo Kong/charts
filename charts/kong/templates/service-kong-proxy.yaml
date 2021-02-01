@@ -45,7 +45,7 @@ spec:
     {{- end -}}
   {{- if .Values.proxy.ingress.tls }}
   tls:
-  {{ toYaml .Values.proxy.ingress.tls | indent 4 }}
+{{ toYaml .Values.proxy.ingress.tls | indent 2 }}
   {{- end -}}
 {{- end -}}
 {{- end -}}
