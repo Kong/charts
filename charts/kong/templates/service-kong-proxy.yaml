@@ -43,11 +43,11 @@ spec:
               serviceName: {{ $serviceName }}-proxy
               servicePort: {{ $servicePort }}
     {{- end -}}
-    {{- end -}}
   {{- if .Values.proxy.ingress.tls }}
   tls:
   {{ toYaml .Values.proxy.ingress.tls | indent 4 }}
   {{- end -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
