@@ -19,6 +19,12 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
+    # Deploy as daemon set
+  ## Setting this to true will deploy kong as a daemonset
+  ## Else by default it creates as a deployment
+  ##
+  # daemonset: true
+  ##
   ## Optionally specify any extra sidecar containers to be included in the deployment
   ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
   # sidecarContainers:
@@ -590,7 +596,7 @@ enterprise:
     smtp_admin_emails: none@example.com
     smtp_host: smtp.example.com
     smtp_port: 587
-    smtp_auth_type: ''
+    smtp_auth_type: nil
     smtp_ssl: nil
     smtp_starttls: true
     auth:

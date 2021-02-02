@@ -463,7 +463,7 @@ directory.
 | image.tag                          | Kong image version                                                                    | `2.0`               |
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
-| replicaCount                       | Kong instance count. It has no effect when `autoscaling.enabled` is set to true         | `1`                 |
+| replicaCount                       | Kong instance count. It has no effect when `autoscaling.enabled` or `deployment.daemonset` is set to true   | `1`                 |
 | plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
 | migrations.preUpgrade              | Run "kong migrations up" jobs                                                         | `true`              |
@@ -582,6 +582,7 @@ For a complete list of all configuration values you can set in the
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | namespace                          | Namespace to deploy chart resources                                                   |                     |
 | deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
+| deployment.daemonset               | If set to true kong is deployed as `Daemonset`. Else, by default, Kong is deployed as `Deployment`              | `false`      |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
 | autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
 | autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |

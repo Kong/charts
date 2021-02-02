@@ -85,3 +85,18 @@ This occurs if a `RELEASE-NAME-kong-init-migrations` Job is left over from a
 previous `helm install` or `helm upgrade`. Deleting it with
 `kubectl delete job RELEASE-NAME-kong-init-migrations` will allow the upgrade
 to proceed. Chart versions greater than 1.5.0 delete the job automatically.
+
+#### Can we deploy kong as a `Daemonset` ?
+Yes. You can deploy kong as a daemonset. Set `deployment.daemonset: true` to deploy the kong pods as a daemonset.
+Else by default, the pods are deployed as a deployment.
+
+#### How to deploy kong if the kubernetes cluster does not support Loadbalancer type service ?
+One way you can deploy the kong pods and expose it as `NodePort`.
+But the problem is we cannot access the ingress directly with well known ports http or https. 
+Instead we need to access this cluster using http[s]://<host-ip>:<node-port>/<some-path>.
+
+
+Another way is to deploy kong as Daemonset and expose the pods as hostPort. This is not recommended unless 
+it is pretty much needed because of the security reasons. But by this way, we can expose the well known ports
+80 and 443 of the pods as hostport and hence using the http://<host-ip> or https://<host-ip> we can directly
+access the ingress. If we have a loadbalancer in front of the hosts, then just http[s]://<lb-ip>/<some-path>
