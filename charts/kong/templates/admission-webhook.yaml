@@ -2,16 +2,16 @@
 {{- $cn := printf "%s.%s.svc" ( include "kong.service.validationWebhook" . ) ( include "kong.namespace" . ) -}}
 {{- $ca := genCA "kong-admission-ca" 3650 -}}
 {{- $cert := genSignedCert $cn nil nil 3650 $ca -}}
-{{- $certCert := $cert.Cert -}}
-{{- $certKey := $cert.Key -}}
+{{- $webhookCert := $cert.Cert -}}
+{{- $webhookKey := $cert.Key -}}
 {{- $caCert := $ca.Cert -}}
 {{- $caKey := $ca.Key -}}
 
 {{- $caSecret := (lookup "v1" "Secret" (include "kong.namespace" .) (printf "%s-validation-webhook-ca-keypair" (include "kong.fullname" .))) -}}
 {{- $certSecret := (lookup "v1" "Secret" (include "kong.namespace" .) (printf "%s-validation-webhook-keypair" (include "kong.fullname" .))) -}}
 {{- if $certSecret -}}
-{{- $certCert = (b64dec (get $certSecret.data "tls.crt")) -}}
-{{- $certKey = (b64dec (get $certSecret.data "tls.key")) -}}
+{{- $webhookCert = (b64dec (get $certSecret.data "tls.crt")) -}}
+{{- $webhookKey = (b64dec (get $certSecret.data "tls.key")) -}}
 {{- $caCert = (b64dec (get $caSecret.data "tls.crt")) -}}
 {{- $caKey = (b64dec (get $caSecret.data "tls.key")) -}}
 {{- end -}}
@@ -86,6 +86,6 @@ metadata:
     {{- include "kong.metaLabels" . | nindent 4 }}
 type: kubernetes.io/tls
 data:
-  tls.crt: {{ b64enc $certCert }}
-  tls.key: {{ b64enc $certKey }}
+  tls.crt: {{ b64enc $webhookCert }}
+  tls.key: {{ b64enc $webhookKey }}
 {{ end }}
