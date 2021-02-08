@@ -459,7 +459,12 @@ livenessProbe:
 lifecycle:
   preStop:
     exec:
+      # Note kong quit has a default timeout of 10 seconds
       command: ["/bin/sh", "-c", "/bin/sleep 15 && kong quit"]
+
+# terminationGracePeriodSeconds is closely related to the lifecycle preStop hook
+# Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution
+terminationGracePeriodSeconds: 30
 
 # Affinity for pod assignment
 # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
