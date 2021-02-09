@@ -34,6 +34,12 @@ enterprise:
   smtp:
     enabled: false
 
+portal:
+  enabled: false
+
+portalapi:
+  enabled: false
+
 env:
   prefix: /kong_prefix/
   database: postgres
