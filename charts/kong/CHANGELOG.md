@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.14.5
+
+### Fixed
+
+* Removed `http2` from default status listen TLS parameters. It only supports a
+  limited subset of the extra listen parameters, and does not allow `http2`.
+
 ## 1.14.4
 
 ### Fixed
