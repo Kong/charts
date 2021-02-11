@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.14.4
+
+### Fixed
+
+* Status listens now include parameters in the default values.yaml. The absence
+  of these defaults caused a template rendering error when the TLS listen was
+  enabled.
+
+### Documentation
+
+* Updated status listen comments to reflect TLS listen availability on Kong
+  2.1+.
+
 ## 1.14.3
 
 ### Fixed
