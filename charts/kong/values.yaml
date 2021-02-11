@@ -138,8 +138,7 @@ status:
     # This setting must remain false on those versions
     enabled: false
     containerPort: 8543
-    parameters:
-    - http2
+    parameters: []
 
 # Specify Kong cluster service and listener configuration
 #
