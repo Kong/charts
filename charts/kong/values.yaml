@@ -274,7 +274,6 @@ migrations:
   # as the sidecar containers do not terminate and prevent the jobs from completing
   annotations:
     sidecar.istio.io/inject: false
-    kuma.io/sidecar-injection: "disabled"
   # Additional annotations to apply to migration jobs
   # This is helpful in certain non-Helm installation situations such as GitOps
   # where additional control is required around this job creation.
