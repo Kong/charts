@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.14.6
+
+### Fixed
+
+* Removed duplicate status field from TCPIngress CRD.
+
 ## 1.14.5
 
 ### Fixed
