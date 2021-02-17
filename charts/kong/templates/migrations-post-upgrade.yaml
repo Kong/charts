@@ -39,10 +39,6 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      initContainers:
-      {{- if (eq .Values.env.database "postgres") }}
-      {{- include "kong.wait-for-postgres" . | nindent 6 }}
-      {{- end }}
       containers:
       - name: {{ template "kong.name" . }}-post-upgrade-migrations
         {{- if .Values.image.unifiedRepoTag }}

@@ -1,5 +1,23 @@
 # Frequently Asked Questions (FAQs)
 
+#### Kong Pods enter CrashLoopBackoff after the initial install when using a database
+
+Following the initial chart installation, database-backed Kong Pods will
+normally enter a CrashLoopBackoff state while waiting for migrations to
+complete. The initial migration job may also temporarily enter a
+CrashLoopBackoff. If the database is available, the migration Job will
+complete, and the Kong Deployment's Pods will come online after. If this does
+not resolve within several minutes and the database is online, check Kong Pod
+logs to determine reasons they cannot connect to the database or could not
+complete migrations.
+
+Historically, older versions of the chart (up to 1.14) used init containers to
+verify database connectivity and migration bootstrap success. Kong Pods
+remained in the Init state until the database was ready. However, this startup
+sequence was not compatible with service meshes, whose sidecars would not be
+available for the init containers and prevented them from communicating with
+databases also in the mesh.
+
 #### Kong fails to start after `helm upgrade` when Postgres is used. What do I do?
 
 You may be running into this issue: https://github.com/helm/charts/issues/12575.

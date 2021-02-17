@@ -470,9 +470,6 @@ directory.
 | migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
 | migrations.annotations             | Annotations for migration job pods                                                    | `{"sidecar.istio.io/inject": "false", "kuma.io/sidecar-injection": "disabled"}` |
 | migrations.jobAnnotations          | Additional annotations for migration jobs                                             | `{}`                |
-| waitImage.repository               | Image used to wait for database to become ready                                       | `bash`              |
-| waitImage.tag                      | Tag for image used to wait for database to become ready                               | `5`                 |
-| waitImage.pullPolicy               | Wait image pull policy                                                                | `IfNotPresent`      |
 | postgresql.enabled                 | Spin up a new postgres instance for Kong                                              | `false`             |
 | dblessConfig.configMap             | Name of an existing ConfigMap containing the `kong.yml` file. This must have the key `kong.yml`.| `` |
 | dblessConfig.config                | Yaml configuration file for the dbless (declarative) configuration of Kong | see in `values.yaml`    |

@@ -61,10 +61,6 @@ spec:
       {{- end }}
       {{- end }}
       {{- if not (eq .Values.env.database "off") }}
-      {{- if .Values.deployment.kong.enabled }}
-      initContainers:
-      {{- include "kong.wait-for-db" . | nindent 6 }}
-      {{ end }}
       {{ end }}
       containers:
       {{- if .Values.ingressController.enabled }}

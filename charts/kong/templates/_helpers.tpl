@@ -365,10 +365,6 @@ The name of the service used for the ingress controller's validation webhook
   emptyDir: {}
 - name: {{ template "kong.fullname" . }}-tmp
   emptyDir: {}
-- name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
-  configMap:
-    name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
-    defaultMode: 0755
 {{- range .Values.plugins.configMaps }}
 - name: kong-plugin-{{ .pluginName }}
   configMap:
@@ -484,21 +480,6 @@ The name of the service used for the ingress controller's validation webhook
   {{ $myList = append $myList .pluginName -}}
 {{- end }}
 {{- $myList | join "," -}}
-{{- end -}}
-
-{{- define "kong.wait-for-db" -}}
-- name: wait-for-db
-{{- if .Values.image.unifiedRepoTag }}
-  image: "{{ .Values.image.unifiedRepoTag }}"
-{{- else }}
-  image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-{{- end }}
-  imagePullPolicy: {{ .Values.image.pullPolicy }}
-  env:
-  {{- include "kong.env" . | nindent 2 }}
-  command: [ "/bin/sh", "-c", "until kong start; do echo 'waiting for db'; sleep 1; done; kong stop" ]
-  volumeMounts:
-  {{- include "kong.volumeMounts" . | nindent 4 }}
 {{- end -}}
 
 {{- define "kong.controller-container" -}}
@@ -755,22 +736,6 @@ Environment variables are sorted alphabetically
 {{- end }}
 {{- end -}}
 
-{{- end -}}
-
-{{- define "kong.wait-for-postgres" -}}
-- name: wait-for-postgres
-{{- if .Values.waitImage.unifiedRepoTag }}
-  image: "{{ .Values.waitImage.unifiedRepoTag }}"
-{{- else }}
-  image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
-{{- end }}
-  imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
-  env:
-  {{- include "kong.no_daemon_env" . | nindent 2 }}
-  command: [ "bash", "/wait_postgres/wait.sh" ]
-  volumeMounts:
-  - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
-    mountPath: /wait_postgres
 {{- end -}}
 
 {{- define "kong.deprecation-warnings" -}}

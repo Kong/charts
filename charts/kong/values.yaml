@@ -407,11 +407,6 @@ postgresql:
 # Miscellaneous parameters
 # -----------------------------------------------------------------------------
 
-waitImage:
-  repository: bash
-  tag: 5
-  pullPolicy: IfNotPresent
-
 # update strategy
 updateStrategy: {}
   # type: RollingUpdate
