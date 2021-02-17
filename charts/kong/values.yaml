@@ -410,8 +410,11 @@ postgresql:
 waitImage:
   # Wait for the database to come online before starting Kong or running migrations
   enabled: false
-  repository: bash
-  tag: 5
+  # Optionally specify an image that provides bash for pre-migration database
+  # checks. If none is specified, the chart uses the Kong image. The official
+  # Kong images provide bash
+  # repository: bash
+  # tag: 5
   pullPolicy: IfNotPresent
 
 # update strategy
