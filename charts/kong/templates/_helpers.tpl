@@ -365,10 +365,12 @@ The name of the service used for the ingress controller's validation webhook
   emptyDir: {}
 - name: {{ template "kong.fullname" . }}-tmp
   emptyDir: {}
+{{- if (and (eq .Values.env.database "postgres") .Values.waitImage.enabled) }}
 - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
   configMap:
     name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
     defaultMode: 0755
+{{- end }}
 {{- range .Values.plugins.configMaps }}
 - name: kong-plugin-{{ .pluginName }}
   configMap:

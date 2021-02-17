@@ -408,6 +408,8 @@ postgresql:
 # -----------------------------------------------------------------------------
 
 waitImage:
+  # Wait for the database to come online before starting Kong or running migrations
+  enabled: false
   repository: bash
   tag: 5
   pullPolicy: IfNotPresent
