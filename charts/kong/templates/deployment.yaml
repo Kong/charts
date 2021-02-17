@@ -62,8 +62,10 @@ spec:
       {{- end }}
       {{- if not (eq .Values.env.database "off") }}
       {{- if .Values.deployment.kong.enabled }}
+      {{- if (and (eq .Values.env.database "postgres") .Values.waitImage.enabled) }}
       initContainers:
       {{- include "kong.wait-for-db" . | nindent 6 }}
+      {{- end }}
       {{ end }}
       {{ end }}
       containers:
