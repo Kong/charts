@@ -67,7 +67,8 @@ spec:
       nodeSelector:
       {{- toYaml .Values.nodeSelector | nindent 8 }}
       {{- end }}
-      restartPolicy: OnFailure
+      restartPolicy: {{ .Values.migrations.restartPolicy }}
+      backoffLimit: {{ .Values.migrations.backofflimit }}
       volumes:
       {{- include "kong.volumes" . | nindent 6 -}}
 {{- end }}

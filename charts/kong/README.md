@@ -468,6 +468,8 @@ directory.
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
 | migrations.preUpgrade              | Run "kong migrations up" jobs                                                         | `true`              |
 | migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
+| migrations.restartPolicy           | Job restart policy                                                                    | `OnFailure`         |
+| migrations.backoffLimit            | Job backoff limit                                                                     | `6`                 |
 | migrations.annotations             | Annotations for migration job pods                                                    | `{"sidecar.istio.io/inject": "false", "kuma.io/sidecar-injection": "disabled"}` |
 | migrations.jobAnnotations          | Additional annotations for migration jobs                                             | `{}`                |
 | postgresql.enabled                 | Spin up a new postgres instance for Kong                                              | `false`             |
