@@ -39,7 +39,7 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      {{- if (and (eq .Values.env.database "postgres") .Values.waitImage.enabled) }}
+      {{- if (and (.Values.postgresql.enabled) .Values.waitImage.enabled) }}
       initContainers:
       {{- include "kong.wait-for-postgres" . | nindent 6 }}
       {{- end }}

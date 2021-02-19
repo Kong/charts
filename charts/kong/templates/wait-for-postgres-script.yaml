@@ -1,4 +1,4 @@
-{{ if (and (eq .Values.env.database "postgres") .Values.waitImage.enabled) }}
+{{ if (and (.Values.postgresql.enabled) .Values.waitImage.enabled) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
