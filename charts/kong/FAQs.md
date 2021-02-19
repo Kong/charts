@@ -85,3 +85,25 @@ This occurs if a `RELEASE-NAME-kong-init-migrations` Job is left over from a
 previous `helm install` or `helm upgrade`. Deleting it with
 `kubectl delete job RELEASE-NAME-kong-init-migrations` will allow the upgrade
 to proceed. Chart versions greater than 1.5.0 delete the job automatically.
+
+#### DB-backed instances do not start when deployed within a service mesh
+
+Service meshes, such as Istio and Kuma, commonly enforce restrictions on
+traffic between Pods and require that traffic pass through a sidecar proxy.
+These sidecars are not available for init containers.
+
+By default, this chart uses init containers to ensure that the database is
+online and has migrations applied before starting Kong. This provides for a
+smoother startup, but isn't compatible with service mesh sidecar requirements
+if both Kong and its database are in the mesh.
+
+Setting `waitImage.enabled=false` in values.yaml disables these init containers
+and resolves this issue. However, during the initial install, your Kong
+Deployment will enter the CrashLoopBackOff state while waiting for migrations
+to complete. It will eventually exit this state and enter Running as long as
+there are no issues finishing migrations, usually within 2 minutes.
+
+If your Deployment is stuck in CrashLoopBackoff for longer, check the init
+migrations Job logs to see if it is unable to connect to the database or unable
+to complete migrations for some other reason. Resolve any issues you find,
+delete the release, and attempt to install again.
