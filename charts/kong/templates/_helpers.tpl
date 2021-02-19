@@ -365,7 +365,7 @@ The name of the service used for the ingress controller's validation webhook
   emptyDir: {}
 - name: {{ template "kong.fullname" . }}-tmp
   emptyDir: {}
-{{- if (and (eq .Values.env.database "postgres") .Values.waitImage.enabled) }}
+{{- if (and (.Values.postgresql.enabled) .Values.waitImage.enabled) }}
 - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
   configMap:
     name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
@@ -699,7 +699,7 @@ TODO: remove legacy admin listen behavior at a future date
   {{- $_ := set $autoEnv "KONG_PG_PORT" .Values.postgresql.service.port -}}
   {{- $pgPassword := include "secretkeyref" (dict "name" (include "kong.postgresql.fullname" .) "key" "postgresql-password") -}}
   {{- $_ := set $autoEnv "KONG_PG_PASSWORD" $pgPassword -}}
-{{- else if eq .Values.env.database "postgres" }}
+{{- else if .Values.postgresql.enabled }}
   {{- $_ := set $autoEnv "KONG_PG_PORT" "5432" }}
 {{- end }}
 
