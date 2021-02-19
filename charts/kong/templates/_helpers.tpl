@@ -490,11 +490,7 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- define "kong.wait-for-db" -}}
 - name: wait-for-db
-{{- if .Values.image.unifiedRepoTag }}
-  image: "{{ .Values.image.unifiedRepoTag }}"
-{{- else }}
-  image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-{{- end }}
+  image: {{ include "kong.getRepoTag" .Values.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
   env:
   {{- include "kong.env" . | nindent 2 }}
@@ -524,11 +520,7 @@ The name of the service used for the ingress controller's validation webhook
         apiVersion: v1
         fieldPath: metadata.namespace
 {{- include "kong.ingressController.env" .  | indent 2 }}
-{{- if .Values.ingressController.image.unifiedRepoTag }}
-  image: "{{ .Values.ingressController.image.unifiedRepoTag }}"
-{{- else }}
-  image: "{{ .Values.ingressController.image.repository }}:{{ .Values.ingressController.image.tag }}"
-{{- end }}
+  image: {{ include "kong.getRepoTag" .Values.ingressController.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
   readinessProbe:
 {{ toYaml .Values.ingressController.readinessProbe | indent 4 }}
@@ -761,16 +753,10 @@ Environment variables are sorted alphabetically
 
 {{- define "kong.wait-for-postgres" -}}
 - name: wait-for-postgres
-{{- if .Values.waitImage.unifiedRepoTag }}
-  image: "{{ .Values.waitImage.unifiedRepoTag }}"
-{{- else if .Values.waitImage.repository }}
-  image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
+{{- if (or .Values.waitImage.unifiedRepoTag .Values.waitImage.repository) }}
+  image: {{ include "kong.getRepoTag" .Values.waitImage }}
 {{- else }} {{/* default to the Kong image */}}
-{{- if .Values.image.unifiedRepoTag }}
-  image: "{{ .Values.image.unifiedRepoTag }}"
-{{- else }}
-  image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-{{- end }}
+  image: {{ include "kong.getRepoTag" .Values.image }}
 {{- end }}
   imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
   env:
@@ -789,4 +775,12 @@ Environment variables are sorted alphabetically
   {{- end -}}
   {{- $warningString := ($warnings | join "") -}}
   {{- $warningString -}}
+{{- end -}}
+
+{{- define "kong.getRepoTag" -}}
+{{- if .unifiedRepoTag }}
+{{- .unifiedRepoTag }}
+{{- else if .repository }}
+{{- .repository }}:{{ .tag }}
+{{- end -}}
 {{- end -}}
