@@ -408,8 +408,10 @@ postgresql:
 
 waitImage:
   # Wait for the database to come online before starting Kong or running migrations
-  # If Kong and its database are deployed within a service mesh that restricts
-  # traffic between pods, this must be disabled
+  # If Kong is to access the database through a service mesh that injects a sidecar to
+  # Kong's container, this must be disabled. Otherwise there'll be a deadlock:
+  # InitContainer waiting for DB access that requires the sidecar, and the sidecar
+  # waiting for InitContainers to finish.
   enabled: true
   # Optionally specify an image that provides bash for pre-migration database
   # checks. If none is specified, the chart uses the Kong image. The official
