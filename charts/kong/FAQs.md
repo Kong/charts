@@ -88,14 +88,14 @@ to proceed. Chart versions greater than 1.5.0 delete the job automatically.
 
 #### DB-backed instances do not start when deployed within a service mesh
 
-Service meshes, such as Istio and Kuma, commonly enforce restrictions on
-traffic between Pods and require that traffic pass through a sidecar proxy.
-These sidecars are not available for init containers.
+Service meshes, such as Istio and Kuma, if deployed in a mode that injects
+a sidecar to Kong, don't make the mesh available to `InitContainer`s,
+because the sidecar starts _after_ all `InitContainer`s finish.
 
 By default, this chart uses init containers to ensure that the database is
 online and has migrations applied before starting Kong. This provides for a
 smoother startup, but isn't compatible with service mesh sidecar requirements
-if both Kong and its database are in the mesh.
+if Kong is to access the database through the mesh.
 
 Setting `waitImage.enabled=false` in values.yaml disables these init containers
 and resolves this issue. However, during the initial install, your Kong
