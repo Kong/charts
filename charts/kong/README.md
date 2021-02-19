@@ -37,6 +37,7 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [Standalone controller nodes](#standalone-controller-nodes)
   - [Hybrid mode](#hybrid-mode)
   - [CRDs only](#crds-only)
+  - [Sidecar containers](#sidecar-containers)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
@@ -154,26 +155,13 @@ Following sections detail on various high-level architecture options available:
 
 ### Database
 
-Kong can run with or without a database (DB-less).
-By default, this chart installs Kong without a database.
+Kong can run with or without a database (DB-less). By default, this chart
+installs Kong without a database.
 
-Although Kong can run with Postgres and Cassandra, the recommended database,
-if you would like to use one, is Postgres for Kubernetes installations.
-If your use-case warrants Cassandra, you should run the Cassandra cluster
-outside of Kubernetes.
+You can set the database the `env.database` parameter. For more details, please
+read the [env](#the-env-section) section.
 
-The database to use for Kong can be controlled via the `env.database` parameter.
-For more details, please read the [env](#the-env-section) section.
-
-Furthermore, this chart allows you to bring your own database that you manage
-or spin up a new Postgres instance using the `postgres.enabled` parameter.
-
-> Cassandra deployment via a sub-chart was previously supported but
-the support has now been dropped due to stability issues.
-You can still deploy Cassandra on your own and configure Kong to use
-that via the `env.database` parameter.
-
-#### DB-less  deployment
+#### DB-less deployment
 
 When deploying Kong in DB-less mode(`env.database: "off"`)
 and without the Ingress Controller(`ingressController.enabled: false`),
@@ -183,6 +171,18 @@ The configuration can be provided using an existing ConfigMap
 `values.yaml` file for deployment itself, under the `dblessConfig.config`
 parameter. See the example configuration in the default values.yaml
 for more details.
+
+#### Using the Postgres sub-chart
+
+The chart can optionally spawn a Postgres instance using [Bitnami's Postgres
+chart](https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md)
+as a sub-chart. Set `postgresql.enabled=true` to enable the sub-chart. Enabling
+this will auto-populate Postgres connection settings in Kong's environment.
+
+The Postgres sub-chart is best used to quickly provision temporary environments
+without installing and configuring your database separately. For longer-lived
+environments, we recommend you manage your database outside the Kong Helm
+release.
 
 ### Runtime package
 
