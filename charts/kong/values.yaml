@@ -130,12 +130,15 @@ status:
     # Enable plaintext HTTP listen for the status listen
     enabled: true
     containerPort: 8100
+    parameters: []
 
   tls:
     # Enable HTTPS listen for the status listen
-    # Kong does not currently support HTTPS status listens, so this should remain false
+    # Kong versions prior to 2.1 do not support TLS status listens.
+    # This setting must remain false on those versions
     enabled: false
     containerPort: 8543
+    parameters: []
 
 # Specify Kong cluster service and listener configuration
 #
