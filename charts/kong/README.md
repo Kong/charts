@@ -53,6 +53,7 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [RBAC](#rbac)
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
+- [Prometheus Operator integration](#prometheus-operator-integration)
 - [Changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
 - [Upgrading](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
@@ -536,6 +537,7 @@ nodes.
 | SVC.ingress.path                   | Ingress path.                                                                         | `/`                 |
 | SVC.ingress.annotations            | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
 | SVC.annotations                    | Service annotations                                                                   | `{}`                |
+| SVC.annotations                    | Service labels                                                                        | `{}`                |
 
 #### Stream listens
 
@@ -804,6 +806,30 @@ that these have limited functionality without sending email.
 If your SMTP server requires authentication, you must provide the `username` and `smtp_password_secret` keys under `.enterprise.smtp.auth`. `smtp_password_secret` must be a Secret containing an `smtp_password` key whose value is your SMTP password.
 
 By default, SMTP uses `AUTH` `PLAIN` when you provide credentials. If your provider requires `AUTH LOGIN`, set `smtp_auth_type: login`.
+
+## Prometheus Operator integration
+
+The chart can configure a ServiceMonitor resource to instruct the [Prometheus
+Operator](https://github.com/prometheus-operator/prometheus-operator) to
+collect metrics from Kong Pods. To enable this, set
+`serviceMonitor.enabled=true` in values.yaml.
+
+Kong exposes memory usage and connection counts by default. You can enable
+traffic metrics for routes and services by configuring the [Prometheus
+plugin](https://docs.konghq.com/hub/kong-inc/prometheus/).
+
+The ServiceMonitor requires an `enable-metrics: "true"` label on one of the
+chart's Services to collect data. By default, this label is set on the proxy
+Service. It should only be set on a single chart Service to avoid duplicate
+data. If you disable the proxy Service (e.g. on a hybrid control plane instance
+or Portal-only instance) and still wish to collect memory usage metrics, add
+this label to another Service, e.g. on the admin API Service:
+
+```
+admin:
+  labels:
+    enable-metrics: "true"
+```
 
 ## Seeking help
 

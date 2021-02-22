@@ -110,6 +110,9 @@ metadata:
   {{- end }}
   labels:
     {{- .metaLabels | nindent 4 }}
+  {{- range $key, $value := .labels }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
 spec:
   type: {{ .type }}
   {{- if eq .type "LoadBalancer" }}
