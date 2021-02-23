@@ -690,11 +690,10 @@ Kong is going to be deployed.
 
 #### Kong Enterprise Docker registry access
 
-Next, we need to setup Docker credentials in order to allow Kubernetes
-nodes to pull down Kong Enterprise Docker images, which are hosted in a private
-registry.
+Kong Enterprise versions 2.2 and earlier use a private Docker registry and
+require a pull secret. If you use 2.3 or newer, you can skip this step.
 
-You should received credentials to log into https://bintray.com/kong after
+You should have received credentials to log into https://bintray.com/kong after
 purchasing Kong Enterprise. After logging in, you can retrieve your API key
 from \<your username\> \> Edit Profile \> API Key. Use this to create registry
 secrets:

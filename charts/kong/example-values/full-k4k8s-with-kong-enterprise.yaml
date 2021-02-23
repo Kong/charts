@@ -11,11 +11,8 @@
 #   the Portal and Portal API.
 
 image:
-  repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-  tag: 2.2.1.0-alpine
-  pullSecrets:
-    # CHANGEME: https://github.com/Kong/charts/blob/main/charts/kong/README.md#kong-enterprise-docker-registry-access
-    - kong-enterprise-edition-docker
+  repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
+  tag: "2.3.2.0-alpine"
 
 env:
   prefix: /kong_prefix/

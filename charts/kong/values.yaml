@@ -57,10 +57,10 @@ env:
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.2"
+  tag: "2.3"
   # Kong Enterprise
-  # repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-  # tag: "2.2.1.0-alpine"
+  # repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
+  # tag: "2.3.2.0-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
