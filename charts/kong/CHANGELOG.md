@@ -1,5 +1,49 @@
 # Changelog
 
+## 1.15.0
+
+1.15.0 is an interim release before the planned release of 2.0.0. There were
+several feature changes we wanted to release prior to the removal of deprecated
+functionality for 2.0. The original planned deprecations covered in the [1.14.0
+changelog](#1140) are still planned for 2.0.0.
+
+### Improvements
+
+* The default Kong version is now 2.3 and the default Kong Enterprise version
+  is now 2.3.2.0.
+* Added configurable `terminationGracePeriodSeconds` for the pre-stop lifecycle
+  hook.
+  ([#271](https://github.com/Kong/charts/pull/271)).
+* Initial migration database wait init containers no longer have a default
+  image configuration in values.yaml. When no image is specified, the chart
+  will use the Kong image. The standard Kong images include bash, and can run
+  the database wait script without downloading a separate image. Configuring a
+  wait image is now only necessary if you use a custom Kong image that lacks
+  bash.
+  ([#285](https://github.com/Kong/charts/pull/285)).
+* Init containers for database availability and migration completeness can now
+  be disabled. They cause compatibility issues with many service meshes.
+  ([#285](https://github.com/Kong/charts/pull/285)).
+* Removed the default migration Job annotation that disabled Kuma's mesh proxy.
+  The latest version of Kuma no longer prevents Jobs from completing.
+  ([#285](https://github.com/Kong/charts/pull/285)).
+* Services now support user-configurable labels, and the Prometheus
+  ServiceMonitor label is included on the proxy Service by default. Users that
+  disable the proxy Service and add this label to another Service to collect
+  metrics.
+  ([#290](https://github.com/Kong/charts/pull/290)).
+* Migration Jobs now allow resource quota configuration. Init containers
+  inherit their resource quotas from their associated Kong container.
+  ([#294](https://github.com/Kong/charts/pull/294)).
+
+### Fixed
+
+* The database readiness wait script ConfigMap and associated mounts are no
+  longer created if that feature is not in use.
+  ([#285](https://github.com/Kong/charts/pull/285)).
+* Removed a duplicated field from CRDs.
+  ([#281](https://github.com/Kong/charts/pull/281)).
+
 ## 1.14.5
 
 ### Fixed
