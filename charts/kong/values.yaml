@@ -279,6 +279,15 @@ migrations:
   # This is helpful in certain non-Helm installation situations such as GitOps
   # where additional control is required around this job creation.
   jobAnnotations: {}
+  resources: {}
+  # Example reasonable setting for "resources":
+  # resources:
+  #   limits:
+  #     cpu: 100m
+  #     memory: 256Mi
+  #   requests:
+  #     cpu: 50m
+  #     memory: 128Mi
 
 # Kong's configuration for DB-less mode
 # Note: Use this section only if you are deploying Kong in DB-less mode

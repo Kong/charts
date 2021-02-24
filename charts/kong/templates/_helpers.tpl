@@ -773,6 +773,8 @@ Environment variables are sorted alphabetically
   volumeMounts:
   - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
     mountPath: /wait_postgres
+  resources:
+  {{- toYaml .Values.migrations.resources | nindent 4 }}
 {{- end -}}
 
 {{- define "kong.deprecation-warnings" -}}
