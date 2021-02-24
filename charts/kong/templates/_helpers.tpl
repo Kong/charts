@@ -497,6 +497,8 @@ The name of the service used for the ingress controller's validation webhook
   command: [ "/bin/sh", "-c", "until kong start; do echo 'waiting for db'; sleep 1; done; kong stop" ]
   volumeMounts:
   {{- include "kong.volumeMounts" . | nindent 4 }}
+  resources:
+  {{- toYaml .Values.resources | nindent 4 }}
 {{- end -}}
 
 {{- define "kong.controller-container" -}}
@@ -765,6 +767,8 @@ Environment variables are sorted alphabetically
   volumeMounts:
   - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
     mountPath: /wait_postgres
+  resources:
+  {{- toYaml .Values.migrations.resources | nindent 4 }}
 {{- end -}}
 
 {{- define "kong.deprecation-warnings" -}}
