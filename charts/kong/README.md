@@ -686,7 +686,7 @@ Kong is going to be deployed.
 
 #### Kong Enterprise Docker registry access
 
-:bulb: This is needed only for Kong Enterprise version <=2.2 - since 2.3 the image can be downloaded without those pullSecrets.
+:bulb: This is needed only for Kong Enterprise versions older than 2.3 - from 2.3 onwards, the image can be downloaded without those pullSecrets.
 
 Next, we need to setup Docker credentials in order to allow Kubernetes
 nodes to pull down Kong Enterprise Docker images, which are hosted in a private
