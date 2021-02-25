@@ -78,10 +78,11 @@ admin:
   # Enterprise users that wish to use Kong Manager with the controller should enable this
   enabled: false
   type: NodePort
-  # If you want to specify annotations for the admin service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the admin service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   http:
     # Enable plaintext HTTP listen for the admin API
@@ -152,10 +153,11 @@ status:
 # provider's documentation, as the configuration required for this varies).
 cluster:
   enabled: false
-  # If you want to specify annotations for the cluster service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the cluster service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   tls:
     enabled: false
@@ -170,10 +172,12 @@ proxy:
   # Enable creating a Kubernetes service for the proxy
   enabled: true
   type: LoadBalancer
-  # If you want to specify annotations for the proxy service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the proxy service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels:
+    enable-metrics: "true"
 
   http:
     # Enable plaintext HTTP listen for the proxy
@@ -630,10 +634,11 @@ manager:
   # Enable creating a Kubernetes service for Kong Manager
   enabled: true
   type: NodePort
-  # If you want to specify annotations for the Manager service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the Manager service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   http:
     # Enable plaintext HTTP listen for Kong Manager
@@ -672,10 +677,11 @@ portal:
   # Enable creating a Kubernetes service for the Developer Portal
   enabled: true
   type: NodePort
-  # If you want to specify annotations for the Portal service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the Portal service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   http:
     # Enable plaintext HTTP listen for the Developer Portal
@@ -714,10 +720,11 @@ portalapi:
   # Enable creating a Kubernetes service for the Developer Portal API
   enabled: true
   type: NodePort
-  # If you want to specify annotations for the Portal API service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the Portal API service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   http:
     # Enable plaintext HTTP listen for the Developer Portal API
@@ -754,10 +761,11 @@ portalapi:
 
 clustertelemetry:
   enabled: false
-  # If you want to specify annotations for the cluster telemetry service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the cluster telemetry service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   tls:
     enabled: false
