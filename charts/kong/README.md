@@ -537,7 +537,7 @@ nodes.
 | SVC.ingress.path                   | Ingress path.                                                                         | `/`                 |
 | SVC.ingress.annotations            | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
 | SVC.annotations                    | Service annotations                                                                   | `{}`                |
-| SVC.annotations                    | Service labels                                                                        | `{}`                |
+| SVC.labels                         | Service labels                                                                        | `{}`                |
 
 #### Stream listens
 
@@ -812,7 +812,7 @@ By default, SMTP uses `AUTH` `PLAIN` when you provide credentials. If your provi
 The chart can configure a ServiceMonitor resource to instruct the [Prometheus
 Operator](https://github.com/prometheus-operator/prometheus-operator) to
 collect metrics from Kong Pods. To enable this, set
-`serviceMonitor.enabled=true` in values.yaml.
+`serviceMonitor.enabled=true` in `values.yaml`.
 
 Kong exposes memory usage and connection counts by default. You can enable
 traffic metrics for routes and services by configuring the [Prometheus

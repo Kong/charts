@@ -78,8 +78,8 @@ admin:
   # Enterprise users that wish to use Kong Manager with the controller should enable this
   enabled: false
   type: NodePort
-  # To specify annotations or labels for the admin service, remove the "{}" and add indented lines
-  # after, similar to the commented aws-load-balancer-proxy-protocol example
+  # To specify annotations or labels for the admin service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
@@ -153,8 +153,8 @@ status:
 # provider's documentation, as the configuration required for this varies).
 cluster:
   enabled: false
-  # To specify annotations or labels for the cluster service, remove the "{}" and add indented lines
-  # after, similar to the commented aws-load-balancer-proxy-protocol example
+  # To specify annotations or labels for the cluster service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
@@ -172,8 +172,8 @@ proxy:
   # Enable creating a Kubernetes service for the proxy
   enabled: true
   type: LoadBalancer
-  # To specify annotations or labels for the proxy service, remove the "{}" and add indented lines
-  # after, similar to the commented aws-load-balancer-proxy-protocol example
+  # To specify annotations or labels for the proxy service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels:
@@ -625,8 +625,8 @@ manager:
   # Enable creating a Kubernetes service for Kong Manager
   enabled: true
   type: NodePort
-  # To specify annotations or labels for the Manager service, remove the "{}" and add indented lines
-  # after, similar to the commented aws-load-balancer-proxy-protocol example
+  # To specify annotations or labels for the Manager service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
@@ -668,8 +668,8 @@ portal:
   # Enable creating a Kubernetes service for the Developer Portal
   enabled: true
   type: NodePort
-  # To specify annotations or labels for the Portal service, remove the "{}" and add indented lines
-  # after, similar to the commented aws-load-balancer-proxy-protocol example
+  # To specify annotations or labels for the Portal service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
@@ -711,8 +711,8 @@ portalapi:
   # Enable creating a Kubernetes service for the Developer Portal API
   enabled: true
   type: NodePort
-  # To specify annotations or labels for the Portal API service, remove the "{}" and add indented lines
-  # after, similar to the commented aws-load-balancer-proxy-protocol example
+  # To specify annotations or labels for the Portal API service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
@@ -752,8 +752,8 @@ portalapi:
 
 clustertelemetry:
   enabled: false
-  # To specify annotations or labels for the cluster telemetry service, remove the "{}" and add indented lines
-  # after, similar to the commented aws-load-balancer-proxy-protocol example
+  # To specify annotations or labels for the cluster telemetry service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
