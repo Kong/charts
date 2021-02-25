@@ -684,7 +684,7 @@ Set the secret name in `values.yaml`, in the `.enterprise.license_secret` key.
 Please ensure the above secret is created in the same namespace in which
 Kong is going to be deployed.
 
-#### Kong Enterprise Docker registry access
+#### Kong Enterprise Docker registry access (only for Kong <2.3)
 
 :bulb: This is needed only for Kong Enterprise versions older than 2.3 - from 2.3 onwards, the image can be downloaded without those pullSecrets.
 
