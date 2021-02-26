@@ -691,7 +691,7 @@ Kong is going to be deployed.
 #### Kong Enterprise Docker registry access
 
 Kong Enterprise versions 2.2 and earlier use a private Docker registry and
-require a pull secret. If you use 2.3 or newer, you can skip this step.
+require a pull secret. **If you use 2.3 or newer, you can skip this step.**
 
 You should have received credentials to log into https://bintray.com/kong after
 purchasing Kong Enterprise. After logging in, you can retrieve your API key
