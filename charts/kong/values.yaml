@@ -57,10 +57,10 @@ env:
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.2"
+  tag: "2.3"
   # Kong Enterprise
-  # repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-  # tag: "2.2.1.0-alpine"
+  # repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
+  # tag: "2.3.2.0-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -78,10 +78,11 @@ admin:
   # Enterprise users that wish to use Kong Manager with the controller should enable this
   enabled: false
   type: NodePort
-  # If you want to specify annotations for the admin service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the admin service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   http:
     # Enable plaintext HTTP listen for the admin API
@@ -152,10 +153,11 @@ status:
 # provider's documentation, as the configuration required for this varies).
 cluster:
   enabled: false
-  # If you want to specify annotations for the cluster service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the cluster service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   tls:
     enabled: false
@@ -170,10 +172,12 @@ proxy:
   # Enable creating a Kubernetes service for the proxy
   enabled: true
   type: LoadBalancer
-  # If you want to specify annotations for the proxy service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the proxy service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels:
+    enable-metrics: "true"
 
   http:
     # Enable plaintext HTTP listen for the proxy
@@ -274,11 +278,19 @@ migrations:
   # as the sidecar containers do not terminate and prevent the jobs from completing
   annotations:
     sidecar.istio.io/inject: false
-    kuma.io/sidecar-injection: "disabled"
   # Additional annotations to apply to migration jobs
   # This is helpful in certain non-Helm installation situations such as GitOps
   # where additional control is required around this job creation.
   jobAnnotations: {}
+  resources: {}
+  # Example reasonable setting for "resources":
+  # resources:
+  #   limits:
+  #     cpu: 100m
+  #     memory: 256Mi
+  #   requests:
+  #     cpu: 50m
+  #     memory: 128Mi
 
 # Kong's configuration for DB-less mode
 # Note: Use this section only if you are deploying Kong in DB-less mode
@@ -408,8 +420,17 @@ postgresql:
 # -----------------------------------------------------------------------------
 
 waitImage:
-  repository: bash
-  tag: 5
+  # Wait for the database to come online before starting Kong or running migrations
+  # If Kong is to access the database through a service mesh that injects a sidecar to
+  # Kong's container, this must be disabled. Otherwise there'll be a deadlock:
+  # InitContainer waiting for DB access that requires the sidecar, and the sidecar
+  # waiting for InitContainers to finish.
+  enabled: true
+  # Optionally specify an image that provides bash for pre-migration database
+  # checks. If none is specified, the chart uses the Kong image. The official
+  # Kong images provide bash
+  # repository: bash
+  # tag: 5
   pullPolicy: IfNotPresent
 
 # update strategy
@@ -613,10 +634,11 @@ manager:
   # Enable creating a Kubernetes service for Kong Manager
   enabled: true
   type: NodePort
-  # If you want to specify annotations for the Manager service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the Manager service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   http:
     # Enable plaintext HTTP listen for Kong Manager
@@ -655,10 +677,11 @@ portal:
   # Enable creating a Kubernetes service for the Developer Portal
   enabled: true
   type: NodePort
-  # If you want to specify annotations for the Portal service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the Portal service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   http:
     # Enable plaintext HTTP listen for the Developer Portal
@@ -697,10 +720,11 @@ portalapi:
   # Enable creating a Kubernetes service for the Developer Portal API
   enabled: true
   type: NodePort
-  # If you want to specify annotations for the Portal API service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the Portal API service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   http:
     # Enable plaintext HTTP listen for the Developer Portal API
@@ -737,10 +761,11 @@ portalapi:
 
 clustertelemetry:
   enabled: false
-  # If you want to specify annotations for the cluster telemetry service, uncomment the following
-  # line, add additional or adjust as needed, and remove the curly braces after 'annotations:'.
+  # To specify annotations or labels for the cluster telemetry service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
 
   tls:
     enabled: false

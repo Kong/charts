@@ -22,6 +22,7 @@ metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: init-migrations
+  annotations:
   {{- range $key, $value := .Values.migrations.jobAnnotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
@@ -48,23 +49,21 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
+      {{- if (and (.Values.postgresql.enabled) .Values.waitImage.enabled) }}
       initContainers:
-      {{- if (eq .Values.env.database "postgres") }}
       {{- include "kong.wait-for-postgres" . | nindent 6 }}
       {{- end }}
       containers:
       - name: {{ template "kong.name" . }}-migrations
-        {{- if .Values.image.unifiedRepoTag }}
-        image: "{{ .Values.image.unifiedRepoTag }}"
-        {{- else }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        {{- end }}
+        image: {{ include "kong.getRepoTag" .Values.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         {{- include "kong.no_daemon_env" . | nindent 8 }}
         command: [ "/bin/sh", "-c", "kong migrations bootstrap" ]
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 8 }}
+        resources:
+        {{- toYaml .Values.migrations.resources | nindent 10 }}
       securityContext:
       {{- include "kong.podsecuritycontext" . | nindent 8 }}
       {{- if .Values.nodeSelector }}
