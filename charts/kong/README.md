@@ -37,6 +37,7 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [Standalone controller nodes](#standalone-controller-nodes)
   - [Hybrid mode](#hybrid-mode)
   - [CRDs only](#crds-only)
+  - [Sidecar containers](#sidecar-containers)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
@@ -52,6 +53,7 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [RBAC](#rbac)
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
+- [Prometheus Operator integration](#prometheus-operator-integration)
 - [Changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
 - [Upgrading](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
@@ -154,26 +156,13 @@ Following sections detail on various high-level architecture options available:
 
 ### Database
 
-Kong can run with or without a database (DB-less).
-By default, this chart installs Kong without a database.
+Kong can run with or without a database (DB-less). By default, this chart
+installs Kong without a database.
 
-Although Kong can run with Postgres and Cassandra, the recommended database,
-if you would like to use one, is Postgres for Kubernetes installations.
-If your use-case warrants Cassandra, you should run the Cassandra cluster
-outside of Kubernetes.
+You can set the database the `env.database` parameter. For more details, please
+read the [env](#the-env-section) section.
 
-The database to use for Kong can be controlled via the `env.database` parameter.
-For more details, please read the [env](#the-env-section) section.
-
-Furthermore, this chart allows you to bring your own database that you manage
-or spin up a new Postgres instance using the `postgres.enabled` parameter.
-
-> Cassandra deployment via a sub-chart was previously supported but
-the support has now been dropped due to stability issues.
-You can still deploy Cassandra on your own and configure Kong to use
-that via the `env.database` parameter.
-
-#### DB-less  deployment
+#### DB-less deployment
 
 When deploying Kong in DB-less mode(`env.database: "off"`)
 and without the Ingress Controller(`ingressController.enabled: false`),
@@ -183,6 +172,18 @@ The configuration can be provided using an existing ConfigMap
 `values.yaml` file for deployment itself, under the `dblessConfig.config`
 parameter. See the example configuration in the default values.yaml
 for more details.
+
+#### Using the Postgres sub-chart
+
+The chart can optionally spawn a Postgres instance using [Bitnami's Postgres
+chart](https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md)
+as a sub-chart. Set `postgresql.enabled=true` to enable the sub-chart. Enabling
+this will auto-populate Postgres connection settings in Kong's environment.
+
+The Postgres sub-chart is best used to quickly provision temporary environments
+without installing and configuring your database separately. For longer-lived
+environments, we recommend you manage your database outside the Kong Helm
+release.
 
 ### Runtime package
 
@@ -468,10 +469,11 @@ directory.
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
 | migrations.preUpgrade              | Run "kong migrations up" jobs                                                         | `true`              |
 | migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
-| migrations.annotations             | Annotations for migration job pods                                                    | `{"sidecar.istio.io/inject": "false", "kuma.io/sidecar-injection": "disabled"}` |
+| migrations.annotations             | Annotations for migration job pods                                                    | `{"sidecar.istio.io/inject": "false" |
 | migrations.jobAnnotations          | Additional annotations for migration jobs                                             | `{}`                |
-| waitImage.repository               | Image used to wait for database to become ready                                       | `bash`              |
-| waitImage.tag                      | Tag for image used to wait for database to become ready                               | `5`                 |
+| waitImage.enabled                  | Spawn init containers that wait for the database before starting Kong                 | `true`              |
+| waitImage.repository               | Image used to wait for database to become ready. Uses the Kong image if none set      |                     |
+| waitImage.tag                      | Tag for image used to wait for database to become ready                               |                     |
 | waitImage.pullPolicy               | Wait image pull policy                                                                | `IfNotPresent`      |
 | postgresql.enabled                 | Spin up a new postgres instance for Kong                                              | `false`             |
 | dblessConfig.configMap             | Name of an existing ConfigMap containing the `kong.yml` file. This must have the key `kong.yml`.| `` |
@@ -535,6 +537,7 @@ nodes.
 | SVC.ingress.path                   | Ingress path.                                                                         | `/`                 |
 | SVC.ingress.annotations            | Ingress annotations. See documentation for your ingress controller for details        | `{}`                |
 | SVC.annotations                    | Service annotations                                                                   | `{}`                |
+| SVC.labels                         | Service labels                                                                        | `{}`                |
 
 #### Stream listens
 
@@ -591,6 +594,7 @@ For a complete list of all configuration values you can set in the
 | readinessProbe                     | Kong readiness probe                                                                  |                     |
 | livenessProbe                      | Kong liveness probe                                                                   |                     |
 | lifecycle                          | Proxy container lifecycle hooks                                                       | see `values.yaml`   |
+| terminationGracePeriodSeconds      | Related to lifecycle hook                                                             | 30                  |
 | affinity                           | Node/pod affinities                                                                   |                     |
 | nodeSelector                       | Node labels for pod assignment                                                        | `{}`                |
 | deploymentAnnotations              | Annotations to add to deployment                                                      |  see `values.yaml`  |
@@ -686,11 +690,10 @@ Kong is going to be deployed.
 
 #### Kong Enterprise Docker registry access
 
-Next, we need to setup Docker credentials in order to allow Kubernetes
-nodes to pull down Kong Enterprise Docker images, which are hosted in a private
-registry.
+Kong Enterprise versions 2.2 and earlier use a private Docker registry and
+require a pull secret. **If you use 2.3 or newer, you can skip this step.**
 
-You should received credentials to log into https://bintray.com/kong after
+You should have received credentials to log into https://bintray.com/kong after
 purchasing Kong Enterprise. After logging in, you can retrieve your API key
 from \<your username\> \> Edit Profile \> API Key. Use this to create registry
 secrets:
@@ -802,6 +805,30 @@ that these have limited functionality without sending email.
 If your SMTP server requires authentication, you must provide the `username` and `smtp_password_secret` keys under `.enterprise.smtp.auth`. `smtp_password_secret` must be a Secret containing an `smtp_password` key whose value is your SMTP password.
 
 By default, SMTP uses `AUTH` `PLAIN` when you provide credentials. If your provider requires `AUTH LOGIN`, set `smtp_auth_type: login`.
+
+## Prometheus Operator integration
+
+The chart can configure a ServiceMonitor resource to instruct the [Prometheus
+Operator](https://github.com/prometheus-operator/prometheus-operator) to
+collect metrics from Kong Pods. To enable this, set
+`serviceMonitor.enabled=true` in `values.yaml`.
+
+Kong exposes memory usage and connection counts by default. You can enable
+traffic metrics for routes and services by configuring the [Prometheus
+plugin](https://docs.konghq.com/hub/kong-inc/prometheus/).
+
+The ServiceMonitor requires an `enable-metrics: "true"` label on one of the
+chart's Services to collect data. By default, this label is set on the proxy
+Service. It should only be set on a single chart Service to avoid duplicate
+data. If you disable the proxy Service (e.g. on a hybrid control plane instance
+or Portal-only instance) and still wish to collect memory usage metrics, add
+this label to another Service, e.g. on the admin API Service:
+
+```
+admin:
+  labels:
+    enable-metrics: "true"
+```
 
 ## Seeking help
 

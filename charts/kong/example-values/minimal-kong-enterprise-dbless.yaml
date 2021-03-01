@@ -1,15 +1,10 @@
-# WARNING: this deployment example is currently in beta. It is not suited for production.
 # Basic values.yaml for Kong for Kubernetes with Kong Enterprise (DB-less)
 # Several settings (search for the string "CHANGEME") require user-provided
 # Secrets. These Secrets must be created before installation.
 
 image:
-  repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-  tag: 2.2.1.0-alpine
-
-  pullSecrets:
-    # CHANGEME: https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-docker-registry-access
-    - kong-enterprise-edition-docker
+  repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
+  tag: "2.3.2.0-alpine"
 
 enterprise:
   enabled: true
@@ -22,6 +17,14 @@ enterprise:
   rbac:
     enabled: false
 
+manager:
+  enabled: false
+
+portal:
+  enabled: false
+
+portalapi:
+  enabled: false
 
 env:
   database: "off"

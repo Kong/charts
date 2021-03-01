@@ -60,12 +60,10 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      {{- if not (eq .Values.env.database "off") }}
-      {{- if .Values.deployment.kong.enabled }}
+      {{- if (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) }}
       initContainers:
       {{- include "kong.wait-for-db" . | nindent 6 }}
-      {{ end }}
-      {{ end }}
+      {{- end }}
       containers:
       {{- if .Values.ingressController.enabled }}
       {{- include "kong.controller-container" . | nindent 6 }}
@@ -75,11 +73,7 @@ spec:
       {{- end }}
       {{- if .Values.deployment.kong.enabled }}
       - name: "proxy"
-        {{- if .Values.image.unifiedRepoTag }}
-        image: "{{ .Values.image.unifiedRepoTag }}"
-        {{- else }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        {{- end }}
+        image: {{ include "kong.getRepoTag" .Values.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
         {{- include "kong.no_daemon_env" . | nindent 8 }}
@@ -241,6 +235,7 @@ spec:
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       tolerations:
 {{ toYaml .Values.tolerations | indent 8 }}
       volumes:
