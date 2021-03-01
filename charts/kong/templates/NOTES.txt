@@ -13,11 +13,6 @@ Kong: https://bit.ly/k4k8s-get-started
 
 {{ $warnings := list -}}
 
-{{- if and (.Values.enterprise.portal.enabled) (or (.Values.enterprise.portal.portal_auth) (.Values.enterprise.portal.session_conf_secret)) -}}
-{{/* Legacy Portal auth handling */}}
-{{- $warnings = append $warnings "You are currently using legacy Portal authentication configuration in values.yaml. Support for this will be removed in a future release. Please see the upgrade guide for instructions to update your configuration: https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#removal-of-dedicated-portal-authentication-configuration-parameters" -}}
-{{- end -}}
-
 {{- if .Values.admin.containerPort -}}
 {{/* Legacy admin API listen */}}
 {{- $warnings = append $warnings "You are currently using legacy admin API configuration in values.yaml. Support for this will be removed in a future release. Please see the upgrade guide for instructions to update your configuration: https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#changes-to-kong-service-configuration" -}}
