@@ -276,20 +276,12 @@ Create a single listen (IP+port+parameter combo)
 Return the local admin API URL, preferring HTTPS if available
 */}}
 {{- define "kong.adminLocalURL" -}}
-  {{- if .Values.admin.containerPort -}} {{/* TODO: Remove legacy admin behavior */}}
-    {{- if .Values.admin.useTLS -}}
-https://localhost:{{ .Values.admin.containerPort }}
-    {{- else -}}
-http://localhost:{{ .Values.admin.containerPort }}
-    {{- end -}}
-  {{- else -}}
-    {{- if .Values.admin.tls.enabled -}}
+  {{- if .Values.admin.tls.enabled -}}
 https://localhost:{{ .Values.admin.tls.containerPort }}
-    {{- else if .Values.admin.http.enabled -}}
+  {{- else if .Values.admin.http.enabled -}}
 http://localhost:{{ .Values.admin.http.containerPort }}
-    {{- else -}}
+  {{- else -}}
 http://localhost:9999 # You have no admin listens! The controller will not work unless you set .Values.admin.http.enabled=true or .Values.admin.tls.enabled=true!
-    {{- end -}}
   {{- end -}}
 {{- end -}}
 
@@ -580,27 +572,15 @@ the template that it itself is using form the above sections.
   {{- $_ := set $autoEnv "KONG_KIC" "on" -}}
 {{- end -}}
 
-{{/*
-TODO: remove legacy admin listen behavior at a future date
-*/}}
-
 {{- with .Values.admin -}}
   {{- $address := "0.0.0.0" -}}
   {{- if (not .enabled) -}}
     {{- $address = "127.0.0.1" -}}
   {{- end -}}
-  {{- if .containerPort -}} {{/* Legacy admin listener */}}
-    {{- if .useTLS -}}
-      {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (printf "%s:%d ssl" $address (int64 .containerPort)) -}}
-    {{- else -}}
-      {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (printf "%s:%d" $address (int64 .containerPort)) -}}
-    {{- end -}}
-  {{- else -}} {{/* Modern admin listener */}}
-    {{- $listenConfig := dict -}}
-    {{- $listenConfig := merge $listenConfig . -}}
-    {{- $_ := set $listenConfig "address" $address -}}
-    {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (include "kong.listen" $listenConfig) -}}
-  {{- end -}}
+  {{- $listenConfig := dict -}}
+  {{- $listenConfig := merge $listenConfig . -}}
+  {{- $_ := set $listenConfig "address" $address -}}
+  {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (include "kong.listen" $listenConfig) -}}
 {{- end -}}
 
 {{- if .Values.admin.ingress.enabled }}

@@ -1,83 +1,3 @@
-{{- if .Values.admin.containerPort -}} {{/* TODO: remove legacy admin handling */}}
-{{- if .Values.deployment.kong.enabled }}
-{{- if .Values.admin.enabled -}}
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ template "kong.fullname" . }}-admin
-  namespace: {{ template "kong.namespace" . }}
-  {{- if .Values.admin.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.admin.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-  {{- end }}
-  labels:
-    {{- include "kong.metaLabels" . | nindent 4 }}
-spec:
-  type: {{ .Values.admin.type }}
-  {{- if eq .Values.admin.type "LoadBalancer" }}
-  {{- if .Values.admin.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.admin.loadBalancerIP }}
-  {{- end }}
-  {{- if .Values.admin.loadBalancerSourceRanges }}
-  loadBalancerSourceRanges:
-  {{- range $cidr := .Values.admin.loadBalancerSourceRanges }}
-  - {{ $cidr }}
-  {{- end }}
-  {{- end }}
-  {{- end }}
-  ports:
-  - name: kong-admin
-    port: {{ .Values.admin.servicePort }}
-    targetPort: {{ .Values.admin.containerPort }}
-  {{- if (and (eq .Values.admin.type "NodePort") (not (empty .Values.admin.nodePort))) }}
-    nodePort: {{ .Values.admin.nodePort }}
-  {{- end }}
-    protocol: TCP
-  selector:
-    {{- include "kong.selectorLabels" . | nindent 4 }}
-{{- end -}}
-{{- end }}
----
-{{ if .Values.admin.ingress.enabled -}}
-{{- $serviceName := include "kong.fullname" . -}}
-{{- $servicePort := .Values.admin.servicePort -}}
-{{- $path := .Values.admin.ingress.path -}}
-{{- $tls := .Values.admin.ingress.tls -}}
-{{- $hostname := .Values.admin.ingress.hostname -}}
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: {{ template "kong.fullname" . }}-admin
-  namespace: {{ template "kong.namespace" . }}
-  labels:
-    {{- include "kong.metaLabels" . | nindent 4 }}
-  {{- if .Values.admin.ingress.annotations }}
-  annotations:
-  {{- range $key, $value := .Values.admin.ingress.annotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
-  {{- end }}
-spec:
-  rules:
-  - host: {{ $hostname }}
-    http:
-      paths:
-        - path: {{ $path }}
-          backend:
-            serviceName: {{ $serviceName }}-admin
-            servicePort: {{ $servicePort }}
-  {{- if $tls }}
-  tls:
-  - hosts:
-    - {{ $hostname }}
-    secretName: {{ $tls }}
-  {{- end -}}
-{{- end -}}
-
-{{- else -}} {{/* Modern admin handler */}}
-
 {{- if .Values.deployment.kong.enabled }}
 {{- if and .Values.admin.enabled (or .Values.admin.http.enabled .Values.admin.tls.enabled) -}}
 {{- $serviceConfig := dict -}}
@@ -91,7 +11,6 @@ spec:
 {{ if .Values.admin.ingress.enabled }}
 ---
 {{ include "kong.ingress" $serviceConfig }}
-{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
