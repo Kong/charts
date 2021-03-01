@@ -647,12 +647,6 @@ TODO: remove legacy admin listen behavior at a future date
     {{- if .Values.portalapi.ingress.enabled }}
       {{- $_ := set $autoEnv "KONG_PORTAL_API_URL" (include "kong.ingress.serviceUrl" .Values.portalapi.ingress) -}}
     {{- end }}
-
-    {{- if .Values.enterprise.portal.portal_auth }} {{/* TODO: deprecated, remove in a future version */}}
-      {{- $_ := set $autoEnv "KONG_PORTAL_AUTH" .Values.enterprise.portal.portal_auth -}}
-      {{- $portalSession := include "secretkeyref" (dict "name" .Values.enterprise.portal.session_conf_secret "key" "portal_session_conf") -}}
-      {{- $_ := set $autoEnv "KONG_PORTAL_SESSION_CONF" $portalSession -}}
-    {{- end }}
   {{- end }}
 
   {{- if .Values.enterprise.rbac.enabled }}
