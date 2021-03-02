@@ -594,7 +594,7 @@ For a complete list of all configuration values you can set in the
 | readinessProbe                     | Kong readiness probe                                                                  |                     |
 | livenessProbe                      | Kong liveness probe                                                                   |                     |
 | lifecycle                          | Proxy container lifecycle hooks                                                       | see `values.yaml`   |
-| terminationGracePeriodSeconds      | Related to lifecycle hook                                                             | 30                  |
+| terminationGracePeriodSeconds      | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pods | 30                  |
 | affinity                           | Node/pod affinities                                                                   |                     |
 | nodeSelector                       | Node labels for pod assignment                                                        | `{}`                |
 | deploymentAnnotations              | Annotations to add to deployment                                                      |  see `values.yaml`  |
