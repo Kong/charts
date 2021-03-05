@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [2.0.0-rc.1](#200-rc1)
 - [1.14.0](#1140)
 - [1.11.0](#1110)
 - [1.10.0](#1100)
@@ -55,6 +56,43 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 2.0.0-rc1
+
+### Support for Helm 2 dropped
+
+2.0.0 takes advantage of template functionality that is only available in Helm
+3 and reworks values defaults to target Helm 3 CRD handling, and requires Helm
+3 as such. If you are not already using Helm 3, you must migrate to it before
+updating to 2.0.0 or later:
+
+https://helm.sh/docs/topics/v2_v3_migration/
+
+If desired, you can migrate your Kong chart releases without migrating charts'
+releases.
+
+### Support for deprecated 1.x features removed
+
+Several previous 1.x chart releases reworked sections of values.yaml while
+maintaining support for the older version of those settings. 2.x drops support
+for the older versions of these settings entirely:
+
+* [Portal auth settings](#removal-of-dedicated-portal-authentication-configuration-parameters)
+* [The `runMigrations` setting](#changes-to-migration-job-configuration)
+* [Single-stack admin API Service configuration](#changes-to-kong-service-configuration)
+* [Multi-host proxy configuration](#removal-of-multi-host-proxy-ingress)
+
+Each deprecated setting is accompanied by a warning that appears at the end of
+`helm upgrade` output on a 1.x release:
+
+```
+WARNING: You are currently using legacy ...
+```
+
+If you do not see any such warnings when upgrading a release using chart
+1.15.0, you are not using deprecated configuration and are ready to upgrade to
+2.0.0. If you do see these warnings, follow the linked instructions to migrate
+to the current settings format.
 
 ## 1.14.0
 
