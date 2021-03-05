@@ -9,8 +9,6 @@
 {{- $runInit := true -}}
 {{- if (hasKey .Values.migrations "init") -}}
   {{- $runInit = .Values.migrations.init -}}
-{{- else if (hasKey .Values "runMigrations") -}}
-  {{- $runInit = .Values.runMigrations -}}
 {{- end -}}
 
 {{- if (and ($runInit) (not (eq .Values.env.database "off"))) }}

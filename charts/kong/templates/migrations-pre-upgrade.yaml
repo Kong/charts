@@ -1,5 +1,5 @@
 {{- if .Values.deployment.kong.enabled }}
-{{- if (and (or (.Values.runMigrations) (.Values.migrations.preUpgrade)) (not (eq .Values.env.database "off"))) }}
+{{- if (and .Values.migrations.preUpgrade (not (eq .Values.env.database "off"))) }}
 # Why is this Job duplicated and not using only helm hooks?
 # See: https://github.com/helm/charts/pull/7362
 apiVersion: batch/v1

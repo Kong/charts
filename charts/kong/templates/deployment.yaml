@@ -28,9 +28,6 @@ spec:
   template:
     metadata:
       annotations:
-        {{- if .Values.ingressController.admissionWebhook.enabled }}
-        checksum/admission-webhook.yaml: {{ include (print $.Template.BasePath "/admission-webhook.yaml") . | sha256sum }}
-        {{- end }}
         {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off" )) }}
         {{- if .Values.dblessConfig.config }}
         checksum/dbless.config: {{ toYaml .Values.dblessConfig.config | sha256sum }}
@@ -80,15 +77,6 @@ spec:
         lifecycle:
           {{- toYaml .Values.lifecycle | nindent 10 }}
         ports:
-        {{/* TODO: remove legacy admin port template */}}
-        {{- if (and .Values.admin.containerPort .Values.admin.enabled) }}
-        - name: admin
-          containerPort: {{ .Values.admin.containerPort }}
-          {{- if .Values.admin.hostPort }}
-          hostPort: {{ .Values.admin.hostPort }}
-          {{- end}}
-          protocol: TCP
-        {{- end }}
         {{- if (and .Values.admin.http.enabled .Values.admin.enabled) }}
         - name: admin
           containerPort: {{ .Values.admin.http.containerPort }}
