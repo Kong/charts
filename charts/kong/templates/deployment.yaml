@@ -217,6 +217,10 @@ spec:
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
     {{- end }}
+    {{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.topologySpreadConstraints | indent 8 }}
+    {{- end }}
       securityContext:
       {{- include "kong.podsecuritycontext" . | nindent 8 }}
     {{- if .Values.nodeSelector }}
