@@ -491,7 +491,7 @@ terminationGracePeriodSeconds: 30
 # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 # affinity: {}
 
-# Topology spread constraints for pod assignment
+# Topology spread constraints for pod assignment (requires Kubernetes >= 1.19)
 # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 # topologySpreadConstraints: []
 
