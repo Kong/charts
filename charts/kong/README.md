@@ -596,6 +596,7 @@ For a complete list of all configuration values you can set in the
 | lifecycle                          | Proxy container lifecycle hooks                                                       | see `values.yaml`   |
 | terminationGracePeriodSeconds      | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pods | 30                  |
 | affinity                           | Node/pod affinities                                                                   |                     |
+| topologySpreadConstraints          | Control how Pods are spread across cluster among failure-domains                      |                     |
 | nodeSelector                       | Node labels for pod assignment                                                        | `{}`                |
 | deploymentAnnotations              | Annotations to add to deployment                                                      |  see `values.yaml`  |
 | podAnnotations                     | Annotations to add to each pod                                                        | `{}`                |
