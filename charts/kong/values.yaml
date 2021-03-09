@@ -595,8 +595,9 @@ enterprise:
   enabled: false
   # Kong Enterprise license secret name
   # This secret must contain a single 'license' key, containing your base64-encoded license data
-  # The license secret is required for all Kong Enterprise deployments
-  license_secret: kong-enterprise-license
+  # The license secret is required to unlock all Enterprise features. If you omit it,
+  # Kong will run in free mode, with some Enterprise features disabled.
+  # license_secret: kong-enterprise-license
   vitals:
     enabled: true
   portal:
