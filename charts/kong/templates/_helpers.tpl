@@ -663,8 +663,10 @@ the template that it itself is using form the above sections.
     {{- $_ := set $autoEnv "KONG_SMTP_MOCK" "on" -}}
   {{- end }}
 
-  {{- $lic := include "secretkeyref" (dict "name" .Values.enterprise.license_secret "key" "license") -}}
-  {{- $_ := set $autoEnv "KONG_LICENSE_DATA" $lic -}}
+  {{- if .Values.enterprise.license_secret -}}
+    {{- $lic := include "secretkeyref" (dict "name" .Values.enterprise.license_secret "key" "license") -}}
+    {{- $_ := set $autoEnv "KONG_LICENSE_DATA" $lic -}}
+  {{- end }}
 
 {{- end }} {{/* End of the Enterprise settings block */}}
 
