@@ -31,7 +31,7 @@ $ helm install kong/kong --generate-name
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
   - [Standalone controller nodes](#standalone-controller-nodes)
   - [Hybrid mode](#hybrid-mode)
-  - [CRDs only](#crds-only)
+  - [CRD management](#crd-management)
   - [Sidecar containers](#sidecar-containers)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
@@ -394,16 +394,16 @@ documentation on Service
 DNS](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 for more detail.
 
-### CRDs only
+### CRD management
 
-Earlier iterations of this chart (<2.0) created CRDs associated with the
-ingress controller as part of the release. This raised two challenges:
+Earlier versions of this chart (<2.0) created CRDs associated with the ingress
+controller as part of the release. This raised two challenges:
 
-- Multiple installations of the chart would conflict with one another, as each
-  would attempt to create its own set of CRDs.
+- Multiple release of the chart would conflict with one another, as each would
+  attempt to create its own set of CRDs.
 - Because deleting a CRD also deletes any custom resources associated with it,
-  uninstalling the chart could destroy user configuration without providing any
-  means to restore it.
+  deleting a release of the chart could destroy user configuration without
+  providing any means to restore it.
 
 Helm 3 introduced a simplified CRD management method that was safer, but
 requires some manual work when a chart added or modified CRDs: CRDs are created
@@ -414,15 +414,17 @@ recommended for most users.
 
 Some users may wish to manage their CRDs automatically. If you manage your CRDs
 this way, we _strongly_ recommend that you back up all associated custom
-resources in the event you need to recover from unintended CRD deletion. To
-manage CRDs via a Helm release, you can either:
+resources in the event you need to recover from unintended CRD deletion.
 
-- Set `ingressController.enabled=true` and
-  `ingressController.installCRDs=true`. These CRDs will be managed along with
-  your Kong release.
-- Set `ingressController.enabled=false`, `deployment.kong.enabled=false`, and
-  `ingressController.installCRDs=true`. This creates a CRD-only release that
-  you can upgrade independent of your Kong release(s).
+While Helm 3's CRD management system is recommended, there is no simple means
+of migrating away from release-managed CRDs if you previously installed your
+release with the old system (you would need to back up your existing custom
+resources, delete your release, reinstall, and restore your custom resources
+after). As such, the chart detects if you currently use release-managed CRDs
+and continues to use the old CRD templates when using chart version 2.0+. If
+you do (your resources will have a `meta.helm.sh/release-name` annotation), we
+_strongly_ recommend that you back up all associated custom resources in the
+event you need to recover from unintended CRD deletion.
 
 ### Sidecar Containers
 
