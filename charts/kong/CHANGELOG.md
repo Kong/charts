@@ -2,6 +2,14 @@
 
 ## 1.15.0
 
+### Fixed
+
+* Generated admission webhook certificates now include SANs for compatibility
+  with Go 1.15 controller builds.
+  ([#312](https://github.com/Kong/charts/pull/312)).
+
+## 1.15.0
+
 1.15.0 is an interim release before the planned release of 2.0.0. There were
 several feature changes we wanted to release prior to the removal of deprecated
 functionality for 2.0. The original planned deprecations covered in the [1.14.0
