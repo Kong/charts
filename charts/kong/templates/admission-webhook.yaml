@@ -1,7 +1,7 @@
 {{- if .Values.ingressController.admissionWebhook.enabled -}}
 {{- $cn := printf "%s.%s.svc" ( include "kong.service.validationWebhook" . ) ( include "kong.namespace" . ) -}}
 {{- $ca := genCA "kong-admission-ca" 3650 -}}
-{{- $cert := genSignedCert $cn nil nil 3650 $ca -}}
+{{- $cert := genSignedCert $cn nil (list $cn) 3650 $ca -}}
 {{- $certCert := $cert.Cert -}}
 {{- $certKey := $cert.Key -}}
 {{- $caCert := $ca.Cert -}}
