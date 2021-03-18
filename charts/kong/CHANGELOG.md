@@ -1,5 +1,51 @@
 # Changelog
 
+## 2.0.0-rc.1
+
+### Breaking changes
+
+* Helm 2 is no longer supported. You **must** [migrate your Kong chart releases
+  to Helm 3](https://helm.sh/docs/topics/v2_v3_migration/) before updating to
+  this release.
+* Deprecated [Portal auth settings](https://github.com/Kong/charts/blob/kong-1.15.0/charts/kong/UPGRADE.md#removal-of-dedicated-portal-authentication-configuration-parameters)
+  are no longer supported.
+* The deprecated [`runMigrations` setting](https://github.com/Kong/charts/blob/kong-1.15.0/charts/kong/UPGRADE.md#changes-to-migration-job-configuration)
+  is no longer supported.
+* Deprecated [admin API Service configuration](https://github.com/Kong/charts/blob/kong-1.15.0/charts/kong/UPGRADE.md#changes-to-kong-service-configuration)
+  is no longer supported.
+* Deprecated [multi-host proxy configuration](https://github.com/Kong/charts/blob/kong-1.15.0/charts/kong/UPGRADE.md#removal-of-multi-host-proxy-ingress)
+  is no longer supported.
+
+`helm upgrade` with the previous version (1.15.0) will print a warning message
+if you still use any of the removed values.yaml configuration. If you do not
+see any warnings after the upgrade completes, you are already using the modern
+equivalents of these settings and can proceed with upgrading to 2.0.0-rc1.
+
+### Improvements
+
+* Admission webhook certificates persist after their initial creation. This
+  prevents an unnecessary restart of Kong Pods on upgrades that do not actually
+  modify the deployment.
+  ([#256](https://github.com/Kong/charts/pull/256))
+* `ingressController.installCRDs` now defaults to `false`, simplifying
+  installation on Helm 3. Installs now default to using Helm 3's CRD management
+  system, and do not require changes to values or install flags to install
+  successfully.
+  ([#305](https://github.com/Kong/charts/pull/305))
+* Added support for Pod `topologySpreadConstraints`.
+  ([#308](https://github.com/Kong/charts/pull/308))
+
+### Fixed
+
+* Generated admission webhook certificates now include SANs for compatibility
+  with Go 1.15 controller builds.
+  ([#312](https://github.com/Kong/charts/pull/312)).
+
+### Documentation
+
+* Clarified use of `terminationGracePeriodSeconds`.
+  ([#302](https://github.com/Kong/charts/pull/302))
+
 ## 1.15.0
 
 1.15.0 is an interim release before the planned release of 2.0.0. There were
