@@ -37,7 +37,10 @@ $ helm install kong/kong --generate-name --set ingressController.installCRDs=fal
   - [Standalone controller nodes](#standalone-controller-nodes)
   - [Hybrid mode](#hybrid-mode)
   - [CRDs only](#crds-only)
+  - [InitContainers](#initContainers)
   - [Sidecar containers](#sidecar-containers)
+  - [User Defined Volumes](#user-defined-volumes)
+  - [User Defined Volume Mounts](#user-defined-volume-mounts)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
@@ -439,6 +442,10 @@ On Helm 3, CRDs are created if necessary, but are not managed along with the
 release. Releases can be deleted without affecting CRDs; CRDs are only removed
 if you delete them manually.
 
+### InitContainers
+
+The chart able to deploy initcontainers along with Kong. This can be very useful when require to setup additional custom initialization. The `deployment.initcontainers` field in values.yaml takes an array of objects that get appended as-is to the existing `spec.template.initContainers` array in the kong deployment resource. 
+
 ### Sidecar Containers
 
 The chart can deploy additional containers along with the Kong and Ingress
@@ -447,6 +454,14 @@ be useful to include network proxies or logging services along with Kong.  The
 `deployment.sidecarContainers` field in values.yaml takes an array of objects
 that get appended as-is to the existing `spec.template.spec.containers` array
 in the Kong deployment resource.
+
+### User Defined Volumes
+
+The chart can deploy additional volumes along with Kong. This can be useful to include additional volumes which required during iniatilization phase (InitContainer). The  `deployment.userDefinedVolumes` field in values.yaml takes an array of objects that get appended as-is to the existing `spec.template.spec.volumes` array in the kong deployment resource.
+
+### User Defined Volume Mounts
+
+The chart can mount the volumes which defined in the `user defined volume` or others. The `deployment.userDefinedVolumeMounts` field in values.yaml takes an array of object that get appended as-is to the existing `spec.template.spec.containers[].volumeMounts` and `spec.template.spec.initContainers[].volumeMounts` array in the kong deployment resource.
 
 ### Example configurations
 

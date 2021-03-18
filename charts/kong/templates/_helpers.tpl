@@ -355,6 +355,12 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- end -}}
 
+{{- define "kong.userDefinedVolumes" -}}
+  {{- if .Values.deployment.userDefinedVolumes }}
+  {{- toYaml .Values.deployment.userDefinedVolumes }}
+  {{- end }}
+{{- end -}}
+
 {{- define "kong.volumes" -}}
 - name: {{ template "kong.fullname" . }}-prefix-dir
   emptyDir: {}
@@ -415,6 +421,12 @@ The name of the service used for the ingress controller's validation webhook
   secret:
     secretName: {{ .name }}
 {{- end }}
+{{- end -}}
+
+{{- define "kong.userDefinedVolumeMounts" -}}
+  {{- if .Values.deployment.userDefinedVolumeMounts }}
+  {{- toYaml .Values.deployment.userDefinedVolumeMounts }}
+  {{- end }}
 {{- end -}}
 
 {{- define "kong.volumeMounts" -}}
@@ -495,6 +507,7 @@ The name of the service used for the ingress controller's validation webhook
   command: [ "/bin/sh", "-c", "until kong start; do echo 'waiting for db'; sleep 1; done; kong stop; rm -fv {{ $sockFile | squote }}"]
   volumeMounts:
   {{- include "kong.volumeMounts" . | nindent 4 }}
+  {{- include "kong.userDefinedVolumeMounts" . | nindent 4 }}
   resources:
   {{- toYaml .Values.resources | nindent 4 }}
 {{- end -}}
