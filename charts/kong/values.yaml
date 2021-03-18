@@ -367,8 +367,6 @@ ingressController:
     # The annotations for service account
     annotations: {}
 
-  installCRDs: true
-
   # general properties
   livenessProbe:
     httpGet:
