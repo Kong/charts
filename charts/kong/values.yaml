@@ -27,7 +27,7 @@ deployment:
   # initContainers:
   # - name: initcon
   #   image: initcon:latest
-  # userDefinedVolumes: 
+  # userDefinedVolumes:
   # - name: "volumeName"
   #   emptyDir: {}
   # userDefinedVolumeMounts:
