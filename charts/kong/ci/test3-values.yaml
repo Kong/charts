@@ -30,19 +30,19 @@ proxy:
   type: NodePort
 deployment:
   initContainers:
-     - name: "bash"
-       image: "bash:latest"
-       command: ["/bin/sh", "-c", "true"]
-       resources:
-         limits:
-           cpu: "100m"
-           memory: "64Mi"
-         requests:
-           cpu: "100m"
-           memory: "64Mi"
-       volumeMounts:
-       - name: "tmpDir"
-         mountPath: "/opt/tmp"
+    - name: "bash"
+      image: "bash:latest"
+      command: ["/bin/sh", "-c", "true"]
+      resources:
+        limits:
+          cpu: "100m"
+          memory: "64Mi"
+        requests:
+          cpu: "100m"
+          memory: "64Mi"
+      volumeMounts:
+      - name: "tmpDir"
+        mountPath: "/opt/tmp"
   userDefinedVolumes:
   - name: "tmpDir"
     emptyDir: {}
