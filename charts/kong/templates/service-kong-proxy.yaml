@@ -10,7 +10,7 @@
 {{- include "kong.service" $serviceConfig }}
 {{ if .Values.proxy.ingress.enabled }}
 ---
-{{ if (not (hasKey .Values.proxy.ingress "hosts"))  }}
+{{ if (not (hasKey .Values.proxy.ingress "hosts"))  -}}
 {{ include "kong.ingress" $serviceConfig }}
 {{- end -}}
 {{- end -}}
