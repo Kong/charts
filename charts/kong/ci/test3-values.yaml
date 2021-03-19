@@ -41,11 +41,11 @@ deployment:
           cpu: "100m"
           memory: "64Mi"
       volumeMounts:
-      - name: "tmpDir"
+      - name: "tmpdir"
         mountPath: "/opt/tmp"
   userDefinedVolumes:
-  - name: "tmpDir"
+  - name: "tmpdir"
     emptyDir: {}
   userDefinedVolumeMounts:
-  - name: "tmpDir"
+  - name: "tmpdir"
     mountPath: "/opt/tmp"
