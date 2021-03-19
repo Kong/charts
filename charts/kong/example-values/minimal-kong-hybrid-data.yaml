@@ -28,13 +28,6 @@ admin:
 secretVolumes:
 - kong-cluster-cert
 
-postgresql:
-  enabled: true
-  postgresqlUsername: kong
-  postgresqlDatabase: kong
-  service:
-    port: 5432
-
 ingressController:
   enabled: false
   installCRDs: false
