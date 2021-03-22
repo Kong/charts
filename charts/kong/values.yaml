@@ -24,6 +24,15 @@ deployment:
   # sidecarContainers:
   #   - name: sidecar
   #     image: sidecar:latest
+  # initContainers:
+  # - name: initcon
+  #   image: initcon:latest
+  # userDefinedVolumes:
+  # - name: "volumeName"
+  #   emptyDir: {}
+  # userDefinedVolumeMounts:
+  # - name: "volumeName"
+  #   mountPath: "/opt/user/dir/mount"
 
 # Override namepsace for Kong chart resources. By default, the chart creates resources in the release namespace.
 # This may not be desirable when using this chart as a dependency.

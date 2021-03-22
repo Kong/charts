@@ -57,9 +57,14 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      {{- if (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) }}
+      {{- if (or (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) .Values.deployment.initContainers) }}
       initContainers:
-      {{- include "kong.wait-for-db" . | nindent 6 }}
+        {{- if .Values.deployment.initContainers }}
+        {{- toYaml .Values.deployment.initContainers | nindent 6 }}
+        {{- end }}
+        {{- if (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) }}
+        {{- include "kong.wait-for-db" . | nindent 6 }}
+        {{- end }}
       {{- end }}
       containers:
       {{- if .Values.ingressController.enabled }}
@@ -206,6 +211,7 @@ spec:
         {{- end }}
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 10 }}
+        {{- include "kong.userDefinedVolumeMounts" . | nindent 10 }}
         readinessProbe:
 {{ toYaml .Values.readinessProbe | indent 10 }}
         livenessProbe:
@@ -232,4 +238,5 @@ spec:
 {{ toYaml .Values.tolerations | indent 8 }}
       volumes:
       {{- include "kong.volumes" . | nindent 8 -}}
+      {{- include "kong.userDefinedVolumes" . | nindent 8 -}}
 {{- end }}
