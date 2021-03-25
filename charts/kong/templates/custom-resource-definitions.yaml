@@ -22,6 +22,7 @@
   {{- if .Capabilities.APIVersions.Has "apiextensions.k8s.io/v1/CustomResourceDefinition" -}}
     {{- $kongPluginCRD = (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "kongplugins.configuration.konghq.com") -}}
   {{- else -}}
+    {{/* TODO: remove the v1beta1 path when we no longer support k8s <1.16 */}}
     {{- $kongPluginCRD = (lookup "apiextensions.k8s.io/v1beta1" "CustomResourceDefinition" "" "kongplugins.configuration.konghq.com") -}}
   {{- end -}}
   {{- if $kongPluginCRD -}}
