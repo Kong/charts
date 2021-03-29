@@ -790,11 +790,12 @@ extraSecrets: []
 #   mountPath: /mount/to/my/location
 #   subPath: my-subpath # Optional, if you wish to mount a single key and not the entire ConfigMap
 
-csiVolumes:
-  - name: secrets-store-inline
-    enabled: true
-    csi:
-      driver: secrets-store.csi.k8s.io
-      readOnly: true
-      volumeAttributes:
-        secretProviderClass: management-azure-key-vault
+csiVolumes: []
+# csiVolumes:
+#   - name: secrets-store-inline
+#     enabled: true
+#     csi:
+#       driver: secrets-store.csi.k8s.io
+#       readOnly: true
+#       volumeAttributes:
+#         secretProviderClass: <secret-provider-class>

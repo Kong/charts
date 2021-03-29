@@ -19,29 +19,40 @@ $ helm install kong/kong --generate-name
 
 ## Table of contents
 
+- [Kong for Kubernetes](#kong-for-kubernetes)
+- [TL;DR;](#tldr)
+- [Table of contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
 - [Install](#install)
 - [Uninstall](#uninstall)
-- [Kong Enterprise](#kong-enterprise)
 - [FAQs](#faqs)
+- [Kong Enterprise](#kong-enterprise)
 - [Deployment Options](#deployment-options)
   - [Database](#database)
+    - [DB-less deployment](#db-less-deployment)
+    - [Using the Postgres sub-chart](#using-the-postgres-sub-chart)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
   - [Standalone controller nodes](#standalone-controller-nodes)
   - [Hybrid mode](#hybrid-mode)
+    - [Certificates](#certificates)
+    - [Control plane node configuration](#control-plane-node-configuration)
+    - [Data plane node configuration](#data-plane-node-configuration)
   - [CRD management](#crd-management)
-  - [Sidecar containers](#sidecar-containers)
+  - [Sidecar Containers](#sidecar-containers)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
-  - [Kong Parameters](#kong-parameters)
+  - [Kong parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
+    - [Stream listens](#stream-listens)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
-  - [The `env` section](#the-env-section)
+    - [The `env` section](#the-env-section)
+    - [Container Storage Interface (CSI)](#container-storage-interface-csi)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
-  - [Prerequisites](#prerequisites-1)
+  - [Overview](#overview)
+  - [Pre](#pre)
     - [Kong Enterprise License](#kong-enterprise-license)
     - [Kong Enterprise Docker registry access](#kong-enterprise-docker-registry-access)
   - [Service location hints](#service-location-hints)
@@ -49,8 +60,6 @@ $ helm install kong/kong --generate-name
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
 - [Prometheus Operator integration](#prometheus-operator-integration)
-- [Changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
-- [Upgrading](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
@@ -636,6 +645,24 @@ For complete list of Kong configurations please check the
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
 
+#### Container Storage Interface (CSI)
+
+In enterprise setups, you may not want to create secrets in Kubernetes, but store them elsewhere, e.g. in Azure Key Vault. The secrets can then be mounted to the respective container by making use of the [Container Storage Interface (CSI)](https://kubernetes-csi.github.io/docs/introduction.html). For this to work, a volume has to be created and mounted as follows:
+
+```yaml
+csiVolumes:
+  - name: secrets-store-inline
+    enabled: true
+    csi:
+      driver: secrets-store.csi.k8s.io
+      readOnly: true
+      volumeAttributes:
+        secretProviderClass: management-azure-key-vault
+```
+
+
+A more detailed documentation for e.g. setup of Azure Key Vault can be found [here](https://docs.microsoft.com/en-us/azure/key-vault/general/key-vault-integrate-kubernetes).
+
 ## Kong Enterprise Parameters
 
 ### Overview
@@ -646,7 +673,7 @@ you need to do the following:
 
 - Set `enterprise.enabled` to `true` in `values.yaml` file.
 - Update values.yaml to use a Kong Enterprise image.
-- Satisfy the two prerequsisites below for Enterprise License and
+- Satisfy the two prerequisites below for Enterprise License and
   Enterprise Docker Registry.
 - (Optional) [set a `password` environment variable](#rbac) to create the
   initial super-admin. Though not required, this is recommended for users that
@@ -660,8 +687,7 @@ Some of the more important configuration is grouped in sections
 under the `.enterprise` key in values.yaml, though most enterprise-specific
 configuration can be placed under the `.env` key.
 
-### Prerequisites
-
+### Pre
 #### Kong Enterprise License
 
 Kong Enterprise 2.3+ can run with or without a license. If you wish to run 2.3+
