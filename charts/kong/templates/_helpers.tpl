@@ -415,6 +415,16 @@ The name of the service used for the ingress controller's validation webhook
   secret:
     secretName: {{ .name }}
 {{- end }}
+{{- range .Values.csiVolumes }}
+{{- if .enabled }}
+- name: {{ .name }}
+  csi:
+    driver: {{ .csi.driver }}
+    readOnly: {{ .csi.readOnly }}
+    volumeAttributes:
+      secretProviderClass: {{ .csi.volumeAttributes.secretProviderClass }}
+{{- end }}
+{{- end }}
 {{- end -}}
 
 {{- define "kong.volumeMounts" -}}
@@ -468,6 +478,14 @@ The name of the service used for the ingress controller's validation webhook
   {{- if .subPath }}
   subPath: {{ .subPath }}
   {{- end }}
+{{- end }}
+
+{{- range .Values.csiVolumes }}
+{{- if .enabled }}
+- name: {{ .name }}
+  mountPath: {{ printf "/etc/csi/%s" .name }}
+  readOnly: {{ .csi.readOnly }}
+{{- end }}
 {{- end }}
 
 {{- end -}}
