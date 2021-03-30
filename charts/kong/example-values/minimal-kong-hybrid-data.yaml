@@ -18,7 +18,7 @@ env:
   database: "off"
   role: data_plane
   cluster_control_plane: CHANGEME-control-service.CHANGEME-namespace.svc.cluster.local:8005
-  lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
+  lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-ca/tls.crt
   cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
   cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
 
