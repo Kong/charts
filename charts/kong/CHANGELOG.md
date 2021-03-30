@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0-rc.2
+
+### Fixed
+
+* The legacy CRD lookup now functions on Kubernetes versions that do not
+  support `apiextensions.k8s.io/v1/CustomResourceDefinition` (versions prior to
+  1.16).
+
 ## 2.0.0-rc.1
 
 ### Breaking changes
