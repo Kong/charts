@@ -89,6 +89,7 @@ admin:
     # Disabling this and using a TLS listen only is recommended for most configuration
     enabled: false
     servicePort: 8001
+    servicePortName: http-kongadmin
     containerPort: 8001
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
@@ -99,6 +100,7 @@ admin:
     # Enable HTTPS listen for the admin API
     enabled: true
     servicePort: 8444
+    servicePortName: https-kongadmin
     containerPort: 8444
     # Set a target port for the TLS port in the admin API service, useful when using TLS
     # termination on an ELB.
@@ -183,6 +185,7 @@ proxy:
     # Enable plaintext HTTP listen for the proxy
     enabled: true
     servicePort: 80
+    servicePortName: http-kongproxy
     containerPort: 8000
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
@@ -193,6 +196,7 @@ proxy:
     # Enable HTTPS listen for the proxy
     enabled: true
     servicePort: 443
+    servicePortName: https-kongproxy
     containerPort: 8443
     # Set a target port for the TLS port in proxy service, useful when using TLS
     # termination on an ELB.
