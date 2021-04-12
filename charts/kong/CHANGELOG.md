@@ -1,6 +1,14 @@
 # Changelog
 
-## 1.15.0
+## 1.15.2
+
+### Fixed
+
+* Kong Ingress Controller image now pulled from Docker Hub (due to Bintray being
+  discontinued). Changed the default Docker image repository for the ingress
+  controller.
+
+## 1.15.1
 
 ### Fixed
 
