@@ -320,7 +320,7 @@ dblessConfig:
 ingressController:
   enabled: true
   image:
-    repository: kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller
+    repository: kong/kubernetes-ingress-controller
     tag: "1.1"
   args: []
 
