@@ -39,7 +39,7 @@ jobs:
           fi
 
       - name: Run chart-testing (lint)
-        run: ct lint --chart-repos bitnami=https://charts.bitnami.com/bitnami --check-version-increment=false --remote origin
+        run: ct lint --chart-repos bitnami=https://charts.bitnami.com/bitnami --check-version-increment=false --remote origin --target-branch next
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.0.0
