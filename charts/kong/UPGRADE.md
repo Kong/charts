@@ -17,7 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
-- [2.0.0-rc.1](#200-rc1)
+- [2.0.0](#200)
 - [1.14.0](#1140)
 - [1.11.0](#1110)
 - [1.10.0](#1100)
@@ -57,7 +57,7 @@ text ending with `field is immutable`. This is typically due to a bug with the
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
 
-## 2.0.0-rc1
+## 2.0.0
 
 ### Support for Helm 2 dropped
 
