@@ -1,14 +1,6 @@
 # Changelog
 
-## 2.0.0-rc.2
-
-### Fixed
-
-* The legacy CRD lookup now functions on Kubernetes versions that do not
-  support `apiextensions.k8s.io/v1/CustomResourceDefinition` (versions prior to
-  1.16).
-
-## 2.0.0-rc.1
+## 2.0.0
 
 ### Breaking changes
 
@@ -42,6 +34,9 @@ equivalents of these settings and can proceed with upgrading to 2.0.0-rc1.
   ([#305](https://github.com/Kong/charts/pull/305))
 * Added support for Pod `topologySpreadConstraints`.
   ([#308](https://github.com/Kong/charts/pull/308))
+* Kong Ingress Controller image now pulled from Docker Hub (due to Bintray being
+  discontinued). Changed the default Docker image repository for the ingress
+  controller.
 
 ### Fixed
 
