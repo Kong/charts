@@ -42,7 +42,7 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
-        run: ct install
+        run: ct install --chart-repos bitnami=https://charts.bitnami.com/bitnami --remote origin --target-branch main
   release:
     needs: lint-test
     runs-on: ubuntu-latest
