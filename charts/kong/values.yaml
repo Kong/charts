@@ -573,11 +573,8 @@ securityContext: {}
 
 serviceMonitor:
   # Specifies whether ServiceMonitor for Prometheus operator should be created
-  # NOTE: setting `enabled: true` here enables the ServiceMonitor resource, but
-  #       by itself doesn't enable the label for all components that can be monitored.
-  #       For instance, if you want to turn metrics on for the Admin API you must add
-  #       a `metrics-enabled: true` label in the admin.labels above.
-  #       For more context see: https://github.com/Kong/charts/blob/main/charts/kong/README.md#prometheus-operator-integration
+  # If you wish to gather metrics from a Kong instance with the proxy disabled (such as a hybrid control plane), see:
+  # https://github.com/Kong/charts/blob/main/charts/kong/README.md#prometheus-operator-integration
   enabled: false
   # interval: 10s
   # Specifies namespace, where ServiceMonitor should be installed
