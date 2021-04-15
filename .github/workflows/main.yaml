@@ -7,6 +7,8 @@ on:
 
 jobs:
   lint-test:
+    env:
+      COMMON_CT_ARGS: "--chart-repos bitnami=https://charts.bitnami.com/bitnami --remote origin --target-branch main"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,14 +37,14 @@ jobs:
           fi
 
       - name: Run chart-testing (lint)
-        run: ct lint --chart-repos bitnami=https://charts.bitnami.com/bitnami --remote origin --target-branch main
+        run: ct lint $COMMON_CT_ARGS
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.0.0
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
-        run: ct install
+        run: ct install $COMMON_CT_ARGS
   release:
     needs: lint-test
     runs-on: ubuntu-latest
