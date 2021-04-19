@@ -27,7 +27,11 @@ spec:
     matchLabels:
       {{- include "kong.selectorLabels" . | nindent 6 }}
   {{- if .Values.updateStrategy }}
+  {{- if .Values.deployment.daemonset }}
+  updateStrategy:
+  {{- else }}
   strategy:
+  {{- end }}
 {{ toYaml .Values.updateStrategy | indent 4 }}
   {{- end }}
 
