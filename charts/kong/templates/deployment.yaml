@@ -1,6 +1,10 @@
 {{- if or .Values.deployment.kong.enabled .Values.ingressController.enabled }}
 apiVersion: apps/v1
+{{- if .Values.deployment.daemonset }}
+kind: DaemonSet
+{{- else }}
 kind: Deployment
+{{- end }}
 metadata:
   name: {{ template "kong.fullname" . }}
   namespace:  {{ template "kong.namespace" . }}
@@ -15,7 +19,9 @@ metadata:
   {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
+  {{- if not .Values.deployment.daemonset }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   {{- end }}
   selector:
     matchLabels:

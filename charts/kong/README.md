@@ -36,6 +36,7 @@ $ helm install kong/kong --generate-name
   - [Sidecar containers](#sidecar-containers)
   - [User Defined Volumes](#user-defined-volumes)
   - [User Defined Volume Mounts](#user-defined-volume-mounts)
+  - [Using a DaemonSet](#using-a-daemonset)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
@@ -450,6 +451,13 @@ The chart can deploy additional volumes along with Kong. This can be useful to i
 
 The chart can mount the volumes which defined in the `user defined volume` or others. The `deployment.userDefinedVolumeMounts` field in values.yaml takes an array of object that get appended as-is to the existing `spec.template.spec.containers[].volumeMounts` and `spec.template.spec.initContainers[].volumeMounts` array in the kong deployment resource.
 
+### Using a DaemonSet
+
+Setting `deployment.daemonset: true` deploys Kong using a [DaemonSet
+controller](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+instead of a Deployment controller. This runs a Kong Pod on every kubelet in
+the Kubernetes cluster.
+
 ### Example configurations
 
 Several example values.yaml are available in the
@@ -588,6 +596,7 @@ For a complete list of all configuration values you can set in the
 | namespace                          | Namespace to deploy chart resources                                                   |                     |
 | deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
 | deployment.initContainers          | Create initContainers. Please go to Kubernetes doc for the spec of the initContainers |                     |
+| deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
 | deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
