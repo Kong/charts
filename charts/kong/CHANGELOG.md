@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.15.3
+
+* Kong Enterprise image now pulled from Docker Hub. Updated tags to latest
+  versions.
+
 ## 1.15.2
 
 ### Fixed
