@@ -57,10 +57,10 @@ env:
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.3"
+  tag: "2.4"
   # Kong Enterprise
-  # repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
-  # tag: "2.3.2.0-alpine"
+  # repository: kong/kong-gateway
+  # tag: "2.3.3.2-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -321,7 +321,7 @@ ingressController:
   enabled: true
   image:
     repository: kong/kubernetes-ingress-controller
-    tag: "1.1"
+    tag: "1.2"
   args: []
 
   # Specify Kong Ingress Controller configuration via environment variables

@@ -12,5 +12,5 @@ ingressController:
   env:
     anonymous_reports: "false"
   image:
-    unifiedRepoTag: kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller:1.1.1
+    unifiedRepoTag: kong/kubernetes-ingress-controller:1.2.0
   installCRDs: false
