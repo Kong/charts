@@ -16,4 +16,5 @@ spec:
   selector:
     matchLabels:
       {{- include "kong.metaLabels" . | nindent 6 }}
+      app.kubernetes.io/component: app
 {{- end }}
