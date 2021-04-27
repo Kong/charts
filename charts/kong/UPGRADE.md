@@ -66,10 +66,10 @@ Bintray, the Docker registry previously used for several images used by this
 chart, is [sunsetting May 1,
 2021](https://jfrog.com/blog/into-the-sunset-bintray-jcenter-gocenter-and-chartcenter/).
 
-The chart default values.yaml now uses the new Docker Hub repositories for all
-affected images. You should check your release values.yamls to confirm that
+The chart default `values.yaml` now uses the new Docker Hub repositories for all
+affected images. You should check your release `values.yaml` files to confirm that
 they do not still reference Bintray repositories. If they do, update them to
-use the Docker Hub repositories now in the default values.yaml.
+use the Docker Hub repositories now in the default `values.yaml`.
 
 ## 2.0.0
 
