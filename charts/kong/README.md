@@ -32,7 +32,11 @@ $ helm install kong/kong --generate-name
   - [Standalone controller nodes](#standalone-controller-nodes)
   - [Hybrid mode](#hybrid-mode)
   - [CRD management](#crd-management)
+  - [InitContainers](#initContainers)
   - [Sidecar containers](#sidecar-containers)
+  - [User Defined Volumes](#user-defined-volumes)
+  - [User Defined Volume Mounts](#user-defined-volume-mounts)
+  - [Using a DaemonSet](#using-a-daemonset)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong Parameters](#kong-parameters)
@@ -426,6 +430,10 @@ you do (your resources will have a `meta.helm.sh/release-name` annotation), we
 _strongly_ recommend that you back up all associated custom resources in the
 event you need to recover from unintended CRD deletion.
 
+### InitContainers
+
+The chart able to deploy initcontainers along with Kong. This can be very useful when require to setup additional custom initialization. The `deployment.initcontainers` field in values.yaml takes an array of objects that get appended as-is to the existing `spec.template.initContainers` array in the kong deployment resource. 
+
 ### Sidecar Containers
 
 The chart can deploy additional containers along with the Kong and Ingress
@@ -434,6 +442,21 @@ be useful to include network proxies or logging services along with Kong.  The
 `deployment.sidecarContainers` field in values.yaml takes an array of objects
 that get appended as-is to the existing `spec.template.spec.containers` array
 in the Kong deployment resource.
+
+### User Defined Volumes
+
+The chart can deploy additional volumes along with Kong. This can be useful to include additional volumes which required during iniatilization phase (InitContainer). The  `deployment.userDefinedVolumes` field in values.yaml takes an array of objects that get appended as-is to the existing `spec.template.spec.volumes` array in the kong deployment resource.
+
+### User Defined Volume Mounts
+
+The chart can mount the volumes which defined in the `user defined volume` or others. The `deployment.userDefinedVolumeMounts` field in values.yaml takes an array of object that get appended as-is to the existing `spec.template.spec.containers[].volumeMounts` and `spec.template.spec.initContainers[].volumeMounts` array in the kong deployment resource.
+
+### Using a DaemonSet
+
+Setting `deployment.daemonset: true` deploys Kong using a [DaemonSet
+controller](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+instead of a Deployment controller. This runs a Kong Pod on every kubelet in
+the Kubernetes cluster.
 
 ### Example configurations
 
@@ -448,7 +471,7 @@ directory.
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | image.repository                   | Kong image                                                                            | `kong`              |
-| image.tag                          | Kong image version                                                                    | `2.0`               |
+| image.tag                          | Kong image version                                                                    | `2.4`               |
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
 | replicaCount                       | Kong instance count. It has no effect when `autoscaling.enabled` is set to true         | `1`                 |
@@ -547,8 +570,8 @@ section of `values.yaml` file:
 | Parameter                          | Description                                                                           | Default                                                                      |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | enabled                            | Deploy the ingress controller, rbac and crd                                           | true                                                                         |
-| image.repository                   | Docker image with the ingress controller                                              | kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller |
-| image.tag                          | Version of the ingress controller                                                     | 0.9.1                                                                        |
+| image.repository                   | Docker image with the ingress controller                                              | kong/kubernetes-ingress-controller |
+| image.tag                          | Version of the ingress controller                                                     | 1.2.0 |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
 | installCRDs                        | Creates managed CRDs.                                                                 | false
@@ -572,6 +595,10 @@ For a complete list of all configuration values you can set in the
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | namespace                          | Namespace to deploy chart resources                                                   |                     |
 | deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
+| deployment.initContainers          | Create initContainers. Please go to Kubernetes doc for the spec of the initContainers |                     |
+| deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
+| deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
+| deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
 | autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
 | autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |

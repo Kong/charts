@@ -19,11 +19,22 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
+    # Use a DaemonSet controller instead of a Deployment controller
+    daemonset: false
   ## Optionally specify any extra sidecar containers to be included in the deployment
   ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
   # sidecarContainers:
   #   - name: sidecar
   #     image: sidecar:latest
+  # initContainers:
+  # - name: initcon
+  #   image: initcon:latest
+  # userDefinedVolumes:
+  # - name: "volumeName"
+  #   emptyDir: {}
+  # userDefinedVolumeMounts:
+  # - name: "volumeName"
+  #   mountPath: "/opt/user/dir/mount"
 
 # Override namepsace for Kong chart resources. By default, the chart creates resources in the release namespace.
 # This may not be desirable when using this chart as a dependency.
@@ -57,10 +68,10 @@ env:
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.3"
+  tag: "2.4"
   # Kong Enterprise
-  # repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
-  # tag: "2.3.2.0-alpine"
+  # repository: kong/kong-gateway
+  # tag: "2.3.3.2-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -321,7 +332,7 @@ ingressController:
   enabled: true
   image:
     repository: kong/kubernetes-ingress-controller
-    tag: "1.1"
+    tag: "1.2"
   args: []
 
   # Specify Kong Ingress Controller configuration via environment variables
@@ -573,6 +584,8 @@ securityContext: {}
 
 serviceMonitor:
   # Specifies whether ServiceMonitor for Prometheus operator should be created
+  # If you wish to gather metrics from a Kong instance with the proxy disabled (such as a hybrid control plane), see:
+  # https://github.com/Kong/charts/blob/main/charts/kong/README.md#prometheus-operator-integration
   enabled: false
   # interval: 10s
   # Specifies namespace, where ServiceMonitor should be installed

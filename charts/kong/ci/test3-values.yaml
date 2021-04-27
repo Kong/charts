@@ -28,3 +28,24 @@ dblessConfig:
             message: "dbless-config"
 proxy:
   type: NodePort
+deployment:
+  initContainers:
+    - name: "bash"
+      image: "bash:latest"
+      command: ["/bin/sh", "-c", "true"]
+      resources:
+        limits:
+          cpu: "100m"
+          memory: "64Mi"
+        requests:
+          cpu: "100m"
+          memory: "64Mi"
+      volumeMounts:
+      - name: "tmpdir"
+        mountPath: "/opt/tmp"
+  userDefinedVolumes:
+  - name: "tmpdir"
+    emptyDir: {}
+  userDefinedVolumeMounts:
+  - name: "tmpdir"
+    mountPath: "/opt/tmp"

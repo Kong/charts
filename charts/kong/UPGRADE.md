@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [2.1.0](#210)
 - [2.0.0](#200)
 - [1.14.0](#1140)
 - [1.11.0](#1110)
@@ -56,6 +57,19 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 2.1.0
+
+### Migration off Bintray
+
+Bintray, the Docker registry previously used for several images used by this
+chart, is [sunsetting May 1,
+2021](https://jfrog.com/blog/into-the-sunset-bintray-jcenter-gocenter-and-chartcenter/).
+
+The chart default `values.yaml` now uses the new Docker Hub repositories for all
+affected images. You should check your release `values.yaml` files to confirm that
+they do not still reference Bintray repositories. If they do, update them to
+use the Docker Hub repositories now in the default `values.yaml`.
 
 ## 2.0.0
 

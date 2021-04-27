@@ -8,8 +8,8 @@
 # kubectl port-forward deploy/your-deployment-kong 8001:8001 8002:8002
 
 image:
-  repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
-  tag: "2.3.2.0-alpine"
+  repository: kong/kong-gateway
+  tag: "2.3.3.2-alpine"
 
 admin:
   enabled: true
