@@ -33,6 +33,7 @@ spec:
     priority: 1
   validation:
     openAPIV3Schema:
+      type: object
       required:
       - plugin
       properties:
@@ -110,6 +111,7 @@ spec:
     priority: 1
   validation:
     openAPIV3Schema:
+      type: object
       required:
       - plugin
       properties:
@@ -180,6 +182,7 @@ spec:
     JSONPath: .metadata.creationTimestamp
   validation:
     openAPIV3Schema:
+      type: object
       properties:
         username:
           type: string
@@ -208,8 +211,10 @@ spec:
     - ki
   validation:
     openAPIV3Schema:
+      type: object
       properties:
         route:
+          type: object
           properties:
             methods:
               type: array
@@ -377,6 +382,7 @@ spec:
     JSONPath: .metadata.creationTimestamp
   validation:
     openAPIV3Schema:
+      type: object
       properties:
         apiVersion:
           type: string
