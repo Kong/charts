@@ -161,8 +161,6 @@ portalapi:
     konghq.com/protocol: "https"
 
   http:
-
-  http:
     enabled: true
     servicePort: 8004
     containerPort: 8004
