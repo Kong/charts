@@ -29,6 +29,11 @@ deployment:
   # initContainers:
   # - name: initcon
   #   image: initcon:latest
+  # hostAliases:
+  # - ip: "127.0.0.1"
+  #   hostnames:
+  #   - "foo.local"
+  #   - "bar.local"
   # userDefinedVolumes:
   # - name: "volumeName"
   #   emptyDir: {}
