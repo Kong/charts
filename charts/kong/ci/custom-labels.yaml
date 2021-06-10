@@ -1,5 +1,5 @@
 
-# install chart with custon labels
+# install chart with some extra labels
 
 extraLabels:
   acme.com/some-key: some-value
