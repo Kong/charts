@@ -671,7 +671,7 @@ For complete list of Kong configurations please check the
 
 #### The `labels` section
 
-The `labels` section can be used to configure some common labels that will be added to each of the Helm chart artefacts.
+The `labels` section can be used to configure some common labels that will be added to each Kubernetes object generated.
 
 An example to provide the environment used within the `acme.com` label scope.
 
