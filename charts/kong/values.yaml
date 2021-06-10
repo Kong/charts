@@ -70,6 +70,9 @@ env:
   portal_api_error_log: /dev/stderr
   prefix: /kong_prefix/
 
+# Specify labels to be applied globally
+labels: {}
+
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
