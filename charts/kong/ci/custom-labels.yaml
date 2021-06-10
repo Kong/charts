@@ -1,6 +1,6 @@
 
 # install chart with custon labels
 
-labels: {
-  acme.com/environment: development
-}
+extraLabels:
+  acme.com/some-key: some-value
+

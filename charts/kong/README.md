@@ -44,7 +44,7 @@ $ helm install kong/kong --generate-name
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
   - [The `env` section](#the-env-section)
-  - [The `labels` section](#the-labels-section)
+  - [The `extraLabels` section](#the-extralabels-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
   - [Prerequisites](#prerequisites-1)
     - [Kong Enterprise License](#kong-enterprise-license)
@@ -669,16 +669,15 @@ For complete list of Kong configurations please check the
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
 
-#### The `labels` section
+#### The `extraLabels` section
 
-The `labels` section can be used to configure some common labels that will be added to each of the Helm chart artefacts.
+The `extraLabels` section can be used to configure some extra labels that will be added to each Kubernetes object generated.
 
-An example to provide the environment used within the `acme.com` label scope.
+For example, you can add the `acme.com/some-key: some-value` label to each Kubernetes object by putting the following in your Helm values:
 
 ```yaml
-labels: {
-  acme.com/environment: development
-}
+extraLabels:
+  acme.com/some-key: some-value
 ```
 
 ## Kong Enterprise Parameters
