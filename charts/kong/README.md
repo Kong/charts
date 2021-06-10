@@ -673,7 +673,7 @@ For complete list of Kong configurations please check the
 
 The `labels` section can be used to configure some common labels that will be added to each of the Helm chart artefacts.
 
-An example to provide the enviroment used within the `acme.com` label scope.
+An example to provide the environment used within the `acme.com` label scope.
 
 ```yaml
 labels: {
