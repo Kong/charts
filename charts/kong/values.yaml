@@ -70,6 +70,9 @@ env:
   portal_api_error_log: /dev/stderr
   prefix: /kong_prefix/
 
+# This section can be used to configure some extra labels that will be added to each Kubernetes object generated.
+extraLabels: {}
+
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
