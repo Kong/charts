@@ -84,10 +84,12 @@ spec:
   - host: {{ $hostname }}
     http:
       paths:
-        - path: {{ $path }}
-          backend:
+        - backend:
             serviceName: {{ .fullName }}-{{ .serviceName }}
             servicePort: {{ $servicePort }}
+          {{- if $path }}
+          path: {{ $path }}
+          {{- end -}}
   {{- if (hasKey .ingress "tls") }}
   tls:
   - hosts:
