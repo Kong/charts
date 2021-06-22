@@ -166,7 +166,7 @@ spec:
     {{- if (and (or (eq $.type "LoadBalancer") (eq $.type "NodePort")) (not (empty .nodePort))) }}
     nodePort: {{ .nodePort }}
     {{- end }}
-    protocol: TCP
+    protocol: {{ .protocol }}
   {{- end }}
   {{- end }}
   {{- if .externalTrafficPolicy }}
@@ -255,12 +255,18 @@ Create KONG_STREAM_LISTEN string
     {{- $listenConfig := dict -}}
     {{- $listenConfig := merge $listenConfig . -}}
     {{- $_ := set $listenConfig "address" "0.0.0.0" -}}
+    {{- if (eq .protocol "UDP") -}}
+      {{/* You set NGINX stream listens to UDP using a parameter because reasons. Since our configuration
+           is dual-purpose for both the Service and listen string, we forcibly inject this parameter if
+           that's the Service protocol. */}}
+      {{- $_ := set $listenConfig "parameters" (append .parameters "udp") -}}
+    {{- end -}}
     {{- $unifiedListen = append $unifiedListen (include "kong.singleListen" $listenConfig ) -}}
   {{- end -}}
 
   {{- $listenString := ($unifiedListen | join ", ") -}}
   {{- if eq (len $listenString) 0 -}}
-    {{- $listenString = "off" -}}
+    {{- $listenString = "" -}}
   {{- end -}}
   {{- $listenString -}}
 {{- end -}}
@@ -607,7 +613,24 @@ the template that it itself is using form the above sections.
 
 {{- $_ := set $autoEnv "KONG_PROXY_LISTEN" (include "kong.listen" .Values.proxy) -}}
 
-{{- $_ := set $autoEnv "KONG_STREAM_LISTEN" (include "kong.streamListen" .Values.proxy) -}}
+{{- $streamStrings := list -}}
+{{- if .Values.proxy.enabled -}}
+  {{- $tcpStreamString := (include "kong.streamListen" .Values.proxy) -}}
+  {{- if (not (eq $tcpStreamString "")) -}}
+    {{- $streamStrings = (append $streamStrings $tcpStreamString) -}}
+  {{- end -}}
+{{- end -}}
+{{- if .Values.udpProxy.enabled -}}
+  {{- $udpStreamString := (include "kong.streamListen" .Values.udpProxy) -}}
+  {{- if (not (eq $udpStreamString "")) -}}
+    {{- $streamStrings = (append $streamStrings $udpStreamString) -}}
+  {{- end -}}
+{{- end -}}
+{{- $streamString := $streamStrings | join ", " -}}
+{{- if (eq (len $streamString) 0)  -}}
+  {{- $streamString = "off" -}}
+{{- end -}}
+{{- $_ := set $autoEnv "KONG_STREAM_LISTEN" $streamString -}}
 
 {{- $_ := set $autoEnv "KONG_STATUS_LISTEN" (include "kong.listen" .Values.status) -}}
 
