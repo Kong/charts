@@ -160,7 +160,7 @@ spec:
   {{- end }}
   {{- if (hasKey . "stream") }}
   {{- range .stream }}
-  - name: stream-{{ .containerPort }}
+  - name: stream-{{ if (eq .protocol "UDP") }}udp-{{ end }}{{ .containerPort }}
     port: {{ .servicePort }}
     targetPort: {{ .containerPort }}
     {{- if (and (or (eq $.type "LoadBalancer") (eq $.type "NodePort")) (not (empty .nodePort))) }}

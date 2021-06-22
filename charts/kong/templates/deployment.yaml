@@ -134,7 +134,15 @@ spec:
           {{- if .hostPort }}
           hostPort: {{ .hostPort }}
           {{- end}}
-          protocol: TCP
+          protocol: {{ .protocol }}
+        {{- end }}
+        {{- range .Values.udpProxy.stream }}
+        - name: stream-udp-{{ .containerPort }}
+          containerPort: {{ .containerPort }}
+          {{- if .hostPort }}
+          hostPort: {{ .hostPort }}
+          {{- end}}
+          protocol: {{ .protocol }}
         {{- end }}
         {{- if (and .Values.status.http.enabled .Values.status.enabled)}}
         - name: status
