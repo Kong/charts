@@ -160,13 +160,13 @@ spec:
   {{- end }}
   {{- if (hasKey . "stream") }}
   {{- range .stream }}
-  - name: stream-{{ if (eq .protocol "UDP") }}udp-{{ end }}{{ .containerPort }}
+  - name: stream-{{ if (eq (default .protocol "TCP") "UDP") }}udp-{{ end }}{{ .containerPort }}
     port: {{ .servicePort }}
     targetPort: {{ .containerPort }}
     {{- if (and (or (eq $.type "LoadBalancer") (eq $.type "NodePort")) (not (empty .nodePort))) }}
     nodePort: {{ .nodePort }}
     {{- end }}
-    protocol: {{ .protocol }}
+    protocol: {{ .protocol | default "TCP" }}
   {{- end }}
   {{- end }}
   {{- if .externalTrafficPolicy }}
@@ -255,10 +255,11 @@ Create KONG_STREAM_LISTEN string
     {{- $listenConfig := dict -}}
     {{- $listenConfig := merge $listenConfig . -}}
     {{- $_ := set $listenConfig "address" "0.0.0.0" -}}
-    {{- if (eq .protocol "UDP") -}}
-      {{/* You set NGINX stream listens to UDP using a parameter because reasons. Since our configuration
-           is dual-purpose for both the Service and listen string, we forcibly inject this parameter if
-           that's the Service protocol. */}}
+    {{/* You set NGINX stream listens to UDP using a parameter because reasons. Since our configuration
+         is dual-purpose for both the Service and listen string, we forcibly inject this parameter if
+         that's the Service protocol. The default handles configs that predate the addition of the
+         protocol field, where we only supported TCP. */}}
+    {{- if (eq (default .protocol "TCP") "UDP") -}}
       {{- $_ := set $listenConfig "parameters" (append .parameters "udp") -}}
     {{- end -}}
     {{- $unifiedListen = append $unifiedListen (include "kong.singleListen" $listenConfig ) -}}
