@@ -526,6 +526,12 @@ The name of the service used for the ingress controller's validation webhook
   - {{ $val }}
   {{- end }}
   {{- end }}
+  ports:
+  {{- if .Values.ingressController.admissionWebhook.enabled }}
+  - name: webhook
+    containerPort: {{ .Values.ingressController.admissionWebhook.port }}
+    protocol: TCP
+  {{- end }}  
   env:
   - name: POD_NAME
     valueFrom:
