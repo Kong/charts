@@ -160,11 +160,6 @@ spec:
           {{- end}}
           protocol: TCP
         {{- end }}
-        {{- if .Values.ingressController.admissionWebhook.enabled }}
-        - name: webhook
-          containerPort: {{ .Values.ingressController.admissionWebhook.port }}
-          protocol: TCP
-        {{- end }}
         {{- if .Values.enterprise.enabled }}
         {{- if (and .Values.manager.http.enabled .Values.manager.enabled) }}
         - name: manager
