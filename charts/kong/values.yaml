@@ -560,7 +560,6 @@ autoscaling:
 # Kong Pod Disruption Budget
 podDisruptionBudget:
   enabled: false
-  maxUnavailable: "50%"
 
 podSecurityPolicy:
   enabled: false
