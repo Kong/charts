@@ -368,11 +368,11 @@ ingressController:
     certificate:
       provided: false
     # Specifiy the secretName when the certificate is provided via a TLS secret
-    # secretName: "" 
-    # Specifiy the CA bundle of the provided certificate.  
+    # secretName: ""
+    # Specifiy the CA bundle of the provided certificate.
     # This is a PEM encoded CA bundle which will be used to validate the webhook certificate. If unspecified, system trust roots on the apiserver are used.
-    # ca: 
-    #   bundle: 
+    # ca:
+    #   bundle:
     #     | Add the CA bundle content here.
 
   ingressClass: kong
