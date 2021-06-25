@@ -409,7 +409,11 @@ The name of the service used for the ingress controller's validation webhook
 {{- if .Values.ingressController.admissionWebhook.enabled }}
 - name: webhook-cert
   secret:
+    {{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
     secretName: {{ template "kong.fullname" . }}-validation-webhook-keypair
+    {{- else }}
+    secretName: {{ .Values.ingressController.admissionWebhook.certificate.secretName }}
+    {{- end }}  
 {{- end }}
 {{- range $secretVolume := .Values.secretVolumes }}
 - name: {{ . }}
