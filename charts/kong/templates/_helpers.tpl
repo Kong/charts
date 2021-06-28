@@ -505,6 +505,8 @@ The name of the service used for the ingress controller's validation webhook
 - name: wait-for-db
   image: {{ include "kong.getRepoTag" .Values.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
+  securityContext:
+  {{ toYaml .Values.containerSecurityContext | nindent 4 }} 
   env:
   {{- include "kong.env" . | nindent 2 }}
 {{/* TODO: the rm command here is a workaround for https://github.com/Kong/charts/issues/295
@@ -520,6 +522,8 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- define "kong.controller-container" -}}
 - name: ingress-controller
+  securityContext:
+{{ toYaml .Values.containerSecurityContext | nindent 4 }}  
   args:
   - /kong-ingress-controller
   {{ if .Values.ingressController.args}}

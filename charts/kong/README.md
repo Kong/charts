@@ -631,6 +631,7 @@ For a complete list of all configuration values you can set in the
 | priorityClassName                  | Set pod scheduling priority class for Kong pods                                       | `""`                |
 | secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |
 | securityContext                    | Set the securityContext for Kong Pods                                                 | `{}`                |
+| containerSecurityContext           | Set the securityContext for Containers                                                | `{}`                |
 | serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | `false`             |
 | serviceMonitor.interval            | Scraping interval                                                                     | `30s`               |
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
