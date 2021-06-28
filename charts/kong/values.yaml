@@ -79,7 +79,7 @@ image:
   tag: "2.4"
   # Kong Enterprise
   # repository: kong/kong-gateway
-  # tag: "2.3.3.2-alpine"
+  # tag: "2.4.1.1-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -383,7 +383,7 @@ ingressController:
   enabled: true
   image:
     repository: kong/kubernetes-ingress-controller
-    tag: "1.2"
+    tag: "1.3"
   args: []
 
   # Specify Kong Ingress Controller configuration via environment variables
