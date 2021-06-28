@@ -255,10 +255,10 @@ Create KONG_STREAM_LISTEN string
     {{- $listenConfig := dict -}}
     {{- $listenConfig := merge $listenConfig . -}}
     {{- $_ := set $listenConfig "address" "0.0.0.0" -}}
-    {{/* You set NGINX stream listens to UDP using a parameter because reasons. Since our configuration
-         is dual-purpose for both the Service and listen string, we forcibly inject this parameter if
-         that's the Service protocol. The default handles configs that predate the addition of the
-         protocol field, where we only supported TCP. */}}
+    {{/* You set NGINX stream listens to UDP using a parameter due to historical reasons.
+         Our configuration is dual-purpose, for both the Service and listen string, so we
+         forcibly inject this parameter if that's the Service protocol. The default handles
+         configs that predate the addition of the protocol field, where we only supported TCP. */}}
     {{- if (eq (default .protocol "TCP") "UDP") -}}
       {{- $_ := set $listenConfig "parameters" (append .parameters "udp") -}}
     {{- end -}}
