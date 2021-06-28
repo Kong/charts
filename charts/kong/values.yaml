@@ -635,6 +635,9 @@ priorityClassName: ""
 # securityContext for Kong pods.
 securityContext: {}
 
+# securityContext for containers.
+containerSecurityContext: {}
+
 serviceMonitor:
   # Specifies whether ServiceMonitor for Prometheus operator should be created
   # If you wish to gather metrics from a Kong instance with the proxy disabled (such as a hybrid control plane), see:

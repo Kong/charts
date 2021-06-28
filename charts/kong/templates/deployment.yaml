@@ -91,6 +91,8 @@ spec:
       - name: "proxy"
         image: {{ include "kong.getRepoTag" .Values.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        securityContext:
+        {{ toYaml .Values.containerSecurityContext | nindent 10 }}  
         env:
         {{- include "kong.no_daemon_env" . | nindent 8 }}
         lifecycle:
