@@ -44,6 +44,7 @@ $ helm install kong/kong --generate-name
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
   - [The `env` section](#the-env-section)
+  - [The `extraLabels` section](#the-extralabels-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
   - [Prerequisites](#prerequisites-1)
     - [Kong Enterprise License](#kong-enterprise-license)
@@ -434,6 +435,11 @@ event you need to recover from unintended CRD deletion.
 
 The chart able to deploy initcontainers along with Kong. This can be very useful when require to setup additional custom initialization. The `deployment.initcontainers` field in values.yaml takes an array of objects that get appended as-is to the existing `spec.template.initContainers` array in the kong deployment resource. 
 
+### HostAliases
+
+The chart able to inject host aliases into containers. This can be very useful when require to resolve additional domain name which can't
+be looked-up directly from dns server. The `deployment.hostAliases` field in values.yaml takes an array of objects that set to `spec.template.hostAliases` field in the kong deployment resource.
+
 ### Sidecar Containers
 
 The chart can deploy additional containers along with the Kong and Ingress
@@ -471,7 +477,7 @@ directory.
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | image.repository                   | Kong image                                                                            | `kong`              |
-| image.tag                          | Kong image version                                                                    | `2.0`               |
+| image.tag                          | Kong image version                                                                    | `2.4`               |
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
 | replicaCount                       | Kong instance count. It has no effect when `autoscaling.enabled` is set to true         | `1`                 |
@@ -570,8 +576,8 @@ section of `values.yaml` file:
 | Parameter                          | Description                                                                           | Default                                                                      |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | enabled                            | Deploy the ingress controller, rbac and crd                                           | true                                                                         |
-| image.repository                   | Docker image with the ingress controller                                              | kong-docker-kubernetes-ingress-controller.bintray.io/kong-ingress-controller |
-| image.tag                          | Version of the ingress controller                                                     | 0.9.1                                                                        |
+| image.repository                   | Docker image with the ingress controller                                              | kong/kubernetes-ingress-controller |
+| image.tag                          | Version of the ingress controller                                                     | 1.2.0 |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
 | installCRDs                        | Creates managed CRDs.                                                                 | false
@@ -663,6 +669,17 @@ For complete list of Kong configurations please check the
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
 
+#### The `extraLabels` section
+
+The `extraLabels` section can be used to configure some extra labels that will be added to each Kubernetes object generated.
+
+For example, you can add the `acme.com/some-key: some-value` label to each Kubernetes object by putting the following in your Helm values:
+
+```yaml
+extraLabels:
+  acme.com/some-key: some-value
+```
+
 ## Kong Enterprise Parameters
 
 ### Overview
@@ -693,7 +710,7 @@ configuration can be placed under the `.env` key.
 
 Kong Enterprise 2.3+ can run with or without a license. If you wish to run 2.3+
 without a license, you can skip this step and leave `enterprise.license_secret`
-unset. Earlier versions require a license.
+unset. In this case only a limited subset of features will be available. Earlier versions require a license.
 
 If you have paid for a license, but you do not have a copy of yours, please
 contact Kong Support. Once you have it, you will need to store it in a Secret:

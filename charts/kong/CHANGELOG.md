@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.1.0
+
+### Improvements
+
+* Added support for user-defined volumes, volume mounts, and init containers.
+  ([#317](https://github.com/Kong/charts/pull/317))
+* Tolerations are now applied to migration Job Pods also.
+  ([#341](https://github.com/Kong/charts/pull/341))
+* Added support for using a DaemonSet instead of Deployment.
+  ([#347](https://github.com/Kong/charts/pull/347))
+* Updated default image versions and completed migration off Bintray
+  repositories.
+  ([#349](https://github.com/Kong/charts/pull/349))
+* PDB ignores migration Job Pods.
+  ([#352](https://github.com/Kong/charts/pull/352))
+
+### Documentation
+
+* Clarified service monitor usage information.
+  ([#345](https://github.com/Kong/charts/pull/345))
+
 ## 2.0.0
 
 ### Breaking changes

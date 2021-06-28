@@ -29,6 +29,11 @@ deployment:
   # initContainers:
   # - name: initcon
   #   image: initcon:latest
+  # hostAliases:
+  # - ip: "127.0.0.1"
+  #   hostnames:
+  #   - "foo.local"
+  #   - "bar.local"
   # userDefinedVolumes:
   # - name: "volumeName"
   #   emptyDir: {}
@@ -65,13 +70,16 @@ env:
   portal_api_error_log: /dev/stderr
   prefix: /kong_prefix/
 
+# This section can be used to configure some extra labels that will be added to each Kubernetes object generated.
+extraLabels: {}
+
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.3"
+  tag: "2.4"
   # Kong Enterprise
-  # repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
-  # tag: "2.3.2.0-alpine"
+  # repository: kong/kong-gateway
+  # tag: "2.3.3.2-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -186,7 +194,12 @@ proxy:
   # To specify annotations or labels for the proxy service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
-  #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  # If terminating TLS at the ELB, the following annotations can be used
+  # "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "*",
+  # "service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled": "true",
+  # "service.beta.kubernetes.io/aws-load-balancer-ssl-cert": "arn:aws:acm:REGION:ACCOUNT:certificate/XXXXXX-XXXXXXX-XXXXXXX-XXXXXXXX",
+  # "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "kong-tls-proxy",
+  # "service.beta.kubernetes.io/aws-load-balancer-type": "elb"
   labels:
     enable-metrics: "true"
 
@@ -205,8 +218,7 @@ proxy:
     enabled: true
     servicePort: 443
     containerPort: 8443
-    # Set a target port for the TLS port in proxy service, useful when using TLS
-    # termination on an ELB.
+    # Set a target port for the TLS port in proxy service
     # overrideServiceTargetPort: 8000
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32443
@@ -332,7 +344,7 @@ ingressController:
   enabled: true
   image:
     repository: kong/kubernetes-ingress-controller
-    tag: "1.1"
+    tag: "1.2"
   args: []
 
   # Specify Kong Ingress Controller configuration via environment variables
@@ -548,7 +560,9 @@ autoscaling:
 # Kong Pod Disruption Budget
 podDisruptionBudget:
   enabled: false
-  maxUnavailable: "50%"
+  # Uncomment only one of the following when enabled is set to true
+  # maxUnavailable: "50%"
+  # minUnavailable: "50%"
 
 podSecurityPolicy:
   enabled: false

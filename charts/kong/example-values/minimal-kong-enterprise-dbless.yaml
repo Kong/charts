@@ -3,8 +3,8 @@
 # Secrets. These Secrets must be created before installation.
 
 image:
-  repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
-  tag: "2.3.2.0-alpine"
+  repository: kong/kong-gateway
+  tag: "2.3.3.2-alpine"
 
 enterprise:
   enabled: true
