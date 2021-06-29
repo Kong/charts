@@ -371,9 +371,8 @@ ingressController:
     # secretName: ""
     # Specifiy the CA bundle of the provided certificate.
     # This is a PEM encoded CA bundle which will be used to validate the webhook certificate. If unspecified, system trust roots on the apiserver are used.
-    # ca:
-    #   bundle:
-    #     | Add the CA bundle content here.
+    # caBundle:
+    #   | Add the CA bundle content here.
 
   ingressClass: kong
 
