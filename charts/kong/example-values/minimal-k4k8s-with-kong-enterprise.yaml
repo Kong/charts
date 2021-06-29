@@ -9,7 +9,7 @@
 
 image:
   repository: kong/kong-gateway
-  tag: "2.3.3.2-alpine"
+  tag: "2.4.1.1-alpine"
 
 admin:
   enabled: true

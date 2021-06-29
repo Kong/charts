@@ -505,6 +505,7 @@ individual services: see values.yaml for their individual default values.
 
 `SVC` below can be substituted with each of:
 * `proxy`
+* `udpProxy`
 * `admin`
 * `manager`
 * `portal`
@@ -524,6 +525,10 @@ only.
 authentication, which cannot pass through an ingress proxy). `clustertelemetry`
 is similar, and used when Vitals is enabled on Kong Enterprise control plane
 nodes.
+
+`udpProxy` is used for UDP stream listens (Kubernetes does not yet support
+mixed TCP/UDP LoadBalancer Services). It _does not_ support the `http`, `tls`,
+or `ingress` sections, as it is used only for stream listens.
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
@@ -558,10 +563,11 @@ nodes.
 #### Stream listens
 
 The proxy configuration additionally supports creating stream listens. These
-are configured using an array of objects under `proxy.stream`:
+are configured using an array of objects under `proxy.stream` and `udpProxy.stream`:
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| protocol                           | The listen protocol, either "TCP" or "UDP"                                            |                     |
 | containerPort                      | Container port to use for a stream listen                                             |                     |
 | servicePort                        | Service port to use for a stream listen                                               |                     |
 | nodePort                           | Node port to use for a stream listen                                                  |                     |

@@ -79,7 +79,7 @@ image:
   tag: "2.4"
   # Kong Enterprise
   # repository: kong/kong-gateway
-  # tag: "2.3.3.2-alpine"
+  # tag: "2.4.1.1-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -230,12 +230,17 @@ proxy:
   # To enable, remove "{}", uncomment the section below, and select your desired
   # ports and parameters. Listens are dynamically named after their servicePort,
   # e.g. "stream-9000" for the below.
+  # Note: although you can select the protocol here, you cannot set UDP if you
+  # use a LoadBalancer Service due to limitations in current Kubernetes versions.
+  # To proxy both TCP and UDP with LoadBalancers, you must enable the udpProxy Service
+  # in the next section and place all UDP stream listen configuration under it.
   stream: {}
     #   # Set the container (internal) and service (external) ports for this listen.
     #   # These values should normally be the same. If your environment requires they
     #   # differ, note that Kong will match routes based on the containerPort only.
     # - containerPort: 9000
     #   servicePort: 9000
+    #   protocol: TCP
     #   # Optionally set a static nodePort if the service type is NodePort
     #   # nodePort: 32080
     #   # Additional listen parameters, e.g. "ssl", "reuseport", "backlog=16384"
@@ -259,6 +264,40 @@ proxy:
 
   # Optionally specify a static load balancer IP.
   # loadBalancerIP:
+
+# Specify Kong UDP proxy service configuration
+# Currently, LoadBalancer type Services are generally limited to a single transport protocol
+# Multi-protocol Services are an alpha feature as of Kubernetes 1.20:
+# https://kubernetes.io/docs/concepts/services-networking/service/#load-balancers-with-mixed-protocol-types
+# You should enable this Service if you proxy UDP traffic, and configure UDP stream listens under it
+udpProxy:
+  # Enable creating a Kubernetes service for UDP proxying
+  enabled: false
+  type: LoadBalancer
+  # To specify annotations or labels for the proxy service, add them to the respective
+  # "annotations" or "labels" dictionaries below.
+  annotations: {}
+  #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  labels: {}
+  # Optionally specify a static load balancer IP.
+  # loadBalancerIP:
+
+  # Define stream (UDP) listen
+  # To enable, remove "{}", uncomment the section below, and select your desired
+  # ports and parameters. Listens are dynamically named after their servicePort,
+  # e.g. "stream-9000" for the below.
+  stream: {}
+    #   # Set the container (internal) and service (external) ports for this listen.
+    #   # These values should normally be the same. If your environment requires they
+    #   # differ, note that Kong will match routes based on the containerPort only.
+    # - containerPort: 9000
+    #   servicePort: 9000
+    #   protocol: UDP
+    #   # Optionally set a static nodePort if the service type is NodePort
+    #   # nodePort: 32080
+    #   # Additional listen parameters, e.g. "ssl", "reuseport", "backlog=16384"
+    #   # "ssl" is required for SNI-based routes. It is not supported on versions <2.0
+    #   parameters: []
 
 # Custom Kong plugins can be loaded into Kong by mounting the plugin code
 # into the file-system of Kong container.
@@ -344,7 +383,7 @@ ingressController:
   enabled: true
   image:
     repository: kong/kubernetes-ingress-controller
-    tag: "1.2"
+    tag: "1.3"
   args: []
 
   # Specify Kong Ingress Controller configuration via environment variables
