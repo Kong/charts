@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [2.2.0](#220)
 - [2.1.0](#210)
 - [2.0.0](#200)
 - [1.14.0](#1140)
@@ -57,6 +58,19 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 2.2.0
+
+### Changes to pod disruption budget defaults
+
+Prior to 2.2.0, the default values.yaml included
+`podDisruptionBudget.maxUnavailable: 50%`. This prevented setting
+`podDisruptionBudget.minUnavailable` at all. To allow use of
+`podDisruptionBudget.minUnavailable`, we have removed the
+`podDisruptionBudget.maxUnavailable` default. If you previously relied on this
+default (you set `podDisruptionBudget.enabled: true` but did not set
+`podDisruptionBudget.maxUnavailable`), you now must explicitly set
+`podDisruptionBudget.maxUnavailable: 50%` in your values.yaml.
 
 ## 2.1.0
 
