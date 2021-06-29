@@ -101,7 +101,7 @@ installing the chart:
 
 - Set `enterprise.enabled` to `true` in `values.yaml` file.
 - Update values.yaml to use a Kong Enterprise image.
-- Satisfy the two  prerequsisites below for
+- Satisfy the two prerequisites below for
   [Enterprise License](#kong-enterprise-license) and
   [Enterprise Docker Registry](#kong-enterprise-docker-registry-access).
 - (Optional) [set a `password` environment variable](#rbac) to create the
@@ -668,7 +668,7 @@ kong:
          secretKeyRef:
             key: kong
             name: postgres
-  nginx_worker_processes: "2"
+     nginx_worker_processes: "2"
 ```
 
 For complete list of Kong configurations please check the
@@ -697,7 +697,7 @@ you need to do the following:
 
 - Set `enterprise.enabled` to `true` in `values.yaml` file.
 - Update values.yaml to use a Kong Enterprise image.
-- Satisfy the two prerequsisites below for Enterprise License and
+- Satisfy the two prerequisites below for Enterprise License and
   Enterprise Docker Registry.
 - (Optional) [set a `password` environment variable](#rbac) to create the
   initial super-admin. Though not required, this is recommended for users that
@@ -815,7 +815,7 @@ as it contains an HMAC key.
 Kong Manager's session configuration must be configured via values.yaml,
 whereas this is optional for the Developer Portal on versions 0.36+. Providing
 Portal session configuration in values.yaml provides the default session
-configuration, which can be overriden on a per-workspace basis.
+configuration, which can be overridden on a per-workspace basis.
 
 ```
 $ cat admin_gui_session_conf
