@@ -52,7 +52,9 @@ webhooks:
     {{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
     caBundle: {{ b64enc $caCert }}
     {{- else }}
-    caBundle: {{ b64enc .Values.ingressController.admissionWebhook.certificate.ca.bundle }}
+    {{- if .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    caBundle: {{ b64enc .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    {{- end }}    
     {{- end }}
     service:
       name: {{ template "kong.service.validationWebhook" . }}
