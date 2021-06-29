@@ -1,20 +1,26 @@
-{{- if .Values.ingressController.admissionWebhook.enabled -}}
+{{- if .Values.ingressController.admissionWebhook.enabled }}
+{{- $certCert := "" -}}
+{{- $certKey := "" -}}
+{{- $caCert := "" -}}
+{{- $caKey := "" -}}
+{{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
 {{- $cn := printf "%s.%s.svc" ( include "kong.service.validationWebhook" . ) ( include "kong.namespace" . ) -}}
 {{- $ca := genCA "kong-admission-ca" 3650 -}}
 {{- $cert := genSignedCert $cn nil (list $cn) 3650 $ca -}}
-{{- $certCert := $cert.Cert -}}
-{{- $certKey := $cert.Key -}}
-{{- $caCert := $ca.Cert -}}
-{{- $caKey := $ca.Key -}}
-
+{{- $certCert = $cert.Cert -}}
+{{- $certKey = $cert.Key -}}
+{{- $caCert = $ca.Cert -}}
+{{- $caKey = $ca.Key -}}
+ 
 {{- $caSecret := (lookup "v1" "Secret" (include "kong.namespace" .) (printf "%s-validation-webhook-ca-keypair" (include "kong.fullname" .))) -}}
 {{- $certSecret := (lookup "v1" "Secret" (include "kong.namespace" .) (printf "%s-validation-webhook-keypair" (include "kong.fullname" .))) -}}
-{{- if $certSecret -}}
+{{- if $certSecret }}
 {{- $certCert = (b64dec (get $certSecret.data "tls.crt")) -}}
 {{- $certKey = (b64dec (get $certSecret.data "tls.key")) -}}
 {{- $caCert = (b64dec (get $caSecret.data "tls.crt")) -}}
 {{- $caKey = (b64dec (get $caSecret.data "tls.key")) -}}
-{{- end -}}
+{{- end }}
+{{- end }}
 kind: ValidatingWebhookConfiguration
 {{- if .Capabilities.APIVersions.Has "admissionregistration.k8s.io/v1" }}
 apiVersion: admissionregistration.k8s.io/v1
@@ -43,7 +49,13 @@ webhooks:
     - kongconsumers
     - kongplugins
   clientConfig:
+    {{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
     caBundle: {{ b64enc $caCert }}
+    {{- else }}
+    {{- if .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    caBundle: {{ b64enc .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    {{- end }}    
+    {{- end }}
     service:
       name: {{ template "kong.service.validationWebhook" . }}
       namespace: {{ template "kong.namespace" . }}
@@ -64,6 +76,7 @@ spec:
   selector:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: app
+{{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
 ---
 apiVersion: v1
 kind: Secret
@@ -88,4 +101,5 @@ type: kubernetes.io/tls
 data:
   tls.crt: {{ b64enc $certCert }}
   tls.key: {{ b64enc $certKey }}
-{{ end }}
+{{- end }}
+{{- end }}
