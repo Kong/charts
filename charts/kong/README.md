@@ -611,6 +611,7 @@ For a complete list of all configuration values you can set in the
 | deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
 | deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |
+| automountServiceAccountToken       | Set this to `true` to mount service account token                                     | `false`             |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
 | autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
 | autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |
