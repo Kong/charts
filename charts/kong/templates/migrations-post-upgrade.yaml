@@ -30,6 +30,7 @@ spec:
       {{- end }}
       {{- end }}
     spec:
+      automountServiceAccountToken: {{ .Values.automountServiceAccountToken }}
       {{- if .Values.podSecurityPolicy.enabled }}
       serviceAccountName: {{ template "kong.serviceAccountName" . }}
       {{- end }}
