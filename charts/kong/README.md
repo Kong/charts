@@ -44,6 +44,7 @@ $ helm install kong/kong --generate-name
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
   - [The `env` section](#the-env-section)
+  - [The `extraLabels` section](#the-extralabels-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
   - [Prerequisites](#prerequisites-1)
     - [Kong Enterprise License](#kong-enterprise-license)
@@ -100,7 +101,7 @@ installing the chart:
 
 - Set `enterprise.enabled` to `true` in `values.yaml` file.
 - Update values.yaml to use a Kong Enterprise image.
-- Satisfy the two  prerequsisites below for
+- Satisfy the two prerequisites below for
   [Enterprise License](#kong-enterprise-license) and
   [Enterprise Docker Registry](#kong-enterprise-docker-registry-access).
 - (Optional) [set a `password` environment variable](#rbac) to create the
@@ -434,6 +435,11 @@ event you need to recover from unintended CRD deletion.
 
 The chart able to deploy initcontainers along with Kong. This can be very useful when require to setup additional custom initialization. The `deployment.initcontainers` field in values.yaml takes an array of objects that get appended as-is to the existing `spec.template.initContainers` array in the kong deployment resource. 
 
+### HostAliases
+
+The chart able to inject host aliases into containers. This can be very useful when require to resolve additional domain name which can't
+be looked-up directly from dns server. The `deployment.hostAliases` field in values.yaml takes an array of objects that set to `spec.template.hostAliases` field in the kong deployment resource.
+
 ### Sidecar Containers
 
 The chart can deploy additional containers along with the Kong and Ingress
@@ -499,6 +505,7 @@ individual services: see values.yaml for their individual default values.
 
 `SVC` below can be substituted with each of:
 * `proxy`
+* `udpProxy`
 * `admin`
 * `manager`
 * `portal`
@@ -518,6 +525,10 @@ only.
 authentication, which cannot pass through an ingress proxy). `clustertelemetry`
 is similar, and used when Vitals is enabled on Kong Enterprise control plane
 nodes.
+
+`udpProxy` is used for UDP stream listens (Kubernetes does not yet support
+mixed TCP/UDP LoadBalancer Services). It _does not_ support the `http`, `tls`,
+or `ingress` sections, as it is used only for stream listens.
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
@@ -552,10 +563,11 @@ nodes.
 #### Stream listens
 
 The proxy configuration additionally supports creating stream listens. These
-are configured using an array of objects under `proxy.stream`:
+are configured using an array of objects under `proxy.stream` and `udpProxy.stream`:
 
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| protocol                           | The listen protocol, either "TCP" or "UDP"                                            |                     |
 | containerPort                      | Container port to use for a stream listen                                             |                     |
 | servicePort                        | Service port to use for a stream listen                                               |                     |
 | nodePort                           | Node port to use for a stream listen                                                  |                     |
@@ -584,6 +596,9 @@ section of `values.yaml` file:
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
 | admissionWebhook.failurePolicy     | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)      | Fail                                                                         |
 | admissionWebhook.port              | The port the ingress controller will listen on for admission webhooks                 | 8080                                                                         |
+| admissionWebhook.certificate.provided   | Whether to generate the admission webhook certificate if not provided            | false                                                                        |
+| admissionWebhook.certificate.secretName | Name of the TLS secret for the provided webhook certificate                      |                                                                            |
+| admissionWebhook.certificate.caBundle   | PEM encoded CA bundle which will be used to validate the provided webhook certificate |                                                                            |
 
 For a complete list of all configuration values you can set in the
 `env` section, please read the Kong Ingress Controller's
@@ -625,6 +640,7 @@ For a complete list of all configuration values you can set in the
 | priorityClassName                  | Set pod scheduling priority class for Kong pods                                       | `""`                |
 | secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |
 | securityContext                    | Set the securityContext for Kong Pods                                                 | `{}`                |
+| containerSecurityContext           | Set the securityContext for Containers                                                | `{}`                |
 | serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | `false`             |
 | serviceMonitor.interval            | Scraping interval                                                                     | `30s`               |
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
@@ -655,13 +671,24 @@ kong:
          secretKeyRef:
             key: kong
             name: postgres
-  nginx_worker_processes: "2"
+     nginx_worker_processes: "2"
 ```
 
 For complete list of Kong configurations please check the
 [Kong configuration docs](https://docs.konghq.com/latest/configuration).
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
+
+#### The `extraLabels` section
+
+The `extraLabels` section can be used to configure some extra labels that will be added to each Kubernetes object generated.
+
+For example, you can add the `acme.com/some-key: some-value` label to each Kubernetes object by putting the following in your Helm values:
+
+```yaml
+extraLabels:
+  acme.com/some-key: some-value
+```
 
 ## Kong Enterprise Parameters
 
@@ -673,7 +700,7 @@ you need to do the following:
 
 - Set `enterprise.enabled` to `true` in `values.yaml` file.
 - Update values.yaml to use a Kong Enterprise image.
-- Satisfy the two prerequsisites below for Enterprise License and
+- Satisfy the two prerequisites below for Enterprise License and
   Enterprise Docker Registry.
 - (Optional) [set a `password` environment variable](#rbac) to create the
   initial super-admin. Though not required, this is recommended for users that
@@ -693,7 +720,7 @@ configuration can be placed under the `.env` key.
 
 Kong Enterprise 2.3+ can run with or without a license. If you wish to run 2.3+
 without a license, you can skip this step and leave `enterprise.license_secret`
-unset. Earlier versions require a license.
+unset. In this case only a limited subset of features will be available. Earlier versions require a license.
 
 If you have paid for a license, but you do not have a copy of yours, please
 contact Kong Support. Once you have it, you will need to store it in a Secret:
@@ -791,7 +818,7 @@ as it contains an HMAC key.
 Kong Manager's session configuration must be configured via values.yaml,
 whereas this is optional for the Developer Portal on versions 0.36+. Providing
 Portal session configuration in values.yaml provides the default session
-configuration, which can be overriden on a per-workspace basis.
+configuration, which can be overridden on a per-workspace basis.
 
 ```
 $ cat admin_gui_session_conf

@@ -55,6 +55,7 @@ spec:
         {{ toYaml .Values.podLabels | nindent 8 }}
         {{- end }}
     spec:
+      automountServiceAccountToken: {{ .Values.ingressController.enabled }}
       {{- if .Values.priorityClassName }}
       priorityClassName: "{{ .Values.priorityClassName }}"
       {{- end }}
@@ -76,6 +77,10 @@ spec:
         {{- include "kong.wait-for-db" . | nindent 6 }}
         {{- end }}
       {{- end }}
+      {{- if .Values.deployment.hostAliases }}
+      hostAliases:
+        {{- toYaml .Values.deployment.hostAliases | nindent 6 }}
+      {{- end}}
       containers:
       {{- if .Values.ingressController.enabled }}
       {{- include "kong.controller-container" . | nindent 6 }}
@@ -87,6 +92,8 @@ spec:
       - name: "proxy"
         image: {{ include "kong.getRepoTag" .Values.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        securityContext:
+        {{ toYaml .Values.containerSecurityContext | nindent 10 }}  
         env:
         {{- include "kong.no_daemon_env" . | nindent 8 }}
         lifecycle:
@@ -130,7 +137,15 @@ spec:
           {{- if .hostPort }}
           hostPort: {{ .hostPort }}
           {{- end}}
-          protocol: TCP
+          protocol: {{ .protocol }}
+        {{- end }}
+        {{- range .Values.udpProxy.stream }}
+        - name: stream-udp-{{ .containerPort }}
+          containerPort: {{ .containerPort }}
+          {{- if .hostPort }}
+          hostPort: {{ .hostPort }}
+          {{- end}}
+          protocol: {{ .protocol }}
         {{- end }}
         {{- if (and .Values.status.http.enabled .Values.status.enabled)}}
         - name: status
@@ -154,11 +169,6 @@ spec:
           {{- if .Values.cluster.tls.hostPort }}
           hostPort: {{ .Values.cluster.tls.hostPort }}
           {{- end}}
-          protocol: TCP
-        {{- end }}
-        {{- if .Values.ingressController.admissionWebhook.enabled }}
-        - name: webhook
-          containerPort: {{ .Values.ingressController.admissionWebhook.port }}
           protocol: TCP
         {{- end }}
         {{- if .Values.enterprise.enabled }}
