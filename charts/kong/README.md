@@ -43,8 +43,8 @@ $ helm install kong/kong --generate-name
     - [Kong Service Parameters](#kong-service-parameters)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
-  - [The `env` section](#the-env-section)
-  - [The `extraLabels` section](#the-extralabels-section)
+    - [The `env` section](#the-env-section)
+    - [The `extraLabels` section](#the-extralabels-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
   - [Prerequisites](#prerequisites-1)
     - [Kong Enterprise License](#kong-enterprise-license)
@@ -646,6 +646,8 @@ For a complete list of all configuration values you can set in the
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
 | serviceMonitor.labels              | ServiceMonitor labels                                                                 | `{}`                |
 | serviceMonitor.targetLabels        | ServiceMonitor targetLabels                                                           | `{}`                |
+| serviceMonitor.honorLabels         | ServiceMonitor honorLabels                                                            | `{}`                |
+| serviceMonitor.metricRelabelings   | ServiceMonitor metricRelabelings                                                      | `{}`                |
 | extraConfigMaps                    | ConfigMaps to add to mounted volumes                                                  | `[]`                |
 | extraSecrets                       | Secrets to add to mounted volumes                                                     | `[]`                |
 
