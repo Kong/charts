@@ -578,8 +578,6 @@ deploymentAnnotations:
   kuma.io/gateway: enabled
   traffic.sidecar.istio.io/includeInboundPorts: ""
 
-automountServiceAccountToken: false
-
 # Enable autoscaling using HorizontalPodAutoscaler
 # When configuring an HPA, you must set resource requests on all containers via
 # "resources" and, if using the controller, "ingressController.resources" in values.yaml
