@@ -18,6 +18,12 @@ spec:
     {{- if .Values.serviceMonitor.interval }}
     interval: {{ .Values.serviceMonitor.interval }}
     {{- end }}
+    {{- if .Values.serviceMonitor.honorLabels }}
+    honorLabels: true
+    {{- end }}
+    {{- if .Values.serviceMonitor.metricRelabelings }}
+    metricRelabelings: {{ toYaml .Values.serviceMonitor.metricRelabelings | nindent 6 }}
+    {{- end }}
   jobLabel: {{ .Release.Name }}
   namespaceSelector:
     matchNames:

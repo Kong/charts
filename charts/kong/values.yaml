@@ -659,6 +659,9 @@ serviceMonitor:
   # targetLabels:
   #   - foo
 
+  # honorLabels: false
+  # metricRelabelings: []
+
 # -----------------------------------------------------------------------------
 # Kong Enterprise parameters
 # -----------------------------------------------------------------------------
