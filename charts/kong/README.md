@@ -22,30 +22,38 @@ $ helm install kong/kong --generate-name
 - [Prerequisites](#prerequisites)
 - [Install](#install)
 - [Uninstall](#uninstall)
-- [Kong Enterprise](#kong-enterprise)
 - [FAQs](#faqs)
+- [Kong Enterprise](#kong-enterprise)
 - [Deployment Options](#deployment-options)
   - [Database](#database)
+    - [DB-less deployment](#db-less-deployment)
+    - [Using the Postgres sub-chart](#using-the-postgres-sub-chart)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
   - [Standalone controller nodes](#standalone-controller-nodes)
   - [Hybrid mode](#hybrid-mode)
+    - [Certificates](#certificates)
+    - [Control plane node configuration](#control-plane-node-configuration)
+    - [Data plane node configuration](#data-plane-node-configuration)
   - [CRD management](#crd-management)
-  - [InitContainers](#initContainers)
-  - [Sidecar containers](#sidecar-containers)
+  - [InitContainers](#initcontainers)
+  - [HostAliases](#hostaliases)
+  - [Sidecar Containers](#sidecar-containers)
   - [User Defined Volumes](#user-defined-volumes)
   - [User Defined Volume Mounts](#user-defined-volume-mounts)
   - [Using a DaemonSet](#using-a-daemonset)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
-  - [Kong Parameters](#kong-parameters)
+  - [Kong parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
+    - [Stream listens](#stream-listens)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
-  - [The `env` section](#the-env-section)
-  - [The `extraLabels` section](#the-extralabels-section)
+    - [The `env` section](#the-env-section)
+    - [The `extraLabels` section](#the-extralabels-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
+  - [Overview](#overview)
   - [Prerequisites](#prerequisites-1)
     - [Kong Enterprise License](#kong-enterprise-license)
     - [Kong Enterprise Docker registry access](#kong-enterprise-docker-registry-access)
@@ -101,7 +109,7 @@ installing the chart:
 
 - Set `enterprise.enabled` to `true` in `values.yaml` file.
 - Update values.yaml to use a Kong Enterprise image.
-- Satisfy the two  prerequsisites below for
+- Satisfy the two prerequisites below for
   [Enterprise License](#kong-enterprise-license) and
   [Enterprise Docker Registry](#kong-enterprise-docker-registry-access).
 - (Optional) [set a `password` environment variable](#rbac) to create the
@@ -596,6 +604,9 @@ section of `values.yaml` file:
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
 | admissionWebhook.failurePolicy     | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)      | Fail                                                                         |
 | admissionWebhook.port              | The port the ingress controller will listen on for admission webhooks                 | 8080                                                                         |
+| admissionWebhook.certificate.provided   | Whether to generate the admission webhook certificate if not provided            | false                                                                        |
+| admissionWebhook.certificate.secretName | Name of the TLS secret for the provided webhook certificate                      |                                                                            |
+| admissionWebhook.certificate.caBundle   | PEM encoded CA bundle which will be used to validate the provided webhook certificate |                                                                            |
 
 For a complete list of all configuration values you can set in the
 `env` section, please read the Kong Ingress Controller's
@@ -643,6 +654,8 @@ For a complete list of all configuration values you can set in the
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
 | serviceMonitor.labels              | ServiceMonitor labels                                                                 | `{}`                |
 | serviceMonitor.targetLabels        | ServiceMonitor targetLabels                                                           | `{}`                |
+| serviceMonitor.honorLabels         | ServiceMonitor honorLabels                                                            | `{}`                |
+| serviceMonitor.metricRelabelings   | ServiceMonitor metricRelabelings                                                      | `{}`                |
 | extraConfigMaps                    | ConfigMaps to add to mounted volumes                                                  | `[]`                |
 | extraSecrets                       | Secrets to add to mounted volumes                                                     | `[]`                |
 
@@ -668,7 +681,7 @@ kong:
          secretKeyRef:
             key: kong
             name: postgres
-  nginx_worker_processes: "2"
+     nginx_worker_processes: "2"
 ```
 
 For complete list of Kong configurations please check the
@@ -697,7 +710,7 @@ you need to do the following:
 
 - Set `enterprise.enabled` to `true` in `values.yaml` file.
 - Update values.yaml to use a Kong Enterprise image.
-- Satisfy the two prerequsisites below for Enterprise License and
+- Satisfy the two prerequisites below for Enterprise License and
   Enterprise Docker Registry.
 - (Optional) [set a `password` environment variable](#rbac) to create the
   initial super-admin. Though not required, this is recommended for users that
@@ -815,7 +828,7 @@ as it contains an HMAC key.
 Kong Manager's session configuration must be configured via values.yaml,
 whereas this is optional for the Developer Portal on versions 0.36+. Providing
 Portal session configuration in values.yaml provides the default session
-configuration, which can be overriden on a per-workspace basis.
+configuration, which can be overridden on a per-workspace basis.
 
 ```
 $ cat admin_gui_session_conf

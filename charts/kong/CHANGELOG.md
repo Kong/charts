@@ -1,5 +1,52 @@
 # Changelog
 
+## 2.2.0
+
+### Breaking changes
+
+* Removed default `maxUnavailable` setting for pod disruption budget
+  configuration. This is necessary to allow usage of the `minUnavailable`
+  setting, but means that there is no longer any default availability
+  constraint. If you set `podDisruptionBudget.enabled=true` in your values and
+  did not previously set any `podDisruptionBudget.maxUnavailable` value, you
+  must add `podDisruptionBudget.maxUnavailable="50%"` to your values.
+
+### Improvements
+
+* Added host alias injection to override DNS and/or add DNS entries not
+  available from the DNS resolver.
+  ([#366](https://github.com/Kong/charts/pull/366))
+* Added support for custom labels.
+  ([#370](https://github.com/Kong/charts/pull/370))
+* Only add paths to Ingresses if configured, for OpenShift 4.x compatibility.
+  ([#375](https://github.com/Kong/charts/pull/375))
+* Kong containers no longer the image ENTRYPOINT. This allows the stock image
+  bootstrap scripts to run normally.
+  ([#377](https://github.com/Kong/charts/pull/377))
+* Added security context settings for containers.
+  ([#387](https://github.com/Kong/charts/pull/387))
+* Bumped Kong and controller image defaults to the latest versions.
+  ([#378](https://github.com/Kong/charts/pull/378))
+* Added support for user-provided admission webhook certificates.
+  ([#385](https://github.com/Kong/charts/pull/385))
+* Disable service account tokens when it is unnecessary.
+  ([#389](https://github.com/Kong/charts/pull/389))
+
+### Fixed
+
+* Admission webhook port is now listed under the controller container, where
+  the admission webhook runs.
+  ([#384](https://github.com/Kong/charts/pull/384))
+
+### Documentation
+
+* Removed a duplicate key from example values.
+  ([#360](https://github.com/Kong/charts/pull/360))
+* Clarified Enterprise free mode usage.
+  ([#362](https://github.com/Kong/charts/pull/362))
+* Expand EKS Service annotation examples for proxy.
+  ([#376](https://github.com/Kong/charts/pull/375))
+
 ## 2.1.0
 
 ### Improvements
