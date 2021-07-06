@@ -1,18 +1,14 @@
-name: Lint and Test Charts
+name: Release Charts
 
 on:
-  push:
-    branches-ignore:
-    - 'main'
-    - 'kong-1.x'
   pull_request:
-    branches-ignore:
-    - 'main'
+    branches:
+      - main
 
 jobs:
   lint-test:
     env:
-      COMMON_CT_ARGS: "--chart-repos bitnami=https://charts.bitnami.com/bitnami --remote origin --target-branch next"
+      COMMON_CT_ARGS: "--chart-repos bitnami=https://charts.bitnami.com/bitnami --remote origin --target-branch main"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,7 +37,7 @@ jobs:
           fi
 
       - name: Run chart-testing (lint)
-        run: ct lint $COMMON_CT_ARGS --check-version-increment=false
+        run: ct lint $COMMON_CT_ARGS
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.2.0
