@@ -738,16 +738,16 @@ Kong is going to be deployed.
 Kong Enterprise versions 2.2 and earlier use a private Docker registry and
 require a pull secret. **If you use 2.3 or newer, you can skip this step.**
 
-You should have received credentials to log into https://bintray.com/kong after
+You should have received credentials to log into docker hub after
 purchasing Kong Enterprise. After logging in, you can retrieve your API key
 from \<your username\> \> Edit Profile \> API Key. Use this to create registry
 secrets:
 
 ```bash
 $ kubectl create secret docker-registry kong-enterprise-edition-docker \
-    --docker-server=kong-docker-kong-enterprise-edition-docker.bintray.io \
-    --docker-username=<your-bintray-username@kong> \
-    --docker-password=<your-bintray-api-key>
+    --docker-server=hub.docker.io \
+    --docker-username=<username-provided-to-you> \
+    --docker-password=<password-provided-to-you>
 secret/kong-enterprise-edition-docker created
 ```
 
