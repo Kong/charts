@@ -6,8 +6,8 @@ on:
     - 'main'
     - 'kong-1.x'
   pull_request:
-    branches:
-    - '**'
+    branches-ignore:
+    - 'main'
 
 jobs:
   lint-test:
