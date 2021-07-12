@@ -1,0 +1,25 @@
+name: Integration Tests
+
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - 'main'
+      - 'next'
+    tags:
+      - '*'
+
+jobs:
+  integration-test-dbless:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repository
+      uses: actions/checkout@v2
+    - name: setup testing environment
+      run: scripts/setup-test-cluster.sh
+      shell: bash
+    - name: run integration tests
+      run: scripts/run-tests.sh
+      shell: bash
