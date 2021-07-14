@@ -67,7 +67,7 @@ kind: Pod
 metadata:
   name: "{{ .Release.Name }}-test-ingress"
   annotations:
-    "helm.sh/hook": test-success
+    "helm.sh/hook": test
 spec:
   restartPolicy: OnFailure
   containers:
@@ -82,7 +82,7 @@ kind: Pod
 metadata:
   name: "{{ .Release.Name }}-test-ingress-v1beta1"
   annotations:
-    "helm.sh/hook": test-success
+    "helm.sh/hook": test
 spec:
   restartPolicy: OnFailure
   containers:
