@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
 # ------------------------------------------------------------------------------
-# test-run.sh
+# test-kick-2.x-upgrade.sh
 #
-# This script performs a `helm install` of all charts in the repository and runs
-# the chart tests for each of them.
-#
-# Note: This script assumes you've created an environment with the adjacent
-#       script "test-env.sh" and have a running Kubernetes cluster configured in
-#       your local environment.
+# This script is temporary: in the timeframe between 1.x and 2.x KIC
+# releases this script was made to validate that upgrading to the
+# latest pre-release image was functional, once 2.0 releases fully
+# this script will be removed because all tests thereafter will be
+# running on that version and it's lineage.
 # ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
@@ -34,10 +33,25 @@ kubectl cluster-info --context kind-${TEST_ENV_NAME} 1>/dev/null
 KUBERNETES_VERSION="$(kubectl version -o json | jq -r '.serverVersion.gitVersion')"
 
 # ------------------------------------------------------------------------------
+# Determine the latest KIC 2.x Pre-Release Version
+# ------------------------------------------------------------------------------
+
+BASE="kong/kubernetes-ingress-controller"
+LATEST_PRERELEASE=$(curl -s https://api.github.com/repos/${BASE}/releases | \
+    jq -r '.[] | select(.tag_name | test("^2.[0-9]+.[0-9]+")) | .name' | head -1)
+
+if [ "$LATEST_PRERELEASE" = "" ]; then
+    echo "Error: could not find latest release for ${BASE}!${LATEST_PRERELEASE}"
+    exit 1
+fi
+
+echo "INFO: the latest release of ${BASE} v2.x was determined to be ${LATEST_PRERELEASE}"
+
+# ------------------------------------------------------------------------------
 # Setup Chart Cleanup - Kubernetes Ingress Controller
 # ------------------------------------------------------------------------------
 
-RELEASE_NAME="chart-tests"
+RELEASE_NAME="chart-tests-prerelease-compat"
 RELEASE_NAMESPACE="$(uuidgen)"
 
 function cleanup() {
@@ -60,6 +74,20 @@ helm install --create-namespace --namespace ${RELEASE_NAMESPACE} ${RELEASE_NAME}
 
 # ------------------------------------------------------------------------------
 # Test Chart - Kubernetes Ingress Controller
+# ------------------------------------------------------------------------------
+
+echo "INFO: running helm tests for all charts on Kubernetes ${KUBERNETES_VERSION}"
+helm test --namespace ${RELEASE_NAMESPACE} ${RELEASE_NAME}
+
+# ------------------------------------------------------------------------------
+# Upgrade Chart Image To v2.x
+# ------------------------------------------------------------------------------
+
+echo "INFO: upgrading the helm chart to latest pre-release image ${LATEST_PRERELEASE}"
+helm upgrade --namespace ${RELEASE_NAMESPACE} --set ingressController.image.tag=${LATEST_PRERELEASE} ${RELEASE_NAME} ./
+
+# ------------------------------------------------------------------------------
+# Test Upgraded Chart
 # ------------------------------------------------------------------------------
 
 echo "INFO: running helm tests for all charts on Kubernetes ${KUBERNETES_VERSION}"
