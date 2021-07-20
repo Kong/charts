@@ -39,12 +39,18 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint $COMMON_CT_ARGS
 
-      - name: Create kind cluster
-        uses: helm/kind-action@v1.2.0
+      - name: setup testing environment (kind-cluster)
+        run: ./scripts/test-env.sh
         if: steps.list-changed.outputs.changed == 'true'
 
-      - name: Run chart-testing (install)
+      - name: run chart-testing (install)
         run: ct install $COMMON_CT_ARGS
+
+      - name: run integration tests (integration)
+        run: ./scripts/test-run.sh
+
+      - name: cleanup integration tests (cleanup)
+        run: ./scripts/test-env.sh cleanup
   release:
     needs: lint-test
     runs-on: ubuntu-latest
