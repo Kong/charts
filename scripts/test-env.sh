@@ -16,15 +16,8 @@
 # Environment Variables
 # ------------------------------------------------------------------------------
 
-if [[ -z $TEST_ENV_NAME ]]
-then
-    TEST_ENV_NAME="kong-charts-tests"
-fi
-
-if [[ -z $KIND_VERSION ]]
-then
-    KIND_VERSION="v0.11.1"
-fi
+TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
+KIND_VERSION="${KIND_VERSION:-v0.11.1}"
 
 if [[ ! -z $1 ]]
 then

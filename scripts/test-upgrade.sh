@@ -14,25 +14,10 @@
 # Environment Variables
 # ------------------------------------------------------------------------------
 
-if [[ -z $TEST_ENV_NAME ]]
-then
-    TEST_ENV_NAME="kong-charts-tests"
-fi
-
-if [[ -z $TAG ]]
-then
-    TAG="next-railgun"
-fi
-
-if [[ -z $RELEASE_NAME ]]
-then
-    RELEASE_NAME="chart-tests-upgrade-compat"
-fi
-
-if [[ -z $RELEASE_NAMESPACE ]]
-then
-    RELEASE_NAMESPACE="$(uuidgen)"
-fi
+TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
+TAG="${TAG:-next-railgun}"
+RELEASE_NAME="${RELEASE_NAME:-chart-tests-upgrade-compat}"
+RELEASE_NAMESPACE="${RELEASE_NAMESPACE:-$(uuidgen)}"
 
 # ------------------------------------------------------------------------------
 # Shell Configuration

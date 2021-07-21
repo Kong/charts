@@ -14,10 +14,7 @@
 # Environment Variables
 # ------------------------------------------------------------------------------
 
-if [[ -z $TEST_ENV_NAME ]]
-then
-    TEST_ENV_NAME="kong-charts-tests"
-fi
+TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
 
 # ------------------------------------------------------------------------------
 # Shell Configuration
