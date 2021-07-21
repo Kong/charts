@@ -19,11 +19,11 @@
 TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
 KIND_VERSION="${KIND_VERSION:-v0.11.1}"
 
-if [[ ! -z $1 ]]
+if [[ -n $1 ]]
 then
     if [[ "$1" == "cleanup" ]]
     then
-        ktf environments delete --name ${TEST_ENV_NAME}
+        ktf environments delete --name "${TEST_ENV_NAME}"
         exit $?
     fi
 fi
@@ -55,7 +55,7 @@ docker info 1>/dev/null
 # ensure kind command is accessible
 if ! command -v kind &> /dev/null
 then
-    go get -v sigs.k8s.io/kind@${KIND_VERSION}
+    go get -v sigs.k8s.io/kind@"${KIND_VERSION}"
 fi
 
 # ensure kind is functional
@@ -68,7 +68,7 @@ kind version 1>/dev/null
 # ensure ktf command is accessible
 if ! command -v ktf 1>/dev/null
 then
-    mkdir -p ${HOME}/.local/bin
+    mkdir -p "${HOME}"/.local/bin
     curl --proto '=https' -sSf https://kong.github.io/kubernetes-testing-framework/install.sh | bash
     export PATH="${HOME}/.local/bin:$PATH"
 fi
@@ -81,7 +81,7 @@ ktf 1>/dev/null
 # ------------------------------------------------------------------------------
 
 function cleanup() {
-    ktf environments delete --name ${TEST_ENV_NAME}
+    ktf environments delete --name "${TEST_ENV_NAME}"
     exit 1
 }
 
@@ -91,4 +91,4 @@ trap cleanup SIGTERM SIGINT
 # Create Testing Environment
 # ------------------------------------------------------------------------------
 
-ktf environments create --name ${TEST_ENV_NAME} --addon metallb
+ktf environments create --name "${TEST_ENV_NAME}" --addon metallb
