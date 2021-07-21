@@ -26,13 +26,6 @@ fi
 set -euo pipefail
 
 # ------------------------------------------------------------------------------
-# Kubernetes Cluster Setup
-# ------------------------------------------------------------------------------
-
-kubectl cluster-info --context kind-${TEST_ENV_NAME} 1>/dev/null
-KUBERNETES_VERSION="$(kubectl version -o json | jq -r '.serverVersion.gitVersion')"
-
-# ------------------------------------------------------------------------------
 # Determine the latest KIC 2.x Pre-Release Version
 # ------------------------------------------------------------------------------
 
@@ -48,47 +41,9 @@ fi
 echo "INFO: the latest release of ${BASE} v2.x was determined to be ${LATEST_PRERELEASE}"
 
 # ------------------------------------------------------------------------------
-# Setup Chart Cleanup - Kubernetes Ingress Controller
+# Run Upgrade Tests
 # ------------------------------------------------------------------------------
 
-RELEASE_NAME="chart-tests-prerelease-compat"
-RELEASE_NAMESPACE="$(uuidgen)"
+echo "INFO: running upgrade test to ${LATEST_PRERELEASE}"
 
-function cleanup() {
-    echo "INFO: cleaning up helm release ${RELEASE_NAME}"
-    helm delete --namespace ${RELEASE_NAMESPACE} ${RELEASE_NAME}
-    kubectl delete namespace ${RELEASE_NAMESPACE}
-    kubectl delete clusterrole ${RELEASE_NAME}-kong
-    exit 1
-}
-
-trap cleanup SIGINT SIGKILL
-
-# ------------------------------------------------------------------------------
-# Deploy Chart - Kubernetes Ingress Controller
-# ------------------------------------------------------------------------------
-
-cd charts/kong/
-echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
-helm install --create-namespace --namespace ${RELEASE_NAMESPACE} ${RELEASE_NAME} ./
-
-# ------------------------------------------------------------------------------
-# Test Chart - Kubernetes Ingress Controller
-# ------------------------------------------------------------------------------
-
-echo "INFO: running helm tests for all charts on Kubernetes ${KUBERNETES_VERSION}"
-helm test --namespace ${RELEASE_NAMESPACE} ${RELEASE_NAME}
-
-# ------------------------------------------------------------------------------
-# Upgrade Chart Image To v2.x
-# ------------------------------------------------------------------------------
-
-echo "INFO: upgrading the helm chart to latest pre-release image ${LATEST_PRERELEASE}"
-helm upgrade --namespace ${RELEASE_NAMESPACE} --set ingressController.image.tag=${LATEST_PRERELEASE} ${RELEASE_NAME} ./
-
-# ------------------------------------------------------------------------------
-# Test Upgraded Chart
-# ------------------------------------------------------------------------------
-
-echo "INFO: running helm tests for all charts on Kubernetes ${KUBERNETES_VERSION}"
-helm test --namespace ${RELEASE_NAMESPACE} ${RELEASE_NAME}
+RELEASE_NAME="chart-test-v2-upgrade" TEST_ENV_NAME=${TEST_ENV_NAME} TAG=${LATEST_PRERELEASE} ./scripts/test-upgrade.sh
