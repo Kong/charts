@@ -55,6 +55,9 @@ jobs:
       - name: run upgrade integration tests (integration-upgrade)
         run: ./scripts/test-upgrade.sh
 
+      - name: run crds integration tests (integration-crds)
+        run: ./scripts/test-crds.sh
+
       # TODO: these are specifically in place in the interim between v1.x
       #       and the upcoming v2.x release to add some extra checking to
       #       ensure our chart and our pre-releases are compatible, and there
