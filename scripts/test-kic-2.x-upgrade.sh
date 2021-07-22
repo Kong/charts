@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ------------------------------------------------------------------------------
-# test-kick-2.x-upgrade.sh
+# test-kic-2.x-upgrade.sh
 #
 # This script is temporary: in the timeframe between 1.x and 2.x KIC
 # releases this script was made to validate that upgrading to the
