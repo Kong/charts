@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.3.0 (not yet released)
+
+### Breaking Changes
+
+* Upgraded CRDs to V1 from the previous deprecated v1beta1.
+  [#391](https://github.com/kong/charts/issues/391)
+  ACTION REQUIRED: This is a breaking change as it makes
+  this chart incompatible with Kubernetes clusters older
+  than v1.16.x. Upgrade your cluster to a version greater
+  than or equal to v1.16 before installing.
+  Note that technically it will remain possible to deploy
+  on older clusters by managing the CRDs manually ahead of
+  time (e.g. intentionally deploying the legacy CRDs) but
+  these configurations will be considered unsupported.
+  [upgrade](https://kubernetes.io/docs/tasks/administer-cluster/cluster-upgrade/)
+  ACTION REQUIRED: For existing deployments Helm avoids managing
+  CRDs so when upgrading from a previous release you will need
+  to apply the new V1 versions of the CRDs (in `crds/`) manually.
+  [hip-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md)
+
 ## 2.2.0
 
 ### Breaking changes
