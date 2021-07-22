@@ -52,7 +52,8 @@ trap cleanup SIGINT
 
 cd charts/kong/
 echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
-helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" ./
+helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
+    --set deployment.test.enabled=true ./
 
 # ------------------------------------------------------------------------------
 # Test Chart - Kubernetes Ingress Controller
@@ -66,7 +67,8 @@ helm test --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}"
 # ------------------------------------------------------------------------------
 
 echo "INFO: upgrading the helm chart to image tag ${TAG}"
-helm upgrade --namespace "${RELEASE_NAMESPACE}" --set ingressController.image.tag="${TAG}" "${RELEASE_NAME}" ./
+helm upgrade --namespace "${RELEASE_NAMESPACE}" --set ingressController.image.tag="${TAG}" "${RELEASE_NAME}" \
+    --set deployment.test.enabled=true ./
 
 # ------------------------------------------------------------------------------
 # Test Upgraded Chart
