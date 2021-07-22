@@ -11,49 +11,28 @@
 # ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
-# Environment Variables
-# ------------------------------------------------------------------------------
-
-TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
-TAG="${TAG:-next-railgun}"
-RELEASE_NAME="${RELEASE_NAME:-chart-tests-upgrade-compat}"
-RELEASE_NAMESPACE="${RELEASE_NAMESPACE:-$(uuidgen)}"
-
-# ------------------------------------------------------------------------------
-# Shell Configuration
+# Configuration
 # ------------------------------------------------------------------------------
 
 set -euo pipefail
 
-# ------------------------------------------------------------------------------
-# Kubernetes Cluster Setup
-# ------------------------------------------------------------------------------
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/.."
 
-kubectl cluster-info --context kind-"${TEST_ENV_NAME}" 1>/dev/null
-KUBERNETES_VERSION="$(kubectl version -o json | jq -r '.serverVersion.gitVersion')"
-
-# ------------------------------------------------------------------------------
-# Setup Chart Cleanup - Kubernetes Ingress Controller
-# ------------------------------------------------------------------------------
-
-function cleanup() {
-    echo "INFO: cleaning up helm release ${RELEASE_NAME}"
-    helm delete --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}"
-    kubectl delete namespace "${RELEASE_NAMESPACE}"
-    kubectl delete clusterrole "${RELEASE_NAME}"-kong
-    exit 1
-}
-
-trap cleanup SIGINT
+TAG="${TAG:-next-railgun}"
+RELEASE_NAME="${RELEASE_NAME:-chart-tests-upgrade-compat}"
+RELEASE_NAMESPACE="${RELEASE_NAMESPACE:-$(uuidgen)}"
+TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
+KUBECTL="kubectl --context kind-${TEST_ENV_NAME}"
+KUBERNETES_VERSION="$($KUBECTL version -o json | jq -r '.serverVersion.gitVersion')"
 
 # ------------------------------------------------------------------------------
 # Deploy Chart - Kubernetes Ingress Controller
 # ------------------------------------------------------------------------------
 
-cd charts/kong/
 echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
 helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-    --set deployment.test.enabled=true ./
+    --set deployment.test.enabled=true charts/kong/
 
 # ------------------------------------------------------------------------------
 # Test Chart - Kubernetes Ingress Controller
@@ -68,7 +47,7 @@ helm test --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}"
 
 echo "INFO: upgrading the helm chart to image tag ${TAG}"
 helm upgrade --namespace "${RELEASE_NAMESPACE}" --set ingressController.image.tag="${TAG}" "${RELEASE_NAME}" \
-    --set deployment.test.enabled=true ./
+    --set deployment.test.enabled=true charts/kong/
 
 # ------------------------------------------------------------------------------
 # Test Upgraded Chart
