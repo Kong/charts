@@ -35,7 +35,7 @@ KUBERNETES_VERSION="$(kubectl version -o json | jq -r '.serverVersion.gitVersion
 # Setup Chart Cleanup - Kubernetes Ingress Controller
 # ------------------------------------------------------------------------------
 
-RELEASE_NAME="chart-tests-$(uuidgen)"
+RELEASE_NAME="chart-tests-${RANDOM}"
 RELEASE_NAMESPACE="$(uuidgen)"
 
 function cleanup() {
