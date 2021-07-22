@@ -40,6 +40,9 @@ deployment:
   # userDefinedVolumeMounts:
   # - name: "volumeName"
   #   mountPath: "/opt/user/dir/mount"
+  test:
+    # Enable creation of test resources for use with "helm test"
+    enabled: false
 
 # Override namepsace for Kong chart resources. By default, the chart creates resources in the release namespace.
 # This may not be desirable when using this chart as a dependency.
