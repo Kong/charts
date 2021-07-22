@@ -62,8 +62,14 @@ jobs:
       #       Once v2.0 has released and become a standard part of the chart
       #       we can remove this or change the upgrade tests in whatever way
       #       seems to fit.
-      - name: run prerelease upgrade compatibility tests (integration-prerelease)
-        run: ./scripts/test-kic-2.x-upgrade.sh
+
+      - name: run prerelease deployment tests (v2-deploy)
+        run: ./scripts/test-v2-deploy.sh
+
+      - name: run prerelease upgrade compatibility tests (v2-upgrade)
+        run: ./scripts/test-v2-upgrade.sh
+
+      # </TODO>
 
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
