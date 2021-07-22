@@ -52,5 +52,18 @@ jobs:
       - name: run integration tests (integration)
         run: ./scripts/test-run.sh
 
+      - name: run upgrade integration tests (integration-upgrade)
+        run: ./scripts/test-upgrade.sh
+
+      # TODO: these are specifically in place in the interim between v1.x
+      #       and the upcoming v2.x release to add some extra checking to
+      #       ensure our chart and our pre-releases are compatible, and there
+      #       are no regressions with our charts in between pre-releases.
+      #       Once v2.0 has released and become a standard part of the chart
+      #       we can remove this or change the upgrade tests in whatever way
+      #       seems to fit.
+      - name: run prerelease upgrade compatibility tests (integration-prerelease)
+        run: ./scripts/test-kic-2.x-upgrade.sh
+
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
