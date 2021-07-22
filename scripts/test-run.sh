@@ -31,6 +31,12 @@ set -euo pipefail
 kubectl cluster-info --context kind-"${TEST_ENV_NAME}" 1>/dev/null
 KUBERNETES_VERSION="$(kubectl version -o json | jq -r '.serverVersion.gitVersion')"
 
+# TODO: this is a temporary shim to deploy the v1beta1.UDPIngress CRD and it will
+#       be removed in a follow up issue once v1 CRDs are supported by the chart.
+#
+#       See: https://github.com/Kong/charts/issues/391
+kubectl apply -f  https://raw.githubusercontent.com/Kong/kubernetes-ingress-controller/next/railgun/config/crd/bases/configuration.konghq.com_udpingresses.yaml
+
 # ------------------------------------------------------------------------------
 # Setup Chart Cleanup - Kubernetes Ingress Controller
 # ------------------------------------------------------------------------------
