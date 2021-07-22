@@ -16,6 +16,7 @@
 # ------------------------------------------------------------------------------
 
 TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
+TAG="${TAG:-default}"
 
 # ------------------------------------------------------------------------------
 # Shell Configuration
@@ -34,7 +35,7 @@ KUBERNETES_VERSION="$(kubectl version -o json | jq -r '.serverVersion.gitVersion
 # Setup Chart Cleanup - Kubernetes Ingress Controller
 # ------------------------------------------------------------------------------
 
-RELEASE_NAME="chart-tests"
+RELEASE_NAME="chart-tests-$(uuidgen)"
 RELEASE_NAMESPACE="$(uuidgen)"
 
 function cleanup() {
@@ -52,8 +53,16 @@ trap cleanup SIGINT
 # ------------------------------------------------------------------------------
 
 cd charts/kong/
-echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
-helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" ./
+
+if [[ "${TAG}" == "default" ]]
+then
+    echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
+    helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" ./
+else
+    echo "INFO: installing chart as release ${RELEASE_NAME} with controller tag ${TAG} to namespace ${RELEASE_NAMESPACE}"
+    helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" \
+        --set ingressController.image.tag="${TAG}" "${RELEASE_NAME}" ./
+fi
 
 # ------------------------------------------------------------------------------
 # Test Chart - Kubernetes Ingress Controller
