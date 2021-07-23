@@ -49,6 +49,25 @@ jobs:
       - name: run chart-testing (install)
         run: ct install $COMMON_CT_ARGS
 
+      - name: cleanup integration tests (cleanup)
+        run: ./scripts/test-env.sh cleanup
+
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: setup helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.2.4
+
+      - name: setup testing environment (kind-cluster)
+        run: ./scripts/test-env.sh
+
       - name: run integration tests (integration)
         run: ./scripts/test-run.sh
 
