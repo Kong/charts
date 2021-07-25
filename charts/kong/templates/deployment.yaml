@@ -71,7 +71,7 @@ spec:
       {{- if (or (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) .Values.deployment.initContainers) }}
       initContainers:
         {{- if .Values.deployment.initContainers }}
-        {{- tpl (toYaml .Values.deployment.initContainers) . | nindent 6 }}
+        {{- toYaml .Values.deployment.initContainers | nindent 6 }}
         {{- end }}
         {{- if (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) }}
         {{- include "kong.wait-for-db" . | nindent 6 }}

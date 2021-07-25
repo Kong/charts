@@ -369,7 +369,7 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- define "kong.userDefinedVolumes" -}}
 {{- if .Values.deployment.userDefinedVolumes }}
-{{- tpl (toYaml .Values.deployment.userDefinedVolumes) . }}
+{{- toYaml .Values.deployment.userDefinedVolumes }}
 {{- end }}
 {{- end -}}
 
@@ -441,7 +441,7 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- define "kong.userDefinedVolumeMounts" -}}
 {{- if .Values.deployment.userDefinedVolumeMounts }}
-{{- tpl (toYaml .Values.deployment.userDefinedVolumeMounts) . }}
+{{- toYaml .Values.deployment.userDefinedVolumeMounts }}
 {{- end }}
 {{- end -}}
 
