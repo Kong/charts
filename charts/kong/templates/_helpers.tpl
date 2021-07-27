@@ -348,6 +348,7 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
 {{- if (not (eq (len .Values.ingressController.watchNamespaces) 0)) }}
   {{- $_ := set $autoEnv "CONTROLLER_WATCH_NAMESPACE" (.Values.ingressController.watchNamespaces | join ",") -}}
+  {{- $_ := set $autoEnv "CONTROLLER_CONTROLLER_KONGCLUSTERPLUGIN" "disabled" -}}
 {{- end }}
 
 {{/*
