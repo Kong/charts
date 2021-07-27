@@ -389,6 +389,13 @@ ingressController:
     tag: "1.3"
   args: []
 
+  # Specify individual namespaces to watch for ingress configuration. By default,
+  # when no namespaces are set, the controller watches all namespaces and uses a
+  # ClusterRole to grant access to Kubernetes resources. When you list specific
+  # namespaces, the controller will watch those namespaces only and will create
+  # namespaced-scoped Roles for each of them. Requires controller 2.0.0 or newer.
+  watchNamespaces: []
+
   # Specify Kong Ingress Controller configuration via environment variables
   env:
     # The controller disables TLS verification by default because Kong

@@ -1,9 +1,13 @@
 # This tests the following unrelated aspects of Ingress Controller
 # - ingressController deploys with a database
+# - ingressController deploys with specific watch namespaces
 # - stream listens work
 ingressController:
   enabled: true
   installCRDs: false
+  watchNamespaces:
+  - foo
+  - bar
   env:
     anonymous_reports: "false"
 postgresql:
