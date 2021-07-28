@@ -334,6 +334,12 @@ secretVolumes: []
 
 # Enable/disable migration jobs, and set annotations for them
 migrations:
+  # include additional argument in migration job
+  addtionalArgs: ""
+  # include additional argument in pre-upgrade migration job
+  additionalPreUpgradeArgs: ""
+  # include additional argument in post-upgrade migration job
+  additionalPostUpgradeArgs: ""
   # Enable pre-upgrade migrations (run "kong migrations up")
   preUpgrade: true
   # Enable post-upgrade migrations (run "kong migrations finish")
