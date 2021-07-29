@@ -1,6 +1,6 @@
 {{- if or .Values.deployment.kong.enabled .Values.ingressController.enabled }}
 apiVersion: apps/v1
-{{- if .Values.deployment.kong.daemonset }}
+{{- if .Values.deployment.daemonset }}
 kind: DaemonSet
 {{- else }}
 kind: Deployment

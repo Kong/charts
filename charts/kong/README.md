@@ -623,8 +623,8 @@ For a complete list of all configuration values you can set in the
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | namespace                          | Namespace to deploy chart resources                                                   |                     |
 | deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
-| deployment.kong.daemonset          | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.initContainers          | Create initContainers. Please go to Kubernetes doc for the spec of the initContainers |                     |
+| deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
 | deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
