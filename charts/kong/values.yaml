@@ -19,8 +19,6 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
-    # Use a DaemonSet controller instead of a Deployment controller
-    daemonset: false
   ## Optionally specify any extra sidecar containers to be included in the deployment
   ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
   # sidecarContainers:
@@ -43,6 +41,8 @@ deployment:
   test:
     # Enable creation of test resources for use with "helm test"
     enabled: false
+  # Use a DaemonSet controller instead of a Deployment controller
+  daemonset: false
 
 # Override namepsace for Kong chart resources. By default, the chart creates resources in the release namespace.
 # This may not be desirable when using this chart as a dependency.
