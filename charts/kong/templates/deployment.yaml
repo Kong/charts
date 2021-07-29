@@ -1,6 +1,6 @@
 {{- if or .Values.deployment.kong.enabled .Values.ingressController.enabled }}
 apiVersion: apps/v1
-{{- if .Values.deployment.daemonset }}
+{{- if .Values.deployment.kong.daemonset }}
 kind: DaemonSet
 {{- else }}
 kind: Deployment
@@ -81,6 +81,13 @@ spec:
       hostAliases:
         {{- toYaml .Values.deployment.hostAliases | nindent 6 }}
       {{- end}}
+      {{- if .Values.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.dnsConfig | indent 8 }}
+      {{- end }}
       containers:
       {{- if .Values.ingressController.enabled }}
       {{- include "kong.controller-container" . | nindent 6 }}

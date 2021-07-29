@@ -658,6 +658,20 @@ securityContext: {}
 # securityContext for containers.
 containerSecurityContext: {}
 
+## Optional DNS configuration for Kong pods
+# dnsPolicy: ClusterFirst
+# dnsConfig:
+#   nameservers:
+#   - "10.100.0.10"
+#   options:
+#   - name: ndots
+#     value: "5"
+#   searches:
+#   - default.svc.cluster.local
+#   - svc.cluster.local
+#   - cluster.local
+#   - us-east-1.compute.internal
+
 serviceMonitor:
   # Specifies whether ServiceMonitor for Prometheus operator should be created
   # If you wish to gather metrics from a Kong instance with the proxy disabled (such as a hybrid control plane), see:

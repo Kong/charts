@@ -472,6 +472,10 @@ controller](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/
 instead of a Deployment controller. This runs a Kong Pod on every kubelet in
 the Kubernetes cluster.
 
+### Using dnsPolicy and dnsConfig
+
+The chart able to inject custom DNS configuration into containers. This can be useful when you have EKS cluster with [NodeLocal DNSCache](https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/) configured and attach AWS security groups directly to pod using [security groups for pods feature](https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html).
+
 ### Example configurations
 
 Several example values.yaml are available in the
@@ -619,8 +623,8 @@ For a complete list of all configuration values you can set in the
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | namespace                          | Namespace to deploy chart resources                                                   |                     |
 | deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
+| deployment.kong.daemonset          | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.initContainers          | Create initContainers. Please go to Kubernetes doc for the spec of the initContainers |                     |
-| deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
 | deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
@@ -641,6 +645,8 @@ For a complete list of all configuration values you can set in the
 | podLabels                          | Labels to add to each pod                                                             | `{}`                |
 | resources                          | Pod resource requests & limits                                                        | `{}`                |
 | tolerations                        | List of node taints to tolerate                                                       | `[]`                |
+| dnsPolicy                          | Pod dnsPolicy                                                                         |                     |
+| dnsConfig                          | Pod dnsConfig                                                                         |                     |
 | podDisruptionBudget.enabled        | Enable PodDisruptionBudget for Kong                                                   | `false`             |
 | podDisruptionBudget.maxUnavailable | Represents the minimum number of Pods that can be unavailable (integer or percentage) | `50%`               |
 | podDisruptionBudget.minAvailable   | Represents the number of Pods that must be available (integer or percentage)          |                     |
