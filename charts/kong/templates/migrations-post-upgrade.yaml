@@ -57,7 +57,7 @@ spec:
         {{ toYaml .Values.containerSecurityContext | nindent 10 }} 
         env:
         {{- include "kong.no_daemon_env" . | nindent 8 }}
-        args: [ "/bin/sh", "-c", "kong migrations finish" ]
+        args: [ "kong", "migrations", "finish" ]
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 8 }}
         {{- include "kong.userDefinedVolumeMounts" . | nindent 8 }}
