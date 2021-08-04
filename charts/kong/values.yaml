@@ -387,6 +387,12 @@ ingressController:
   image:
     repository: kong/kubernetes-ingress-controller
     tag: "1.3"
+    # Optionally set a semantic version for version-gated features. This can normally
+    # be left unset. You only need to set this if your tag is not a semver string,
+    # such as when you are using a "next" tag. Set this to the effective semantic
+    # version of your tag: for example if using a "next" image for an unreleased 3.1.0
+    # version, set this to "3.1.0".
+    effectiveSemver:
   args: []
 
   # Specify individual namespaces to watch for ingress configuration. By default,

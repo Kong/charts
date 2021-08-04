@@ -540,7 +540,12 @@ kong.controller2xplus returns "true" if the controller image tag major version i
 Note that this is a string, not a boolean, because templates vov
 */}}
 {{- define "kong.controller2xplus" -}}
-{{- $version := semver .Values.ingressController.image.tag -}}
+{{- $version := "" -}}
+{{- if .Values.ingressController.image.effectiveSemver -}}
+  {{- $version = semver .Values.ingressController.image.effectiveSemver -}}
+{{- else -}}
+  {{- $version = semver .Values.ingressController.image.tag -}}
+{{- end -}}
 {{- ge $version.Major 2 -}}
 {{- end -}}
 
