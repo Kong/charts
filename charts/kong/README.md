@@ -596,6 +596,7 @@ section of `values.yaml` file:
 | enabled                            | Deploy the ingress controller, rbac and crd                                           | true                                                                         |
 | image.repository                   | Docker image with the ingress controller                                              | kong/kubernetes-ingress-controller |
 | image.tag                          | Version of the ingress controller                                                     | 1.2.0 |
+| image.effectiveSemver              | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version | |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
 | installCRDs                        | Creates managed CRDs.                                                                 | false

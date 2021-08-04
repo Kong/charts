@@ -20,6 +20,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
 TAG="${TAG:-next-railgun}"
+EFFECTIVE_TAG="2.0.0"
 RELEASE_NAME="${RELEASE_NAME:-chart-tests-upgrade-compat}"
 RELEASE_NAMESPACE="${RELEASE_NAMESPACE:-$(uuidgen)}"
 TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
@@ -47,7 +48,7 @@ helm test --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}"
 
 echo "INFO: upgrading the helm chart to image tag ${TAG}"
 helm upgrade --namespace "${RELEASE_NAMESPACE}" --set ingressController.image.tag="${TAG}" "${RELEASE_NAME}" \
-    --set deployment.test.enabled=true charts/kong/
+    --set deployment.test.enabled=true --set ingressController.image.effectiveSemver="${EFFECTIVE_TAG}" charts/kong/
 
 # ------------------------------------------------------------------------------
 # Test Upgraded Chart

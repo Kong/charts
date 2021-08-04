@@ -535,7 +535,22 @@ The name of the service used for the ingress controller's validation webhook
   {{- toYaml .Values.resources | nindent 4 }}
 {{- end -}}
 
+{{/*
+kong.controller2xplus returns "true" if the controller image tag major version is >= 2
+Note that this is a string, not a boolean, because templates vov
+*/}}
+{{- define "kong.controller2xplus" -}}
+{{- $version := "" -}}
+{{- if .Values.ingressController.image.effectiveSemver -}}
+  {{- $version = semver .Values.ingressController.image.effectiveSemver -}}
+{{- else -}}
+  {{- $version = semver .Values.ingressController.image.tag -}}
+{{- end -}}
+{{- ge $version.Major 2 -}}
+{{- end -}}
+
 {{- define "kong.controller-container" -}}
+{{- $controllerIs2xPlus := include "kong.controller2xplus" . -}}
 - name: ingress-controller
   securityContext:
 {{ toYaml .Values.containerSecurityContext | nindent 4 }}  
@@ -550,6 +565,11 @@ The name of the service used for the ingress controller's validation webhook
   {{- if .Values.ingressController.admissionWebhook.enabled }}
   - name: webhook
     containerPort: {{ .Values.ingressController.admissionWebhook.port }}
+    protocol: TCP
+  {{- end }}
+  {{ if (eq $controllerIs2xPlus "true") -}}
+  - name: cmetrics
+    containerPort: 10255
     protocol: TCP
   {{- end }}
   env:
