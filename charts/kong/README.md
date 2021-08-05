@@ -489,7 +489,7 @@ directory.
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | image.repository                   | Kong image                                                                            | `kong`              |
-| image.tag                          | Kong image version                                                                    | `2.4`               |
+| image.tag                          | Kong image version                                                                    | `2.5`               |
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
 | replicaCount                       | Kong instance count. It has no effect when `autoscaling.enabled` is set to true         | `1`                 |
