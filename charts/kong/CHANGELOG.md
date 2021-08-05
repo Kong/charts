@@ -1,5 +1,62 @@
 # Changelog
 
+## 2.3.0
+
+### Breaking Changes
+
+* Upgraded CRDs to V1 from the previous deprecated v1beta1.
+  [#391](https://github.com/kong/charts/issues/391)
+  ACTION REQUIRED: This is a breaking change as it makes
+  this chart incompatible with Kubernetes clusters older
+  than v1.16.x. Upgrade your cluster to a version greater
+  than or equal to v1.16 before installing.
+  Note that technically it will remain possible to deploy
+  on older clusters by managing the CRDs manually ahead of
+  time (e.g. intentionally deploying the legacy CRDs) but
+  these configurations will be considered unsupported.
+  [upgrade](https://kubernetes.io/docs/tasks/administer-cluster/cluster-upgrade/)
+  ACTION REQUIRED: For existing deployments Helm avoids managing
+  CRDs so when upgrading from a previous release you will need
+  to apply the new V1 versions of the CRDs (in `crds/`) manually.
+  [hip-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md)
+  ([#415](https://github.com/Kong/charts/pull/415))
+* Added support for controller metrics to the Prometheus resources. This
+  requires KIC 2.x. The chart automatically detects if your controller image is
+  compatible, but only if your tag is semver-compliant. If you are using an
+  image without a semver-compliant tag (such as `next`) you _must_ set the
+  `ingressController.image.effectiveSemver` value to a semver string
+  appropriate for your image (for example, if your image is 2.0.0-based, you
+  would set it to `2.0.0`.
+  ([#430](https://github.com/Kong/charts/pull/430))
+
+### Improvements
+
+* Updated default Kong versions to 2.5 (OSS) and 2.5.0.0 (Enterprise).
+* Added user-configured initContainer support to Jobs.
+  ([#408](https://github.com/Kong/charts/pull/408))
+* Upgraded RBAC resources to v1 from v1beta1 for compatibility with Kubernetes
+  1.22 and newer. This breaks compatibility with Kubernetes 1.7 and older, but
+  these Kubernetes versions were never supported, so this change is not
+  breaking. Added additional permissions to support KIC 2.x.
+  ([#420](https://github.com/Kong/charts/pull/420))
+  ([#419](https://github.com/Kong/charts/pull/419))
+* Added `ingressController.watchNamespaces[]` to values.yaml. When set, the
+  controller will only watch the listed namespaces (instead of all namespaces,
+  the default), and will create Roles for each namespace (instead of a
+  ClusterRole). This feature requires KIC 2.x.
+  ([#420](https://github.com/Kong/charts/pull/420))
+* Added support for [dnsPolicy and
+  dnsConfig](https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/).
+  ([#425](https://github.com/Kong/charts/pull/425))
+* Use migration commands directly in upgrade/install Jobs instead of invoking
+  them via a shell. This adds support for some additional features in Kong
+  images that only apply when the container command starts with `kong`.
+  ([#429](https://github.com/Kong/charts/pull/429))
+
+### Fixed
+* Fixed an incorrect template for DaemonSet releases.
+  ([#426](https://github.com/Kong/charts/pull/426))
+
 ## 2.2.0
 
 ### Breaking changes

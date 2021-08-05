@@ -22,30 +22,38 @@ $ helm install kong/kong --generate-name
 - [Prerequisites](#prerequisites)
 - [Install](#install)
 - [Uninstall](#uninstall)
-- [Kong Enterprise](#kong-enterprise)
 - [FAQs](#faqs)
+- [Kong Enterprise](#kong-enterprise)
 - [Deployment Options](#deployment-options)
   - [Database](#database)
+    - [DB-less deployment](#db-less-deployment)
+    - [Using the Postgres sub-chart](#using-the-postgres-sub-chart)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
   - [Standalone controller nodes](#standalone-controller-nodes)
   - [Hybrid mode](#hybrid-mode)
+    - [Certificates](#certificates)
+    - [Control plane node configuration](#control-plane-node-configuration)
+    - [Data plane node configuration](#data-plane-node-configuration)
   - [CRD management](#crd-management)
-  - [InitContainers](#initContainers)
-  - [Sidecar containers](#sidecar-containers)
+  - [InitContainers](#initcontainers)
+  - [HostAliases](#hostaliases)
+  - [Sidecar Containers](#sidecar-containers)
   - [User Defined Volumes](#user-defined-volumes)
   - [User Defined Volume Mounts](#user-defined-volume-mounts)
   - [Using a DaemonSet](#using-a-daemonset)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
-  - [Kong Parameters](#kong-parameters)
+  - [Kong parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
+    - [Stream listens](#stream-listens)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
-  - [The `env` section](#the-env-section)
-  - [The `extraLabels` section](#the-extralabels-section)
+    - [The `env` section](#the-env-section)
+    - [The `extraLabels` section](#the-extralabels-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
+  - [Overview](#overview)
   - [Prerequisites](#prerequisites-1)
     - [Kong Enterprise License](#kong-enterprise-license)
     - [Kong Enterprise Docker registry access](#kong-enterprise-docker-registry-access)
@@ -464,6 +472,10 @@ controller](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/
 instead of a Deployment controller. This runs a Kong Pod on every kubelet in
 the Kubernetes cluster.
 
+### Using dnsPolicy and dnsConfig
+
+The chart able to inject custom DNS configuration into containers. This can be useful when you have EKS cluster with [NodeLocal DNSCache](https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/) configured and attach AWS security groups directly to pod using [security groups for pods feature](https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html).
+
 ### Example configurations
 
 Several example values.yaml are available in the
@@ -477,7 +489,7 @@ directory.
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | image.repository                   | Kong image                                                                            | `kong`              |
-| image.tag                          | Kong image version                                                                    | `2.4`               |
+| image.tag                          | Kong image version                                                                    | `2.5`               |
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
 | replicaCount                       | Kong instance count. It has no effect when `autoscaling.enabled` is set to true         | `1`                 |
@@ -584,6 +596,7 @@ section of `values.yaml` file:
 | enabled                            | Deploy the ingress controller, rbac and crd                                           | true                                                                         |
 | image.repository                   | Docker image with the ingress controller                                              | kong/kubernetes-ingress-controller |
 | image.tag                          | Version of the ingress controller                                                     | 1.2.0 |
+| image.effectiveSemver              | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version | |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
 | installCRDs                        | Creates managed CRDs.                                                                 | false
@@ -593,6 +606,7 @@ section of `values.yaml` file:
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
 | ingressClass                       | The ingress-class value for controller                                                | kong                                                                         |
 | args                               | List of ingress-controller cli arguments                                              | []                                                                           |
+| watchNamespaces                    | List of namespaces to watch. Watches all namespaces if empty                          | []                                                                           |
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
 | admissionWebhook.failurePolicy     | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)      | Fail                                                                         |
 | admissionWebhook.port              | The port the ingress controller will listen on for admission webhooks                 | 8080                                                                         |
@@ -632,6 +646,8 @@ For a complete list of all configuration values you can set in the
 | podLabels                          | Labels to add to each pod                                                             | `{}`                |
 | resources                          | Pod resource requests & limits                                                        | `{}`                |
 | tolerations                        | List of node taints to tolerate                                                       | `[]`                |
+| dnsPolicy                          | Pod dnsPolicy                                                                         |                     |
+| dnsConfig                          | Pod dnsConfig                                                                         |                     |
 | podDisruptionBudget.enabled        | Enable PodDisruptionBudget for Kong                                                   | `false`             |
 | podDisruptionBudget.maxUnavailable | Represents the minimum number of Pods that can be unavailable (integer or percentage) | `50%`               |
 | podDisruptionBudget.minAvailable   | Represents the number of Pods that must be available (integer or percentage)          |                     |
@@ -646,6 +662,8 @@ For a complete list of all configuration values you can set in the
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
 | serviceMonitor.labels              | ServiceMonitor labels                                                                 | `{}`                |
 | serviceMonitor.targetLabels        | ServiceMonitor targetLabels                                                           | `{}`                |
+| serviceMonitor.honorLabels         | ServiceMonitor honorLabels                                                            | `{}`                |
+| serviceMonitor.metricRelabelings   | ServiceMonitor metricRelabelings                                                      | `{}`                |
 | extraConfigMaps                    | ConfigMaps to add to mounted volumes                                                  | `[]`                |
 | extraSecrets                       | Secrets to add to mounted volumes                                                     | `[]`                |
 

@@ -346,6 +346,10 @@ The name of the service used for the ingress controller's validation webhook
 {{- if .Values.ingressController.admissionWebhook.enabled }}
   {{- $_ := set $autoEnv "CONTROLLER_ADMISSION_WEBHOOK_LISTEN" (printf "0.0.0.0:%d" (int64 .Values.ingressController.admissionWebhook.port)) -}}
 {{- end }}
+{{- if (not (eq (len .Values.ingressController.watchNamespaces) 0)) }}
+  {{- $_ := set $autoEnv "CONTROLLER_WATCH_NAMESPACE" (.Values.ingressController.watchNamespaces | join ",") -}}
+  {{- $_ := set $autoEnv "CONTROLLER_CONTROLLER_KONGCLUSTERPLUGIN" "disabled" -}}
+{{- end }}
 
 {{/*
     ====== USER-SET ENVIRONMENT VARIABLES ======
@@ -531,7 +535,22 @@ The name of the service used for the ingress controller's validation webhook
   {{- toYaml .Values.resources | nindent 4 }}
 {{- end -}}
 
+{{/*
+kong.controller2xplus returns "true" if the controller image tag major version is >= 2
+Note that this is a string, not a boolean, because templates vov
+*/}}
+{{- define "kong.controller2xplus" -}}
+{{- $version := "" -}}
+{{- if .Values.ingressController.image.effectiveSemver -}}
+  {{- $version = semver .Values.ingressController.image.effectiveSemver -}}
+{{- else -}}
+  {{- $version = semver .Values.ingressController.image.tag -}}
+{{- end -}}
+{{- ge $version.Major 2 -}}
+{{- end -}}
+
 {{- define "kong.controller-container" -}}
+{{- $controllerIs2xPlus := include "kong.controller2xplus" . -}}
 - name: ingress-controller
   securityContext:
 {{ toYaml .Values.containerSecurityContext | nindent 4 }}  
@@ -546,6 +565,11 @@ The name of the service used for the ingress controller's validation webhook
   {{- if .Values.ingressController.admissionWebhook.enabled }}
   - name: webhook
     containerPort: {{ .Values.ingressController.admissionWebhook.port }}
+    protocol: TCP
+  {{- end }}
+  {{ if (eq $controllerIs2xPlus "true") -}}
+  - name: cmetrics
+    containerPort: 10255
     protocol: TCP
   {{- end }}
   env:
@@ -826,4 +850,224 @@ Environment variables are sorted alphabetically
 {{- else if .repository }}
 {{- .repository }}:{{ .tag }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+kong.kubernetesRBACRoles outputs a static list of RBAC rules (the "rules" block
+of a Role or ClusterRole) that provide the ingress controller access to the
+Kubernetes resources it uses to build Kong configuration.
+*/}}
+{{- define "kong.kubernetesRBACRules" -}}
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - endpoints/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongplugins
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongplugins/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - tcpingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - tcpingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - udpingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - udpingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - networking.internal.knative.dev
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.internal.knative.dev
+  resources:
+  - ingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses/status
+  verbs:
+  - get
+  - patch
+  - update
 {{- end -}}

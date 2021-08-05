@@ -19,8 +19,6 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
-    # Use a DaemonSet controller instead of a Deployment controller
-    daemonset: false
   ## Optionally specify any extra sidecar containers to be included in the deployment
   ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
   # sidecarContainers:
@@ -40,6 +38,11 @@ deployment:
   # userDefinedVolumeMounts:
   # - name: "volumeName"
   #   mountPath: "/opt/user/dir/mount"
+  test:
+    # Enable creation of test resources for use with "helm test"
+    enabled: false
+  # Use a DaemonSet controller instead of a Deployment controller
+  daemonset: false
 
 # Override namepsace for Kong chart resources. By default, the chart creates resources in the release namespace.
 # This may not be desirable when using this chart as a dependency.
@@ -76,10 +79,10 @@ extraLabels: {}
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.4"
+  tag: "2.5"
   # Kong Enterprise
   # repository: kong/kong-gateway
-  # tag: "2.4.1.1-alpine"
+  # tag: "2.5.0.0-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -384,7 +387,22 @@ ingressController:
   image:
     repository: kong/kubernetes-ingress-controller
     tag: "1.3"
+    # Optionally set a semantic version for version-gated features. This can normally
+    # be left unset. You only need to set this if your tag is not a semver string,
+    # such as when you are using a "next" tag. Set this to the effective semantic
+    # version of your tag: for example if using a "next" image for an unreleased 3.1.0
+    # version, set this to "3.1.0".
+    effectiveSemver:
   args: []
+
+  # Specify individual namespaces to watch for ingress configuration. By default,
+  # when no namespaces are set, the controller watches all namespaces and uses a
+  # ClusterRole to grant access to Kubernetes resources. When you list specific
+  # namespaces, the controller will watch those namespaces only and will create
+  # namespaced-scoped Roles for each of them. Note that watching specific namespaces
+  # disables KongClusterPlugin usage, as KongClusterPlugins only exist as cluster resources.
+  # Requires controller 2.0.0 or newer.
+  watchNamespaces: []
 
   # Specify Kong Ingress Controller configuration via environment variables
   env:
@@ -519,7 +537,6 @@ resources: {}
   #  memory: 256Mi
 
 # readinessProbe for Kong pods
-# If using Kong Enterprise with RBAC, you must add a Kong-Admin-Token header
 readinessProbe:
   httpGet:
     path: "/status"
@@ -646,6 +663,20 @@ securityContext: {}
 # securityContext for containers.
 containerSecurityContext: {}
 
+## Optional DNS configuration for Kong pods
+# dnsPolicy: ClusterFirst
+# dnsConfig:
+#   nameservers:
+#   - "10.100.0.10"
+#   options:
+#   - name: ndots
+#     value: "5"
+#   searches:
+#   - default.svc.cluster.local
+#   - svc.cluster.local
+#   - cluster.local
+#   - us-east-1.compute.internal
+
 serviceMonitor:
   # Specifies whether ServiceMonitor for Prometheus operator should be created
   # If you wish to gather metrics from a Kong instance with the proxy disabled (such as a hybrid control plane), see:
@@ -658,6 +689,9 @@ serviceMonitor:
   #   foo: bar
   # targetLabels:
   #   - foo
+
+  # honorLabels: false
+  # metricRelabelings: []
 
 # -----------------------------------------------------------------------------
 # Kong Enterprise parameters

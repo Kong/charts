@@ -2,12 +2,11 @@ name: Lint and Test Charts
 
 on:
   push:
-    branches-ignore:
-    - 'main'
-    - 'kong-1.x'
+    branches:
+    - 'next'
   pull_request:
-    branches-ignore:
-    - 'main'
+    branches:
+    - 'next'
 
 jobs:
   lint-test:
@@ -43,9 +42,56 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint $COMMON_CT_ARGS --check-version-increment=false
 
-      - name: Create kind cluster
-        uses: helm/kind-action@v1.2.0
+      - name: setup testing environment (kind-cluster)
+        run: ./scripts/test-env.sh
         if: steps.list-changed.outputs.changed == 'true'
 
-      - name: Run chart-testing (install)
+      - name: run chart-testing (install)
         run: ct install $COMMON_CT_ARGS
+
+      - name: cleanup integration tests (cleanup)
+        run: ./scripts/test-env.sh cleanup
+
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: setup helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.2.4
+
+      - name: setup testing environment (kind-cluster)
+        run: ./scripts/test-env.sh
+
+      - name: run integration tests (integration)
+        run: ./scripts/test-run.sh
+
+      - name: run upgrade integration tests (integration-upgrade)
+        run: ./scripts/test-upgrade.sh
+
+      - name: run crds integration tests (integration-crds)
+        run: ./scripts/test-crds.sh
+
+      # TODO: these are specifically in place in the interim between v1.x
+      #       and the upcoming v2.x release to add some extra checking to
+      #       ensure our chart and our pre-releases are compatible, and there
+      #       are no regressions with our charts in between pre-releases.
+      #       Once v2.0 has released and become a standard part of the chart
+      #       we can remove this or change the upgrade tests in whatever way
+      #       seems to fit.
+
+      - name: run prerelease deployment tests (v2-deploy)
+        run: ./scripts/test-v2-deploy.sh
+
+      - name: run prerelease upgrade compatibility tests (v2-upgrade)
+        run: ./scripts/test-v2-upgrade.sh
+
+      # </TODO>
+
+      - name: cleanup integration tests (cleanup)
+        run: ./scripts/test-env.sh cleanup
