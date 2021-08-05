@@ -2,7 +2,7 @@
 # use single image strings instead of repository/tag
 
 image:
-  unifiedRepoTag: kong:2.4
+  unifiedRepoTag: kong:2.5
 proxy:
   type: NodePort
 

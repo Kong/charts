@@ -11,4 +11,4 @@ maintainers:
 name: kong
 sources:
 version: 2.2.0
-appVersion: "2.4"
+appVersion: "2.5"

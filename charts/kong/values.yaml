@@ -79,10 +79,10 @@ extraLabels: {}
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.4"
+  tag: "2.5"
   # Kong Enterprise
   # repository: kong/kong-gateway
-  # tag: "2.4.1.1-alpine"
+  # tag: "2.5.0.0-alpine"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
