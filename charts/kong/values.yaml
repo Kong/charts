@@ -537,7 +537,6 @@ resources: {}
   #  memory: 256Mi
 
 # readinessProbe for Kong pods
-# If using Kong Enterprise with RBAC, you must add a Kong-Admin-Token header
 readinessProbe:
   httpGet:
     path: "/status"
