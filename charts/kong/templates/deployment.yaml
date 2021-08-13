@@ -147,7 +147,7 @@ spec:
           protocol: {{ .protocol }}
         {{- end }}
         {{- range .Values.udpProxy.stream }}
-        - name: stream-udp-{{ .containerPort }}
+        - name: streamudp-{{ .containerPort }}
           containerPort: {{ .containerPort }}
           {{- if .hostPort }}
           hostPort: {{ .hostPort }}
