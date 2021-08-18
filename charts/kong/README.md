@@ -499,6 +499,7 @@ directory.
 | migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
 | migrations.annotations             | Annotations for migration job pods                                                    | `{"sidecar.istio.io/inject": "false" |
 | migrations.jobAnnotations          | Additional annotations for migration jobs                                             | `{}`                |
+| migrations.backoffLimit            | Override the system backoffLimit                                                      | `{}`                |
 | waitImage.enabled                  | Spawn init containers that wait for the database before starting Kong                 | `true`              |
 | waitImage.repository               | Image used to wait for database to become ready. Uses the Kong image if none set      |                     |
 | waitImage.tag                      | Tag for image used to wait for database to become ready                               |                     |

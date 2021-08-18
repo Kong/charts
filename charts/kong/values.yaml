@@ -347,6 +347,7 @@ migrations:
   # This is helpful in certain non-Helm installation situations such as GitOps
   # where additional control is required around this job creation.
   jobAnnotations: {}
+  backoffLimit:
   resources: {}
   # Example reasonable setting for "resources":
   # resources:
