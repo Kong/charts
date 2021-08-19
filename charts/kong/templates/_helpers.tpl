@@ -88,10 +88,20 @@ spec:
     http:
       paths:
         - backend:
+          {{- if (and (not (eq .ingressVersion "networking.k8s.io/v1")) .ingress.ingressClassName) }}
             serviceName: {{ .fullName }}-{{ .serviceName }}
             servicePort: {{ $servicePort }}
+          {{- else }}
+            service:
+              name: {{ .fullName }}-{{ .serviceName }}
+              port:
+                number: {{ $servicePort }}
+            {{- end }}
           {{- if $path }}
           path: {{ $path }}
+          {{- if (and (not (eq .ingressVersion "extensions/v1beta1")) .ingress.ingressClassName) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           {{- end -}}
   {{- if (hasKey .ingress "tls") }}
   tls:
