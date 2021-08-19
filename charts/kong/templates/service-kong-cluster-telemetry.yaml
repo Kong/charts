@@ -2,6 +2,7 @@
 {{- if and .Values.clustertelemetry.enabled .Values.clustertelemetry.tls.enabled -}}
 {{- $serviceConfig := dict -}}
 {{- $serviceConfig := merge $serviceConfig .Values.clustertelemetry -}}
+{{- $_ := set $serviceConfig "ingressVersion" (include "kong.ingressVersion" .) -}}
 {{- $_ := set $serviceConfig "fullName" (include "kong.fullname" .) -}}
 {{- $_ := set $serviceConfig "namespace" (include "kong.namespace" .) -}}
 {{- $_ := set $serviceConfig "metaLabels" (include "kong.metaLabels" .) -}}

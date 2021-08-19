@@ -1,0 +1,16 @@
+{{- if (and .Values.ingressController.enabled (not (eq (include "kong.ingressVersion" .) "extensions/v1beta1"))) -}}
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: {{ .Values.ingressController.ingressClass }}
+  {{- if .Values.ingressController.ingressClassAnnotations }}
+  annotations:
+  {{- range $key, $value := .Values.ingressController.ingressClassAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
+  labels:
+  {{- include "kong.metaLabels" . | nindent 4 }}
+spec:
+  controller: konghq.com/ingress-controller
+{{- end -}}

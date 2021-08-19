@@ -566,6 +566,7 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.externalIPs                    | IPs for which nodes in the cluster will also accept traffic for the servic            | `[]`                |
 | SVC.externalTrafficPolicy          | k8s service's externalTrafficPolicy. Options: Cluster, Local                          |                     |
 | SVC.ingress.enabled                | Enable ingress resource creation (works with SVC.type=ClusterIP)                      | `false`             |
+| SVC.ingress.ingressClassName       | Set the ingressClassName to associate this Ingress with an IngressClass               |                     |
 | SVC.ingress.tls                    | Name of secret resource, containing TLS secret                                        |                     |
 | SVC.ingress.hostname               | Ingress hostname                                                                      | `""`                |
 | SVC.ingress.path                   | Ingress path.                                                                         | `/`                 |
@@ -605,7 +606,8 @@ section of `values.yaml` file:
 | serviceAccount.name                | Use existing Service Account, specify its name                                        | ""
 | serviceAccount.annotations         | Annotations for Service Account                                                       | {}
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
-| ingressClass                       | The ingress-class value for controller                                                | kong                                                                         |
+| ingressClass                       | The name of this controller's ingressClass                                                | kong                                                                         |
+| ingressClassAnnotations            | The ingress-class value for controller                                                | kong                                                                         |
 | args                               | List of ingress-controller cli arguments                                              | []                                                                           |
 | watchNamespaces                    | List of namespaces to watch. Watches all namespaces if empty                          | []                                                                           |
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
