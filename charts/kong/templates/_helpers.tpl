@@ -160,7 +160,7 @@ spec:
   {{- end }}
   {{- if (hasKey . "stream") }}
   {{- range .stream }}
-  - name: stream-{{ if (eq (default .protocol "TCP") "UDP") }}udp-{{ end }}{{ .containerPort }}
+  - name: stream{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
     port: {{ .servicePort }}
     targetPort: {{ .containerPort }}
     {{- if (and (or (eq $.type "LoadBalancer") (eq $.type "NodePort")) (not (empty .nodePort))) }}
@@ -259,8 +259,8 @@ Create KONG_STREAM_LISTEN string
          Our configuration is dual-purpose, for both the Service and listen string, so we
          forcibly inject this parameter if that's the Service protocol. The default handles
          configs that predate the addition of the protocol field, where we only supported TCP. */}}
-    {{- if (eq (default .protocol "TCP") "UDP") -}}
-      {{- $_ := set $listenConfig "parameters" (append .parameters "udp") -}}
+    {{- if (eq (default "TCP" .protocol) "UDP") -}}
+      {{- $_ := set $listenConfig "parameters" (append (default (list) .parameters) "udp") -}}
     {{- end -}}
     {{- $unifiedListen = append $unifiedListen (include "kong.singleListen" $listenConfig ) -}}
   {{- end -}}
