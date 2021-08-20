@@ -56,3 +56,9 @@ helm upgrade --namespace "${RELEASE_NAMESPACE}" --set ingressController.image.ta
 
 echo "INFO: running helm tests for all charts on Kubernetes ${KUBERNETES_VERSION}"
 helm test --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}"
+
+
+# ------------------------------------------------------------------------------
+# Cleanup
+# ------------------------------------------------------------------------------
+helm delete --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}"
