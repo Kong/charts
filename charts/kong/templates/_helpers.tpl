@@ -88,7 +88,7 @@ spec:
     http:
       paths:
         - backend:
-          {{- if (and (not (eq .ingressVersion "networking.k8s.io/v1")) .ingress.ingressClassName) }}
+          {{- if (not (eq .ingressVersion "networking.k8s.io/v1")) }}
             serviceName: {{ .fullName }}-{{ .serviceName }}
             servicePort: {{ $servicePort }}
           {{- else }}
@@ -99,7 +99,7 @@ spec:
             {{- end }}
           {{- if $path }}
           path: {{ $path }}
-          {{- if (and (not (eq .ingressVersion "extensions/v1beta1")) .ingress.ingressClassName) }}
+          {{- if (not (eq .ingressVersion "extensions/v1beta1")) }}
           pathType: ImplementationSpecific
           {{- end }}
           {{- end -}}
