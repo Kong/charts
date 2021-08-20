@@ -59,7 +59,7 @@ spec:
       {{- if .Values.priorityClassName }}
       priorityClassName: "{{ .Values.priorityClassName }}"
       {{- end }}
-      {{- if or .Values.ingressController.enabled .Values.podSecurityPolicy.enabled }}
+      {{- if or .Values.ingressController.enabled .Values.podSecurityPolicy.enabled .Values.deployment.serviceAccount.create }}
       serviceAccountName: {{ template "kong.serviceAccountName" . }}
       {{ end }}
       {{- if .Values.image.pullSecrets }}

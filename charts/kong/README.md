@@ -629,6 +629,9 @@ For a complete list of all configuration values you can set in the
 | deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
 | deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |
+| deployment.serviceAccount.create   | Create Service Account for the Deployment / Daemonset and the migrations              | `false`             |
+| deployment.serviceAccount.name     | Name of the Service Account, a default one will be generated if left blank            | ""                  |
+| deployment.serviceAccount.annotations | Annotations for the Service Account                                                | {}                  |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
 | autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
 | autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |
