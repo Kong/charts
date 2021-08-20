@@ -22,8 +22,8 @@ deployment:
   ## Specify the service account to create and to be assigned to the deployment / daemonset and for th migrations
   serviceAccount:
     create: false
-  ## Optionally specify the name of the service account to create and the annotations to add.  
-  #  name: 
+  ## Optionally specify the name of the service account to create and the annotations to add.
+  #  name:
   #  annotations: {}
 
   ## Optionally specify any extra sidecar containers to be included in the deployment
