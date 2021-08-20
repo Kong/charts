@@ -638,7 +638,7 @@ For a complete list of all configuration values you can set in the
 | deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
 | deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |
 | deployment.serviceAccount.create   | Create Service Account for the Deployment / Daemonset and the migrations              | `false`             |
-| deployment.serviceAccount.name     | Name of the Service Account, a default one will be generated if left blank            | ""                  |
+| deployment.serviceAccount.name     | Name of the Service Account, a default one will be generated if left blank. If the ingressController.serviceAccount.create is set to true then the name will be taken from the ingressController.serviceAccount.name | ""                  |
 | deployment.serviceAccount.annotations | Annotations for the Service Account                                                | {}                  |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
 | autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
