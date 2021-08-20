@@ -136,6 +136,7 @@ admin:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    ingressClassName:
     # TLS secret name.
     # tls: kong-admin.example.com-tls
     # Ingress hostname
@@ -256,6 +257,7 @@ proxy:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    ingressClassName:
     # Ingress hostname
     # TLS secret name.
     # tls: kong-admin.example.com-tls
@@ -434,6 +436,8 @@ ingressController:
     #   | Add the CA bundle content here.
 
   ingressClass: kong
+  # annotations for IngressClass resource (Kubernetes 1.18+)
+  ingressClassAnnotations: {}
 
   rbac:
     # Specifies whether RBAC resources should be created
@@ -780,6 +784,7 @@ manager:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    ingressClassName:
     # TLS secret name.
     # tls: kong-proxy.example.com-tls
     # Ingress hostname
@@ -823,6 +828,7 @@ portal:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    ingressClassName:
     # TLS secret name.
     # tls: kong-proxy.example.com-tls
     # Ingress hostname
@@ -866,6 +872,7 @@ portalapi:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    ingressClassName:
     # TLS secret name.
     # tls: kong-proxy.example.com-tls
     # Ingress hostname
