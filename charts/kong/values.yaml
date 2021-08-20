@@ -21,9 +21,11 @@ deployment:
     enabled: true
   ## Specify the service account to create and to be assigned to the deployment / daemonset and for th migrations
   serviceAccount:
-     create: false
-     name: 
-     annotations: {}      
+    create: false
+  ## Optionally specify the name of the service account to create and the annotations to add.  
+  #  name: 
+  #  annotations: {}
+
   ## Optionally specify any extra sidecar containers to be included in the deployment
   ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
   # sidecarContainers:
