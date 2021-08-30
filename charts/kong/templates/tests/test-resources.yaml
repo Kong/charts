@@ -45,21 +45,4 @@ spec:
             name: "{{ .Release.Name }}-httpbin"
             port:
               number: 80
----
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: "{{ .Release.Name }}-httpbin-v1beta1"
-  annotations:
-    httpbin.ingress.kubernetes.io/rewrite-target: /
-    kubernetes.io/ingress.class: "kong"
-    konghq.com/strip-path: "true"
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /httpbin-v1beta1
-        backend:
-          serviceName: "{{ .Release.Name }}-httpbin"
-          servicePort: 80
 {{- end }}
