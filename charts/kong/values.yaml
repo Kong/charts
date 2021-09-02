@@ -21,7 +21,7 @@ deployment:
     enabled: true
   ## Specify the service account to create and to be assigned to the deployment / daemonset and for th migrations
   serviceAccount:
-    create: false
+    create: true
   ## Optionally specify the name of the service account to create and the annotations to add.
   #  name:
   #  annotations: {}
@@ -449,15 +449,6 @@ ingressController:
   rbac:
     # Specifies whether RBAC resources should be created
     create: true
-
-  serviceAccount:
-    # Specifies whether a ServiceAccount should be created
-    create: true
-    # The name of the ServiceAccount to use.
-    # If not set and create is true, a name is generated using the fullname template
-    name:
-    # The annotations for service account
-    annotations: {}
 
   # general properties
   livenessProbe:

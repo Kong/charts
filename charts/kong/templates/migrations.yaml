@@ -39,9 +39,11 @@ spec:
       {{- end }}
       {{- end }}
     spec:
-      automountServiceAccountToken: false
-      {{- if or .Values.podSecurityPolicy.enabled .Values.deployment.serviceAccount.create }}
+      {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
       serviceAccountName: {{ template "kong.serviceAccountName" . }}
+      automountServiceAccountToken: true
+      {{- else }}
+      automountServiceAccountToken: false
       {{- end }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
