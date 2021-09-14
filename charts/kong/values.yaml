@@ -202,7 +202,7 @@ proxy:
   # "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "*",
   # "service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled": "true",
   # "service.beta.kubernetes.io/aws-load-balancer-ssl-cert": "arn:aws:acm:REGION:ACCOUNT:certificate/XXXXXX-XXXXXXX-XXXXXXX-XXXXXXXX",
-  # "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "kong-tls-proxy",
+  # "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "kong-proxy-tls",
   # "service.beta.kubernetes.io/aws-load-balancer-type": "elb"
   labels:
     enable-metrics: "true"
