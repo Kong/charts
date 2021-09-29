@@ -146,7 +146,7 @@ read the [env](#the-env-section) section.
 
 When deploying Kong in DB-less mode(`env.database: "off"`)
 and without the Ingress Controller(`ingressController.enabled: false`),
-you have to provide a [declarative configuration]https://docs.konghq.com/gateway-oss/latest/db-less-and-declarative-config/#the-declarative-configuration-format) for Kong to run.
+you have to provide a [declarative configuration](https://docs.konghq.com/gateway-oss/latest/db-less-and-declarative-config/#the-declarative-configuration-format) for Kong to run.
 You can provide an existing ConfigMap
 (`dblessConfig.configMap`) or place the whole configuration into
 `values.yaml` (`dblessConfig.config`)
