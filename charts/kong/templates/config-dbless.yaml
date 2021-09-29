@@ -9,7 +9,7 @@ metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 data:
-  kong.yml: |
+  kong.yml:
 {{ .Values.dblessConfig.config | toYaml | indent 4 }}
 {{- end }}
 {{- end }}
