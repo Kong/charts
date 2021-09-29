@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [2.4.0](#240)
 - [2.3.0](#230)
 - [2.2.0](#220)
 - [2.1.0](#210)
@@ -59,6 +60,77 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 2.4.0
+
+### When using both the Ingress Controller and PostgreSQL options
+
+This version of the chart includes an update to 2.x versions of the ingress
+controller. When upgrading there is a brief window (the actual length of time
+can vary depending on your environment) of time where both control-planes
+(the new **AND** the old controller) will be sending updates to the data-plane
+which can result in inconsistency when PostgreSQL is the backend.
+
+If you are configured with the following:
+
+- ingressController.enabled=true
+- postgresql.enabled=true
+
+The upgrade must be done with the ingress controller *disabled* prior to
+performing the upgrade to avoid problems of data-plane inconsistency. The
+most straightforward mechanism for this is to configure the chart with
+`--set ingressController.enabled=false` (or the equivalent `values.yaml`
+configuration) and performing an in-place upgrade on the same version before
+fully upgrading to the new version.
+
+#### Example workflow for disabling the controller
+
+**WARNING**: Make sure that you create a testing environment to practice
+upgrading and document your process fully before you perform this upgrade
+on a production system.
+
+**WARNING**: For the period of time where this upgrade is being performed
+there will be some service unavailability (for instance newly posted `Ingress`
+resources wont be provisioned until the upgrade is complete). We recommend
+you establish an active maintenance window under which to perform this upgrade
+and inform users and stakeholders so as to avoid unexpected disruption.
+
+**WARNING**: How you disable the ingress controller for upgrade depends on things
+like whether you use CLI flags or `values.yaml` to configure your release, but
+the following are meant to help illustrate the high level workflow. Don't use
+this verbatim, but instead as a reference to develop your own upgrade procedure.
+
+Upgrade the chart "in place" by performing an upgrade of the options only, but
+keep the current chart version:
+
+```console
+$ helm upgrade \
+  --set ingressController.enabled=false \
+  --version <CURRENT_CHART_VERSION> \
+  --namespace <YOUR_RELEASE_NAMESPACE> \
+  <YOUR_RELEASE_NAME> kong/kong
+```
+
+Then wait for pods in the namespace to be fully terminated before proceeding:
+
+```console
+$ kubectl -n <YOUR_RELEASE_NAMESPACE> get pods -w
+```
+
+Once everything is settled you will only have the proxy itself running and you
+can re-enable the ingress controller and perform the actual upgrade:
+
+```console
+$ helm upgrade \
+  --set ingressController.enabled=true \
+  --version <NEW_CHART_VERSION> \
+  --namespace <YOUR_RELEASE_NAMESPACE> \
+  <YOUR_RELEASE_NAME> kong/kong
+```
+
+The result of this workflow is that the older version of the ingress controller
+container will already have been shut down when you perform the release so the
+new container and old container wont be running simoltaneously.
 
 ## 2.3.0
 
