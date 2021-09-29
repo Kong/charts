@@ -146,17 +146,18 @@ read the [env](#the-env-section) section.
 
 When deploying Kong in DB-less mode(`env.database: "off"`)
 and without the Ingress Controller(`ingressController.enabled: false`),
-you have to provide a [declarative configuration]https://docs.konghq.com/gateway-oss/latest/db-less-and-declarative-config/#the-declarative-configuration-format)
-for Kong to run. You can provide an existing ConfigMap
+you have to provide a [declarative configuration]https://docs.konghq.com/gateway-oss/latest/db-less-and-declarative-config/#the-declarative-configuration-format) for Kong to run.
+You can provide an existing ConfigMap
 (`dblessConfig.configMap`) or place the whole configuration into
 `values.yaml` (`dblessConfig.config`)
 parameter. See the example configuration in the default values.yaml
 for more details. You can use `--set-file dblessConfig.config=/path/to/declarative-config.yaml`
 in Helm commands to substitute in a complete declarative config file.    
     
-Note that ConfigMap updates will not restart Kong pods when using `dblessConfig.configMap`,
-and they will not recognize updated configuration until restarted. You should run
-`kubectl rollout restart deploy` after updating the configuration ConfigMap contents.    
+Note that externally supplied ConfigMaps are not hashed or tracked in deployment annotations.
+Subsequent ConfigMap updates will require user-initiated new deployment rollouts
+to apply the new configuration. You should run `kubectl rollout restart deploy`
+after updating externally supplied ConfigMap content.    
     
 #### Using the Postgres sub-chart
 
