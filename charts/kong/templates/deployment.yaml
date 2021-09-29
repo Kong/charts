@@ -139,7 +139,7 @@ spec:
           protocol: TCP
         {{- end }}
         {{- range .Values.proxy.stream }}
-        - name: stream-{{ .containerPort }}
+        - name: stream{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
           containerPort: {{ .containerPort }}
           {{- if .hostPort }}
           hostPort: {{ .hostPort }}
@@ -147,7 +147,7 @@ spec:
           protocol: {{ .protocol }}
         {{- end }}
         {{- range .Values.udpProxy.stream }}
-        - name: stream-udp-{{ .containerPort }}
+        - name: streamudp-{{ .containerPort }}
           containerPort: {{ .containerPort }}
           {{- if .hostPort }}
           hostPort: {{ .hostPort }}

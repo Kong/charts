@@ -66,13 +66,13 @@ Create Ingress resource for a Kong service
 {{- $servicePort := include "kong.ingress.servicePort" . }}
 {{- $path := .ingress.path -}}
 {{- $hostname := .ingress.hostname -}}
-apiVersion: extensions/v1beta1
+apiVersion: {{ .ingressVersion }}
 kind: Ingress
 metadata:
   name: {{ .fullName }}-{{ .serviceName }}
   namespace: {{ .namespace }}
   labels:
-   {{- .metaLabels | nindent 4 }}
+  {{- .metaLabels | nindent 4 }}
   {{- if .ingress.annotations }}
   annotations:
     {{- range $key, $value := .ingress.annotations }}
@@ -80,15 +80,28 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
+{{- if (and (not (eq .ingressVersion "extensions/v1beta1")) .ingress.ingressClassName) }}
+  ingressClassName: {{ .ingress.ingressClassName }}
+{{- end }}
   rules:
   - host: {{ $hostname }}
     http:
       paths:
         - backend:
+          {{- if (not (eq .ingressVersion "networking.k8s.io/v1")) }}
             serviceName: {{ .fullName }}-{{ .serviceName }}
             servicePort: {{ $servicePort }}
+          {{- else }}
+            service:
+              name: {{ .fullName }}-{{ .serviceName }}
+              port:
+                number: {{ $servicePort }}
+            {{- end }}
           {{- if $path }}
           path: {{ $path }}
+          {{- if (not (eq .ingressVersion "extensions/v1beta1")) }}
+          pathType: ImplementationSpecific
+          {{- end }}
           {{- end -}}
   {{- if (hasKey .ingress "tls") }}
   tls:
@@ -160,7 +173,7 @@ spec:
   {{- end }}
   {{- if (hasKey . "stream") }}
   {{- range .stream }}
-  - name: stream-{{ if (eq (default .protocol "TCP") "UDP") }}udp-{{ end }}{{ .containerPort }}
+  - name: stream{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
     port: {{ .servicePort }}
     targetPort: {{ .containerPort }}
     {{- if (and (or (eq $.type "LoadBalancer") (eq $.type "NodePort")) (not (empty .nodePort))) }}
@@ -259,8 +272,8 @@ Create KONG_STREAM_LISTEN string
          Our configuration is dual-purpose, for both the Service and listen string, so we
          forcibly inject this parameter if that's the Service protocol. The default handles
          configs that predate the addition of the protocol field, where we only supported TCP. */}}
-    {{- if (eq (default .protocol "TCP") "UDP") -}}
-      {{- $_ := set $listenConfig "parameters" (append .parameters "udp") -}}
+    {{- if (eq (default "TCP" .protocol) "UDP") -}}
+      {{- $_ := set $listenConfig "parameters" (append (default (list) .parameters) "udp") -}}
     {{- end -}}
     {{- $unifiedListen = append $unifiedListen (include "kong.singleListen" $listenConfig ) -}}
   {{- end -}}
@@ -1070,4 +1083,14 @@ Kubernetes resources it uses to build Kong configuration.
   - get
   - patch
   - update
+{{- end -}}
+
+{{- define "kong.ingressVersion" -}}
+{{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1") -}}
+networking.k8s.io/v1
+{{- else if (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1") -}}
+networking.k8s.io/v1beta1
+{{- else -}}
+extensions/v1beta1
+{{- end -}}
 {{- end -}}

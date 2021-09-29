@@ -25,6 +25,7 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
+  backoffLimit: {{ .Values.migrations.backoffLimit }}
   template:
     metadata:
       name: {{ template "kong.name" . }}-init-migrations

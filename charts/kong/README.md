@@ -508,6 +508,7 @@ directory.
 | migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
 | migrations.annotations             | Annotations for migration job pods                                                    | `{"sidecar.istio.io/inject": "false" |
 | migrations.jobAnnotations          | Additional annotations for migration jobs                                             | `{}`                |
+| migrations.backoffLimit            | Override the system backoffLimit                                                      | `{}`                |
 | waitImage.enabled                  | Spawn init containers that wait for the database before starting Kong                 | `true`              |
 | waitImage.repository               | Image used to wait for database to become ready. Uses the Kong image if none set      |                     |
 | waitImage.tag                      | Tag for image used to wait for database to become ready                               |                     |
@@ -574,6 +575,7 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.externalIPs                    | IPs for which nodes in the cluster will also accept traffic for the servic            | `[]`                |
 | SVC.externalTrafficPolicy          | k8s service's externalTrafficPolicy. Options: Cluster, Local                          |                     |
 | SVC.ingress.enabled                | Enable ingress resource creation (works with SVC.type=ClusterIP)                      | `false`             |
+| SVC.ingress.ingressClassName       | Set the ingressClassName to associate this Ingress with an IngressClass               |                     |
 | SVC.ingress.tls                    | Name of secret resource, containing TLS secret                                        |                     |
 | SVC.ingress.hostname               | Ingress hostname                                                                      | `""`                |
 | SVC.ingress.path                   | Ingress path.                                                                         | `/`                 |
@@ -613,7 +615,8 @@ section of `values.yaml` file:
 | serviceAccount.name                | Use existing Service Account, specify its name                                        | ""
 | serviceAccount.annotations         | Annotations for Service Account                                                       | {}
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
-| ingressClass                       | The ingress-class value for controller                                                | kong                                                                         |
+| ingressClass                       | The name of this controller's ingressClass                                                | kong                                                                         |
+| ingressClassAnnotations            | The ingress-class value for controller                                                | kong                                                                         |
 | args                               | List of ingress-controller cli arguments                                              | []                                                                           |
 | watchNamespaces                    | List of namespaces to watch. Watches all namespaces if empty                          | []                                                                           |
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |

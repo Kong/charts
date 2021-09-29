@@ -136,6 +136,7 @@ admin:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    ingressClassName:
     # TLS secret name.
     # tls: kong-admin.example.com-tls
     # Ingress hostname
@@ -201,7 +202,7 @@ proxy:
   # "service.beta.kubernetes.io/aws-load-balancer-backend-protocol": "*",
   # "service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled": "true",
   # "service.beta.kubernetes.io/aws-load-balancer-ssl-cert": "arn:aws:acm:REGION:ACCOUNT:certificate/XXXXXX-XXXXXXX-XXXXXXX-XXXXXXXX",
-  # "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "kong-tls-proxy",
+  # "service.beta.kubernetes.io/aws-load-balancer-ssl-ports": "kong-proxy-tls",
   # "service.beta.kubernetes.io/aws-load-balancer-type": "elb"
   labels:
     enable-metrics: "true"
@@ -256,6 +257,7 @@ proxy:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    ingressClassName:
     # Ingress hostname
     # TLS secret name.
     # tls: kong-admin.example.com-tls
@@ -347,6 +349,8 @@ migrations:
   # This is helpful in certain non-Helm installation situations such as GitOps
   # where additional control is required around this job creation.
   jobAnnotations: {}
+  # Optionally set a backoffLimit. If none is set, Jobs will use the cluster default
+  backoffLimit:
   resources: {}
   # Example reasonable setting for "resources":
   # resources:
@@ -432,6 +436,8 @@ ingressController:
     #   | Add the CA bundle content here.
 
   ingressClass: kong
+  # annotations for IngressClass resource (Kubernetes 1.18+)
+  ingressClassAnnotations: {}
 
   rbac:
     # Specifies whether RBAC resources should be created
@@ -778,6 +784,7 @@ manager:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    ingressClassName:
     # TLS secret name.
     # tls: kong-proxy.example.com-tls
     # Ingress hostname
@@ -821,6 +828,7 @@ portal:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    ingressClassName:
     # TLS secret name.
     # tls: kong-proxy.example.com-tls
     # Ingress hostname
@@ -864,6 +872,7 @@ portalapi:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    ingressClassName:
     # TLS secret name.
     # tls: kong-proxy.example.com-tls
     # Ingress hostname
