@@ -63,74 +63,51 @@ clear it.
 
 ## 2.4.0
 
-### When using both the Ingress Controller and PostgreSQL options
+### Disable ingress controller prior to 2.x upgrade when using PostgreSQL
 
-This version of the chart includes an update to 2.x versions of the ingress
-controller. When upgrading there is a brief window (the actual length of time
-can vary depending on your environment) of time where both control-planes
-(the new **AND** the old controller) will be sending updates to the data-plane
-which can result in inconsistency when PostgreSQL is the backend.
+Chart version 2.4 is the first Kong chart version that defaults to the 2.x
+series of ingress controller releases. 2.x uses a different leader election
+system than 1.x. If both versions are running simultaneously, both controller
+versions will attempt to interact with the admin API, potentially setting
+inconsistent configuration in the database when PostgreSQL is the backend.
 
 If you are configured with the following:
 
 - ingressController.enabled=true
 - postgresql.enabled=true
 
-The upgrade must be done with the ingress controller *disabled* prior to
-performing the upgrade to avoid problems of data-plane inconsistency. The
-most straightforward mechanism for this is to configure the chart with
-`--set ingressController.enabled=false` (or the equivalent `values.yaml`
-configuration) and performing an in-place upgrade on the same version before
-fully upgrading to the new version.
+and do not override the ingress controller version, you must perform a
+preliminary upgrade to disable the ingress controller prior to upgrading to the
+chart version 2.4.
 
-#### Example workflow for disabling the controller
+While the controller is disabled, changes to Kubernetes configuration (Ingress
+resources, KongPlugin resources, Service Endpoints, etc.) will not update Kong
+proxy configuration. We recommend you establish an active maintenance window
+under which to perform this upgrade and inform users and stakeholders so as to
+avoid unexpected disruption.
 
-**WARNING**: Make sure that you create a testing environment to practice
-upgrading and document your process fully before you perform this upgrade
-on a production system.
-
-**WARNING**: For the period of time where this upgrade is being performed
-there will be some service unavailability (for instance newly posted `Ingress`
-resources wont be provisioned until the upgrade is complete). We recommend
-you establish an active maintenance window under which to perform this upgrade
-and inform users and stakeholders so as to avoid unexpected disruption.
-
-**WARNING**: How you disable the ingress controller for upgrade depends on things
-like whether you use CLI flags or `values.yaml` to configure your release, but
-the following are meant to help illustrate the high level workflow. Don't use
-this verbatim, but instead as a reference to develop your own upgrade procedure.
-
-Upgrade the chart "in place" by performing an upgrade of the options only, but
-keep the current chart version:
+First, run an upgrade that keeps the current version, but disables the ingress
+controller:
 
 ```console
-$ helm upgrade \
+$ helm upgrade --wait \
   --set ingressController.enabled=false \
   --version <CURRENT_CHART_VERSION> \
   --namespace <YOUR_RELEASE_NAMESPACE> \
   <YOUR_RELEASE_NAME> kong/kong
 ```
 
-Then wait for pods in the namespace to be fully terminated before proceeding:
-
-```console
-$ kubectl -n <YOUR_RELEASE_NAMESPACE> get pods -w
-```
-
-Once everything is settled you will only have the proxy itself running and you
-can re-enable the ingress controller and perform the actual upgrade:
+Once the upgrade completes you will only have the proxy itself running, and can
+run a second upgrade to re-enable the ingress controller and update to chart
+version 2.4:
 
 ```console
 $ helm upgrade \
   --set ingressController.enabled=true \
-  --version <NEW_CHART_VERSION> \
+  --version 2.4.0 \
   --namespace <YOUR_RELEASE_NAMESPACE> \
   <YOUR_RELEASE_NAME> kong/kong
 ```
-
-The result of this workflow is that the older version of the ingress controller
-container will already have been shut down when you perform the release so the
-new container and old container wont be running simoltaneously.
 
 ## 2.3.0
 
