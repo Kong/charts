@@ -146,13 +146,22 @@ read the [env](#the-env-section) section.
 
 When deploying Kong in DB-less mode(`env.database: "off"`)
 and without the Ingress Controller(`ingressController.enabled: false`),
-you have to provide a declarative configuration for Kong to run.
-The configuration can be provided using an existing ConfigMap
-(`dblessConfig.configMap`) or or the whole configuration can be put into the
-`values.yaml` file for deployment itself, under the `dblessConfig.config`
-parameter. See the example configuration in the default values.yaml
-for more details.
-
+you have to provide a declarative configuration for Kong to run. [Declarative
+configuration](https://docs.konghq.com/gateway-oss/2.5.x/db-less-and-declarative-config/#the-declarative-configuration-format)
+is supplied via ConfigMap.    
+    
+Possible sources of the declarative configuration ConfigMap include configuration 
+supplied under the `dblessConfig.config` paramater of `values.yaml`, or with the
+helm flag `--set-file` parameter. See the example configuration in the default 
+[values.yaml](values.yaml#L371) or [example-values/dbless-config.yaml](example-values/dbless-config.yaml)
+for syntax and more details.    
+    
+Alternatively, the configuration can be provided separately using an existing
+ConfigMap name supplied to Kong in (`dblessConfig.configMap`). Note, externally
+supplied ConfigMaps are not hashed or tracked in deployment annotations.
+Subsequent ConfigMap updates will require user-initiated new deployment rollouts
+to apply the new configuration.    
+    
 #### Using the Postgres sub-chart
 
 The chart can optionally spawn a Postgres instance using [Bitnami's Postgres
