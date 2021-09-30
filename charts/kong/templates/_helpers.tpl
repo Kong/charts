@@ -59,7 +59,6 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
-
 {{/*
 Create Ingress resource for a Kong service
 */}}
