@@ -52,8 +52,8 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 Create the name of the service account to use
 */}}
 {{- define "kong.serviceAccountName" -}}
-{{- if .Values.ingressController.serviceAccount.create -}}
-    {{ default (include "kong.fullname" .) .Values.ingressController.serviceAccount.name }}
+{{- if .Values.deployment.serviceAccount.create -}}
+    {{ default (include "kong.fullname" .) .Values.deployment.serviceAccount.name }}
 {{- else -}}
     {{ default "default" .Values.ingressController.serviceAccount.name }}
 {{- end -}}

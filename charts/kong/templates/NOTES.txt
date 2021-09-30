@@ -12,5 +12,10 @@ Once installed, please follow along the getting started guide to start using
 Kong: https://bit.ly/k4k8s-get-started
 
 {{ $warnings := list -}}
+{{- if (hasKey .Values.ingressController "serviceAccount") -}}
+{{- if (or (hasKey .Values.ingressController.serviceAccount "name") (hasKey .Values.ingressController.serviceAccount "annotations")) -}}
+{{- $warnings = append $warnings "you have set either .ingressController.serviceAccount.name or .ingressController.serviceAccount.annotations. These settings have moved to .deployment.serviceAccount.name and .deployment.serviceAccount.annotations. You must move your configuration to the new location in values.yaml" -}}
+{{- end -}}
+{{- end -}}
 
 {{- include "kong.deprecation-warnings" $warnings -}}
