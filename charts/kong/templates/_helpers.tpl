@@ -55,7 +55,7 @@ Create the name of the service account to use
 {{- if .Values.deployment.serviceAccount.create -}}
     {{ default (include "kong.fullname" .) .Values.deployment.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.ingressController.serviceAccount.name }}
+    {{ default "default" .Values.deployment.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
