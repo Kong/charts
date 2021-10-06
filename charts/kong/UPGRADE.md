@@ -109,6 +109,17 @@ $ helm upgrade \
   <YOUR_RELEASE_NAME> kong/kong
 ```
 
+### Changed ServiceAccount configuration location
+
+2.4.0 moved ServiceAccount configuration from
+`ingressController.serviceAccount` to `deployment.serviceAccount` to accomodate
+configurations that required a ServiceAccount but did not use the controller.
+If you disable ServiceAccount or override its name, you must move your
+configuration under `deployment.serviceAccount`. The chart will warn you if it
+detects non-default configuration in the original location when you upgrade.
+You can use `helm upgrade --dry-run` to see if you are affected before actually
+upgrading.
+
 ## 2.3.0
 
 ### Updated CRDs and CRD API version

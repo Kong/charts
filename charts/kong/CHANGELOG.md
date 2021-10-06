@@ -1,5 +1,37 @@
 # Changelog
 
+## 2.4.0
+
+* KIC now defaults to version 2.0. If you use a database, you must first
+  perform a temporary intermediate upgrade to disable KIC before upgrading it
+  to 2.0 and re-enabling it. See the [upgrade guide](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#disable-ingress-controller-prior-to-2x-upgrade-when-using-postgresql)
+  for detailed instructions.
+* ServiceAccount are now always created by default unless explicitly disabled.
+  ServiceAccount customization has [moved under the `deployment` section of
+  configuration](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#changed-serviceaccount-configuration-location)
+  to reflect this. This accomodates configurations that need a ServiceAccount
+  but that do not use the ingress controller.
+  ([#455](https://github.com/Kong/charts/pull/455))
+
+### Breaking Changes
+
+### Improvements
+
+* Migration jobs support a configurable backoffLimit.
+  ([#442](https://github.com/Kong/charts/pull/442))
+* Generated Ingresses now use `networking.k8s.io/v1` when available.
+  ([#446](https://github.com/Kong/charts/pull/446))
+
+### Fixed
+
+* 5-digit UDP ports now work properly.
+  ([#443](https://github.com/Kong/charts/pull/443))
+* Fixed port name used for NLB annotation example.
+  ([#458](https://github.com/Kong/charts/pull/458))
+* Fixed a compatibility issue with Helm's `--set-file` feature and
+  user-provided DB-less configuration ConfigMaps.
+  ([#465](https://github.com/Kong/charts/pull/465))
+
 ## 2.3.0
 
 ### Breaking Changes
