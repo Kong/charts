@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [2.4.0](#240)
 - [2.3.0](#230)
 - [2.2.0](#220)
 - [2.1.0](#210)
@@ -59,6 +60,65 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 2.4.0
+
+### Disable ingress controller prior to 2.x upgrade when using PostgreSQL
+
+Chart version 2.4 is the first Kong chart version that defaults to the 2.x
+series of ingress controller releases. 2.x uses a different leader election
+system than 1.x. If both versions are running simultaneously, both controller
+versions will attempt to interact with the admin API, potentially setting
+inconsistent configuration in the database when PostgreSQL is the backend.
+
+If you are configured with the following:
+
+- ingressController.enabled=true
+- postgresql.enabled=true
+
+and do not override the ingress controller version, you must perform a
+preliminary upgrade to disable the ingress controller prior to upgrading to the
+chart version 2.4.
+
+While the controller is disabled, changes to Kubernetes configuration (Ingress
+resources, KongPlugin resources, Service Endpoints, etc.) will not update Kong
+proxy configuration. We recommend you establish an active maintenance window
+under which to perform this upgrade and inform users and stakeholders so as to
+avoid unexpected disruption.
+
+First, run an upgrade that keeps the current version, but disables the ingress
+controller:
+
+```console
+$ helm upgrade --wait \
+  --set ingressController.enabled=false \
+  --version <CURRENT_CHART_VERSION> \
+  --namespace <YOUR_RELEASE_NAMESPACE> \
+  <YOUR_RELEASE_NAME> kong/kong
+```
+
+Once the upgrade completes you will only have the proxy itself running, and can
+run a second upgrade to re-enable the ingress controller and update to chart
+version 2.4:
+
+```console
+$ helm upgrade \
+  --set ingressController.enabled=true \
+  --version 2.4.0 \
+  --namespace <YOUR_RELEASE_NAMESPACE> \
+  <YOUR_RELEASE_NAME> kong/kong
+```
+
+### Changed ServiceAccount configuration location
+
+2.4.0 moved ServiceAccount configuration from
+`ingressController.serviceAccount` to `deployment.serviceAccount` to accomodate
+configurations that required a ServiceAccount but did not use the controller.
+If you disable ServiceAccount or override its name, you must move your
+configuration under `deployment.serviceAccount`. The chart will warn you if it
+detects non-default configuration in the original location when you upgrade.
+You can use `helm upgrade --dry-run` to see if you are affected before actually
+upgrading.
 
 ## 2.3.0
 

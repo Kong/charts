@@ -146,13 +146,19 @@ read the [env](#the-env-section) section.
 
 When deploying Kong in DB-less mode(`env.database: "off"`)
 and without the Ingress Controller(`ingressController.enabled: false`),
-you have to provide a declarative configuration for Kong to run.
-The configuration can be provided using an existing ConfigMap
-(`dblessConfig.configMap`) or or the whole configuration can be put into the
-`values.yaml` file for deployment itself, under the `dblessConfig.config`
+you have to provide a [declarative configuration](https://docs.konghq.com/gateway-oss/latest/db-less-and-declarative-config/#the-declarative-configuration-format) for Kong to run.
+You can provide an existing ConfigMap
+(`dblessConfig.configMap`) or place the whole configuration into
+`values.yaml` (`dblessConfig.config`)
 parameter. See the example configuration in the default values.yaml
-for more details.
-
+for more details. You can use `--set-file dblessConfig.config=/path/to/declarative-config.yaml`
+in Helm commands to substitute in a complete declarative config file.    
+    
+Note that externally supplied ConfigMaps are not hashed or tracked in deployment annotations.
+Subsequent ConfigMap updates will require user-initiated new deployment rollouts
+to apply the new configuration. You should run `kubectl rollout restart deploy`
+after updating externally supplied ConfigMap content.    
+    
 #### Using the Postgres sub-chart
 
 The chart can optionally spawn a Postgres instance using [Bitnami's Postgres
@@ -499,6 +505,7 @@ directory.
 | migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
 | migrations.annotations             | Annotations for migration job pods                                                    | `{"sidecar.istio.io/inject": "false" |
 | migrations.jobAnnotations          | Additional annotations for migration jobs                                             | `{}`                |
+| migrations.backoffLimit            | Override the system backoffLimit                                                      | `{}`                |
 | waitImage.enabled                  | Spawn init containers that wait for the database before starting Kong                 | `true`              |
 | waitImage.repository               | Image used to wait for database to become ready. Uses the Kong image if none set      |                     |
 | waitImage.tag                      | Tag for image used to wait for database to become ready                               |                     |
@@ -565,6 +572,7 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.externalIPs                    | IPs for which nodes in the cluster will also accept traffic for the servic            | `[]`                |
 | SVC.externalTrafficPolicy          | k8s service's externalTrafficPolicy. Options: Cluster, Local                          |                     |
 | SVC.ingress.enabled                | Enable ingress resource creation (works with SVC.type=ClusterIP)                      | `false`             |
+| SVC.ingress.ingressClassName       | Set the ingressClassName to associate this Ingress with an IngressClass               |                     |
 | SVC.ingress.tls                    | Name of secret resource, containing TLS secret                                        |                     |
 | SVC.ingress.hostname               | Ingress hostname                                                                      | `""`                |
 | SVC.ingress.path                   | Ingress path.                                                                         | `/`                 |
@@ -595,16 +603,14 @@ section of `values.yaml` file:
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | enabled                            | Deploy the ingress controller, rbac and crd                                           | true                                                                         |
 | image.repository                   | Docker image with the ingress controller                                              | kong/kubernetes-ingress-controller |
-| image.tag                          | Version of the ingress controller                                                     | 1.2.0 |
+| image.tag                          | Version of the ingress controller                                                     | 2.0 |
 | image.effectiveSemver              | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version | |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
 | installCRDs                        | Creates managed CRDs.                                                                 | false
-| serviceAccount.create              | Create Service Account for ingress controller                                         | true
-| serviceAccount.name                | Use existing Service Account, specify its name                                        | ""
-| serviceAccount.annotations         | Annotations for Service Account                                                       | {}
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
-| ingressClass                       | The ingress-class value for controller                                                | kong                                                                         |
+| ingressClass                       | The name of this controller's ingressClass                                                | kong                                                                         |
+| ingressClassAnnotations            | The ingress-class value for controller                                                | kong                                                                         |
 | args                               | List of ingress-controller cli arguments                                              | []                                                                           |
 | watchNamespaces                    | List of namespaces to watch. Watches all namespaces if empty                          | []                                                                           |
 | admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
@@ -628,6 +634,9 @@ For a complete list of all configuration values you can set in the
 | deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
 | deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |
+| deployment.serviceAccount.create   | Create Service Account for the Deployment / Daemonset and the migrations              | `true`              |
+| deployment.serviceAccount.name     | Name of the Service Account, a default one will be generated if left blank.           | ""                  |
+| deployment.serviceAccount.annotations | Annotations for the Service Account                                                | {}                  |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
 | autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
 | autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |

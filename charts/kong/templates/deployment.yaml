@@ -55,12 +55,14 @@ spec:
         {{ toYaml .Values.podLabels | nindent 8 }}
         {{- end }}
     spec:
-      automountServiceAccountToken: {{ .Values.ingressController.enabled }}
       {{- if .Values.priorityClassName }}
       priorityClassName: "{{ .Values.priorityClassName }}"
       {{- end }}
-      {{- if or .Values.ingressController.enabled .Values.podSecurityPolicy.enabled }}
+      {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
       serviceAccountName: {{ template "kong.serviceAccountName" . }}
+      automountServiceAccountToken: true
+      {{- else }}
+      automountServiceAccountToken: false
       {{ end }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
@@ -139,7 +141,7 @@ spec:
           protocol: TCP
         {{- end }}
         {{- range .Values.proxy.stream }}
-        - name: stream-{{ .containerPort }}
+        - name: stream{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
           containerPort: {{ .containerPort }}
           {{- if .hostPort }}
           hostPort: {{ .hostPort }}
@@ -147,7 +149,7 @@ spec:
           protocol: {{ .protocol }}
         {{- end }}
         {{- range .Values.udpProxy.stream }}
-        - name: stream-udp-{{ .containerPort }}
+        - name: streamudp-{{ .containerPort }}
           containerPort: {{ .containerPort }}
           {{- if .hostPort }}
           hostPort: {{ .hostPort }}

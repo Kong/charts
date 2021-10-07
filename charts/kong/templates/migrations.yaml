@@ -25,6 +25,7 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
+  backoffLimit: {{ .Values.migrations.backoffLimit }}
   template:
     metadata:
       name: {{ template "kong.name" . }}-init-migrations
@@ -38,9 +39,11 @@ spec:
       {{- end }}
       {{- end }}
     spec:
-      automountServiceAccountToken: false
-      {{- if .Values.podSecurityPolicy.enabled }}
+      {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
       serviceAccountName: {{ template "kong.serviceAccountName" . }}
+      automountServiceAccountToken: true
+      {{- else }}
+      automountServiceAccountToken: false
       {{- end }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
