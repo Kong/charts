@@ -7,8 +7,6 @@ on:
 
 jobs:
   lint-test:
-    env:
-      COMMON_CT_ARGS: "--chart-repos bitnami=https://charts.bitnami.com/bitnami --remote origin --target-branch main"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,23 +26,14 @@ jobs:
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.0.1
 
-      - name: Run chart-testing (list-changed)
-        id: list-changed
-        run: |
-          changed=$(ct list-changed)
-          if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
-          fi
-
       - name: Run chart-testing (lint)
-        run: ct lint $COMMON_CT_ARGS
+        run: ct lint
 
       - name: setup testing environment (kind-cluster)
         run: ./scripts/test-env.sh
-        if: steps.list-changed.outputs.changed == 'true'
 
       - name: run chart-testing (install)
-        run: ct install $COMMON_CT_ARGS
+        run: ct install
 
       - name: run integration tests (integration)
         run: ./scripts/test-run.sh
