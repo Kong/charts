@@ -1,0 +1,3 @@
+# See https://github.com/helm/chart-testing#configuration
+chart-repos:
+  - bitnami=https://charts.bitnami.com/bitnami
