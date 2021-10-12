@@ -68,7 +68,11 @@ $ helm install kong/kong --generate-name
 
 ## Prerequisites
 
-- Kubernetes 1.12+
+- Kubernetes 1.17+. Older chart releases support older Kubernetes versions.
+  Refer to the [supported version matrix](https://docs.konghq.com/kubernetes-ingress-controller/latest/references/version-compatibility/#kubernetes)
+  and the [chart changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
+  for information about the default chart controller versions and Kubernetes
+  versions supported by controller releases.
 - PV provisioner support in the underlying infrastructure if persistence
   is needed for Kong datastore.
 
