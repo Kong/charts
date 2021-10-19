@@ -1,6 +1,19 @@
 # Changelog
 
+## 2.5.0
+
+### Improvements
+
+* Default Kong proxy version updated to 2.6.
+
+### Fixed
+
+* Properly disable KongClusterPlugin when watchNamespaces is set.
+  ([#475](https://github.com/Kong/charts/pull/475))
+
 ## 2.4.0
+
+### Breaking Changes
 
 * KIC now defaults to version 2.0. If you use a database, you must first
   perform a temporary intermediate upgrade to disable KIC before upgrading it
@@ -12,8 +25,6 @@
   to reflect this. This accomodates configurations that need a ServiceAccount
   but that do not use the ingress controller.
   ([#455](https://github.com/Kong/charts/pull/455))
-
-### Breaking Changes
 
 ### Improvements
 

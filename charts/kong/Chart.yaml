@@ -10,5 +10,5 @@ maintainers:
   email: traines@konghq.com
 name: kong
 sources:
-version: 2.4.0
-appVersion: "2.5"
+version: 2.5.0
+appVersion: "2.6"
