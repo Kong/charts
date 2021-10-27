@@ -70,15 +70,23 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      {{- if (or (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) .Values.deployment.initContainers) }}
       initContainers:
+      - name: clear-stale-pid
+        image: {{ include "kong.getRepoTag" .Values.image }}
+        command:
+        - "rm"
+        - "-vrf"
+        - "$KONG_PREFIX/pids"
+        env:
+        {{- include "kong.env" . | nindent 8 }}
+        volumeMounts:
+        {{- include "kong.volumeMounts" . | nindent 8 }}
         {{- if .Values.deployment.initContainers }}
         {{- toYaml .Values.deployment.initContainers | nindent 6 }}
         {{- end }}
         {{- if (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) }}
         {{- include "kong.wait-for-db" . | nindent 6 }}
         {{- end }}
-      {{- end }}
       {{- if .Values.deployment.hostAliases }}
       hostAliases:
         {{- toYaml .Values.deployment.hostAliases | nindent 6 }}
