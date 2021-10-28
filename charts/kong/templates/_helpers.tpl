@@ -598,10 +598,17 @@ Note that this is a string, not a boolean, because templates vov
 {{- include "kong.ingressController.env" .  | indent 2 }}
   image: {{ include "kong.getRepoTag" .Values.ingressController.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
+     Helm value interpretation doesn't let you replac the default HTTP checks with any other
+	 check type, and all HTTP checks freeze when a debugger pauses operation.
+	 Setting disableReadiness to ANY value disables the probes.
+*/}}
+{{- if (not (hasKey .Values.ingressController "disableProbes")) }}
   readinessProbe:
 {{ toYaml .Values.ingressController.readinessProbe | indent 4 }}
   livenessProbe:
 {{ toYaml .Values.ingressController.livenessProbe | indent 4 }}
+{{- end }}
   resources:
 {{ toYaml .Values.ingressController.resources | indent 4 }}
 {{- if .Values.ingressController.admissionWebhook.enabled }}
