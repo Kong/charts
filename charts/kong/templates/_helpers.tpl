@@ -568,7 +568,6 @@ Note that this is a string, not a boolean, because templates vov
   securityContext:
 {{ toYaml .Values.containerSecurityContext | nindent 4 }}  
   args:
-  - /kong-ingress-controller
   {{ if .Values.ingressController.args}}
   {{- range $val := .Values.ingressController.args }}
   - {{ $val }}
