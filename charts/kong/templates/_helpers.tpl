@@ -599,7 +599,7 @@ Note that this is a string, not a boolean, because templates vov
   image: {{ include "kong.getRepoTag" .Values.ingressController.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
-     Helm value interpretation doesn't let you replac the default HTTP checks with any other
+     Helm value interpretation doesn't let you replace the default HTTP checks with any other
 	 check type, and all HTTP checks freeze when a debugger pauses operation.
 	 Setting disableReadiness to ANY value disables the probes.
 */}}
