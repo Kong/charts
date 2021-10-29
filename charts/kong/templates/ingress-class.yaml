@@ -1,6 +1,6 @@
 {{/* Create a "kong" IngressClass if none exists already */}}
 {{- $existingKongIngressClass := (lookup "networking.k8s.io/v1" "IngressClass" "" "kong") -}}
-{{- if $existingKongIngressClass -}}
+{{- if (not $existingKongIngressClass) -}}
 {{- if (and .Values.ingressController.enabled (not (eq (include "kong.ingressVersion" .) "extensions/v1beta1"))) -}}
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
