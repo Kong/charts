@@ -57,6 +57,8 @@ jobs:
         run: ./scripts/test-env.sh cleanup
 
   integration-test:
+    # Not a real requirement, but due to worker CPU contention, this can fail if it runs concurrent with lint-test
+    needs: lint-test
     runs-on: ubuntu-latest
     steps:
       - name: checkout
