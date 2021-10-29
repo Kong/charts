@@ -1086,9 +1086,9 @@ Kubernetes resources it uses to build Kong configuration.
 {{- end -}}
 
 {{- define "kong.ingressVersion" -}}
-{{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1") -}}
+{{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress") -}}
 networking.k8s.io/v1
-{{- else if (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1") -}}
+{{- else if (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress") -}}
 networking.k8s.io/v1beta1
 {{- else -}}
 extensions/v1beta1
