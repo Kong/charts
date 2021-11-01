@@ -55,6 +55,9 @@ spec:
         {{ toYaml .Values.podLabels | nindent 8 }}
         {{- end }}
     spec:
+      {{- if .Values.deployment.hostNetwork }}
+      hostNetwork: true
+      {{- end }}
       {{- if .Values.priorityClassName }}
       priorityClassName: "{{ .Values.priorityClassName }}"
       {{- end }}
