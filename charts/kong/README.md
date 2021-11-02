@@ -685,21 +685,6 @@ For a complete list of all configuration values you can set in the
 need to tweak the `containerSecurityContext` configuration as in the example:
 
 ```yaml
-deployment:
-  daemonset: true # run as daemonset
-  hostNetwork: true # enable hostNetwork
-nodeSelector: # limit the nodes bases on a label
-  ingress: "true"
-proxy:
-  type: NodePort # maybe you don't need or want a LoadBalancer
-  http:
-    containerPort: 80 # containerPor and hostPort neest to be the same
-    nodePort: 32080
-    hostPort: 80
-  tls:
-    containerPort: 443
-    nodePort: 32443
-    hostPort: 443
 containerSecurityContext: # run as root to bind to lower ports
   capabilities:
     add: [NET_BIND_SERVICE]
