@@ -9,7 +9,7 @@ export PROXY_IP=${HOST}:${PORT}
 curl $PROXY_IP
 
 Once installed, please follow along the getting started guide to start using
-Kong: https://bit.ly/k4k8s-get-started
+Kong: https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/getting-started/
 
 {{ $warnings := list -}}
 {{- if (hasKey .Values.ingressController "serviceAccount") -}}
