@@ -1,5 +1,36 @@
 # Changelog
 
+**Note:** chart versions 2.3.0 through 2.5.0 contained an incorrect
+KongIngress CRD. The `proxy.path` field was missing. Helm will not fix this
+automatically on upgrade. You can fix it by running:
+
+```
+kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/crds/custom-resource-definitions.yaml
+```
+
+## 2.6.0
+
+### Improvements
+
+* Added an initContainer to clear leftover PID file in the event of a Kong
+  container crash, allowing the container to restart.
+  ([#480](https://github.com/Kong/charts/pull/480))
+* Added deployment.hostNetwork to enable host network access.
+  ([#486](https://github.com/Kong/charts/pull/486))
+
+### Fixed
+
+* NOTES.txt documentation link now uses up-to-date location.
+* Ingress availability check tightened to require the Ingress API specifically
+  in `networking.k8s.io/v1`.
+  ([#484](https://github.com/Kong/charts/pull/484))
+* Flipped backwards logic for creating an IngressClass when no IngressClass was
+  present.
+  ([#485](https://github.com/Kong/charts/pull/485))
+* Removed unnecessary hardcoded controller container argument.
+  ([#481](https://github.com/Kong/charts/pull/481))
+* Restored missing `proxy.path` field to KongIngress CRD.
+
 ## 2.5.0
 
 ### Improvements
