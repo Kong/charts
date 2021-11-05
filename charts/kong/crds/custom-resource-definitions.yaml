@@ -190,6 +190,9 @@ spec:
           proxy:
             description: Service represents a Service in Kong. Read https://getkong.org/docs/0.13.x/admin-api/#Service-object
             properties:
+              path:
+                type: string
+                pattern: ^/.*$
               connect_timeout:
                 minimum: 0
                 type: integer
