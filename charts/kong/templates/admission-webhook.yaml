@@ -48,6 +48,18 @@ webhooks:
     resources:
     - kongconsumers
     - kongplugins
+{{- if (semverCompare ">= 2.0.4" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+    - kongclusterplugins
+{{- end }}
+  - apiGroups:
+    - ''
+    apiVersions:
+    - 'v1'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - secrets
   clientConfig:
     {{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
     caBundle: {{ b64enc $caCert }}
