@@ -548,22 +548,16 @@ The name of the service used for the ingress controller's validation webhook
   {{- toYaml .Values.resources | nindent 4 }}
 {{- end -}}
 
-{{/*
-kong.controller2xplus returns "true" if the controller image tag major version is >= 2
-Note that this is a string, not a boolean, because templates vov
-*/}}
-{{- define "kong.controller2xplus" -}}
-{{- $version := "" -}}
-{{- if .Values.ingressController.image.effectiveSemver -}}
-  {{- $version = semver .Values.ingressController.image.effectiveSemver -}}
+{{/* effectiveVersion takes an image dict from values.yaml. if .effectiveSemver is set, it returns that, else it returns .tag */}}
+{{- define "kong.effectiveVersion" -}}
+{{- if .effectiveSemver -}}
+{{- .effectiveSemver -}}
 {{- else -}}
-  {{- $version = semver .Values.ingressController.image.tag -}}
+{{- .tag -}}
 {{- end -}}
-{{- ge $version.Major 2 -}}
 {{- end -}}
 
 {{- define "kong.controller-container" -}}
-{{- $controllerIs2xPlus := include "kong.controller2xplus" . -}}
 - name: ingress-controller
   securityContext:
 {{ toYaml .Values.containerSecurityContext | nindent 4 }}  
@@ -579,7 +573,7 @@ Note that this is a string, not a boolean, because templates vov
     containerPort: {{ .Values.ingressController.admissionWebhook.port }}
     protocol: TCP
   {{- end }}
-  {{ if (eq $controllerIs2xPlus "true") -}}
+  {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) -}}
   - name: cmetrics
     containerPort: 10255
     protocol: TCP
