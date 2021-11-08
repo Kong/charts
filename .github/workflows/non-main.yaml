@@ -11,7 +11,7 @@ on:
 jobs:
   lint-test:
     env:
-      COMMON_CT_ARGS: "--chart-repos bitnami=https://charts.bitnami.com/bitnami --remote origin --target-branch next"
+      CT_TARGET_BRANCH: next
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,6 +33,7 @@ jobs:
 
       - name: Run chart-testing (list-changed)
         id: list-changed
+        working-directory: charts
         run: |
           changed=$(ct list-changed)
           if [[ -n "$changed" ]]; then
@@ -40,19 +41,24 @@ jobs:
           fi
 
       - name: Run chart-testing (lint)
-        run: ct lint $COMMON_CT_ARGS --check-version-increment=false
+        run: ct lint --check-version-increment=false
+        working-directory: charts
 
       - name: setup testing environment (kind-cluster)
         run: ./scripts/test-env.sh
-        if: steps.list-changed.outputs.changed == 'true'
+        # currently broken. list-changed refuses to list changed charts for some reason
+        #if: steps.list-changed.outputs.changed == 'true'
 
       - name: run chart-testing (install)
-        run: ct install $COMMON_CT_ARGS
+        run: ct install
+        working-directory: charts
 
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
 
   integration-test:
+    # Not a real requirement, but due to worker CPU contention, this can fail if it runs concurrent with lint-test
+    needs: lint-test
     runs-on: ubuntu-latest
     steps:
       - name: checkout

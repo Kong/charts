@@ -636,6 +636,7 @@ For a complete list of all configuration values you can set in the
 | deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
 | deployment.initContainers          | Create initContainers. Please go to Kubernetes doc for the spec of the initContainers |                     |
 | deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
+| deployment.hostNetwork             | Enable hostNetwork, which binds to the ports to the host                              | `false`             |
 | deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
 | deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |
 | deployment.serviceAccount.create   | Create Service Account for the Deployment / Daemonset and the migrations              | `true`              |
@@ -680,6 +681,17 @@ For a complete list of all configuration values you can set in the
 | extraConfigMaps                    | ConfigMaps to add to mounted volumes                                                  | `[]`                |
 | extraSecrets                       | Secrets to add to mounted volumes                                                     | `[]`                |
 
+**Note:** If you are using `deployment.hostNetwork` to bind to lower ports ( < 1024), which may be the desired option (ports 80 and 433), you also 
+need to tweak the `containerSecurityContext` configuration as in the example:
+
+```yaml
+containerSecurityContext: # run as root to bind to lower ports
+  capabilities:
+    add: [NET_BIND_SERVICE]
+  runAsGroup: 0
+  runAsNonRoot: false
+  runAsUser: 0
+```
 
 #### The `env` section
 

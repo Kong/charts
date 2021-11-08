@@ -568,7 +568,6 @@ Note that this is a string, not a boolean, because templates vov
   securityContext:
 {{ toYaml .Values.containerSecurityContext | nindent 4 }}  
   args:
-  - /kong-ingress-controller
   {{ if .Values.ingressController.args}}
   {{- range $val := .Values.ingressController.args }}
   - {{ $val }}
@@ -599,10 +598,17 @@ Note that this is a string, not a boolean, because templates vov
 {{- include "kong.ingressController.env" .  | indent 2 }}
   image: {{ include "kong.getRepoTag" .Values.ingressController.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
+     Helm value interpretation doesn't let you replace the default HTTP checks with any other
+	 check type, and all HTTP checks freeze when a debugger pauses operation.
+	 Setting disableReadiness to ANY value disables the probes.
+*/}}
+{{- if (not (hasKey .Values.ingressController "disableProbes")) }}
   readinessProbe:
 {{ toYaml .Values.ingressController.readinessProbe | indent 4 }}
   livenessProbe:
 {{ toYaml .Values.ingressController.livenessProbe | indent 4 }}
+{{- end }}
   resources:
 {{ toYaml .Values.ingressController.resources | indent 4 }}
 {{- if .Values.ingressController.admissionWebhook.enabled }}
@@ -1086,9 +1092,9 @@ Kubernetes resources it uses to build Kong configuration.
 {{- end -}}
 
 {{- define "kong.ingressVersion" -}}
-{{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1") -}}
+{{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress") -}}
 networking.k8s.io/v1
-{{- else if (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1") -}}
+{{- else if (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress") -}}
 networking.k8s.io/v1beta1
 {{- else -}}
 extensions/v1beta1
