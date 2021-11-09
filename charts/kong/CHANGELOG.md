@@ -8,6 +8,15 @@ automatically on upgrade. You can fix it by running:
 kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/crds/custom-resource-definitions.yaml
 ```
 
+## 2.6.1
+
+### Fixed
+
+* Disabled IngressClass creation on Kubernetes versions that do not support it.
+* Added missing resources (Secrets, KongClusterPlugins) to the admission
+  controller configuration.
+  ([#492](https://github.com/Kong/charts/pull/492))
+
 ## 2.6.0
 
 ### Improvements
