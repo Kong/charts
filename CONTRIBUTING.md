@@ -41,14 +41,19 @@ release.
 
 ## Commit message format
 
-To maintain a healthy Git history, we ask of you that you write your commit
-messages as follows:
+To maintain a healthy Git history, we ask that you follow the [Kong commit
+message format](https://github.com/Kong/kong/blob/master/CONTRIBUTING.md#commit-message-format).
 
-- The commit header is in present tense.
-- The header indicates its chart, e.g. `[kong] made a cool change`.
-- The header and body are separated by a blank line.
-- The header should not be longer than 50 characters.
-- The body of your message should not contain lines longer than 72 characters.
+Briefly, commit message headers should begin with _type(area)_, where type
+indicates the type of change and area indicates what section of the chart it
+updates. For example:
+
+- `feat(services) add support for foobar` for a new feature in the Service
+  templates.
+- `docs(hybrid) clarify foobar` for documentation updates related to hybrid
+  mode.
+- `fix(helpers) handle foobar correctly` for a bugfix in a generic helper
+  template.
 
 ### Header
 
