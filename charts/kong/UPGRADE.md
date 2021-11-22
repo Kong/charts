@@ -114,6 +114,15 @@ $ helm upgrade \
 2.4.0 moved ServiceAccount configuration from
 `ingressController.serviceAccount` to `deployment.serviceAccount` to accomodate
 configurations that required a ServiceAccount but did not use the controller.
+
+The chart now creates a ServiceAccount by default. When enabled, upgrade
+migration hooks require the ServiceAccount, but Helm will not create it before
+the hooks run, and the migration jobs will fail. To avoid this, first perform
+an initial chart upgrade that does not update the Kong image version and sets
+`migrations.preUpgrade=false` and `migrations.postUpgrade=false`. This will
+create the account for future upgrades, and you can re-enable migrations and
+upgrade your Kong version after.
+
 If you disable ServiceAccount or override its name, you must move your
 configuration under `deployment.serviceAccount`. The chart will warn you if it
 detects non-default configuration in the original location when you upgrade.
