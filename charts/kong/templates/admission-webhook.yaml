@@ -34,6 +34,9 @@ metadata:
     {{- include "kong.metaLabels" . | nindent 4 }}
 webhooks:
 - name: validations.kong.konghq.com
+  objectSelector:
+    matchLabels:
+      owner: !helm
   failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
   sideEffects: None
   admissionReviewVersions: ["v1beta1"]
