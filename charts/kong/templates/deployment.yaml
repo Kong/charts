@@ -76,6 +76,7 @@ spec:
       initContainers:
       - name: clear-stale-pid
         image: {{ include "kong.getRepoTag" .Values.image }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         command:
         - "rm"
         - "-vrf"
