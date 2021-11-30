@@ -77,6 +77,8 @@ spec:
       - name: clear-stale-pid
         image: {{ include "kong.getRepoTag" .Values.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        securityContext:
+        {{ toYaml .Values.containerSecurityContext | nindent 10 }}
         command:
         - "rm"
         - "-vrf"
@@ -114,7 +116,7 @@ spec:
         image: {{ include "kong.getRepoTag" .Values.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         securityContext:
-        {{ toYaml .Values.containerSecurityContext | nindent 10 }}  
+        {{ toYaml .Values.containerSecurityContext | nindent 10 }}
         env:
         {{- include "kong.no_daemon_env" . | nindent 8 }}
         lifecycle:
