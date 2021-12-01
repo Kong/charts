@@ -12,7 +12,24 @@ kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/
 
 ### Improvements
 
-* Added `add` and `version` labels to pods. ([#504](https://github.com/Kong/charts/pull/504))
+* Added `app` and `version` labels to pods.
+  ([#504](https://github.com/Kong/charts/pull/504))
+* Reworked leftover socket file cleanup to avoid similar problems of the same
+  class.
+  ([#508](https://github.com/Kong/charts/pull/508))
+
+### Fixed
+
+* SecurityContext and resources applied to PID cleanup initContainer also.
+  ([#503](https://github.com/Kong/charts/pull/503))
+* Disabled the admission webhook on Helm Secrets, fixing an issue where it
+  prevented Helm from updating release metadata.
+  ([#500](https://github.com/Kong/charts/pull/500))
+* initContainers that use the Kong image use the same imagePullPolicy as the
+  main Kong container.
+  ([#501](https://github.com/Kong/charts/pull/501))
+* Applied mesh sidecar annotations to the Pod, not the Deployment.
+  ([#507](https://github.com/Kong/charts/pull/507))
 
 ## 2.6.1
 
