@@ -593,7 +593,9 @@ tolerations: []
 nodeSelector: {}
 
 # Annotation to be added to Kong pods
-podAnnotations: {}
+podAnnotations: 
+  kuma.io/gateway: enabled
+  traffic.sidecar.istio.io/includeInboundPorts: ""
 
 # Labels to be added to Kong pods
 podLabels: {}
@@ -603,9 +605,7 @@ podLabels: {}
 replicaCount: 1
 
 # Annotations to be added to Kong deployment
-deploymentAnnotations:
-  kuma.io/gateway: enabled
-  traffic.sidecar.istio.io/includeInboundPorts: ""
+deploymentAnnotations: {}
 
 # Enable autoscaling using HorizontalPodAutoscaler
 # When configuring an HPA, you must set resource requests on all containers via
