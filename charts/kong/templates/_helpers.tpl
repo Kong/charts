@@ -529,7 +529,6 @@ The name of the service used for the ingress controller's validation webhook
 {{- end -}}
 
 {{- define "kong.wait-for-db" -}}
-{{ $sockFile := (printf "%s/stream_rpc.sock" (default "/usr/local/kong" .Values.env.prefix)) }}
 - name: wait-for-db
   image: {{ include "kong.getRepoTag" .Values.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -537,10 +536,9 @@ The name of the service used for the ingress controller's validation webhook
   {{ toYaml .Values.containerSecurityContext | nindent 4 }} 
   env:
   {{- include "kong.env" . | nindent 2 }}
-{{/* TODO: the rm command here is a workaround for https://github.com/Kong/charts/issues/295
-     It should be removed once that's fixed.
+{{/* TODO the prefix override is to work around https://github.com/Kong/charts/issues/295
      Note that we use args instead of command here to /not/ override the standard image entrypoint. */}}
-  args: [ "/bin/sh", "-c", "export KONG_NGINX_DAEMON=on; until kong start; do echo 'waiting for db'; sleep 1; done; kong stop; rm -fv {{ $sockFile | squote }}"]
+  args: [ "/bin/sh", "-c", "export KONG_NGINX_DAEMON=on; export KONG_PREFIX=`mktemp -d`; until kong start; do echo 'waiting for db'; sleep 1; done; kong stop"]
   volumeMounts:
   {{- include "kong.volumeMounts" . | nindent 4 }}
   {{- include "kong.userDefinedVolumeMounts" . | nindent 4 }}

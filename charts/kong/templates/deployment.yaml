@@ -51,6 +51,8 @@ spec:
       labels:
         {{- include "kong.metaLabels" . | nindent 8 }}
         app.kubernetes.io/component: app
+        app: {{ template "kong.fullname" . }}
+        version: {{ .Chart.AppVersion | quote }}
         {{- if .Values.podLabels }}
         {{ toYaml .Values.podLabels | nindent 8 }}
         {{- end }}
@@ -76,6 +78,11 @@ spec:
       initContainers:
       - name: clear-stale-pid
         image: {{ include "kong.getRepoTag" .Values.image }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        securityContext:
+        {{ toYaml .Values.containerSecurityContext | nindent 10 }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
         command:
         - "rm"
         - "-vrf"
@@ -113,7 +120,7 @@ spec:
         image: {{ include "kong.getRepoTag" .Values.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         securityContext:
-        {{ toYaml .Values.containerSecurityContext | nindent 10 }}  
+        {{ toYaml .Values.containerSecurityContext | nindent 10 }}
         env:
         {{- include "kong.no_daemon_env" . | nindent 8 }}
         lifecycle:
