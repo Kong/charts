@@ -10,9 +10,9 @@ kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/
 
 ## 2.6.2
 
-### Improvmenet
+### Improvements
 
-* Add `add` and `version` labels to pods.
+* Added `add` and `version` labels to pods. ([#504](https://github.com/Kong/charts/pull/504))
 
 ## 2.6.1
 
