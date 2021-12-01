@@ -51,6 +51,8 @@ spec:
       labels:
         {{- include "kong.metaLabels" . | nindent 8 }}
         app.kubernetes.io/component: app
+        app: {{ template "kong.fullname" . }}
+        version: {{ .Chart.AppVersion | quote }}
         {{- if .Values.podLabels }}
         {{ toYaml .Values.podLabels | nindent 8 }}
         {{- end }}
