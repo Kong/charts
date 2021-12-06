@@ -535,11 +535,11 @@ updateStrategy: {}
 # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 resources: {}
   # limits:
-  #  cpu: 100m
-  #  memory: 256Mi
+  #  cpu: 1
+  #  memory: 1G
   # requests:
-  #  cpu: 100m
-  #  memory: 256Mi
+  #  cpu: 1
+  #  memory: 1G
 
 # readinessProbe for Kong pods
 readinessProbe:
