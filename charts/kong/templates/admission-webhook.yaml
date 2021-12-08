@@ -35,8 +35,11 @@ metadata:
 webhooks:
 - name: validations.kong.konghq.com
   objectSelector:
-    matchLabels:
-      owner: !helm
+    matchExpressions:
+    - key: owner
+      operator: NotIn
+      values:
+      - helm
   failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
   sideEffects: None
   admissionReviewVersions: ["v1beta1"]
