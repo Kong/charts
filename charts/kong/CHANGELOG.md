@@ -8,6 +8,18 @@ automatically on upgrade. You can fix it by running:
 kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/crds/custom-resource-definitions.yaml
 ```
 
+## 2.6.3
+
+### Improvements
+
+* Increased example resources for the Kong container.
+  ([#511](https://github.com/Kong/charts/pull/511))
+
+### Fixed
+
+* Corrected an invalid label match condition for the admission webhook.
+  ([#513](https://github.com/Kong/charts/pull/513))
+
 ## 2.6.2
 
 ### Improvements
