@@ -698,6 +698,14 @@ serviceMonitor:
   # honorLabels: false
   # metricRelabelings: []
 
+prometheusRules:
+  # Specifies whether PrometheusRules for Prometheus operator should be created
+  enabled: false
+  # Specifies namespace, where PrometheusRules should be installed
+  # namespace: monitoring
+  # Labels to be added to the PrometheusRule
+  # additionalLabels: {}
+
 # -----------------------------------------------------------------------------
 # Kong Enterprise parameters
 # -----------------------------------------------------------------------------

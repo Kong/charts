@@ -1,0 +1,128 @@
+{{- if and ( .Capabilities.APIVersions.Has "monitoring.coreos.com/v1" ) .Values.prometheusRules.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ template "kong.fullname" . }}
+  {{- if .Values.prometheusRules.namespace }}
+  namespace: {{ .Values.prometheusRules.namespace }}
+  {{- end }}
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+  {{- if .Values.prometheusRules.additionalLabels }}
+    {{- toYaml .Values.prometheusRules.additionalLabels | nindent 4 }}
+  {{- end }}
+spec:
+  groups:
+  - name: kong
+    rules:
+    - alert: kong_latencyTooHigh
+      expr: histogram_quantile(0.1, sum(rate(kong_latency_bucket{type="kong"}[1m])) by (instance, job, type, le)) > 100
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: Kongs latency is more than 100ms, may suggest a performance bottleneck
+        description: 90% of calls take longer than 100ms in last minute
+
+    - alert: kong_httpErrorCountTooHigh
+      expr: sum(rate(kong_http_status{code=~"5.."}[1m])) by (instance, job, route, servce) / sum(rate(kong_http_status{}[1m])) by (instance, job, route, servce) * 100 > 0.5
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: Kongs latency is more than 100ms, may suggest a performance bottleneck
+        description: 90% of calls take longer than 100ms in last minute
+
+    - alert: kong_httpNon2xxCountTooHigh
+      expr: sum(rate(kong_http_status{code!~"2.."}[1m])) by (instance, job, route, servce) / sum(rate(kong_http_status{}[1m])) by (instance, job, route, servce) * 100 > 5
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: Kongs latency is more than 100ms, may suggest a performance bottleneck
+        description: 90% of calls take longer than 100ms in last minute
+
+    - alert: kong_tooManyRequests
+      expr: sum(rate(kong_http_status[5m])) > sum(rate(kong_http_status[6h])) * 1.2
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: May indicate rate limits will be breached soon if a natural spike, or a DDOS or someone security scanning a system
+        description: ">20% higher baseline"
+
+    - alert: kong_tooFewRequests
+      expr: sum(rate(kong_http_status[5m])) < sum(rate(kong_http_status[6h])) * 0.8
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: May indicate a problem downstream in reaching your platform
+        description: <20% lower than baseline
+
+    - alert: kong_datastoreNotReachable
+      expr: kong_datastore_reachable != 1
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: Kong has no connectivity to the database service
+        description: Kong has no connectivity to the database service
+
+  - name: node
+    rules:
+    - alert: node_cpuUsageTooHigh
+      expr: ((count(count(node_cpu_seconds_total) by (cpu, instance)) by (instance) - avg(sum by (mode, instance)(irate(node_cpu_seconds_total{mode='idle'}[5m]))) by (instance)) * 100) / count(count(node_cpu_seconds_total) by (cpu, instance)) by (instance) > 70
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: CPU utilisation has risen above 70% for a greater period than 5 minutes
+        description: CPU 70%
+
+    - alert: node_memoryUsageTooHigh
+      expr: 100 - ((node_memory_MemAvailable_bytes{} * 100) / node_memory_MemTotal_bytes{}) > 70
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: Memory of the node has risen above 70% for a greater period than 5 minutes
+        description: Memory 70%
+
+    - alert: node_diskReadRateTooHigh
+      expr: sum by (instance) (irate(node_disk_read_bytes_total[5m])) / 1024 / 1024 > (1.5 * sum by (instance) (rate(node_disk_read_bytes_total[6h])) / 1024 / 1024)
+      for: 30m
+      labels:
+        severity: warning
+      annotations:
+        summary: disk i/o may indicate back pressure on the logs if writing to file
+        description: Disk Read 150%
+
+    - alert: node_diskWriteRateTooHigh
+      expr: sum by (instance) (irate(node_disk_written_bytes_total[5m])) / 1024 / 1024 > (1.5 * sum by (instance) (rate(node_disk_written_bytes_total[6h])) / 1024 / 1024)
+      for: 30m
+      labels:
+        severity: warning
+      annotations:
+        summary: disk i/o may indicate back pressure on the logs if writing to file
+        description: Disk Write 150%
+
+    - alert: node_filesystemAlmostFull
+      expr: (node_filesystem_avail_bytes{fstype!=""} / node_filesystem_size_bytes{fstype!=""} * 100 < 30 and node_filesystem_readonly{fstype!=""} == 0)
+      for: 30m
+      labels:
+        severity: critical
+      annotations:
+        summary: Kong is running out of disk space
+        description: Filesystem < 30%
+
+    - alert: node_entropyTooLow
+      expr: node_entropy_available_bits < 300
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: Kong is handling TLS traffic and there is no good source of random numbers
+        description: Node entropy too low
+
+{{- end }}
