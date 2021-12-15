@@ -678,6 +678,9 @@ For a complete list of all configuration values you can set in the
 | serviceMonitor.targetLabels        | ServiceMonitor targetLabels                                                           | `{}`                |
 | serviceMonitor.honorLabels         | ServiceMonitor honorLabels                                                            | `{}`                |
 | serviceMonitor.metricRelabelings   | ServiceMonitor metricRelabelings                                                      | `{}`                |
+| prometheusRules.enabled            | Create PrometheusRules for Kong                                                       | `false`             |
+| prometheusRules.namespace          | Where to create PrometheusRules                                                       |                     |
+| prometheusRules.additionalLabels   | PrometheusRules labels                                                                | `{}`                |
 | extraConfigMaps                    | ConfigMaps to add to mounted volumes                                                  | `[]`                |
 | extraSecrets                       | Secrets to add to mounted volumes                                                     | `[]`                |
 
@@ -911,6 +914,11 @@ Service. It should only be set on a single chart Service to avoid duplicate
 data. If you disable the proxy Service (e.g. on a hybrid control plane instance
 or Portal-only instance) and still wish to collect memory usage metrics, add
 this label to another Service, e.g. on the admin API Service:
+
+The chart also can configure a basic set of PrometheusRules.  To enable this,
+set `prometheusRules.enabled=true` in `values.yaml`.  Kong rules require services
+to be configured with the Prometheus plugin.  There are also node rules that rely on metrics
+from [node_exporter](https://github.com/prometheus/node_exporter).
 
 ```
 admin:
