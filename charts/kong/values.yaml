@@ -631,7 +631,7 @@ podDisruptionBudget:
   enabled: false
   # Uncomment only one of the following when enabled is set to true
   # maxUnavailable: "50%"
-  # minUnavailable: "50%"
+  # minAvailable: "50%"
 
 podSecurityPolicy:
   enabled: false
