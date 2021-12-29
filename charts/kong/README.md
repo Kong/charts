@@ -210,7 +210,7 @@ Kong can be configured via two methods:
   for Kong is managed via Ingress and a few
   [Custom Resources](https://github.com/Kong/kubernetes-ingress-controller/blob/main/docs/concepts/custom-resources.md).
   For more details, please read the
-  [documentation](https://github.com/Kong/kubernetes-ingress-controller/tree/main/docs)
+  [documentation](https://github.com/Kong/kubernetes-ingress-controller#documentation)
   on Kong Ingress Controller.
   To configure and fine-tune the controller, please read the
   [Ingress Controller Parameters](#ingress-controller-parameters) section.
