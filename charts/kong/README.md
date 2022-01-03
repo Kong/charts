@@ -208,7 +208,7 @@ Kong can be configured via two methods:
   This is also known as Kong Ingress Controller or Kong for Kubernetes and is
   the default deployment pattern for this Helm Chart. The configuration
   for Kong is managed via Ingress and a few
-  [Custom Resources](https://github.com/Kong/kubernetes-ingress-controller/blob/main/docs/concepts/custom-resources.md).
+  [Custom Resources](https://docs.konghq.com/kubernetes-ingress-controller/latest/concepts/custom-resources).
   For more details, please read the
   [documentation](https://docs.konghq.com/kubernetes-ingress-controller/)
   on Kong Ingress Controller.
