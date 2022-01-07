@@ -8,6 +8,18 @@ automatically on upgrade. You can fix it by running:
 kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/crds/custom-resource-definitions.yaml
 ```
 
+## 2.6.4
+
+### Improvements
+
+* Updated default tags to Kong 2.7, Kong Enterprise 2.7.0.0, and Kong Ingress
+  Controller 2.1.
+
+### Fixed
+
+* Corrected a misnamed field in podDisruptionBudget.
+  ([#519](https://github.com/Kong/charts/pull/519))
+
 ## 2.6.3
 
 ### Improvements
