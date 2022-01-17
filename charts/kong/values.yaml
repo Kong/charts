@@ -472,6 +472,16 @@ ingressController:
     periodSeconds: 10
     successThreshold: 1
     failureThreshold: 3
+  startupProbe:
+    httpGet:
+      path: "/healthz"
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 5
+    timeoutSeconds: 5
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 6
   resources: {}
   # Example reasonable setting for "resources":
   # resources:

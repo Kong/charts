@@ -611,6 +611,7 @@ section of `values.yaml` file:
 | image.effectiveSemver              | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version | |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
+| startupProbe                       | Kong ingress controllers startup probe                                                |                                                                              |
 | installCRDs                        | Creates managed CRDs.                                                                 | false
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
 | ingressClass                       | The name of this controller's ingressClass                                                | kong                                                                         |
