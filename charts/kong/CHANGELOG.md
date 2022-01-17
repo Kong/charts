@@ -8,6 +8,17 @@ automatically on upgrade. You can fix it by running:
 kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/crds/custom-resource-definitions.yaml
 ```
 
+## Unreleased
+
+Nothing yet.
+
+## 2.6.5
+
+### Fixed
+
+* Generated IngressClass resources persist across updates properly.
+  ([#518](https://github.com/Kong/charts/pull/518))
+
 ## 2.6.4
 
 ### Improvements
