@@ -17,6 +17,7 @@ when it is merged.
 
 #### Checklist
 [Place an '[x]' (no spaces) in all applicable fields. Please remove unrelated fields.]
-- [ ] PR is based off the current tip of the `next` branch and targets `next`, not `main`
+- [ ] PR is based off the current tip of the `main` branch.
+- [ ] Changes are documented under the "Unreleased" header in CHANGELOG.md
 - [ ] New or modified sections of values.yaml are documented in the README.md
 - [ ] Commits follow the [Kong commit message guidelines](https://github.com/Kong/kong/blob/master/CONTRIBUTING.md#commit-message-format)
