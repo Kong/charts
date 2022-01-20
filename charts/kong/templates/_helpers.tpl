@@ -789,10 +789,20 @@ the template that it itself is using form the above sections.
 {{- end -}}
 
 {{/*
+    ====== CUSTOM-SET ENVIRONMENT VARIABLES ======
+*/}}
+
+{{- $customEnv := dict -}}
+{{- range $key, $val := .Values.customEnv }}
+  {{- $upper := upper $key -}}
+  {{- $_ := set $customEnv $upper $val -}}
+{{- end -}}
+
+{{/*
       ====== MERGE AND RENDER ENV BLOCK ======
 */}}
 
-{{- $completeEnv := mergeOverwrite $autoEnv $userEnv -}}
+{{- $completeEnv := mergeOverwrite $autoEnv $userEnv $customEnv -}}
 {{- template "kong.renderEnv" $completeEnv -}}
 
 {{- end -}}

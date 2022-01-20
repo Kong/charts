@@ -51,6 +51,7 @@ $ helm install kong/kong --generate-name
   - [Ingress Controller Parameters](#ingress-controller-parameters)
   - [General Parameters](#general-parameters)
     - [The `env` section](#the-env-section)
+    - [The `customEnv` section](#the-customEnv-section)
     - [The `extraLabels` section](#the-extralabels-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
   - [Overview](#overview)
@@ -505,6 +506,7 @@ directory.
 | replicaCount                       | Kong instance count. It has no effect when `autoscaling.enabled` is set to true         | `1`                 |
 | plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
+| customEnv                          | Custom Environment variables without `KONG_` prefix      |                                |
 | migrations.preUpgrade              | Run "kong migrations up" jobs                                                         | `true`              |
 | migrations.postUpgrade             | Run "kong migrations finish" jobs                                                     | `true`              |
 | migrations.annotations             | Annotations for migration job pods                                                    | `{"sidecar.istio.io/inject": "false" |
@@ -721,6 +723,25 @@ For complete list of Kong configurations please check the
 [Kong configuration docs](https://docs.konghq.com/latest/configuration).
 
 > **Tip**: You can use the default [values.yaml](values.yaml)
+
+#### The `customEnv` section
+
+The `customEnv` section can be used to configure all custom properties of other than Kong.
+Any key value put under this section translates to environment variables
+that can be used in Kong's plugin configurations. Every key is upper-cased before setting the environment variable.
+
+An example:
+
+```yaml
+kong:
+  customEnv:                       
+    api_token:
+      valueFrom:
+        secretKeyRef:
+          key: token
+          name: api_key
+    client_name: testClient
+```
 
 #### The `extraLabels` section
 
