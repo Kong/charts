@@ -268,7 +268,7 @@ proxy:
     ingressClassName:
     # Ingress hostname
     # TLS secret name.
-    # tls: kong-admin.example.com-tls
+    # tls: kong-proxy.example.com-tls
     hostname:
     # Map of ingress annotations.
     annotations: {}
@@ -594,7 +594,7 @@ tolerations: []
 nodeSelector: {}
 
 # Annotation to be added to Kong pods
-podAnnotations: 
+podAnnotations:
   kuma.io/gateway: enabled
   traffic.sidecar.istio.io/includeInboundPorts: ""
 
@@ -785,7 +785,7 @@ manager:
     enabled: false
     ingressClassName:
     # TLS secret name.
-    # tls: kong-proxy.example.com-tls
+    # tls: kong-manager.example.com-tls
     # Ingress hostname
     hostname:
     # Map of ingress annotations.
@@ -829,7 +829,7 @@ portal:
     enabled: false
     ingressClassName:
     # TLS secret name.
-    # tls: kong-proxy.example.com-tls
+    # tls: kong-portal.example.com-tls
     # Ingress hostname
     hostname:
     # Map of ingress annotations.
@@ -873,7 +873,7 @@ portalapi:
     enabled: false
     ingressClassName:
     # TLS secret name.
-    # tls: kong-proxy.example.com-tls
+    # tls: kong-portalapi.example.com-tls
     # Ingress hostname
     hostname:
     # Map of ingress annotations.
