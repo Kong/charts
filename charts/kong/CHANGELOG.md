@@ -10,7 +10,10 @@ kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/
 
 ## Unreleased
 
-Nothing yet.
+### Improvements
+
+* Replaced `sleep 15` in `preStop` command with `--wait=15` argument to `kong quit`.
+  ([#531](https://github.com/Kong/charts/pull/531))
 
 ## 2.6.5
 
