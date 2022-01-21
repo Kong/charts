@@ -584,7 +584,10 @@ lifecycle:
   preStop:
     exec:
       # Note kong quit has a default timeout of 10 seconds
-      command: ["/bin/sh", "-c", "/bin/sleep 15 && kong quit"]
+      command:
+        - kong
+        - quit
+        - '--wait=15'
 
 # Sets the termination grace period for pods spawned by the Kubernetes Deployment.
 # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution
