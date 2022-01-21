@@ -81,6 +81,19 @@ env:
   portal_api_error_log: /dev/stderr
   prefix: /kong_prefix/
 
+# This section is any customer specific environments variables that doesn't require KONG_ prefix.
+# These custom environment variables are typicall used in custom plugins or serverless plugins to 
+# access environment specific credentials or tokens.
+# Example as below, uncomment if required and add additional attributes as required.
+
+# customEnv:                     
+#   api_token:
+#     valueFrom:
+#       secretKeyRef:
+#         key: token
+#         name: api_key
+#   client_name: testClient
+
 # This section can be used to configure some extra labels that will be added to each Kubernetes object generated.
 extraLabels: {}
 
