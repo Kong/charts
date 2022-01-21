@@ -20,6 +20,9 @@ postgresql:
 env:
   anonymous_reports: "off"
   database: "postgres"
+# Added example for customEnv
+customEnv:
+  client_id: "exampleId"
 # - ingress resources are created without hosts
 admin:
   type: NodePort
