@@ -46,3 +46,33 @@ jobs:
       - name: Run chart-testing (install)
         run: ct install
         working-directory: charts
+
+  integration-test:
+    # Not a real requirement, but due to worker CPU contention, this can fail if it runs concurrent with lint-test
+    needs: lint-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: setup helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.2.4
+
+      - name: setup testing environment (kind-cluster)
+        run: ./scripts/test-env.sh
+
+      - name: run integration tests (integration)
+        run: ./scripts/test-run.sh
+
+      - name: run upgrade integration tests (integration-upgrade)
+        run: ./scripts/test-upgrade.sh
+
+      - name: run crds integration tests (integration-crds)
+        run: ./scripts/test-crds.sh
+
+      - name: cleanup integration tests (cleanup)
+        run: ./scripts/test-env.sh cleanup
