@@ -35,7 +35,9 @@ if [[ "${TAG}" == "default" ]]
 then
     echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
     helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-        --set deployment.test.enabled=true charts/kong/
+        --set deployment.test.enabled=true \
+		--set ingressController.env.feature_gates="Gateway=true" \
+		charts/kong/
 else
     echo "INFO: installing chart as release ${RELEASE_NAME} with controller tag ${TAG} to namespace ${RELEASE_NAMESPACE}"
     helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" \
