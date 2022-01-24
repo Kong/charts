@@ -19,6 +19,9 @@ jobs:
         with:
           version: v3.2.4
 
+      - name: Add Bitnami
+        run: helm repo add bitnami https://charts.bitnami.com/bitnami
+
       - uses: actions/setup-python@v2
         with:
           python-version: 3.7
@@ -28,7 +31,6 @@ jobs:
 
       - name: Run chart-testing (list-changed)
         id: list-changed
-        working-directory: charts
         run: |
           changed=$(ct list-changed)
           if [[ -n "$changed" ]]; then
@@ -36,16 +38,17 @@ jobs:
           fi
 
       - name: Run chart-testing (lint)
-        run: ct lint
-        working-directory: charts
+        run: ct lint --check-version-increment=false
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.2.0
-        if: steps.list-changed.outputs.changed == 'true'
+        # if: steps.list-changed.outputs.changed == 'true'
+        # TODO for some reason, the earlier chart-testing logic is never seeing any changes, though running it locally
+        # does show changes. This remains a mystery between a lack of any debug logging, but simply running tests
+        # always is fine
 
       - name: Run chart-testing (install)
-        run: ct install
-        working-directory: charts
+        run: ct install --all
 
   integration-test:
     # Not a real requirement, but due to worker CPU contention, this can fail if it runs concurrent with lint-test
