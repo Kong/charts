@@ -82,11 +82,11 @@ env:
   prefix: /kong_prefix/
 
 # This section is any customer specific environments variables that doesn't require KONG_ prefix.
-# These custom environment variables are typicall used in custom plugins or serverless plugins to 
+# These custom environment variables are typicall used in custom plugins or serverless plugins to
 # access environment specific credentials or tokens.
 # Example as below, uncomment if required and add additional attributes as required.
 
-# customEnv:                     
+# customEnv:
 #   api_token:
 #     valueFrom:
 #       secretKeyRef:
