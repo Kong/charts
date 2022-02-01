@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [2.7.0](#270)
 - [2.4.0](#240)
 - [2.3.0](#230)
 - [2.2.0](#220)
@@ -60,6 +61,16 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 2.7.0
+
+2.7 updates CRDs to the version released in KIC 2.1.0. Helm does not upgrade
+CRDs automatically; you must `kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong-2.7.0/crds/custom-resource-definitions.yaml`
+manually before upgrading.
+
+You should not apply the updated CRDs until you are prepared to upgrade to KIC
+2.1 or higher, and [must have first upgraded to 2.0](https://github.com/Kong/kubernetes-ingress-controller/blob/v2.1.1/CHANGELOG.md#breaking-changes)
+and applied the [previous version of the CRDs](https://raw.githubusercontent.com/Kong/charts/kong-2.6.4/charts/kong/crds/custom-resource-definitions.yaml).
 
 ## 2.4.0
 
