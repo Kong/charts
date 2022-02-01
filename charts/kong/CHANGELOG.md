@@ -8,7 +8,9 @@ automatically on upgrade. You can fix it by running:
 kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/crds/custom-resource-definitions.yaml
 ```
 
-## Unreleased
+## 2.7.0
+
+2.7.0 includes CRD updates, which [must be applied manually](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#270).
 
 ### Improvements
 
@@ -17,6 +19,8 @@ kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/
 * Replaced `sleep 15` in `preStop` command with `--wait=15` argument to `kong quit`.
   ([#531](https://github.com/Kong/charts/pull/531))
 * Added support for non `KONG_` prefixed custom environment variables
+  ([#530](https://github.com/Kong/charts/pull/530))
+* Updated to latest CRDs from upstream.
 
 ## 2.6.5
 
