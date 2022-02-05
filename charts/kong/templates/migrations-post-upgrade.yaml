@@ -53,6 +53,9 @@ spec:
       {{- end }}
       {{- end }}
       containers:
+      {{- if .Values.deployment.sidecarContainers }}
+      {{- toYaml .Values.deployment.sidecarContainers | nindent 6 }}
+      {{- end }}
       - name: {{ template "kong.name" . }}-post-upgrade-migrations
         image: {{ include "kong.getRepoTag" .Values.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
