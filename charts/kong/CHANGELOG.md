@@ -10,6 +10,16 @@ kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/
 
 ## Unreleased
 
+### Breaking Changes
+
+* There are upstream changes to the Postgres sub-chart that change many
+  values.yaml keys. The default `postgresqlUsername` and `postgresqlDatabase`
+  keys used in this chart's values.yaml are now `auth.username` and
+  `auth.database`. If you set other Postgres sub-chart values, consult the
+  [upstream README](https://github.com/bitnami/charts/tree/master/bitnami/postgresql)
+  and [upgrade guide](https://docs.bitnami.com/kubernetes/infrastructure/postgresql/administration/upgrade/#to-1100)
+  to see what you need to change.
+
 ### Improvements
 
 * Added Gateway API resources to RBAC rules.

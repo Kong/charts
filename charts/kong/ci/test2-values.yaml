@@ -8,10 +8,9 @@ ingressController:
     anonymous_reports: "false"
 postgresql:
   enabled: true
-  postgresqlUsername: kong
-  postgresqlDatabase: kong
-  service:
-    port: 5432
+  auth:
+    username: kong
+    password: kong
 env:
   anonymous_reports: "off"
   database: "postgres"

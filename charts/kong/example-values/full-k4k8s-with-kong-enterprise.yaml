@@ -185,10 +185,9 @@ portalapi:
 
 postgresql:
   enabled: true
-  postgresqlUsername: kong
-  postgresqlDatabase: kong
-  service:
-    port: 5432
+  auth:
+    username: kong
+    database: kong
 
 ingressController:
   enabled: true
