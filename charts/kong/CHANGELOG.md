@@ -21,6 +21,11 @@
   ([#530](https://github.com/Kong/charts/pull/530))
 * Updated to latest CRDs from upstream.
 
+### Fixed
+
+* Removed CREATE from ValidatingWebhookConfiguration objectSelector for Secrets to align with changes in Kong/kubernetes-ingress-controller.
+  ([#542](https://github.com/Kong/charts/pull/542))
+
 ## 2.6.5
 
 ### Fixed
