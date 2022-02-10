@@ -1,13 +1,5 @@
 # Changelog
 
-**Note:** chart versions 2.3.0 through 2.5.0 contained an incorrect
-KongIngress CRD. The `proxy.path` field was missing. Helm will not fix this
-automatically on upgrade. You can fix it by running:
-
-```
-kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/crds/custom-resource-definitions.yaml
-```
-
 ## 2.7.0
 
 2.7.0 includes CRD updates, which [must be applied manually](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#270).
@@ -86,6 +78,14 @@ kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/
   ([#492](https://github.com/Kong/charts/pull/492))
 
 ## 2.6.0
+
+**Note:** chart versions 2.3.0 through 2.5.0 contained an incorrect
+KongIngress CRD. The `proxy.path` field was missing. Helm will not fix this
+automatically on upgrade. You can fix it by running:
+
+```
+kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong/crds/custom-resource-definitions.yaml
+```
 
 ### Improvements
 
