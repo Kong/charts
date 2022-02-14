@@ -381,6 +381,13 @@ migrations:
   #   requests:
   #     cpu: 50m
   #     memory: 128Mi
+  ## Optionally specify any extra sidecar containers to be included in the deployment
+  ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
+  ## Keep in mind these containers should be terminated along with the main
+  ## migration containers
+  # sidecarContainers:
+  #   - name: sidecar
+  #     image: sidecar:latest
 
 # Kong's configuration for DB-less mode
 # Note: Use this section only if you are deploying Kong in DB-less mode
@@ -399,6 +406,12 @@ dblessConfig:
       #   - name: example
       #     paths:
       #     - "/example"
+  ## Optionally specify any extra sidecar containers to be included in the
+  ## migration jobs
+  ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
+  # sidecarContainers:
+  #   - name: sidecar
+  #     image: sidecar:latest
 
 # -----------------------------------------------------------------------------
 # Ingress Controller parameters
