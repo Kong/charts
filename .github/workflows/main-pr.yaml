@@ -74,8 +74,5 @@ jobs:
       - name: run upgrade integration tests (integration-upgrade)
         run: ./scripts/test-upgrade.sh
 
-      - name: run crds integration tests (integration-crds)
-        run: ./scripts/test-crds.sh
-
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
