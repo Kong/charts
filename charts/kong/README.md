@@ -40,6 +40,7 @@ $ helm install kong/kong --generate-name
   - [InitContainers](#initcontainers)
   - [HostAliases](#hostaliases)
   - [Sidecar Containers](#sidecar-containers)
+  - [Migration Sidecar Containers](#migration-sidecar-containers)
   - [User Defined Volumes](#user-defined-volumes)
   - [User Defined Volume Mounts](#user-defined-volume-mounts)
   - [Using a DaemonSet](#using-a-daemonset)
@@ -467,6 +468,18 @@ be useful to include network proxies or logging services along with Kong.  The
 `deployment.sidecarContainers` field in values.yaml takes an array of objects
 that get appended as-is to the existing `spec.template.spec.containers` array
 in the Kong deployment resource.
+
+### Migration Sidecar Containers
+
+In the same way sidecar containers are attached to the Kong and Ingress 
+Controller containers the chart can add sidecars to the containers that runs
+the migrations. The
+`migrations.sidecarContainers` field in values.yaml takes an array of objects
+that get appended as-is to the existing `spec.template.spec.containers` array
+in the pre-upgrade-migrations, post-upgrade-migrations and migration resrouces.
+Keep in mind the containers should be finite and they should be terminated
+with the migration containers, otherwise the migration could get the status
+as finished and the deployment of the chart will reach the timeout.
 
 ### User Defined Volumes
 

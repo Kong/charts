@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+* Enables the option to add sidecar containers to the migration containers.
+  ([540](https://github.com/Kong/charts/pull/540))
+
 ## 2.7.0
 
 2.7.0 includes CRD updates, which [must be applied manually](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#270).
