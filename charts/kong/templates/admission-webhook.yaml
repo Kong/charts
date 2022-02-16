@@ -11,7 +11,7 @@
 {{- $certKey = $cert.Key -}}
 {{- $caCert = $ca.Cert -}}
 {{- $caKey = $ca.Key -}}
- 
+
 {{- $caSecret := (lookup "v1" "Secret" (include "kong.namespace" .) (printf "%s-validation-webhook-ca-keypair" (include "kong.fullname" .))) -}}
 {{- $certSecret := (lookup "v1" "Secret" (include "kong.namespace" .) (printf "%s-validation-webhook-keypair" (include "kong.fullname" .))) -}}
 {{- if $certSecret }}
@@ -62,7 +62,6 @@ webhooks:
     apiVersions:
     - 'v1'
     operations:
-    - CREATE
     - UPDATE
     resources:
     - secrets
@@ -72,7 +71,7 @@ webhooks:
     {{- else }}
     {{- if .Values.ingressController.admissionWebhook.certificate.caBundle }}
     caBundle: {{ b64enc .Values.ingressController.admissionWebhook.certificate.caBundle }}
-    {{- end }}    
+    {{- end }}
     {{- end }}
     service:
       name: {{ template "kong.service.validationWebhook" . }}
