@@ -65,7 +65,7 @@ clear it.
 ## 2.7.0
 
 2.7 updates CRDs to the version released in KIC 2.1.0. Helm does not upgrade
-CRDs automatically; you must `kubectl apply -f https://raw.githubusercontent.com/Kong/charts/main/charts/kong-2.7.0/crds/custom-resource-definitions.yaml`
+CRDs automatically; you must `kubectl apply -f https://raw.githubusercontent.com/Kong/charts/kong-2.7.0/charts/kong/crds/custom-resource-definitions.yaml`
 manually before upgrading.
 
 You should not apply the updated CRDs until you are prepared to upgrade to KIC
