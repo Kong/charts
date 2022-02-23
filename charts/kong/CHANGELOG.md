@@ -11,6 +11,8 @@
 
 * Removed CREATE from ValidatingWebhookConfiguration objectSelector for Secrets to align with changes in Kong/kubernetes-ingress-controller.
   ([#542](https://github.com/Kong/charts/pull/542))
+* Fixed traffic routing from Istio's envoy proxy to Kong proxy when using Istio's AuthorizationPolicy.
+  ([#550](https://github.com/Kong/charts/pull/550))
 
 ## 2.7.0
 
