@@ -2,7 +2,7 @@
 {{- $includeIngressClass := false -}}
 {{- if (and .Values.ingressController.enabled (not (eq (include "kong.ingressVersion" .) "extensions/v1beta1"))) -}}
   {{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass") -}}
-    {{- with (lookup "networking.k8s.io/v1" "IngressClass" "" "kong") -}}
+    {{- with (lookup "networking.k8s.io/v1" "IngressClass" "" .Values.ingressController.ingressClass) -}}
       {{- if (hasKey .metadata "annotations") -}}
         {{- if (eq $.Release.Name (get .metadata.annotations "meta.helm.sh/release-name")) -}}
           {{/* IngressClass exists and is managed by this chart */}}
