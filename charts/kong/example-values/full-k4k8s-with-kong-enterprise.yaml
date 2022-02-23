@@ -12,7 +12,7 @@
 
 image:
   repository: kong/kong-gateway
-  tag: "2.7.0.0-alpine"
+  tag: "2.7.1.2-alpine"
 
 env:
   prefix: /kong_prefix/
