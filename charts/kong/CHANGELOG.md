@@ -11,6 +11,7 @@
 
 * Removed CREATE from ValidatingWebhookConfiguration objectSelector for Secrets to align with changes in Kong/kubernetes-ingress-controller.
   ([#542](https://github.com/Kong/charts/pull/542))
+* Fixed creation of non-default IngressClasses ([#552](https://github.com/Kong/charts/pull/552))
 
 ## 2.7.0
 
