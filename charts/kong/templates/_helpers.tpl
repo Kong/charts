@@ -167,7 +167,7 @@ spec:
   - name: kong-{{ .serviceName }}-tls
     port: {{ .tls.servicePort }}
     targetPort: {{ .tls.overrideServiceTargetPort | default .tls.containerPort }}
-    appProtocol: tls
+    appProtocol: https
   {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .tls.nodePort))) }}
     nodePort: {{ .tls.nodePort }}
   {{- end }}
