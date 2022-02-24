@@ -13,6 +13,7 @@
   ([#542](https://github.com/Kong/charts/pull/542))
 * Fixed traffic routing from Istio's envoy proxy to Kong proxy when using Istio's AuthorizationPolicy.
   ([#550](https://github.com/Kong/charts/pull/550))
+* Fixed creation of non-default IngressClasses ([#552](https://github.com/Kong/charts/pull/552))
 
 ## 2.7.0
 
