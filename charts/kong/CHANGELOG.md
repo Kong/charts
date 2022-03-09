@@ -6,6 +6,8 @@
 
 * Enables the option to add sidecar containers to the migration containers.
   ([540](https://github.com/Kong/charts/pull/540))
+* Update the IngressClass controller string to match the value used upstream.
+  ([557](https://github.com/Kong/charts/pull/557))
   
 ### Fixed
 
