@@ -14,6 +14,7 @@
 * Fixed traffic routing from Istio's envoy proxy to Kong proxy when using Istio's AuthorizationPolicy.
   ([#550](https://github.com/Kong/charts/pull/550))
 * Fixed creation of non-default IngressClasses ([#552](https://github.com/Kong/charts/pull/552))
+* Fixed: wait_for_db no longer tries to instantiate the keyring in Kong Enterprise ([#556](https://github.com/Kong/charts/pull/556))
 
 ## 2.7.0
 
