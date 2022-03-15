@@ -538,15 +538,9 @@ The name of the service used for the ingress controller's validation webhook
   {{ toYaml .Values.containerSecurityContext | nindent 4 }} 
   env:
   {{- include "kong.env" . | nindent 2 }}
-  {{ $waitForDBEnterpriseEnvs := "true" }}
-  {{- if .Values.enterprise.enabled }}
-  {{/* unconditionally disable keyring at wait-for-db container, so that it doesn't
-       generate a bootstrap key without acknowledge any other kong cluster */}}
-    {{- $waitForDBEnterpriseEnvs = "export KONG_KEYRING_ENABLED=off" }}
-  {{- end }}
 {{/* TODO the prefix override is to work around https://github.com/Kong/charts/issues/295
      Note that we use args instead of command here to /not/ override the standard image entrypoint. */}}
-  args: [ "/bin/sh", "-c", "export KONG_NGINX_DAEMON=on; export KONG_PREFIX=`mktemp -d`; {{ $waitForDBEnterpriseEnvs }}; until kong start; do echo 'waiting for db'; sleep 1; done; kong stop"]
+  args: [ "/bin/sh", "-c", "export KONG_NGINX_DAEMON=on KONG_PREFIX=`mktemp -d` KONG_KEYRING_ENABLED=off; until kong start; do echo 'waiting for db'; sleep 1; done; kong stop"]
   volumeMounts:
   {{- include "kong.volumeMounts" . | nindent 4 }}
   {{- include "kong.userDefinedVolumeMounts" . | nindent 4 }}
