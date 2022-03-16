@@ -39,6 +39,8 @@ deployment:
   #   hostnames:
   #   - "foo.local"
   #   - "bar.local"
+
+  ## Define any volumes and mounts you want present in the Kong proxy container
   # userDefinedVolumes:
   # - name: "volumeName"
   #   emptyDir: {}
@@ -472,6 +474,12 @@ ingressController:
   ingressClass: kong
   # annotations for IngressClass resource (Kubernetes 1.18+)
   ingressClassAnnotations: {}
+
+  ## Define any volumes and mounts you want present in the ingress controller container
+  ## Volumes are defined above in deployment.userDefinedVolumes
+  # userDefinedVolumeMounts:
+  # - name: "volumeName"
+  #   mountPath: "/opt/user/dir/mount"
 
   rbac:
     # Specifies whether RBAC resources should be created

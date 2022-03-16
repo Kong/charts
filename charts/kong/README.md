@@ -487,7 +487,7 @@ The chart can deploy additional volumes along with Kong. This can be useful to i
 
 ### User Defined Volume Mounts
 
-The chart can mount the volumes which defined in the `user defined volume` or others. The `deployment.userDefinedVolumeMounts` field in values.yaml takes an array of object that get appended as-is to the existing `spec.template.spec.containers[].volumeMounts` and `spec.template.spec.initContainers[].volumeMounts` array in the kong deployment resource.
+The chart can mount user-defined volumes. The `deployment.userDefinedVolumeMounts` and `ingressController.userDefinedVolumeMounts` fields in values.yaml take an array of object that get appended as-is to the existing `spec.template.spec.containers[].volumeMounts` and `spec.template.spec.initContainers[].volumeMounts` array in the kong deployment resource.
 
 ### Using a DaemonSet
 
@@ -621,14 +621,14 @@ section of `values.yaml` file:
 | Parameter                          | Description                                                                           | Default                                                                      |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | enabled                            | Deploy the ingress controller, rbac and crd                                           | true                                                                         |
-| image.repository                   | Docker image with the ingress controller                                              | kong/kubernetes-ingress-controller |
-| image.tag                          | Version of the ingress controller                                                     | 2.0 |
-| image.effectiveSemver              | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version | |
+| image.repository                   | Docker image with the ingress controller                                              | kong/kubernetes-ingress-controller                                           |
+| image.tag                          | Version of the ingress controller                                                     | 2.0                                                                          |
+| image.effectiveSemver              | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version |                                                |
 | readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
 | livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
-| installCRDs                        | Creates managed CRDs.                                                                 | false
+| installCRDs                        | Creates managed CRDs.                                                                 | false                                                                        |
 | env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
-| ingressClass                       | The name of this controller's ingressClass                                                | kong                                                                         |
+| ingressClass                       | The name of this controller's ingressClass                                            | kong                                                                         |
 | ingressClassAnnotations            | The ingress-class value for controller                                                | kong                                                                         |
 | args                               | List of ingress-controller cli arguments                                              | []                                                                           |
 | watchNamespaces                    | List of namespaces to watch. Watches all namespaces if empty                          | []                                                                           |
@@ -636,8 +636,10 @@ section of `values.yaml` file:
 | admissionWebhook.failurePolicy     | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)      | Fail                                                                         |
 | admissionWebhook.port              | The port the ingress controller will listen on for admission webhooks                 | 8080                                                                         |
 | admissionWebhook.certificate.provided   | Whether to generate the admission webhook certificate if not provided            | false                                                                        |
-| admissionWebhook.certificate.secretName | Name of the TLS secret for the provided webhook certificate                      |                                                                            |
-| admissionWebhook.certificate.caBundle   | PEM encoded CA bundle which will be used to validate the provided webhook certificate |                                                                            |
+| admissionWebhook.certificate.secretName | Name of the TLS secret for the provided webhook certificate                      |                                                                              |
+| admissionWebhook.certificate.caBundle   | PEM encoded CA bundle which will be used to validate the provided webhook certificate |                                                                         |
+| deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                                                                              |
+| deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                                                                              |
 
 For a complete list of all configuration values you can set in the
 `env` section, please read the Kong Ingress Controller's
@@ -880,7 +882,7 @@ Although the above examples both use the initial super-admin, we recommend
 [creating a less-privileged RBAC user](https://docs.konghq.com/enterprise/latest/kong-manager/administration/rbac/add-user/)
 for the controller after installing. It needs at least workspace admin
 privileges in its workspace (`default` by default, settable by adding a
-`workspace` variable under `ingressController.env`). Once you create the
+`workspace` variable under `singressController.env`). Once you create the
 controller user, add its token to a secret and update your `kong_admin_token`
 variable to use it. Remove the `password` variable from Kong's environment
 variables and the secret containing the super-admin token after.

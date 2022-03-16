@@ -258,7 +258,7 @@ spec:
         {{- end }}
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 10 }}
-        {{- include "kong.userDefinedVolumeMounts" . | nindent 10 }}
+        {{- include "kong.userDefinedVolumeMounts" .Values.deployment | nindent 10 }}
         readinessProbe:
 {{ toYaml .Values.readinessProbe | indent 10 }}
         livenessProbe:
