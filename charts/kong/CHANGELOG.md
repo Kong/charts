@@ -6,6 +6,8 @@
 
 * Enables the option to add sidecar containers to the migration containers.
   ([540](https://github.com/Kong/charts/pull/540))
+* Added support for autoscaling `behavior`.
+  ([561](https://github.com/Kong/charts/pull/561))
   
 ### Fixed
 

@@ -13,6 +13,10 @@ spec:
     name: "{{ template "kong.fullname" . }}"
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  {{- if .Values.autoscaling.behavior }}
+  behavior:
+    {{- toYaml .Values.autoscaling.behavior | nindent 4 }}
+  {{- end }}
   {{- if not (.Capabilities.APIVersions.Has "autoscaling/v2beta2") }}
   targetCPUUtilizationPercentage: {{ .Values.autoscaling.targetCPUUtilizationPercentage | default 80 }}
   {{- else }}
