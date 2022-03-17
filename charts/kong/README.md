@@ -882,7 +882,7 @@ Although the above examples both use the initial super-admin, we recommend
 [creating a less-privileged RBAC user](https://docs.konghq.com/enterprise/latest/kong-manager/administration/rbac/add-user/)
 for the controller after installing. It needs at least workspace admin
 privileges in its workspace (`default` by default, settable by adding a
-`workspace` variable under `singressController.env`). Once you create the
+`workspace` variable under `ingressController.env`). Once you create the
 controller user, add its token to a secret and update your `kong_admin_token`
 variable to use it. Remove the `password` variable from Kong's environment
 variables and the secret containing the super-admin token after.
