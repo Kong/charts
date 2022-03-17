@@ -8,6 +8,8 @@
   ([540](https://github.com/Kong/charts/pull/540))
 * Added support for user-defined controller volume mounts.
   ([560](https://github.com/Kong/charts/pull/560))
+* Added support for autoscaling `behavior`.
+  ([561](https://github.com/Kong/charts/pull/561))
   
 ### Fixed
 
