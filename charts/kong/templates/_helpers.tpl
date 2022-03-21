@@ -459,8 +459,8 @@ The name of the service used for the ingress controller's validation webhook
 {{- end -}}
 
 {{- define "kong.userDefinedVolumeMounts" -}}
-{{- if .Values.deployment.userDefinedVolumeMounts }}
-{{- toYaml .Values.deployment.userDefinedVolumeMounts }}
+{{- if .userDefinedVolumeMounts }}
+{{- toYaml .userDefinedVolumeMounts }}
 {{- end }}
 {{- end -}}
 
@@ -543,7 +543,7 @@ The name of the service used for the ingress controller's validation webhook
   args: [ "/bin/sh", "-c", "export KONG_NGINX_DAEMON=on KONG_PREFIX=`mktemp -d` KONG_KEYRING_ENABLED=off; until kong start; do echo 'waiting for db'; sleep 1; done; kong stop"]
   volumeMounts:
   {{- include "kong.volumeMounts" . | nindent 4 }}
-  {{- include "kong.userDefinedVolumeMounts" . | nindent 4 }}
+  {{- include "kong.userDefinedVolumeMounts" .Values.deployment | nindent 4 }}
   resources:
   {{- toYaml .Values.resources | nindent 4 }}
 {{- end -}}
@@ -605,12 +605,13 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
   resources:
 {{ toYaml .Values.ingressController.resources | indent 4 }}
-{{- if .Values.ingressController.admissionWebhook.enabled }}
   volumeMounts:
+{{- if .Values.ingressController.admissionWebhook.enabled }}
   - name: webhook-cert
     mountPath: /admission-webhook
     readOnly: true
 {{- end }}
+  {{- include "kong.userDefinedVolumeMounts" .Values.ingressController | nindent 2 }}
 {{- end -}}
 
 {{- define "secretkeyref" -}}
