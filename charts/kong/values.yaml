@@ -39,6 +39,8 @@ deployment:
   #   hostnames:
   #   - "foo.local"
   #   - "bar.local"
+
+  ## Define any volumes and mounts you want present in the Kong proxy container
   # userDefinedVolumes:
   # - name: "volumeName"
   #   emptyDir: {}
@@ -100,10 +102,10 @@ extraLabels: {}
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "2.7"
+  tag: "2.8"
   # Kong Enterprise
   # repository: kong/kong-gateway
-  # tag: "2.7"
+  # tag: "2.8"
 
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -473,6 +475,12 @@ ingressController:
   # annotations for IngressClass resource (Kubernetes 1.18+)
   ingressClassAnnotations: {}
 
+  ## Define any volumes and mounts you want present in the ingress controller container
+  ## Volumes are defined above in deployment.userDefinedVolumes
+  # userDefinedVolumeMounts:
+  # - name: "volumeName"
+  #   mountPath: "/opt/user/dir/mount"
+
   rbac:
     # Specifies whether RBAC resources should be created
     create: true
@@ -644,6 +652,7 @@ autoscaling:
   enabled: false
   minReplicas: 2
   maxReplicas: 5
+  behavior: {}
   ## targetCPUUtilizationPercentage only used if the cluster doesn't support autoscaling/v2beta
   targetCPUUtilizationPercentage:
   ## Otherwise for clusters that do support autoscaling/v2beta, use metrics

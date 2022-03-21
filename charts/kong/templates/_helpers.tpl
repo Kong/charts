@@ -84,7 +84,7 @@ spec:
   ingressClassName: {{ .ingress.ingressClassName }}
 {{- end }}
   rules:
-  - host: {{ $hostname }}
+  - host: {{ $hostname | quote }}
     http:
       paths:
         - backend:
@@ -106,7 +106,7 @@ spec:
   {{- if (hasKey .ingress "tls") }}
   tls:
   - hosts:
-    - {{ $hostname }}
+    - {{ $hostname | quote }}
     secretName: {{ .ingress.tls }}
   {{- end -}}
 {{- end -}}
@@ -459,8 +459,8 @@ The name of the service used for the ingress controller's validation webhook
 {{- end -}}
 
 {{- define "kong.userDefinedVolumeMounts" -}}
-{{- if .Values.deployment.userDefinedVolumeMounts }}
-{{- toYaml .Values.deployment.userDefinedVolumeMounts }}
+{{- if .userDefinedVolumeMounts }}
+{{- toYaml .userDefinedVolumeMounts }}
 {{- end }}
 {{- end -}}
 
@@ -540,10 +540,10 @@ The name of the service used for the ingress controller's validation webhook
   {{- include "kong.env" . | nindent 2 }}
 {{/* TODO the prefix override is to work around https://github.com/Kong/charts/issues/295
      Note that we use args instead of command here to /not/ override the standard image entrypoint. */}}
-  args: [ "/bin/sh", "-c", "export KONG_NGINX_DAEMON=on; export KONG_PREFIX=`mktemp -d`; until kong start; do echo 'waiting for db'; sleep 1; done; kong stop"]
+  args: [ "/bin/sh", "-c", "export KONG_NGINX_DAEMON=on KONG_PREFIX=`mktemp -d` KONG_KEYRING_ENABLED=off; until kong start; do echo 'waiting for db'; sleep 1; done; kong stop"]
   volumeMounts:
   {{- include "kong.volumeMounts" . | nindent 4 }}
-  {{- include "kong.userDefinedVolumeMounts" . | nindent 4 }}
+  {{- include "kong.userDefinedVolumeMounts" .Values.deployment | nindent 4 }}
   resources:
   {{- toYaml .Values.resources | nindent 4 }}
 {{- end -}}
@@ -605,12 +605,13 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
   resources:
 {{ toYaml .Values.ingressController.resources | indent 4 }}
-{{- if .Values.ingressController.admissionWebhook.enabled }}
   volumeMounts:
+{{- if .Values.ingressController.admissionWebhook.enabled }}
   - name: webhook-cert
     mountPath: /admission-webhook
     readOnly: true
 {{- end }}
+  {{- include "kong.userDefinedVolumeMounts" .Values.ingressController | nindent 2 }}
 {{- end -}}
 
 {{- define "secretkeyref" -}}
