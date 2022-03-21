@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* add quote on hostname template to be able to use wildcard domains.
+
 ### Improvements
 
 * Enables the option to add sidecar containers to the migration containers.
