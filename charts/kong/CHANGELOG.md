@@ -2,10 +2,12 @@
 
 ## Unreleased
 
-* add quote on hostname template to be able to use wildcard domains.
-
 ### Improvements
 
+* Added IngressClass resources to RBAC roles.
+  ([563](https://github.com/Kong/charts/pull/563))
+* Ingresses now support wildcard hostnames.
+  ([559](https://github.com/Kong/charts/pull/559))
 * Enables the option to add sidecar containers to the migration containers.
   ([540](https://github.com/Kong/charts/pull/540))
 * Update the IngressClass controller string to match the value used upstream.

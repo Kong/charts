@@ -96,6 +96,7 @@ metadata:
   name: {{ template "kong.fullname" . }}
 rules:
 {{ include "kong.kubernetesRBACRules" . }}
+{{ include "kong.kubernetesRBACClusterRules" . }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding

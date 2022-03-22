@@ -879,7 +879,7 @@ Environment variables are sorted alphabetically
 {{/*
 kong.kubernetesRBACRoles outputs a static list of RBAC rules (the "rules" block
 of a Role or ClusterRole) that provide the ingress controller access to the
-Kubernetes resources it uses to build Kong configuration.
+Kubernetes namespace-scoped resources it uses to build Kong configuration.
 */}}
 {{- define "kong.kubernetesRBACRules" -}}
 - apiGroups:
@@ -946,22 +946,6 @@ Kubernetes resources it uses to build Kong configuration.
   - ""
   resources:
   - services/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - configuration.konghq.com
-  resources:
-  - kongclusterplugins
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - configuration.konghq.com
-  resources:
-  - kongclusterplugins/status
   verbs:
   - get
   - patch
@@ -1065,21 +1049,6 @@ Kubernetes resources it uses to build Kong configuration.
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
-  - gatewayclasses
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - gatewayclasses/status
-  verbs:
-  - get
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
   - gateways
   verbs:
   - get
@@ -1140,6 +1109,60 @@ Kubernetes resources it uses to build Kong configuration.
   - get
   - patch
   - update
+{{- end -}}
+
+{{/*
+kong.kubernetesRBACClusterRoles outputs a static list of RBAC rules (the "rules" block
+of a Role or ClusterRole) that provide the ingress controller access to the
+Kubernetes Cluster-scoped resources it uses to build Kong configuration.
+*/}}
+{{- define "kong.kubernetesRBACClusterRules" -}}
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - gatewayclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - gatewayclasses/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingressclasses
+  verbs:
+  - get
+  - list
+  - watch
 {{- end -}}
 
 {{- define "kong.ingressVersion" -}}
