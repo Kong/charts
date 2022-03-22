@@ -10,6 +10,8 @@
   ([559](https://github.com/Kong/charts/pull/559))
 * Enables the option to add sidecar containers to the migration containers.
   ([540](https://github.com/Kong/charts/pull/540))
+* Update the IngressClass controller string to match the value used upstream.
+  ([557](https://github.com/Kong/charts/pull/557))
 * Added support for user-defined controller volume mounts.
   ([560](https://github.com/Kong/charts/pull/560))
 * Added support for autoscaling `behavior`.
