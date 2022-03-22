@@ -1,15 +1,7 @@
 {{- $installCRDs := false -}}
-{{- if .Values.ingressController.installCRDs -}}
-  {{- if .Values.ingressController.enabled -}}
-    {{/* Managed CRD installation is enabled, and the controller is enabled.
-    */}}
-    {{- $installCRDs = true -}}
-  {{- else if (not .Values.deployment.kong.enabled) -}}
-    {{/* Managed CRD installation is enabled, and neither the controller nor Kong or enabled.
-         This is a CRD-only release.
-    */}}
-    {{- $installCRDs = true -}}
-  {{- end -}}
+{{- if (hasKey .Values.ingressController "installCRDs") -}}
+  {{/* Explicitly set, honor whatever's set */}}
+  {{- $installCRDs = .Values.ingressController.installCRDs -}}
 {{- else -}}
   {{/* Legacy default handling. CRD installation is _not_ enabled, but CRDs are already present
        and are managed by this release. This release previously relied on the <2.0 default
