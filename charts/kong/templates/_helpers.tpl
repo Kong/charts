@@ -85,7 +85,7 @@ spec:
   ingressClassName: {{ .ingress.ingressClassName }}
 {{- end }}
   rules:
-  - host: {{ $hostname }}
+  - host: {{ $hostname | quote }}
     http:
       paths:
         - backend:
@@ -107,7 +107,7 @@ spec:
   {{- if (hasKey .ingress "tls") }}
   tls:
   - hosts:
-    - {{ $hostname }}
+    - {{ $hostname | quote }}
     secretName: {{ .ingress.tls }}
   {{- end -}}
 {{- end -}}
