@@ -168,6 +168,8 @@ admin:
     annotations: {}
     # Ingress path.
     path: /
+    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    pathType: ImplementationSpecific
 
 # Specify Kong status listener configuration
 # This listen is internal-only. It cannot be exposed through a service or ingress.
@@ -289,6 +291,8 @@ proxy:
     annotations: {}
     # Ingress path.
     path: /
+    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    pathType: ImplementationSpecific
 
   # Optionally specify a static load balancer IP.
   # loadBalancerIP:
@@ -830,6 +834,8 @@ manager:
     annotations: {}
     # Ingress path.
     path: /
+    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    pathType: ImplementationSpecific
 
 portal:
   # Enable creating a Kubernetes service for the Developer Portal
@@ -874,6 +880,8 @@ portal:
     annotations: {}
     # Ingress path.
     path: /
+    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    pathType: ImplementationSpecific
 
 portalapi:
   # Enable creating a Kubernetes service for the Developer Portal API
@@ -918,6 +926,8 @@ portalapi:
     annotations: {}
     # Ingress path.
     path: /
+    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    pathType: ImplementationSpecific
 
 clustertelemetry:
   enabled: false
