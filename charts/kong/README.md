@@ -454,16 +454,16 @@ event you need to recover from unintended CRD deletion.
 
 ### InitContainers
 
-The chart able to deploy initcontainers along with Kong. This can be very
-useful when require to setup additional custom initialization. The
+The chart is able to deploy initcontainers along with Kong. This can be very
+useful when there's a requirement for custom initialization. The
 `deployment.initcontainers` field in values.yaml takes an array of objects that
 get appended as-is to the existing `spec.template.initContainers` array in the
 kong deployment resource. 
 
 ### HostAliases
 
-The chart able to inject host aliases into containers. This can be very useful
-when require to resolve additional domain name which can't be looked-up
+The chart is able to inject host aliases into containers. This can be very useful
+when it's required to resolve additional domain name which can't be looked-up
 directly from dns server. The `deployment.hostAliases` field in values.yaml
 takes an array of objects that set to `spec.template.hostAliases` field in the
 kong deployment resource.
