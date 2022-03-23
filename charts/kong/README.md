@@ -43,6 +43,7 @@ $ helm install kong/kong --generate-name
   - [Migration Sidecar Containers](#migration-sidecar-containers)
   - [User Defined Volumes](#user-defined-volumes)
   - [User Defined Volume Mounts](#user-defined-volume-mounts)
+  - [Removing cluster-scoped permissions](#removing-cluster-scoped-permissions)
   - [Using a DaemonSet](#using-a-daemonset)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
@@ -453,12 +454,19 @@ event you need to recover from unintended CRD deletion.
 
 ### InitContainers
 
-The chart able to deploy initcontainers along with Kong. This can be very useful when require to setup additional custom initialization. The `deployment.initcontainers` field in values.yaml takes an array of objects that get appended as-is to the existing `spec.template.initContainers` array in the kong deployment resource. 
+The chart is able to deploy initcontainers along with Kong. This can be very
+useful when there's a requirement for custom initialization. The
+`deployment.initcontainers` field in values.yaml takes an array of objects that
+get appended as-is to the existing `spec.template.initContainers` array in the
+kong deployment resource. 
 
 ### HostAliases
 
-The chart able to inject host aliases into containers. This can be very useful when require to resolve additional domain name which can't
-be looked-up directly from dns server. The `deployment.hostAliases` field in values.yaml takes an array of objects that set to `spec.template.hostAliases` field in the kong deployment resource.
+The chart is able to inject host aliases into containers. This can be very useful
+when it's required to resolve additional domain name which can't be looked-up
+directly from dns server. The `deployment.hostAliases` field in values.yaml
+takes an array of objects that set to `spec.template.hostAliases` field in the
+kong deployment resource.
 
 ### Sidecar Containers
 
@@ -483,11 +491,46 @@ as finished and the deployment of the chart will reach the timeout.
 
 ### User Defined Volumes
 
-The chart can deploy additional volumes along with Kong. This can be useful to include additional volumes which required during iniatilization phase (InitContainer). The  `deployment.userDefinedVolumes` field in values.yaml takes an array of objects that get appended as-is to the existing `spec.template.spec.volumes` array in the kong deployment resource.
+The chart can deploy additional volumes along with Kong. This can be useful to
+include additional volumes which required during iniatilization phase
+(InitContainer). The  `deployment.userDefinedVolumes` field in values.yaml
+takes an array of objects that get appended as-is to the existing
+`spec.template.spec.volumes` array in the kong deployment resource.
 
 ### User Defined Volume Mounts
 
-The chart can mount user-defined volumes. The `deployment.userDefinedVolumeMounts` and `ingressController.userDefinedVolumeMounts` fields in values.yaml take an array of object that get appended as-is to the existing `spec.template.spec.containers[].volumeMounts` and `spec.template.spec.initContainers[].volumeMounts` array in the kong deployment resource.
+The chart can mount user-defined volumes. The
+`deployment.userDefinedVolumeMounts` and
+`ingressController.userDefinedVolumeMounts` fields in values.yaml take an array
+of object that get appended as-is to the existing
+`spec.template.spec.containers[].volumeMounts` and
+`spec.template.spec.initContainers[].volumeMounts` array in the kong deployment
+resource.
+
+### Removing cluster-scoped permissions
+
+You can limit the controller's access to allow it to only watch specific
+namespaces for resources. By default, the controller watches all namespaces.
+Limiting access requires several changes to configuration:
+
+- Set `ingressController.watchNamespaces` to a list of namespaces you want to
+  watch. The chart will automatically generate roles for each namespace and
+  assign them to the controller's service account.
+- Set `ingressController.env.enable_controller_kongclusterplugin=false` and
+  `ingressController.env.enable_controller_ingress_class_networkingv1=false`.
+  These are cluster-scoped resources, and controllers with no ClusterRole
+  cannot access them.
+- Optionally set `ingressContrller.installCRDs=false` if your user role (the
+  role you use when running `helm install`, not the controller service
+  account's role) does not have access to get CRDs. By default, the chart
+  attempts to look up the controller CRDs for [a legacy behavior
+  check](#crd-management).
+
+Because there is no namespaced version of IngressClass, controllers without
+cluster-scoped permissions cannot access them. The controller will rely
+entirely on whether the ingress class annotation or `ingressClassName` value
+matches the value set by `--ingress-class` or `CONTROLLER_INGRESS_CLASS` to
+determine which Ingresses it should use.
 
 ### Using a DaemonSet
 
@@ -800,7 +843,8 @@ configuration can be placed under the `.env` key.
 
 Kong Enterprise 2.3+ can run with or without a license. If you wish to run 2.3+
 without a license, you can skip this step and leave `enterprise.license_secret`
-unset. In this case only a limited subset of features will be available. Earlier versions require a license.
+unset. In this case only a limited subset of features will be available.
+Earlier versions require a license.
 
 If you have paid for a license, but you do not have a copy of yours, please
 contact Kong Support. Once you have it, you will need to store it in a Secret:
@@ -927,7 +971,10 @@ Setting `.enterprise.smtp.disabled: true` will set `KONG_SMTP_MOCK=on` and
 allow Admin/Developer invites to proceed without sending email. Note, however,
 that these have limited functionality without sending email.
 
-If your SMTP server requires authentication, you must provide the `username` and `smtp_password_secret` keys under `.enterprise.smtp.auth`. `smtp_password_secret` must be a Secret containing an `smtp_password` key whose value is your SMTP password.
+If your SMTP server requires authentication, you must provide the `username`
+and `smtp_password_secret` keys under `.enterprise.smtp.auth`.
+`smtp_password_secret` must be a Secret containing an `smtp_password` key whose
+value is your SMTP password.
 
 By default, SMTP uses `AUTH` `PLAIN` when you provide credentials. If your provider requires `AUTH LOGIN`, set `smtp_auth_type: login`.
 
