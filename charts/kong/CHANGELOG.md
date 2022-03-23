@@ -4,6 +4,8 @@
 
 ### Improvements
 
+* Ingress `pathType` field is now configurable.
+  ([564](https://github.com/Kong/charts/pull/564))
 * Added IngressClass resources to RBAC roles.
   ([563](https://github.com/Kong/charts/pull/563))
 * Ingresses now support wildcard hostnames.

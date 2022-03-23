@@ -66,6 +66,7 @@ Create Ingress resource for a Kong service
 {{- $servicePort := include "kong.ingress.servicePort" . }}
 {{- $path := .ingress.path -}}
 {{- $hostname := .ingress.hostname -}}
+{{- $pathType := .ingress.pathType -}}
 apiVersion: {{ .ingressVersion }}
 kind: Ingress
 metadata:
@@ -100,7 +101,7 @@ spec:
           {{- if $path }}
           path: {{ $path }}
           {{- if (not (eq .ingressVersion "extensions/v1beta1")) }}
-          pathType: ImplementationSpecific
+          pathType: {{ $pathType }}
           {{- end }}
           {{- end -}}
   {{- if (hasKey .ingress "tls") }}
