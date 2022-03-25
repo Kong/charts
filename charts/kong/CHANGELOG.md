@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* feat(deployment) allow custom environment variables to be configured for the ingress-controller container
+  ([568](https://github.com/Kong/charts/pull/568))
+
 ### Improvements
 
 * Ingress `pathType` field is now configurable.
