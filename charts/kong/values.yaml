@@ -87,6 +87,8 @@ env:
 # These custom environment variables are typicall used in custom plugins or serverless plugins to
 # access environment specific credentials or tokens.
 # Example as below, uncomment if required and add additional attributes as required.
+# Note that these environment variables will only apply to the proxy and init container. The ingress-controller
+# container has its own customEnv section.
 
 # customEnv:
 #   api_token:
@@ -461,6 +463,11 @@ ingressController:
     #     secretKeyRef:
     #        name: CHANGEME-admin-token-secret
     #        key: CHANGEME-admin-token-key
+
+  # This section is any customer specific environments variables that doesn't require CONTROLLER_ prefix.
+  # Example as below, uncomment if required and add additional attributes as required.
+  # customEnv:
+  #   TZ="Europe/Berlin"
 
   admissionWebhook:
     enabled: false
