@@ -467,7 +467,7 @@ ingressController:
   # This section is any customer specific environments variables that doesn't require CONTROLLER_ prefix.
   # Example as below, uncomment if required and add additional attributes as required.
   # customEnv:
-  #   TZ="Europe/Berlin"
+  #   TZ: "Europe/Berlin"
 
   admissionWebhook:
     enabled: false
