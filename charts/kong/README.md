@@ -662,32 +662,49 @@ are configured using an array of objects under `proxy.stream` and `udpProxy.stre
 All of the following properties are nested under the `ingressController`
 section of `values.yaml` file:
 
-| Parameter                          | Description                                                                           | Default                                                                      |
-| ---------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| enabled                            | Deploy the ingress controller, rbac and crd                                           | true                                                                         |
-| image.repository                   | Docker image with the ingress controller                                              | kong/kubernetes-ingress-controller                                           |
-| image.tag                          | Version of the ingress controller                                                     | 2.0                                                                          |
-| image.effectiveSemver              | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version |                                                |
-| readinessProbe                     | Kong ingress controllers readiness probe                                              |                                                                              |
-| livenessProbe                      | Kong ingress controllers liveness probe                                               |                                                                              |
-| installCRDs                        | Creates managed CRDs.                                                                 | false                                                                        |
-| env                                | Specify Kong Ingress Controller configuration via environment variables               |                                                                              |
-| ingressClass                       | The name of this controller's ingressClass                                            | kong                                                                         |
-| ingressClassAnnotations            | The ingress-class value for controller                                                | kong                                                                         |
-| args                               | List of ingress-controller cli arguments                                              | []                                                                           |
-| watchNamespaces                    | List of namespaces to watch. Watches all namespaces if empty                          | []                                                                           |
-| admissionWebhook.enabled           | Whether to enable the validating admission webhook                                    | false                                                                        |
-| admissionWebhook.failurePolicy     | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)      | Fail                                                                         |
-| admissionWebhook.port              | The port the ingress controller will listen on for admission webhooks                 | 8080                                                                         |
-| admissionWebhook.certificate.provided   | Whether to generate the admission webhook certificate if not provided            | false                                                                        |
-| admissionWebhook.certificate.secretName | Name of the TLS secret for the provided webhook certificate                      |                                                                              |
-| admissionWebhook.certificate.caBundle   | PEM encoded CA bundle which will be used to validate the provided webhook certificate |                                                                         |
-| deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                                                                              |
-| deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                                                                              |
+| Parameter                               | Description                                                                                                         | Default                                                                      |
+|-----------------------------------------|---------------------------------------------------------------------------------------------------------------------| ---------------------------------------------------------------------------- |
+| enabled                                 | Deploy the ingress controller, rbac and crd                                                                         | true                                                                         |
+| image.repository                        | Docker image with the ingress controller                                                                            | kong/kubernetes-ingress-controller                                           |
+| image.tag                               | Version of the ingress controller                                                                                   | 2.0                                                                          |
+| image.effectiveSemver                   | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version |                                                |
+| readinessProbe                          | Kong ingress controllers readiness probe                                                                            |                                                                              |
+| livenessProbe                           | Kong ingress controllers liveness probe                                                                             |                                                                              |
+| installCRDs                             | Creates managed CRDs.                                                                                               | false                                                                        |
+| env                                     | Specify Kong Ingress Controller configuration via environment variables                                             |                                                                              |
+| customEnv                               | Specify custom environment variables (without the CONTROLLER_ prefix)                                               |                                                                              |
+| ingressClass                            | The name of this controller's ingressClass                                                                          | kong                                                                         |
+| ingressClassAnnotations                 | The ingress-class value for controller                                                                              | kong                                                                         |
+| args                                    | List of ingress-controller cli arguments                                                                            | []                                                                           |
+| watchNamespaces                         | List of namespaces to watch. Watches all namespaces if empty                                                        | []                                                                           |
+| admissionWebhook.enabled                | Whether to enable the validating admission webhook                                                                  | false                                                                        |
+| admissionWebhook.failurePolicy          | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)                                    | Fail                                                                         |
+| admissionWebhook.port                   | The port the ingress controller will listen on for admission webhooks                                               | 8080                                                                         |
+| admissionWebhook.certificate.provided   | Whether to generate the admission webhook certificate if not provided                                               | false                                                                        |
+| admissionWebhook.certificate.secretName | Name of the TLS secret for the provided webhook certificate                                                         |                                                                              |
+| admissionWebhook.certificate.caBundle   | PEM encoded CA bundle which will be used to validate the provided webhook certificate                               |                                                                         |
+| deployment.userDefinedVolumes           | Create volumes. Please go to Kubernetes doc for the spec of the volumes                                             |                                                                              |
+| deployment.userDefinedVolumeMounts      | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts                                   |                                                                              |
 
+#### The `env` section
 For a complete list of all configuration values you can set in the
 `env` section, please read the Kong Ingress Controller's
 [configuration document](https://github.com/Kong/kubernetes-ingress-controller/blob/main/docs/references/cli-arguments.md).
+
+#### The `customEnv` section
+
+The `customEnv` section can be used to configure all environment variables other than Ingress Controller configuration.
+Any key value put under this section translates to environment variables.
+Every key is upper-cased before setting the environment variable.
+
+An example:
+
+```yaml
+kong:
+  ingressController:
+    customEnv:
+      TZ: "Europe/Berlin"
+```
 
 ### General Parameters
 

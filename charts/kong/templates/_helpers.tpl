@@ -379,10 +379,20 @@ The name of the service used for the ingress controller's validation webhook
 {{- end -}}
 
 {{/*
+    ====== CUSTOM-SET INGRESS CONTROLLER ENVIRONMENT VARIABLES ======
+*/}}
+
+{{- $customIngressEnv := dict -}}
+{{- range $key, $val := .Values.ingressController.customEnv }}
+  {{- $upper := upper $key -}}
+  {{- $_ := set $customIngressEnv $upper $val -}}
+{{- end -}}
+
+{{/*
       ====== MERGE AND RENDER ENV BLOCK ======
 */}}
 
-{{- $completeEnv := mergeOverwrite $autoEnv $userEnv -}}
+{{- $completeEnv := mergeOverwrite $autoEnv $userEnv $customIngressEnv -}}
 {{- template "kong.renderEnv" $completeEnv -}}
 
 {{- end -}}
