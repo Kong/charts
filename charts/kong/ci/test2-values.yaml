@@ -7,6 +7,8 @@ ingressController:
   installCRDs: false
   env:
     anonymous_reports: "false"
+  customEnv:
+    TZ: "Europe/Berlin"
 postgresql:
   enabled: true
   postgresqlUsername: kong
