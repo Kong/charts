@@ -17,7 +17,8 @@ postgresql:
     username: kong
     password: kong
   service:
-    port: 5432
+    ports:
+      postgresql: 5432
 env:
   anonymous_reports: "off"
   database: "postgres"
