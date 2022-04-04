@@ -556,6 +556,10 @@ postgresql:
   auth:
     username: kong
     database: kong
+  image:
+    # use postgres < 14 until is https://github.com/Kong/kong/issues/8533 resolved and released
+    # enterprise (kong-gateway) supports postgres 14
+    tag: 13.6.0-debian-10-r52
   service:
     ports:
       postgresql: "5432"
