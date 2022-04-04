@@ -556,9 +556,6 @@ postgresql:
   auth:
     username: kong
     database: kong
-  service:
-    ports:
-      postgresql: "5432"
 
 # -----------------------------------------------------------------------------
 # Miscellaneous parameters
