@@ -778,8 +778,8 @@ the template that it itself is using form the above sections.
 
 {{- if .Values.postgresql.enabled }}
   {{- $_ := set $autoEnv "KONG_PG_HOST" (include "kong.postgresql.fullname" .) -}}
-  {{- $_ := set $autoEnv "KONG_PG_PORT" (include "postgresql.service.port" .Subcharts.postgresql) -}}
-  {{- $pgPassword := include "secretkeyref" (dict "name" (include "postgresql.secretName" .Subcharts.postgresql) "key" "postgresql-password") -}}
+  {{- $_ := set $autoEnv "KONG_PG_PORT" .Values.postgresql.service.ports.postgresql -}}
+  {{- $pgPassword := include "secretkeyref" (dict "name" (include "kong.postgresql.fullname" .) "key" "postgres-password") -}}
 
   {{- $_ := set $autoEnv "KONG_PG_PASSWORD" $pgPassword -}}
 {{- else if eq .Values.env.database "postgres" }}
