@@ -611,37 +611,38 @@ nodes.
 mixed TCP/UDP LoadBalancer Services). It _does not_ support the `http`, `tls`,
 or `ingress` sections, as it is used only for stream listens.
 
-| Parameter                          | Description                                                                           | Default                  |
-|------------------------------------|---------------------------------------------------------------------------------------|--------------------------|
-| SVC.enabled                        | Create Service resource for SVC (admin, proxy, manager, etc.)                         |                          |
-| SVC.http.enabled                   | Enables http on the service                                                           |                          |
-| SVC.http.servicePort               | Service port to use for http                                                          |                          |
-| SVC.http.containerPort             | Container port to use for http                                                        |                          |
-| SVC.http.nodePort                  | Node port to use for http                                                             |                          |
-| SVC.http.hostPort                  | Host port to use for http                                                             |                          |
-| SVC.http.parameters                | Array of additional listen parameters                                                 | `[]`                     |
-| SVC.tls.enabled                    | Enables TLS on the service                                                            |                          |
-| SVC.tls.containerPort              | Container port to use for TLS                                                         |                          |
-| SVC.tls.servicePort                | Service port to use for TLS                                                           |                          |
-| SVC.tls.nodePort                   | Node port to use for TLS                                                              |                          |
-| SVC.tls.hostPort                   | Host port to use for TLS                                                              |                          |
-| SVC.tls.overrideServiceTargetPort  | Override service port to use for TLS without touching Kong containerPort              |                          |
-| SVC.tls.parameters                 | Array of additional listen parameters                                                 | `["http2"]`              |
-| SVC.type                           | k8s service type. Options: NodePort, ClusterIP, LoadBalancer                          |                          |
-| SVC.clusterIP                      | k8s service clusterIP                                                                 |                          |
-| SVC.loadBalancerSourceRanges       | Limit service access to CIDRs if set and service type is `LoadBalancer`               | `[]`                     |
-| SVC.loadBalancerIP                 | Reuse an existing ingress static IP for the service                                   |                          |
-| SVC.externalIPs                    | IPs for which nodes in the cluster will also accept traffic for the servic            | `[]`                     |
-| SVC.externalTrafficPolicy          | k8s service's externalTrafficPolicy. Options: Cluster, Local                          |                          |
-| SVC.ingress.enabled                | Enable ingress resource creation (works with SVC.type=ClusterIP)                      | `false`                  |
-| SVC.ingress.ingressClassName       | Set the ingressClassName to associate this Ingress with an IngressClass               |                          |
-| SVC.ingress.tls                    | Name of secret resource, containing TLS secret                                        |                          |
-| SVC.ingress.hostname               | Ingress hostname                                                                      | `""`                     |
-| SVC.ingress.path                   | Ingress path.                                                                         | `/`                      |
-| SVC.ingress.pathType               | Ingress pathType. One of `ImplementationSpecific`, `Exact` or `Prefix`                | `ImplementationSpecific` |
-| SVC.ingress.annotations            | Ingress annotations. See documentation for your ingress controller for details        | `{}`                     |
-| SVC.annotations                    | Service annotations                                                                   | `{}`                     |
-| SVC.labels                         | Service labels                                                                        | `{}`                     |
+| Parameter                         | Description                                                  | Default                  |
+| --------------------------------- | ------------------------------------------------------------ | ------------------------ |
+| SVC.enabled                       | Create Service resource for SVC (admin, proxy, manager, etc.) |                          |
+| SVC.http.enabled                  | Enables http on the service                                  |                          |
+| SVC.http.servicePort              | Service port to use for http                                 |                          |
+| SVC.http.containerPort            | Container port to use for http                               |                          |
+| SVC.http.nodePort                 | Node port to use for http                                    |                          |
+| SVC.http.hostPort                 | Host port to use for http                                    |                          |
+| SVC.http.parameters               | Array of additional listen parameters                        | `[]`                     |
+| SVC.tls.enabled                   | Enables TLS on the service                                   |                          |
+| SVC.tls.containerPort             | Container port to use for TLS                                |                          |
+| SVC.tls.servicePort               | Service port to use for TLS                                  |                          |
+| SVC.tls.nodePort                  | Node port to use for TLS                                     |                          |
+| SVC.tls.hostPort                  | Host port to use for TLS                                     |                          |
+| SVC.tls.overrideServiceTargetPort | Override service port to use for TLS without touching Kong containerPort |                          |
+| SVC.tls.parameters                | Array of additional listen parameters                        | `["http2"]`              |
+| SVC.type                          | k8s service type. Options: NodePort, ClusterIP, LoadBalancer |                          |
+| SVC.clusterIP                     | k8s service clusterIP                                        |                          |
+| SVC.loadBalancerSourceRanges      | Limit service access to CIDRs if set and service type is `LoadBalancer` | `[]`                     |
+| SVC.loadBalancerIP                | Reuse an existing ingress static IP for the service          |                          |
+| SVC.externalIPs                   | IPs for which nodes in the cluster will also accept traffic for the servic | `[]`                     |
+| SVC.externalTrafficPolicy         | k8s service's externalTrafficPolicy. Options: Cluster, Local |                          |
+| SVC.ingress.enabled               | Enable ingress resource creation (works with SVC.type=ClusterIP) | `false`                  |
+| SVC.ingress.ingressClassName      | Set the ingressClassName to associate this Ingress with an IngressClass |                          |
+| SVC.ingress.tls                   | Name of secret resource, containing TLS secret               |                          |
+| SVC.ingress.hostname              | Ingress hostname                                             | `""`                     |
+| SVC.ingress.path                  | Ingress path.                                                | `/`                      |
+| SVC.ingress.pathType              | Ingress pathType. One of `ImplementationSpecific`, `Exact` or `Prefix` | `ImplementationSpecific` |
+| SVC.ingress.annotations           | Ingress annotations. See documentation for your ingress controller for details | `{}`                     |
+| SVC.annotations                   | Service annotations                                          | `{}`                     |
+| SVC.labels                        | Service labels                                               | `{}`                     |
+| SVC.routeHostName                 | Hostname for OpenShift route, matching the service.          |                          |
 
 #### Stream listens
 
@@ -713,6 +714,7 @@ kong:
 | namespace                          | Namespace to deploy chart resources                                                   |                     |
 | deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
 | deployment.openshift.enabled | Enable OpenShift deployment mode (generates OpenShift routes). | `false` |
+| deployment.openshift.baseDomain | Defines OpenShift wildcard base domain for route URLs. | `apps.ocp.example.com` |
 | deployment.initContainers          | Create initContainers. Please go to Kubernetes doc for the spec of the initContainers |                     |
 | deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.hostNetwork             | Enable hostNetwork, which binds to the ports to the host                              | `false`             |

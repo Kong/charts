@@ -4,6 +4,8 @@
 
 ### Improvements
 
+* Add OpenShift support. Enable generating OCP routes.
+  ([573](https://github.com/Kong/charts/pull/573))
 * feat(deployment) allow custom environment variables to be configured for the ingress-controller container
   ([568](https://github.com/Kong/charts/pull/568))
 * Ingress `pathType` field is now configurable.
