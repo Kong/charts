@@ -48,6 +48,10 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "kong.ocpBaseDomain" -}}
+{{- default "apps.ocp.example.com" .Values.deployment.openshift.baseDomain -}}
+{{- end -}}
+
 {{/*
 Create the name of the service account to use
 */}}
@@ -195,6 +199,36 @@ spec:
     {{- .selectorLabels | nindent 4 }}
 {{- end -}}
 
+{{/*
+Create OpenShift Route resource for a Kong service
+*/}}
+{{- define "kong.route" -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ .fullName }}-kong-{{ .serviceName }}
+  namespace: {{ .namespace }}
+  labels:
+    {{- .metaLabels | nindent 4 }}
+  {{- range $key, $value := .labels }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+spec:
+  host: {{ .routeHostName }}.{{ .ocpBaseDomain }}
+  to:
+    kind: Service
+    name: {{ .fullName }}-{{ .serviceName }}
+    weight: 100
+  {{- if .tls.enabled }}
+  port:
+    targetPort: kong-{{ .serviceName }}-tls
+  tls:
+    termination: passthrough
+  {{- else }}
+  port:
+    targetPort: kong-{{ .serviceName }}
+  {{- end -}}
+{{- end -}}
 
 {{/*
 Create KONG_SERVICE_LISTEN strings

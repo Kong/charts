@@ -19,6 +19,13 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
+
+  # Enable RedHat OpenShift Support
+  openshift:
+    enabled: false
+    # Define OpenShift apps wildcard domain - for generating routes
+    baseDomain: apps.ocp.example.com
+
   ## Specify the service account to create and to be assigned to the deployment / daemonset and for th migrations
   serviceAccount:
     create: true
@@ -130,6 +137,8 @@ admin:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
+  # Name of optional OpenShift Route
+  routeHostName: kong-admin
 
   http:
     # Enable plaintext HTTP listen for the admin API
@@ -208,6 +217,8 @@ cluster:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
+  # Name of optional OpenShift Route
+  routeHostName: kong-cluster
 
   tls:
     enabled: false
@@ -233,6 +244,8 @@ proxy:
   # "service.beta.kubernetes.io/aws-load-balancer-type": "elb"
   labels:
     enable-metrics: "true"
+  # Name of optional OpenShift Route
+  routeHostName: kong-proxy
 
   http:
     # Enable plaintext HTTP listen for the proxy
@@ -551,6 +564,18 @@ postgresql:
   # service:
   #   port: 5432
 
+  # OpenShift specific (run pods without defined uid)
+  # primary:
+  #   podSecurityContext:
+  #     enabled: false
+  #     fsGroup: "auto"
+  #   containerSecurityContext:
+  #     enabled: false
+  #     runAsUser: "auto"
+  # volumePermissions:
+  #   containerSecurityContext:
+  #     runAsUser: "auto"
+
 # -----------------------------------------------------------------------------
 # Miscellaneous parameters
 # -----------------------------------------------------------------------------
@@ -807,6 +832,8 @@ manager:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
+  # Name of optional OpenShift Route
+  routeHostName: kong-manager
 
   http:
     # Enable plaintext HTTP listen for Kong Manager
@@ -853,6 +880,8 @@ portal:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
+  # Name of optional OpenShift Route
+  routeHostName: kong-portal
 
   http:
     # Enable plaintext HTTP listen for the Developer Portal
@@ -899,6 +928,8 @@ portalapi:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
+  # Name of optional OpenShift Route
+  routeHostName: kong-portal-api
 
   http:
     # Enable plaintext HTTP listen for the Developer Portal API
@@ -943,6 +974,8 @@ clustertelemetry:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
+  # Name of optional OpenShift Route
+  routeHostName: kong-clustertelemetry
 
   tls:
     enabled: false
