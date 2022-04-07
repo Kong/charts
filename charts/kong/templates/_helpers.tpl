@@ -206,7 +206,7 @@ Create OpenShift Route resource for a Kong service
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{ .fullName }}-kong-{{ .serviceName }}
+  name: {{ .fullName }}-{{ .serviceName }}
   namespace: {{ .namespace }}
   labels:
     {{- .metaLabels | nindent 4 }}
