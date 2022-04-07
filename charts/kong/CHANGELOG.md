@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Updated podDisruptionBudget from `policy/v1beta1` to `policy/v1`.
+  ([574](https://github.com/Kong/charts/pull/574))
+
 ### Improvements
 
 * feat(deployment) allow custom environment variables to be configured for the ingress-controller container
@@ -23,7 +26,7 @@
 * Improved support and documentation for installations that [lack
   cluster-scoped permissions](https://github.com/Kong/charts/blob/main/charts/kong/README.md#removing-cluster-scoped-permissions).
   ([565](https://github.com/Kong/charts/pull/565))
-  
+
 ### Fixed
 
 * Removed CREATE from ValidatingWebhookConfiguration objectSelector for Secrets to align with changes in Kong/kubernetes-ingress-controller.
