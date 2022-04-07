@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [2.8.0](#280)
 - [2.7.0](#270)
 - [2.4.0](#240)
 - [2.3.0](#230)
@@ -61,6 +62,33 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+## 2.8.0
+
+2.8 updates the Postgres subchart version from 8.6.8 to 11.1.15. This changes
+a number of values.yaml keys and the default Postgres version. The previous
+default Postgres version was [11.7.0-debian-10-r37](https://github.com/bitnami/charts/blob/590c6b0f4e07161614453b12efe71f22e0c00a46/bitnami/postgresql/values.yaml#L18).
+
+To use the new version on an existing install, you should [follow Bitnami's
+instructions for updating values.yaml keys and upgrading their chart]() as well
+as [the Postgres upgrade instructions](https://www.postgresql.org/docs/current/upgrading.html).
+
+You can alternately use the new chart without upgrading Postgres by setting
+`postgresql.image.tag=11.7.0-debian-10-r37` or use the old version of the
+chart. Helm documentation is unclear on whether ignoring a subchart version
+change for a release is possible, so we recommend [dumping the
+database](https://www.postgresql.org/docs/current/backup-dump.html) and
+creating a separate release if you wish to continue using 8.6.8:
+
+```
+$ helm install my-release -f values.yaml --version 8.6.8 bitnami/postgresql
+```
+
+Afterwords, you will upgrade your Kong chart release with
+`postgresql.enabled=false` and `env.pg_host` and `env.pg_password` set to the
+appropriate hostname and Secret reference for your new release (these are set
+automatically when the subchart is enabled, but will not be set automatically
+with a separate release).
 
 ## 2.7.0
 
