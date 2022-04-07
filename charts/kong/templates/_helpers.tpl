@@ -812,10 +812,11 @@ the template that it itself is using form the above sections.
 
 {{- if .Values.postgresql.enabled }}
   {{- $_ := set $autoEnv "KONG_PG_HOST" (include "kong.postgresql.fullname" .) -}}
-  {{- $_ := set $autoEnv "KONG_PG_PORT" .Values.postgresql.service.port -}}
-  {{- $pgPassword := include "secretkeyref" (dict "name" (include "kong.postgresql.fullname" .) "key" "postgresql-password") -}}
+  {{- $_ := set $autoEnv "KONG_PG_PORT" .Values.postgresql.service.ports.postgresql -}}
+  {{- $pgPassword := include "secretkeyref" (dict "name" (include "kong.postgresql.fullname" .) "key" "password") -}}
+
   {{- $_ := set $autoEnv "KONG_PG_PASSWORD" $pgPassword -}}
-{{- else if .Values.postgresql.enabled }}
+{{- else if eq .Values.env.database "postgres" }}
   {{- $_ := set $autoEnv "KONG_PG_PORT" "5432" }}
 {{- end }}
 

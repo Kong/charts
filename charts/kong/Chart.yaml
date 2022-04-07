@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 description: The Cloud-Native Ingress and API-management
 engine: gotpl
 home: https://konghq.com/
@@ -12,3 +12,8 @@ name: kong
 sources:
 version: 2.7.0
 appVersion: "2.8"
+dependencies:
+- name: postgresql
+  version: 11.1.15
+  repository: https://charts.bitnami.com/bitnami
+  condition: postgresql.enabled
