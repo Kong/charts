@@ -41,7 +41,7 @@ change this value to `true` if you use Helm 2).
 
 * [minimal-kong-enterprise-hybrid-control.yaml](minimal-kong-enterprise-hybrid-control.yaml) and
   [minimal-kong-enterprise-hybrid-data.yaml](minimal-kong-enterprise-hybrid-data.yaml) install
-  separate releases for hybrid mode control and data plane nodes, using the
+  separate releases of Kong Enterprise for hybrid mode control and data plane nodes, using the
   built-in PostgreSQL chart on the control plane release. They require some
   pre-work to [create certificates](https://github.com/Kong/charts/blob/main/charts/kong/README.md#certificates)
   and configure the control plane location. See comments in the file headers
