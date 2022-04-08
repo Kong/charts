@@ -17,7 +17,6 @@ image:
   tag: "2.8"
 
 env:
-  prefix: /kong_prefix/
   database: postgres
   role: control_plane
   cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
@@ -27,15 +26,11 @@ admin:
   enabled: true
   http:
     enabled: true
-    servicePort: 8001
-    containerPort: 8001
 
 cluster:
   enabled: true
   tls:
     enabled: true
-    servicePort: 8005
-    containerPort: 8005
 
 proxy:
   enabled: false
@@ -45,9 +40,6 @@ secretVolumes:
 
 postgresql:
   enabled: true
-  auth:
-    username: kong
-    database: kong
 
 ingressController:
   enabled: false
@@ -58,10 +50,6 @@ enterprise:
   # See instructions regarding enterprise licenses at https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-license
   license_secret: kong-enterprise-license # CHANGEME
   vitals:
-    enabled: false
-  portal:
-    enabled: false
-  rbac:
     enabled: false
 
 portal:

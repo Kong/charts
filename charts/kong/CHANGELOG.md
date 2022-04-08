@@ -2,9 +2,6 @@
 
 ## Unreleased
 
-* doc(examples) add hybrid enterprise example values
-  ([575](https://github.com/Kong/charts/pull/575))
-
 ### Improvements
 
 * feat(deployment) allow custom environment variables to be configured for the ingress-controller container

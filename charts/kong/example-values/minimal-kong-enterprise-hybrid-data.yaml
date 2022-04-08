@@ -15,16 +15,11 @@ image:
   tag: "2.8"
 
 env:
-  prefix: /kong_prefix/
-  database: "off"
   role: data_plane
   cluster_control_plane: CHANGEME-control-service.CHANGEME-namespace.svc.cluster.local:8005
   lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
   cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
   cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
-
-admin:
-  enabled: false
 
 secretVolumes:
 - kong-cluster-cert
@@ -38,10 +33,6 @@ enterprise:
   # See instructions regarding enterprise licenses at https://github.com/Kong/charts/blob/master/charts/kong/README.md#kong-enterprise-license
   license_secret: kong-enterprise-license # CHANGEME
   vitals:
-    enabled: false
-  portal:
-    enabled: false
-  rbac:
     enabled: false
 
 manager:
