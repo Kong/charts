@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Updated podDisruptionBudget from `policy/v1beta1` to `policy/v1`.
+  ([574](https://github.com/Kong/charts/pull/574))
+
 ### Improvements
 
 * feat(deployment) allow custom environment variables to be configured for the ingress-controller container
@@ -23,7 +26,7 @@
 * Improved support and documentation for installations that [lack
   cluster-scoped permissions](https://github.com/Kong/charts/blob/main/charts/kong/README.md#removing-cluster-scoped-permissions).
   ([565](https://github.com/Kong/charts/pull/565))
-  
+
 ### Fixed
 
 * Removed CREATE from ValidatingWebhookConfiguration objectSelector for Secrets to align with changes in Kong/kubernetes-ingress-controller.
@@ -38,6 +41,16 @@
 ## 2.7.0
 
 2.7.0 includes CRD updates, which [must be applied manually](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#270).
+
+### Breaking Changes
+
+* There are upstream changes to the Postgres sub-chart that change many
+  values.yaml keys. The default `postgresqlUsername` and `postgresqlDatabase`
+  keys used in this chart's values.yaml are now `auth.username` and
+  `auth.database`. If you set other Postgres sub-chart values, consult the
+  [upstream README](https://github.com/bitnami/charts/tree/master/bitnami/postgresql)
+  and [upgrade guide](https://docs.bitnami.com/kubernetes/infrastructure/postgresql/administration/upgrade/#to-1100)
+  to see what you need to change.
 
 ### Improvements
 
