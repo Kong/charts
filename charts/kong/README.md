@@ -159,13 +159,13 @@ You can provide an existing ConfigMap
 `values.yaml` (`dblessConfig.config`)
 parameter. See the example configuration in the default values.yaml
 for more details. You can use `--set-file dblessConfig.config=/path/to/declarative-config.yaml`
-in Helm commands to substitute in a complete declarative config file.    
-    
+in Helm commands to substitute in a complete declarative config file.
+
 Note that externally supplied ConfigMaps are not hashed or tracked in deployment annotations.
 Subsequent ConfigMap updates will require user-initiated new deployment rollouts
 to apply the new configuration. You should run `kubectl rollout restart deploy`
-after updating externally supplied ConfigMap content.    
-    
+after updating externally supplied ConfigMap content.
+
 #### Using the Postgres sub-chart
 
 The chart can optionally spawn a Postgres instance using [Bitnami's Postgres
@@ -458,7 +458,7 @@ The chart is able to deploy initcontainers along with Kong. This can be very
 useful when there's a requirement for custom initialization. The
 `deployment.initcontainers` field in values.yaml takes an array of objects that
 get appended as-is to the existing `spec.template.initContainers` array in the
-kong deployment resource. 
+kong deployment resource.
 
 ### HostAliases
 
@@ -479,7 +479,7 @@ in the Kong deployment resource.
 
 ### Migration Sidecar Containers
 
-In the same way sidecar containers are attached to the Kong and Ingress 
+In the same way sidecar containers are attached to the Kong and Ingress
 Controller containers the chart can add sidecars to the containers that runs
 the migrations. The
 `migrations.sidecarContainers` field in values.yaml takes an array of objects
@@ -605,7 +605,8 @@ only.
 `SVC.ingress.*` settings (cluster communication requires TLS client
 authentication, which cannot pass through an ingress proxy). `clustertelemetry`
 is similar, and used when Vitals is enabled on Kong Enterprise control plane
-nodes.
+nodes. It's possible to use `SVC.openshiftRoute.*` if you plan to separate CP and
+DP in two different OpenShift clusters.
 
 `udpProxy` is used for UDP stream listens (Kubernetes does not yet support
 mixed TCP/UDP LoadBalancer Services). It _does not_ support the `http`, `tls`,
@@ -633,6 +634,9 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.loadBalancerIP                | Reuse an existing ingress static IP for the service          |                          |
 | SVC.externalIPs                   | IPs for which nodes in the cluster will also accept traffic for the servic | `[]`                     |
 | SVC.externalTrafficPolicy         | k8s service's externalTrafficPolicy. Options: Cluster, Local |                          |
+| SVC.openshiftRoute.enabled        | Enable OpenShift route resource creation                     | `false`                  |
+| SVC.openshiftRoute.hostname       | Optional - defines the fully qualified hostname for the matching OpenShift route. Otherwise the route name attribute and OpenShift wildcard domain is used |                          |
+| SVC.openshiftRoute.tlsMode        | Defines the OpenShift TLS route mode. Options: none, edge, passthrough | `passthrough`            |
 | SVC.ingress.enabled               | Enable ingress resource creation (works with SVC.type=ClusterIP) | `false`                  |
 | SVC.ingress.ingressClassName      | Set the ingressClassName to associate this Ingress with an IngressClass |                          |
 | SVC.ingress.tls                   | Name of secret resource, containing TLS secret               |                          |
@@ -642,7 +646,6 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.ingress.annotations           | Ingress annotations. See documentation for your ingress controller for details | `{}`                     |
 | SVC.annotations                   | Service annotations                                          | `{}`                     |
 | SVC.labels                        | Service labels                                               | `{}`                     |
-| SVC.routeHostName                 | Hostname for OpenShift route, matching the service.          |                          |
 
 #### Stream listens
 
@@ -713,8 +716,6 @@ kong:
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | namespace                          | Namespace to deploy chart resources                                                   |                     |
 | deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
-| deployment.openshift.enabled | Enable OpenShift deployment mode (generates OpenShift routes). | `false` |
-| deployment.openshift.baseDomain | Defines OpenShift wildcard base domain for route URLs. | `apps.ocp.example.com` |
 | deployment.initContainers          | Create initContainers. Please go to Kubernetes doc for the spec of the initContainers |                     |
 | deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.hostNetwork             | Enable hostNetwork, which binds to the ports to the host                              | `false`             |
@@ -763,7 +764,7 @@ kong:
 | extraConfigMaps                    | ConfigMaps to add to mounted volumes                                                  | `[]`                |
 | extraSecrets                       | Secrets to add to mounted volumes                                                     | `[]`                |
 
-**Note:** If you are using `deployment.hostNetwork` to bind to lower ports ( < 1024), which may be the desired option (ports 80 and 433), you also 
+**Note:** If you are using `deployment.hostNetwork` to bind to lower ports ( < 1024), which may be the desired option (ports 80 and 433), you also
 need to tweak the `containerSecurityContext` configuration as in the example:
 
 ```yaml
@@ -814,7 +815,7 @@ An example:
 
 ```yaml
 kong:
-  customEnv:                       
+  customEnv:
     api_token:
       valueFrom:
         secretKeyRef:

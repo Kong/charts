@@ -1,4 +1,4 @@
-{{- if and .Values.deployment.kong.enabled .Values.deployment.openshift.enabled }}
+{{- if and .Values.deployment.kong.enabled .Values.portalapi.openshiftRoute.enabled }}
 {{- if and .Values.portalapi.enabled (or .Values.portalapi.http.enabled .Values.portalapi.tls.enabled) -}}
 {{- $routeConfig := dict -}}
 {{- $routeConfig := merge $routeConfig .Values.portalapi -}}
@@ -6,7 +6,6 @@
 {{- $_ := set $routeConfig "namespace" (include "kong.namespace" .) -}}
 {{- $_ := set $routeConfig "metaLabels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $routeConfig "serviceName" "portalapi" -}}
-{{- $_ := set $routeConfig "ocpBaseDomain" (include "kong.ocpBaseDomain" .) -}}
 {{- include "kong.route" $routeConfig }}
 {{- end -}}
 {{- end -}}

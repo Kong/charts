@@ -1,4 +1,4 @@
-{{- if and .Values.deployment.kong.enabled .Values.deployment.openshift.enabled }}
+{{- if and .Values.deployment.kong.enabled .Values.admin.openshiftRoute.enabled }}
 {{- if and .Values.admin.enabled (or .Values.admin.http.enabled .Values.admin.tls.enabled) -}}
 {{- $routeConfig := dict -}}
 {{- $routeConfig := merge $routeConfig .Values.admin -}}
@@ -6,7 +6,6 @@
 {{- $_ := set $routeConfig "namespace" (include "kong.namespace" .) -}}
 {{- $_ := set $routeConfig "metaLabels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $routeConfig "serviceName" "admin" -}}
-{{- $_ := set $routeConfig "ocpBaseDomain" (include "kong.ocpBaseDomain" .) -}}
 {{- include "kong.route" $routeConfig }}
 {{- end -}}
 {{- end -}}

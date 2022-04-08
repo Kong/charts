@@ -20,12 +20,6 @@ deployment:
     # controller-only release.
     enabled: true
 
-  # Enable RedHat OpenShift Support
-  openshift:
-    enabled: false
-    # Define OpenShift apps wildcard domain - for generating routes
-    baseDomain: apps.ocp.example.com
-
   ## Specify the service account to create and to be assigned to the deployment / daemonset and for th migrations
   serviceAccount:
     create: true
@@ -137,7 +131,7 @@ admin:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
-  # Name of optional OpenShift Route
+  # Optional - Host (fully qualified) of OpenShift Route
   routeHostName: kong-admin
 
   http:
@@ -164,6 +158,16 @@ admin:
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
     parameters:
     - http2
+
+  # Kong admin OpenShift route settings. Useful if you want to expose the Admin
+  # API of Kong outside the OpenShift cluster.
+  openshiftRoute:
+    # Enable/disable exposure using OpenShift routes.
+    enabled: false
+    # Optional - Host (fully qualified) of OpenShift Route
+    # hostname: kong-admin
+    # Use TLS route mode: none, edge or passthrough
+    tlsMode: passthrough
 
   # Kong admin ingress settings. Useful if you want to expose the Admin
   # API of Kong outside the k8s cluster.
@@ -217,8 +221,6 @@ cluster:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
-  # Name of optional OpenShift Route
-  routeHostName: kong-cluster
 
   tls:
     enabled: false
@@ -227,6 +229,16 @@ cluster:
     parameters: []
 
   type: ClusterIP
+
+  # Kong cluster OpenShift route settings. Useful if you want to expose the Admin
+  # API of Kong outside the OpenShift cluster.
+  openshiftRoute:
+    # Enable/disable exposure using OpenShift routes.
+    enabled: false
+    # Optional - Host (fully qualified) of OpenShift Route
+    # hostname: kong-cluster
+    # Use TLS route mode: none, edge or passthrough
+    tlsMode: passthrough
 
 # Specify Kong proxy service configuration
 proxy:
@@ -244,7 +256,7 @@ proxy:
   # "service.beta.kubernetes.io/aws-load-balancer-type": "elb"
   labels:
     enable-metrics: "true"
-  # Name of optional OpenShift Route
+  # Optional - Host (fully qualified) of OpenShift Route
   routeHostName: kong-proxy
 
   http:
@@ -290,6 +302,16 @@ proxy:
     #   # Additional listen parameters, e.g. "ssl", "reuseport", "backlog=16384"
     #   # "ssl" is required for SNI-based routes. It is not supported on versions <2.0
     #   parameters: []
+
+  # Kong proxy OpenShift route settings. Useful if you want to expose the Admin
+  # API of Kong outside the OpenShift cluster.
+  openshiftRoute:
+    # Enable/disable exposure using OpenShift routes.
+    enabled: false
+    # Optional - Host (fully qualified) of OpenShift Route
+    # hostname: kong-proxy
+    # Use TLS route mode: none, edge or passthrough
+    tlsMode: passthrough
 
   # Kong proxy ingress settings.
   # Note: You need this only if you are using another Ingress Controller
@@ -845,7 +867,7 @@ manager:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
-  # Name of optional OpenShift Route
+  # Optional - Host (fully qualified) of OpenShift Route
   routeHostName: kong-manager
 
   http:
@@ -868,6 +890,16 @@ manager:
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
     parameters:
     - http2
+
+  # Kong manager OpenShift route settings. Useful if you want to expose the Admin
+  # API of Kong outside the OpenShift cluster.
+  openshiftRoute:
+    # Enable/disable exposure using OpenShift routes.
+    enabled: false
+    # Optional - Host (fully qualified) of OpenShift Route
+    # hostname: kong-manager
+    # Use TLS route mode: none, edge or passthrough
+    tlsMode: passthrough
 
   ingress:
     # Enable/disable exposure using ingress.
@@ -893,7 +925,7 @@ portal:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
-  # Name of optional OpenShift Route
+  # Optional - Host (fully qualified) of OpenShift Route
   routeHostName: kong-portal
 
   http:
@@ -916,6 +948,16 @@ portal:
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
     parameters:
     - http2
+
+  # Kong portal OpenShift route settings. Useful if you want to expose the Admin
+  # API of Kong outside the OpenShift cluster.
+  openshiftRoute:
+    # Enable/disable exposure using OpenShift routes.
+    enabled: false
+    # Optional - Host (fully qualified) of OpenShift Route
+    # hostname: kong-portal
+    # Use TLS route mode: none, edge or passthrough
+    tlsMode: passthrough
 
   ingress:
     # Enable/disable exposure using ingress.
@@ -941,7 +983,7 @@ portalapi:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
-  # Name of optional OpenShift Route
+  # Optional - Host (fully qualified) of OpenShift Route
   routeHostName: kong-portal-api
 
   http:
@@ -965,6 +1007,16 @@ portalapi:
     parameters:
     - http2
 
+  # Kong portalapi OpenShift route settings. Useful if you want to expose the Admin
+  # API of Kong outside the OpenShift cluster.
+  openshiftRoute:
+    # Enable/disable exposure using OpenShift routes.
+    enabled: false
+    # Optional - Host (fully qualified) of OpenShift Route
+    # hostname: kong-portalapi
+    # Use TLS route mode: none, edge or passthrough
+    tlsMode: passthrough
+
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
@@ -987,8 +1039,6 @@ clustertelemetry:
   annotations: {}
   #  service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
   labels: {}
-  # Name of optional OpenShift Route
-  routeHostName: kong-clustertelemetry
 
   tls:
     enabled: false
@@ -997,6 +1047,16 @@ clustertelemetry:
     parameters: []
 
   type: ClusterIP
+
+  # Kong clustertelemetry OpenShift route settings. Useful if you want to expose the Admin
+  # API of Kong outside the OpenShift cluster.
+  openshiftRoute:
+    # Enable/disable exposure using OpenShift routes.
+    enabled: false
+    # Optional - Host (fully qualified) of OpenShift Route
+    # hostname: kong-clustertelemetry
+    # Use TLS route mode: none, edge or passthrough
+    tlsMode: passthrough
 
 extraConfigMaps: []
 # extraConfigMaps:

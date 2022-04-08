@@ -48,10 +48,6 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "kong.ocpBaseDomain" -}}
-{{- default "apps.ocp.example.com" .Values.deployment.openshift.baseDomain -}}
-{{- end -}}
-
 {{/*
 Create the name of the service account to use
 */}}
@@ -214,16 +210,18 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
-  host: {{ .routeHostName }}.{{ .ocpBaseDomain }}
+  {{- if .openshiftRoute.hostname }}
+  host: {{ .openshiftRoute.hostname }}
+  {{- end }}
   to:
     kind: Service
     name: {{ .fullName }}-{{ .serviceName }}
     weight: 100
-  {{- if .tls.enabled }}
+  {{- if ne .openshiftRoute.tlsMode "none" }}
   port:
     targetPort: kong-{{ .serviceName }}-tls
   tls:
-    termination: passthrough
+    termination: {{.openshiftRoute.tlsMode}}
   {{- else }}
   port:
     targetPort: kong-{{ .serviceName }}
@@ -374,6 +372,14 @@ the extra slash.
 {{- end -}}
 {{- end -}}
 
+{{- define "kong.openshift.routeUrl" -}}
+{{- if ne .openshiftRoute.tlsMode "none" -}}
+    https://{{ .openshiftRoute.hostname }}
+{{- else -}}
+    http://{{ .openshiftRoute.hostname }}
+{{- end -}}
+{{- end -}}
+
 {{/*
 The name of the service used for the ingress controller's validation webhook
 */}}
@@ -484,7 +490,7 @@ The name of the service used for the ingress controller's validation webhook
     secretName: {{ .Values.ingressController.admissionWebhook.certificate.secretName }}
     {{- else }}
     secretName: {{ template "kong.fullname" . }}-validation-webhook-keypair
-    {{- end }}  
+    {{- end }}
 {{- end }}
 {{- range $secretVolume := .Values.secretVolumes }}
 - name: {{ . }}
@@ -580,7 +586,7 @@ The name of the service used for the ingress controller's validation webhook
   image: {{ include "kong.getRepoTag" .Values.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
   securityContext:
-  {{ toYaml .Values.containerSecurityContext | nindent 4 }} 
+  {{ toYaml .Values.containerSecurityContext | nindent 4 }}
   env:
   {{- include "kong.env" . | nindent 2 }}
 {{/* TODO the prefix override is to work around https://github.com/Kong/charts/issues/295
@@ -605,7 +611,7 @@ The name of the service used for the ingress controller's validation webhook
 {{- define "kong.controller-container" -}}
 - name: ingress-controller
   securityContext:
-{{ toYaml .Values.containerSecurityContext | nindent 4 }}  
+{{ toYaml .Values.containerSecurityContext | nindent 4 }}
   args:
   {{ if .Values.ingressController.args}}
   {{- range $val := .Values.ingressController.args }}
@@ -708,6 +714,8 @@ the template that it itself is using form the above sections.
 
 {{- if .Values.admin.ingress.enabled }}
   {{- $_ := set $autoEnv "KONG_ADMIN_API_URI" (include "kong.ingress.serviceUrl" .Values.admin.ingress) -}}
+{{- else if .Values.admin.openshiftRoute.enabled }}
+  {{- $_ := set $autoEnv "KONG_ADMIN_API_URI" (include "kong.openshift.routeUrl" .Values.admin) -}}
 {{- end -}}
 
 {{- $_ := set $autoEnv "KONG_PROXY_LISTEN" (include "kong.listen" .Values.proxy) -}}
@@ -743,6 +751,8 @@ the template that it itself is using form the above sections.
   {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.listen" .Values.manager) -}}
   {{- if .Values.manager.ingress.enabled }}
     {{- $_ := set $autoEnv "KONG_ADMIN_GUI_URL" (include "kong.ingress.serviceUrl" .Values.manager.ingress) -}}
+  {{- else if .Values.manager.openshiftRoute.enabled }}
+    {{- $_ := set $autoEnv "KONG_ADMIN_GUI_URL" (include "kong.openshift.routeUrl" .Values.manager) -}}
   {{- end -}}
 
   {{- if not .Values.enterprise.vitals.enabled }}
@@ -762,10 +772,19 @@ the template that it itself is using form the above sections.
       {{- else }}
         {{- $_ := set $autoEnv "KONG_PORTAL_GUI_PROTOCOL" "http" -}}
       {{- end }}
+    {{- else if .Values.portal.openshiftRoute.enabled }}
+      {{- $_ := set $autoEnv "KONG_PORTAL_GUI_HOST" (.Values.portal.routeHostName) -}}
+      {{- if .Values.portal.tls.enabled }}
+        {{- $_ := set $autoEnv "KONG_PORTAL_GUI_PROTOCOL" "https" -}}
+      {{- else }}
+        {{- $_ := set $autoEnv "KONG_PORTAL_GUI_PROTOCOL" "http" -}}
+      {{- end }}
     {{- end }}
 
     {{- if .Values.portalapi.ingress.enabled }}
       {{- $_ := set $autoEnv "KONG_PORTAL_API_URL" (include "kong.ingress.serviceUrl" .Values.portalapi.ingress) -}}
+    {{- else if .Values.portalapi.openshiftRoute.enabled }}
+      {{- $_ := set $autoEnv "KONG_PORTAL_API_URL" (include "kong.openshift.routeUrl" .Values.portalapi) -}}
     {{- end }}
   {{- end }}
 
