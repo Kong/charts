@@ -159,13 +159,13 @@ You can provide an existing ConfigMap
 `values.yaml` (`dblessConfig.config`)
 parameter. See the example configuration in the default values.yaml
 for more details. You can use `--set-file dblessConfig.config=/path/to/declarative-config.yaml`
-in Helm commands to substitute in a complete declarative config file.    
-    
+in Helm commands to substitute in a complete declarative config file.
+
 Note that externally supplied ConfigMaps are not hashed or tracked in deployment annotations.
 Subsequent ConfigMap updates will require user-initiated new deployment rollouts
 to apply the new configuration. You should run `kubectl rollout restart deploy`
-after updating externally supplied ConfigMap content.    
-    
+after updating externally supplied ConfigMap content.
+
 #### Using the Postgres sub-chart
 
 The chart can optionally spawn a Postgres instance using [Bitnami's Postgres
@@ -458,7 +458,7 @@ The chart is able to deploy initcontainers along with Kong. This can be very
 useful when there's a requirement for custom initialization. The
 `deployment.initcontainers` field in values.yaml takes an array of objects that
 get appended as-is to the existing `spec.template.initContainers` array in the
-kong deployment resource. 
+kong deployment resource.
 
 ### HostAliases
 
@@ -479,7 +479,7 @@ in the Kong deployment resource.
 
 ### Migration Sidecar Containers
 
-In the same way sidecar containers are attached to the Kong and Ingress 
+In the same way sidecar containers are attached to the Kong and Ingress
 Controller containers the chart can add sidecars to the containers that runs
 the migrations. The
 `migrations.sidecarContainers` field in values.yaml takes an array of objects
@@ -735,7 +735,7 @@ kong:
 | topologySpreadConstraints          | Control how Pods are spread across cluster among failure-domains                      |                     |
 | nodeSelector                       | Node labels for pod assignment                                                        | `{}`                |
 | deploymentAnnotations              | Annotations to add to deployment                                                      |  see `values.yaml`  |
-| podAnnotations                     | Annotations to add to each pod                                                        | `{}`                |
+| podAnnotations                     | Annotations to add to each pod                                                        |  see `values.yaml`  |
 | podLabels                          | Labels to add to each pod                                                             | `{}`                |
 | resources                          | Pod resource requests & limits                                                        | `{}`                |
 | tolerations                        | List of node taints to tolerate                                                       | `[]`                |
@@ -760,7 +760,7 @@ kong:
 | extraConfigMaps                    | ConfigMaps to add to mounted volumes                                                  | `[]`                |
 | extraSecrets                       | Secrets to add to mounted volumes                                                     | `[]`                |
 
-**Note:** If you are using `deployment.hostNetwork` to bind to lower ports ( < 1024), which may be the desired option (ports 80 and 433), you also 
+**Note:** If you are using `deployment.hostNetwork` to bind to lower ports ( < 1024), which may be the desired option (ports 80 and 433), you also
 need to tweak the `containerSecurityContext` configuration as in the example:
 
 ```yaml
@@ -770,6 +770,16 @@ containerSecurityContext: # run as root to bind to lower ports
   runAsGroup: 0
   runAsNonRoot: false
   runAsUser: 0
+```
+
+**Note:** The default pod annotations in this chart disables mesh proxing for Kuma and istio mesh.
+If you don't want to run Kong with disabled proxing inside this meshes, you can tweak the `podAnnotations` configurations as in the example:
+
+```yaml
+# Enable mesh proxing for kuma and istio
+podAnnotations:
+  kuma.io/gateway: disabled
+  traffic.sidecar.istio.io/includeInboundPorts: "*"
 ```
 
 #### The `env` section
@@ -811,7 +821,7 @@ An example:
 
 ```yaml
 kong:
-  customEnv:                       
+  customEnv:
     api_token:
       valueFrom:
         secretKeyRef:
