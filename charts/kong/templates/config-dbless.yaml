@@ -1,5 +1,5 @@
 {{- if .Values.deployment.kong.enabled }}
-{{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
+{{- if (and (.Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 {{- if not .Values.dblessConfig.configMap }}
 apiVersion: v1
 kind: ConfigMap
