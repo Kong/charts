@@ -217,14 +217,19 @@ spec:
     kind: Service
     name: {{ .fullName }}-{{ .serviceName }}
     weight: 100
-  {{- if ne .openshiftRoute.tlsMode "none" }}
+  {{- if eq .openshiftRoute.tlsMode "passthrough" }}
   port:
     targetPort: kong-{{ .serviceName }}-tls
   tls:
-    termination: {{.openshiftRoute.tlsMode}}
+    termination: {{ .openshiftRoute.tlsMode }}
   {{- else }}
   port:
     targetPort: kong-{{ .serviceName }}
+  {{- if eq .openshiftRoute.tlsMode "edge" }}
+  tls:
+    termination: {{ .openshiftRoute.tlsMode }}
+    insecureEdgeTerminationPolicy: Redirect
+  {{- end -}}
   {{- end -}}
 {{- end -}}
 
