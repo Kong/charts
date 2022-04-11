@@ -772,17 +772,15 @@ containerSecurityContext: # run as root to bind to lower ports
   runAsUser: 0
 ```
 
-**Note:** The default pod annotations in this chart enables the Kuma and istio gateway mode, which disables the
-external Envoy listener for the service and making it resolvable inbound. This is the typical usecase when you
-want to use Kong as a “doorway” into the service mesh.
+**Note:** The default `podAnnotations` values disable inbound proxying for Kuma 
+and Istio. This is appropriate when using Kong as a gateway for external 
+traffic inbound into the cluster.
 
-If you want to use Kong gateway as a mesh proxy with advanced plugin functionality, you should disable the
-Kuma and istio gateway mode (as in the following example). In this modes the gateway is only reachable inside the
-service mesh with it's matching _.mesh_ address. The equivalent annotation for istio service mesh is
-`traffic.sidecar.istio.io/includeInboundPorts: "*"`, which redirects all incoming traffic to envoy first.
+If you want to use Kong as an internal proxy within the cluster network, you 
+should enable inbound the inbound mesh proxies:
 
 ```yaml
-# Enable mesh proxing (mesh to mesh) for kuma and istio
+# Enable inbound mesh proxying for Kuma and Istio
 podAnnotations:
   kuma.io/gateway: disabled
   traffic.sidecar.istio.io/includeInboundPorts: "*"
