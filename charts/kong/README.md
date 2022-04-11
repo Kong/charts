@@ -739,7 +739,7 @@ kong:
 | topologySpreadConstraints          | Control how Pods are spread across cluster among failure-domains                      |                     |
 | nodeSelector                       | Node labels for pod assignment                                                        | `{}`                |
 | deploymentAnnotations              | Annotations to add to deployment                                                      |  see `values.yaml`  |
-| podAnnotations                     | Annotations to add to each pod                                                        | `{}`                |
+| podAnnotations                     | Annotations to add to each pod                                                        |  see `values.yaml`  |
 | podLabels                          | Labels to add to each pod                                                             | `{}`                |
 | resources                          | Pod resource requests & limits                                                        | `{}`                |
 | tolerations                        | List of node taints to tolerate                                                       | `[]`                |
@@ -774,6 +774,20 @@ containerSecurityContext: # run as root to bind to lower ports
   runAsGroup: 0
   runAsNonRoot: false
   runAsUser: 0
+```
+
+**Note:** The default `podAnnotations` values disable inbound proxying for Kuma 
+and Istio. This is appropriate when using Kong as a gateway for external 
+traffic inbound into the cluster.
+
+If you want to use Kong as an internal proxy within the cluster network, you 
+should enable inbound the inbound mesh proxies:
+
+```yaml
+# Enable inbound mesh proxying for Kuma and Istio
+podAnnotations:
+  kuma.io/gateway: disabled
+  traffic.sidecar.istio.io/includeInboundPorts: "*"
 ```
 
 #### The `env` section
