@@ -7,6 +7,8 @@
 
 ### Improvements
 
+* feat(services) add Ingress for cluster sync
+  ([582](https://github.com/Kong/charts/pull/582))
 * feat(deployment) allow custom environment variables to be configured for the ingress-controller container
   ([568](https://github.com/Kong/charts/pull/568))
 * Ingress `pathType` field is now configurable.
