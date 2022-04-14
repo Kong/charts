@@ -257,6 +257,23 @@ proxy:
     parameters:
     - http2
 
+  # Kong cluster ingress settings. Useful if you want to split CP and DP
+  # in different clusters.
+  ingress:
+    # Enable/disable exposure using ingress.
+    enabled: false
+    ingressClassName:
+    # TLS secret name.
+    # tls: kong-cluster.example.com-tls
+    # Ingress hostname
+    hostname:
+    # Map of ingress annotations.
+    annotations: {}
+    # Ingress path.
+    path: /
+    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    pathType: ImplementationSpecific
+
   # Define stream (TCP) listen
   # To enable, remove "{}", uncomment the section below, and select your desired
   # ports and parameters. Listens are dynamically named after their servicePort,
@@ -964,6 +981,23 @@ clustertelemetry:
     parameters: []
 
   type: ClusterIP
+
+  # Kong clustertelemetry ingress settings. Useful if you want to split
+  # CP and DP in different clusters.
+  ingress:
+    # Enable/disable exposure using ingress.
+    enabled: false
+    ingressClassName:
+    # TLS secret name.
+    # tls: kong-clustertelemetry.example.com-tls
+    # Ingress hostname
+    hostname:
+    # Map of ingress annotations.
+    annotations: {}
+    # Ingress path.
+    path: /
+    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    pathType: ImplementationSpecific
 
 extraConfigMaps: []
 # extraConfigMaps:
