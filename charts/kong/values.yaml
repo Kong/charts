@@ -217,6 +217,23 @@ cluster:
 
   type: ClusterIP
 
+  # Kong cluster ingress settings. Useful if you want to split CP and DP
+  # in different clusters.
+  ingress:
+    # Enable/disable exposure using ingress.
+    enabled: false
+    ingressClassName:
+    # TLS secret name.
+    # tls: kong-cluster.example.com-tls
+    # Ingress hostname
+    hostname:
+    # Map of ingress annotations.
+    annotations: {}
+    # Ingress path.
+    path: /
+    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    pathType: ImplementationSpecific
+
 # Specify Kong proxy service configuration
 proxy:
   # Enable creating a Kubernetes service for the proxy
@@ -964,6 +981,23 @@ clustertelemetry:
     parameters: []
 
   type: ClusterIP
+
+  # Kong clustertelemetry ingress settings. Useful if you want to split
+  # CP and DP in different clusters.
+  ingress:
+    # Enable/disable exposure using ingress.
+    enabled: false
+    ingressClassName:
+    # TLS secret name.
+    # tls: kong-clustertelemetry.example.com-tls
+    # Ingress hostname
+    hostname:
+    # Map of ingress annotations.
+    annotations: {}
+    # Ingress path.
+    path: /
+    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    pathType: ImplementationSpecific
 
 extraConfigMaps: []
 # extraConfigMaps:

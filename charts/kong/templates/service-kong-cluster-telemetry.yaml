@@ -9,5 +9,9 @@
 {{- $_ := set $serviceConfig "selectorLabels" (include "kong.selectorLabels" .) -}}
 {{- $_ := set $serviceConfig "serviceName" "clustertelemetry" -}}
 {{- include "kong.service" $serviceConfig }}
+{{ if .Values.clustertelemetry.ingress.enabled }}
+---
+{{ include "kong.ingress" $serviceConfig }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
