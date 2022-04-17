@@ -1,31 +1,5 @@
 # Frequently Asked Questions (FAQs)
 
-#### Kong fails to start after `helm upgrade` when Postgres is used. What do I do?
-
-You may be running into this issue: https://github.com/helm/charts/issues/12575.
-This issue is caused due to: https://github.com/helm/helm/issues/3053.
-
-The problem that happens is that Postgres database has the old password but
-the new secret has a different password, which is used by Kong, and password
-based authentication fails.
-
-The solution to the problem is to specify a password to the `postgresql` chart.
-This is to ensure that the password is not generated randomly but is set to
-the same one that is user-provided on each upgrade.
-
-The Postgres chart provides [two options](https://github.com/bitnami/charts/tree/master/bitnami/postgresql#postgresql-common-parameters)
-for setting a password:
-
-- `auth.password` sets a password directly in values.yaml, in cleartext. This
-  is fine if you are using the instance for testing and have no security
-  concerns.
-- `auth.existingSecret` specifies a Secret that contains [specific keys](https://github.com/bitnami/charts/blob/a6146a1ed392c8683c30b21e3fef905d86b0d2d6/bitnami/postgresql/values.yaml#L134-L143).
-  This should be used if you need to properly secure the Postgres instance.
-
-If you have already upgraded, the old password is lost. You will need to
-delete the Helm release and the Postgres PersistentVolumeClaim before
-re-installing with a non-random password.
-
 #### Kong fails to start on a fresh installation with Postgres. What do I do?
 
 Please make sure that there is no `PersistentVolumes` present from a previous

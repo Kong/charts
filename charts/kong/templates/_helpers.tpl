@@ -43,6 +43,16 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "kong.postgresql.secretName" -}}
+{{- if .Values.postgresql.auth.existingSecret -}}
+{{- $name := .Values.postgresql.auth.existingSecret -}}
+{{- printf "%s" $name | trunc 63 -}}
+{{- else -}}
+{{- $name := default "postgresql" .Values.postgresql.nameOverride -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "kong.dblessConfig.fullname" -}}
 {{- $name := default "kong-custom-dbless-config" .Values.dblessConfig.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
@@ -57,6 +67,29 @@ Create the name of the service account to use
 {{- else -}}
     {{ default "default" .Values.deployment.serviceAccount.name }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Create postgres password secret resource
+*/}}
+{{- define "kong.postgresSecret" }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .secretName }}
+  namespace: {{ .namespace }}
+  labels:
+  {{- .metaLabels | nindent 4 }}
+  annotations:
+    "helm.sh/resource-policy": "keep"
+type: Opaque
+data:
+  {{- $secret := (lookup "v1" "Secret" .namespace .secretName) | default dict }}
+  {{- $secretData := (get $secret "data") | default dict }}
+  {{- $pgPwSecret := (get $secretData "postgres-password") | default (randAlphaNum 32| b64enc) }}
+  {{- $pwSecret := (get $secretData "password") | default (randAlphaNum 32 | b64enc) }}
+  postgres-password: {{ $pgPwSecret | quote }}
+  password: {{ $pwSecret | quote }}
 {{- end -}}
 
 {{/*
@@ -777,7 +810,7 @@ the template that it itself is using form the above sections.
 {{- if .Values.postgresql.enabled }}
   {{- $_ := set $autoEnv "KONG_PG_HOST" (include "kong.postgresql.fullname" .) -}}
   {{- $_ := set $autoEnv "KONG_PG_PORT" .Values.postgresql.service.ports.postgresql -}}
-  {{- $pgPassword := include "secretkeyref" (dict "name" (include "kong.postgresql.fullname" .) "key" "password") -}}
+  {{- $pgPassword := include "secretkeyref" (dict "name" (include "kong.postgresql.secretName" .) "key" "password") -}}
 
   {{- $_ := set $autoEnv "KONG_PG_PASSWORD" $pgPassword -}}
 {{- else if eq .Values.env.database "postgres" }}
