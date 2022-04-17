@@ -63,6 +63,10 @@ text ending with `field is immutable`. This is typically due to a bug with the
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
 
+## Unreleased
+
+Default installation of postgres has been changed, passwords for kong user and postgres superuser are set by a generated secret from this helm chart. As mentioned in the FAQs you have to backup your existing postgres password first, before you upgrade your chart to new version. If you know your old password you could change it with this [guide from bitnami](https://docs.bitnami.com/aws/infrastructure/postgresql/administration/change-reset-password/) to the new passwords generated in the secret _kong-pg-password_.
+
 ## 2.8.0
 
 2.8 updates the Postgres subchart version from 8.6.8 to 11.1.15. This changes

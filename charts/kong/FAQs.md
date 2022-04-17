@@ -22,12 +22,13 @@ for setting a password:
 - `auth.existingSecret` specifies a Secret that contains [specific keys](https://github.com/bitnami/charts/blob/a6146a1ed392c8683c30b21e3fef905d86b0d2d6/bitnami/postgresql/values.yaml#L134-L143).
   This should be used if you need to properly secure the Postgres instance.
 
-*Advice:* This behavior was fixed with Pull Request XXX. From this point on, _auth.existingSecret_ is used as the default and a corresponding secret is automatically generated in this helm chart.
+*Advice:* This behavior was fixed with Pull Request 584. From this point on, _auth.existingSecret_ is used as the default and a corresponding secret is automatically generated in this helm chart.
 For a new installation done by this chart, you should no longer have to worry about the behavior described above here.
 
 If you have already upgraded, the old password is lost. You will need to
 delete the Helm release and the Postgres PersistentVolumeClaim before
 re-installing with a non-random password.
+If you don't want to lose your data, you could follow the instructions from [bitnami](https://docs.bitnami.com/aws/infrastructure/postgresql/administration/change-reset-password/).
 
 #### Kong fails to start on a fresh installation with Postgres. What do I do?
 

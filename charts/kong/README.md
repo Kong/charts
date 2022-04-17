@@ -178,6 +178,9 @@ without installing and configuring your database separately. For longer-lived
 environments, we recommend you manage your database outside the Kong Helm
 release.
 
+For a helm upgrade, please refer to the corresponding [upgrade instructions](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md) and [FAQs](https://github.com/Kong/charts/blob/main/charts/kong/FAQs.md).
+
+
 ### Runtime package
 
 There are three different packages of Kong that are available:

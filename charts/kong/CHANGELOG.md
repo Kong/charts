@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-Nothing yet.
+### Fixed
+
+* Fixed: Test and document existingSecret for Postgres passwords
+  ([#584](https://github.com/Kong/charts/pull/584))
 
 ## 2.8.0
 
