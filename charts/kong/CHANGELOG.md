@@ -6,6 +6,11 @@ Nothing yet.
 
 ## 2.8.0
 
+### Breaking changes
+
+2.8 requires manual removal of existing IngressClass resources and updates the
+Postgres sub-chart version. Further details are available [in the upgrade guide.](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#280).
+
 ### Improvements
 
 * Added Ingress for cluster sync.

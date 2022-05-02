@@ -65,6 +65,28 @@ clear it.
 
 ## 2.8.0
 
+### IngressClass controller name change requires manual delete
+
+2.8 updates the chart-managed IngressClass's controller name to match the
+controller name used elsewhere in Kong's documenation. Controller names are
+immutable, so Helm cannot actually update existing IngressClass resources.
+
+Prior to your upgrade, you must delete the existing IngressClass. Helm will
+create a new IngressClass with the new controller name during the upgrade:
+
+```
+kubectl delete ingressclass <class name, "kong" by default>
+helm upgrade RELEASE_NAME kong/kong ...
+```
+
+Removing the IngressClass will not affect configuration: the controller
+IngressClass implementation is still in progress, and it will still ingest
+resources whose `ingress.class` annotation or `ingressClassName` value matches
+the the `CONTROLLER_INGRESS_CLASS` value in the controller environment even if
+no matching IngressClass exists.
+
+### Postgres subchart version update
+
 2.8 updates the Postgres subchart version from 8.6.8 to 11.1.15. This changes
 a number of values.yaml keys and the default Postgres version. The previous
 default Postgres version was [11.7.0-debian-10-r37](https://github.com/bitnami/charts/blob/590c6b0f4e07161614453b12efe71f22e0c00a46/bitnami/postgresql/values.yaml#L18).
