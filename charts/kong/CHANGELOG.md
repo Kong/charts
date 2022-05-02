@@ -9,7 +9,7 @@ Nothing yet.
 ### Breaking changes
 
 2.8 requires manual removal of existing IngressClass resources and updates the
-Postgres sub-chart version. Further details are available [in the upgrade guide.](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#280).
+Postgres sub-chart version. Further details are available [in the upgrade guide](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#280).
 
 ### Improvements
 
