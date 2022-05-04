@@ -46,6 +46,9 @@ migrations finish`.
 If you split your Kong deployment across multiple Helm releases (to create
 proxy-only and admin-only nodes, for example), you must
 [set which migration jobs run based on your upgrade order](https://github.com/Kong/charts/blob/main/charts/kong/README.md#separate-admin-and-proxy-nodes).
+However, this does not apply to hybrid mode, which can run both migrations but
+requires [upgrading the control plane version
+first](https://docs.konghq.com/gateway/latest/plan-and-deploy/hybrid-mode/#version-compatibility).
 
 While the migrations themselves are automated, the chart does not automatically
 ensure that you follow the recommended upgrade path. If you are upgrading from
