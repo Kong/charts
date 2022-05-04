@@ -228,8 +228,10 @@ Kong can be configured via two methods:
 split release technique is generally applicable to any deployment with
 different types of Kong nodes. Separating Admin API and proxy nodes is one of
 the more common use cases for splitting across multiple releases, but you can
-also split releases for hybrid mode CP/DP nodes, split proxy and Developer
-Portal nodes, etc.*
+also split releases for split proxy and Developer Portal nodes, multiple groups
+of proxy nodes with separate listen configurations for network segmentation, etc.
+However, it does not apply to hybrid mode, as only the control plane release
+interacts with the database.*
 
 Users may wish to split their Kong deployment into multiple instances that only
 run some of Kong's services (i.e. you run `helm install` once for every
@@ -306,6 +308,9 @@ values.yaml specifics for each.
 
 Cluster certificates are not generated automatically. You must [create a
 certificate and key pair](#certificates) for intra-cluster communication.
+
+When upgrading the Kong version, you must [upgrade the control plane release
+first and then upgrade the data plane release](https://docs.konghq.com/gateway/latest/plan-and-deploy/hybrid-mode/#version-compatibility).
 
 #### Certificates
 
