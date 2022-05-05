@@ -582,6 +582,43 @@ postgresql:
       postgresql: "5432"
 
 # -----------------------------------------------------------------------------
+# Cert Manager sub-chart parameters
+# -----------------------------------------------------------------------------
+
+# Kong and services proxied can have various certificate requirements.
+# By default, this chart installs Kong without cert-manager.
+
+# If you would like to use certificate automation, there are two options:
+# - (recommended) Deploy and maintain a cert-manager or other certificate integration
+#   and passthrough details to Kong via the `ingress` sections.
+# - You can use the below `cert-manager` sub-chart to deploy a cert-manager
+#   installation along-with Kong as part of a single Helm release. Running stand
+#   alone certificate automation independently is recommended for production,
+#   but the built-in cert-manager is useful for quickly creating test instances.
+
+# Cert Manager Documentation:
+# https://cert-manager.io/docs/
+
+# cert-manager chart source:
+# https://github.com/cert-manager/cert-manager/tree/master/deploy/charts/cert-manager
+#
+# NOTICE: by default, the cert-manager integration also generates a self signed
+# cluster issuer certificate authority.
+# https://github.com/Kong/charts/blob/main/charts/kong/FAQs.md#kong-fails-to-start-after-helm-upgrade-when-postgres-is-used-what-do-i-do
+
+cert-manager:
+  enabled: false
+  issuer: certman-selfsigned-issuer
+  commonName: kong_clustering
+  dnsNames:
+  - kong_clustering
+  - "*.7f000001.nip.io"
+  - "*.apps.7f000001.nip.io"
+  - "*.kong.7f000001.nip.io"
+# args:
+# - --feature-gates=ExperimentalGatewayAPISupport=true
+
+# -----------------------------------------------------------------------------
 # Miscellaneous parameters
 # -----------------------------------------------------------------------------
 

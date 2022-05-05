@@ -17,3 +17,6 @@ dependencies:
   version: 11.1.15
   repository: https://charts.bitnami.com/bitnami
   condition: postgresql.enabled
+- name: cert-manager
+  repository: https://charts.jetstack.io
+  version: v1.8.0
