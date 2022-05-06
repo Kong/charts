@@ -1,0 +1,21 @@
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificate.cluster.enabled }}
+# Self Signed Kong Cluster Certificate
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: kong-cluster
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+spec:
+  secretName: kong-cluster
+  commonName: kong_cluster
+  dnsNames:
+  - "kong_cluster"
+  issuerRef:
+    name: {{ template "kong.certificate.issuer" . }}
+    kind: ClusterIssuer
+  renewBefore: 360h
+  duration: 2160h
+  isCA: false
+{{- end }}

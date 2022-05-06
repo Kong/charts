@@ -1,0 +1,45 @@
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificate.cluster.enabled }}
+---
+# Self Signed Cluster Issuer Root
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ template "kong.fullname" . }}-clusterissuer-selfsign-root
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+spec:
+  selfSigned: {}
+---
+# Self Signed Cluster Issuer Root Certificate
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "kong.fullname" . }}-rootca-cert
+  namespace: {{ template "kong.namespace" . }}
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+spec:
+  isCA: true
+  duration: 2160h
+  renewBefore: 360h
+  commonName: {{ template "kong.fullname" . }}-selfsigned-rootca
+  secretName: {{ template "kong.fullname" . }}-selfsigned-rootca
+  privateKey:
+    size: 256
+    algorithm: ECDSA
+  issuerRef:
+    name: {{ .Release.Name }}-kong-clusterissuer-selfsign-root
+    group: cert-manager.io
+    kind: ClusterIssuer
+---
+# Self Signed Issuer
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ template "kong.fullname" . }}-selfsigned-issuer
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+spec:
+  ca:
+    secretName: {{ .Release.Name }}-kong-selfsigned-rootca
+{{- end }}

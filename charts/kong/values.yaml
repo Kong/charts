@@ -606,17 +606,21 @@ postgresql:
 # cluster issuer certificate authority.
 # https://github.com/Kong/charts/blob/main/charts/kong/FAQs.md#kong-fails-to-start-after-helm-upgrade-when-postgres-is-used-what-do-i-do
 
-cert-manager:
-  enabled: false
-  issuer: certman-selfsigned-issuer
-  commonName: kong_clustering
-  dnsNames:
-  - kong_clustering
-  - "*.7f000001.nip.io"
-  - "*.apps.7f000001.nip.io"
-  - "*.kong.7f000001.nip.io"
-# args:
-# - --feature-gates=ExperimentalGatewayAPISupport=true
+certificate:
+  # Enable cluster.enabled to issue kong hybrid mtls certificate with cert-manager
+  cluster:
+    enabled: false
+  # Enable proxy.enabled to issue default kong-proxy certificate with cert-manager
+  proxy:
+    enabled: false
+    # Use `issuer` to override default self-signed cert-manager issuer
+    # certificate.cluster.enabled must be set to true if not defined
+    issuer: ""
+    commonName: "example.com"
+    dnsNames:
+    - "example.com"
+    - "*.apps.example.com"
+    - "*.kong.example.com"
 
 # -----------------------------------------------------------------------------
 # Miscellaneous parameters

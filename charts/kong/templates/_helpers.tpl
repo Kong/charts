@@ -21,6 +21,12 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "kong.certificate.issuer" -}}
+{{- $default := printf "%s-%s" .Release.Name "kong-selfsigned-issuer" -}}
+{{- $name := default $default .Values.certificate.proxy.issuer -}}
+{{- printf "%s" $name -}}
+{{- end -}}
+
 {{- define "kong.metaLabels" -}}
 app.kubernetes.io/name: {{ template "kong.name" . }}
 helm.sh/chart: {{ template "kong.chart" . }}
