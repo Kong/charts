@@ -40,7 +40,6 @@ $ helm install kong/kong --generate-name
     - [Control plane node configuration](#control-plane-node-configuration)
     - [Data plane node configuration](#data-plane-node-configuration)
   - [Cert Manager Integration](#cert-manager-integration)
-    - [NOTICE: The cert-manager cluster cert integration generates a self signed cluster issuer certificate authority for hybrid cluster mtls when enabled.](#notice-the-cert-manager-cluster-cert-integration-generates-a-self-signed-cluster-issuer-certificate-authority-for-hybrid-cluster-mtls-when-enabled)
   - [CRD management](#crd-management)
   - [InitContainers](#initcontainers)
   - [HostAliases](#hostaliases)
@@ -73,6 +72,8 @@ $ helm install kong/kong --generate-name
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
 - [Prometheus Operator integration](#prometheus-operator-integration)
+- [Changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
+- [Upgrading](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
