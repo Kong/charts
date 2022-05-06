@@ -19,6 +19,9 @@ $ helm install kong/kong --generate-name
 
 ## Table of contents
 
+- [Kong for Kubernetes](#kong-for-kubernetes)
+- [TL;DR;](#tldr)
+- [Table of contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
 - [Install](#install)
 - [Uninstall](#uninstall)
@@ -36,6 +39,8 @@ $ helm install kong/kong --generate-name
     - [Certificates](#certificates)
     - [Control plane node configuration](#control-plane-node-configuration)
     - [Data plane node configuration](#data-plane-node-configuration)
+  - [Cert Manager Integration](#cert-manager-integration)
+    - [NOTICE: The cert-manager cluster cert integration generates a self signed cluster issuer certificate authority for hybrid cluster mtls when enabled.](#notice-the-cert-manager-cluster-cert-integration-generates-a-self-signed-cluster-issuer-certificate-authority-for-hybrid-cluster-mtls-when-enabled)
   - [CRD management](#crd-management)
   - [InitContainers](#initcontainers)
   - [HostAliases](#hostaliases)
@@ -45,15 +50,18 @@ $ helm install kong/kong --generate-name
   - [User Defined Volume Mounts](#user-defined-volume-mounts)
   - [Removing cluster-scoped permissions](#removing-cluster-scoped-permissions)
   - [Using a DaemonSet](#using-a-daemonset)
+  - [Using dnsPolicy and dnsConfig](#using-dnspolicy-and-dnsconfig)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
     - [Stream listens](#stream-listens)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
-  - [General Parameters](#general-parameters)
     - [The `env` section](#the-env-section)
-    - [The `customEnv` section](#the-customEnv-section)
+    - [The `customEnv` section](#the-customenv-section)
+  - [General Parameters](#general-parameters)
+    - [The `env` section](#the-env-section-1)
+    - [The `customEnv` section](#the-customenv-section-1)
     - [The `extraLabels` section](#the-extralabels-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
   - [Overview](#overview)
@@ -65,8 +73,6 @@ $ helm install kong/kong --generate-name
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
 - [Prometheus Operator integration](#prometheus-operator-integration)
-- [Changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
-- [Upgrading](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
@@ -424,6 +430,44 @@ environment. `control-plane-release-name` will change to your CP release name,
 documentation on Service
 DNS](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 for more detail.
+
+### Cert Manager Integration
+
+[cert-manager]:https://cert-manager.io/docs/
+[self-signed issuer]:https://cert-manager.io/docs/configuration/selfsigned/
+
+Kong services and proxied services can have various certificate requirements.
+By default, this chart installs Kong without [cert-manager] and generates
+a fallback self-signed certificate on each proxy dataplane. This cert-manager
+support requires that cert-manager be installed and ready before deploying Kong.
+
+These are the options for using the cert-manager integration:
+
+- Recommended, Deploy cert-manager and configure valid ssl issuer.
+  Leverage your valid ssl issuer for generating any or all of the following:
+  - kong proxy default certificate
+  - database service certificate
+  - kong services certificates
+
+- Alternatively, use the built in [self-signed issuer] to issue self-signed
+  certificates for kong hybrid cluster mtls. Use other valid ssl issuer for all
+  other certificate needs.
+
+- Finally, use the built in self-signed issuer to provision all certificates.
+  This method is generally only recommended for the following scenarios:
+  - Kong utilizes self-signed certs behind an SSL terminating LoadBalancer
+    which handles public traffic with valid ssl certificates and only relies
+    on the self-signed certs on upstream connections between the loadbalancer
+    and the kong proxy and services directly.
+  - Kong helm chart cert-manager integration is used only for provisioning
+    the cluster mtls shared certificate for use in kong hybrid and multiple
+    dataplane scenarios.
+  - Kong pre-prod & local development where the self-signed cert-manager issuer
+    is leveraged for developer and testing workflows only. In this scenario it
+    is assumed that valid certs will be utilized in production for public
+    facing traffic.
+
+#### NOTICE: The cert-manager cluster cert integration generates a self signed cluster issuer certificate authority for hybrid cluster mtls when enabled.
 
 ### CRD management
 

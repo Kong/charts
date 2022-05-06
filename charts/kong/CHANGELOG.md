@@ -37,6 +37,8 @@ Postgres sub-chart version. Further details are available [in the upgrade guide]
 * Updated podDisruptionBudget from `policy/v1beta1` to `policy/v1`.
   ([574](https://github.com/Kong/charts/pull/574))
 * Updated controller version to 2.3.
+* Added cert-manager issuer support for proxy default and cluster mtls certificates
+  ([592](https://github.com/Kong/charts/pull/592))
   
 ### Fixed
 
