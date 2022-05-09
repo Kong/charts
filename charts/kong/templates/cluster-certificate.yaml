@@ -4,7 +4,8 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: kong-cluster
+  name: {{ include "kong.fullname" . }}-kong-cluster
+  namespace:  {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
