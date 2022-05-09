@@ -468,7 +468,7 @@ These are the options for using the cert-manager integration:
     is assumed that valid certs will be utilized in production for public
     facing traffic.
 
-#### NOTICE: The cert-manager cluster cert integration generates a self signed cluster issuer certificate authority for hybrid cluster mtls when enabled.
+**The cert-manager cluster cert integration generates a self signed cluster issuer certificate authority for hybrid cluster mtls when enabled.**
 
 ### CRD management
 
