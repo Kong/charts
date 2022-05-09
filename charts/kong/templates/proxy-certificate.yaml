@@ -12,7 +12,6 @@ spec:
   secretName: {{ include "kong.fullname" . }}-kong-cert
   commonName: kong_clustering
   dnsNames:
-  - "kong_clustering"
   {{- range .Values.certificate.dnsNames }}
   - {{ . | quote }}
   {{- end }}
