@@ -12,7 +12,7 @@ spec:
   secretName: {{ include "kong.fullname" . }}-kong-cert
   commonName: kong_clustering
   dnsNames:
-  {{- range .Values.certificate.dnsNames }}
+  {{- range .Values.certificate.proxy.dnsNames }}
   - {{ . | quote }}
   {{- end }}
   renewBefore: 360h
