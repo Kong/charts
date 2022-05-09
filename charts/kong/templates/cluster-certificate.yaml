@@ -8,7 +8,7 @@ metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
-  secretName: kong-cluster
+  secretName: {{ include "kong.fullname" . }}-kong-cluster
   commonName: kong_cluster
   dnsNames:
   - "kong_cluster"
