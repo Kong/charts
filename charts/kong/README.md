@@ -19,9 +19,6 @@ $ helm install kong/kong --generate-name
 
 ## Table of contents
 
-- [Kong for Kubernetes](#kong-for-kubernetes)
-- [TL;DR;](#tldr)
-- [Table of contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
 - [Install](#install)
 - [Uninstall](#uninstall)
