@@ -8,7 +8,7 @@ metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
-  secretName: kong-cert
+  secretName: {{ include "kong.fullname" . }}-kong-cert
   commonName: kong_clustering
   dnsNames:
   - "kong_clustering"
