@@ -587,7 +587,6 @@ postgresql:
 
 certificates:
   enabled: false
-  selfSignedIssuer: ""
 
   # Set proxy.enabled to true to issue default kong-proxy certificate with cert-manager
   proxy:
