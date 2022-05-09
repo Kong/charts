@@ -152,6 +152,9 @@ certificates:
     commonName: "developer.7f000001.nip.io"
   cluster:
     enabled: true
+  issuer:
+    enabled: true
+    namespace: kong
 image:
   repository: kong/kong-gateway
   tag: "2.8"
