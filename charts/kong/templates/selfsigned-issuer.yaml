@@ -36,7 +36,7 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: {{ template "kong.fullname" . }}-selfsigned-issuer
+  name: {{ template "kong.certificate.issuer" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
