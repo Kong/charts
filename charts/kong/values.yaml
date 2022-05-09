@@ -587,7 +587,7 @@ postgresql:
 
 certificates:
   enabled: false
-  issuer: ""
+  selfSignedIssuer: ""
 
   # Set proxy.enabled to true to issue default kong-proxy certificate with cert-manager
   proxy:
@@ -635,11 +635,11 @@ certificates:
 
   # Set cluster.enabled true to issue kong hybrid mtls certificate with cert-manager
   cluster:
-    enabled: true
+    enabled: false
 
   # Deploy a Self Signed Issuer to the cert-manager namespace for development use if you have no other issuer.
   issuer:
-    enabled: true
+    enabled: false
     # Change to override the namespace of cert-manager
     namespace: cert-manager
 
