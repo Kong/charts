@@ -636,12 +636,11 @@ certificate:
     issuer: ""
     # Use commonName and dnsNames to set the common name and dns alt names which this
     # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
-    commonName: "example.com"
-    dnsNames:
-    - "example.com"
-    - "*.example.com"
-    - "*.apps.example.com"
-    - "*.kong.example.com"
+    commonName: "kong.example"
+    # Remove the "{}" and uncomment/change the examples to add SANs
+    dnsNames:{}
+    #- "kong.example"
+    #- "*.kong.example"
 
 # -----------------------------------------------------------------------------
 # Miscellaneous parameters
