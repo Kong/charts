@@ -1,0 +1,24 @@
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.admin.enabled }}
+# Kong Admin API and Manager Certificate
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "kong.fullname" . }}-admin-cert
+  namespace:  {{ template "kong.namespace" . }}
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+spec:
+  secretName: {{ include "kong.fullname" . }}-admin-cert
+  commonName: {{ .Values.certificates.admin.commonName }}
+  dnsNames:
+  {{- range .Values.certificates.admin.dnsNames }}
+  - {{ . | quote }}
+  {{- end }}
+  renewBefore: 360h
+  duration: 2160h
+  isCA: false
+  issuerRef:
+    name: {{ template "kong.certificate.issuer" . }}
+    kind: ClusterIssuer
+{{- end }}

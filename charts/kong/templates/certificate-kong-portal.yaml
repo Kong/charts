@@ -1,0 +1,25 @@
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.portal.enabled }}
+# Kong Developer Portal Certificate
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "kong.fullname" . }}-portal-cert
+  namespace:  {{ template "kong.namespace" . }}
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+spec:
+  secretName: {{ include "kong.fullname" . }}-portal-cert
+  commonName: {{ .Values.certificates.portal.commonName }}
+  dnsNames:
+  - {{ .Values.certificates.portal.commonName }}
+  {{- range .Values.certificates.portal.dnsNames }}
+  - {{ . | quote }}
+  {{- end }}
+  renewBefore: 360h
+  duration: 2160h
+  isCA: false
+  issuerRef:
+    name: {{ template "kong.certificate.issuer" . }}
+    kind: ClusterIssuer
+{{- end }}

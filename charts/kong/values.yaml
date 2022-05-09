@@ -581,11 +581,14 @@ postgresql:
     ports:
       postgresql: "5432"
 
+# -----------------------------------------------------------------------------
 # Configure cert-manager integration
-certificate:
-  # Set cluster.enabled to true to issue kong hybrid mtls certificate with cert-manager
-  cluster:
-    enabled: false
+# -----------------------------------------------------------------------------
+
+certificates:
+  enabled: false
+  issuer: ""
+
   # Set proxy.enabled to true to issue default kong-proxy certificate with cert-manager
   proxy:
     enabled: false
@@ -595,11 +598,50 @@ certificate:
     issuer: ""
     # Use commonName and dnsNames to set the common name and dns alt names which this
     # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
+    commonName: "app.example"
+    # Remove the "{}" and uncomment/change the examples to add SANs
+    dnsNames: []
+    #- "app.example"
+    #- "*.apps.example"
+    #- "*.kong.example"
+
+  # Set admin.enabled true to issue kong admin api and manager certificate with cert-manager
+  admin:
+    enabled: false
+    # Set `issuer` to name of alternate cert-manager clusterIssuer to override default
+    # self-signed issuer. Note: certificate.cluster.enabled must be set to true if this
+    # is not defined with a valid alternative.
+    issuer: ""
+    # Use commonName and dnsNames to set the common name and dns alt names which this
+    # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
     commonName: "kong.example"
     # Remove the "{}" and uncomment/change the examples to add SANs
-    dnsNames:{}
-    #- "kong.example"
-    #- "*.kong.example"
+    dnsNames: []
+    #- "manager.kong.example"
+
+  # Set proxy.enabled to true to issue default kong-proxy certificate with cert-manager
+  portal:
+    enabled: false
+    # Set `issuer` to name of alternate cert-manager clusterIssuer to override default
+    # self-signed issuer. Note: certificate.cluster.enabled must be set to true if this
+    # is not defined with a valid alternative.
+    issuer: ""
+    # Use commonName and dnsNames to set the common name and dns alt names which this
+    # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
+    commonName: "developer.example"
+    # Remove the "{}" and uncomment/change the examples to add SANs
+    dnsNames: []
+    #- "manager.kong.example"
+
+  # Set cluster.enabled true to issue kong hybrid mtls certificate with cert-manager
+  cluster:
+    enabled: true
+
+  # Deploy a Self Signed Issuer to the cert-manager namespace for development use if you have no other issuer.
+  issuer:
+    enabled: true
+    # Change to override the namespace of cert-manager
+    namespace: cert-manager
 
 # -----------------------------------------------------------------------------
 # Miscellaneous parameters

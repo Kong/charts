@@ -22,8 +22,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{- define "kong.certificate.issuer" -}}
-{{- $default := printf "%s-%s" .Release.Name "kong-selfsigned-issuer" -}}
-{{- $name := default $default .Values.certificate.proxy.issuer -}}
+{{- $name := default (printf "%s-%s" .Release.Name "kong-selfsigned-issuer") .Values.certificates.issuer -}}
 {{- printf "%s" $name -}}
 {{- end -}}
 

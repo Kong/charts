@@ -1,4 +1,4 @@
-{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificate.cluster.enabled }}
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.cluster.enabled }}
 ---
 # Self Signed Cluster Issuer Root
 apiVersion: cert-manager.io/v1

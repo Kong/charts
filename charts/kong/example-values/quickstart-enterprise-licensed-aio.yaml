@@ -14,9 +14,9 @@ admin:
       nginx.ingress.kubernetes.io/backend-protocol: HTTPS
       nginx.ingress.kubernetes.io/permanent-redirect-code: "301"
     enabled: true
-    hostname: manager.kong.7f000001.nip.io
+    hostname: kong.7f000001.nip.io
     path: /api
-    tls: kong-cert
+    tls: quickstart-kong-admin-cert
   tls:
     containerPort: 8444
     enabled: true
@@ -48,7 +48,7 @@ enterprise:
   enabled: true
   license_secret: kong-enterprise-license
   portal:
-    enabled: false
+    enabled: true
   rbac:
     admin_api_auth: basic-auth
     admin_gui_auth_conf_secret: kong-config-secret
@@ -64,16 +64,16 @@ env:
   admin_gui_access_log: /dev/stdout
   admin_gui_error_log: /dev/stdout
   admin_gui_protocol: https
-  admin_gui_ssl_cert: /etc/secrets/kong-cert/tls.crt
-  admin_gui_ssl_cert_key: /etc/secrets/kong-cert/tls.key
-  admin_ssl_cert: /etc/secrets/kong-cert/tls.crt
-  admin_ssl_cert_key: /etc/secrets/kong-cert/tls.key
-  admin_gui_host: manager.kong.7f000001.nip.io
-  admin_gui_url: https://manager.kong.7f000001.nip.io/
-  admin_api_uri: https://manager.kong.7f000001.nip.io/api
-  portal_gui_host: portal.kong.7f000001.nip.io
-  portal_gui_url: https://portal.kong.7f000001.nip.io/
-  portal_api_url: https://portal.kong.7f000001.nip.io/api
+  admin_gui_ssl_cert: /etc/secrets/quickstart-kong-admin-cert/tls.crt
+  admin_gui_ssl_cert_key: /etc/secrets/quickstart-kong-admin-cert/tls.key
+  admin_ssl_cert: /etc/secrets/quickstart-kong-admin-cert/tls.crt
+  admin_ssl_cert_key: /etc/secrets/quickstart-kong-admin-cert/tls.key
+  admin_gui_host: kong.7f000001.nip.io
+  admin_gui_url: https://kong.7f000001.nip.io/
+  admin_api_uri: https://kong.7f000001.nip.io/api
+  portal_gui_host: developer.7f000001.nip.io
+  portal_gui_url: https://developer.7f000001.nip.io/
+  portal_api_url: https://developer.7f000001.nip.io/api
   portal_api_access_log: /dev/stdout
   portal_api_error_log: /dev/stdout
   portal_auth: basic-auth
@@ -87,15 +87,15 @@ env:
         key: portal_session_conf
         name: kong-config-secret
   portal: true
-  cluster_cert: /etc/secrets/kong-cluster/tls.crt
-  cluster_cert_key: /etc/secrets/kong-cluster/tls.key
+  cluster_cert: /etc/secrets/quickstart-kong-cluster-cert/tls.crt
+  cluster_cert_key: /etc/secrets/quickstart-kong-cluster-cert/tls.key
   cluster_data_plane_purge_delay: 60
   cluster_listen: 0.0.0.0:8005
   cluster_telemetry_listen: 0.0.0.0:8006
   database: postgres
   log_level: debug
   lua_package_path: /opt/?.lua;;
-  lua_ssl_trusted_certificate: /etc/secrets/kong-cert/tls.crt,/etc/ssl/certs/ca-certificates.crt
+  lua_ssl_trusted_certificate: /etc/secrets/quickstart-kong-admin-cert/tls.crt,/etc/ssl/certs/ca-certificates.crt
   nginx_worker_processes: "2"
   password:
     valueFrom:
@@ -123,8 +123,8 @@ env:
   proxy_stream_access_log: /dev/stdout
   proxy_stream_error_log: /dev/stdout
   smtp_mock: "on"
-  ssl_cert: /etc/secrets/kong-cert/tls.crt
-  ssl_cert_key: /etc/secrets/kong-cert/tls.key
+  ssl_cert: /etc/secrets/quickstart-kong-proxy-cert/tls.crt
+  ssl_cert_key: /etc/secrets/quickstart-kong-proxy-cert/tls.key
   status_listen: 0.0.0.0:8100
   trusted_ips: 0.0.0.0/0,::/0
   vitals: true
@@ -137,17 +137,21 @@ postgresql:
       database: kong
       username: kong
       existingSecret: kong-config-secret
-certificate:
-  cluster:
-    enabled: true
+certificates:
+  enabled: true
   proxy:
     enabled: true
-    commonName: "example.com"
-  commonName: "7f000001.nip.io"
-  dnsNames:
-  - "*.7f000001.nip.io"
-  - "*.apps.7f000001.nip.io"
-  - "*.kong.7f000001.nip.io"
+    commonName: "7f000001.nip.io"
+    dnsNames:
+    - "*.7f000001.nip.io"
+  admin:
+    enabled: true
+    commonName: "kong.7f000001.nip.io"
+  portal:
+    enabled: true
+    commonName: "developer.7f000001.nip.io"
+  cluster:
+    enabled: true
 image:
   repository: kong/kong-gateway
   tag: "2.8"
@@ -163,7 +167,7 @@ ingressController:
           name: kong-config-secret
     kong_admin_url: https://localhost:8444
     kong_workspace: default
-    publish_service: kong/enterprise-kong-proxy
+    publish_service: kong/quickstart-kong-proxy
   image:
     repository: docker.io/kong/kubernetes-ingress-controller
     tag: "2.2"
@@ -183,9 +187,9 @@ manager:
       kubernetes.io/ingress.class: default
       nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     enabled: true
-    hostname: manager.kong.7f000001.nip.io
+    hostname: kong.7f000001.nip.io
     path: /
-    tls: kong-cert
+    tls: quickstart-kong-admin-cert
   tls:
     containerPort: 8445
     enabled: true
@@ -215,9 +219,9 @@ portal:
       konghq.com/strip-path: "false"
       kubernetes.io/ingress.class: default
     enabled: true
-    hostname: portal.kong.7f000001.nip.io
+    hostname: developer.7f000001.nip.io
     path: /
-    tls: kong-cert
+    tls: quickstart-kong-portal-cert
   tls:
     containerPort: 8446
     enabled: true
@@ -239,9 +243,9 @@ portalapi:
       kubernetes.io/ingress.class: default
       nginx.ingress.kubernetes.io/app-root: /
     enabled: true
-    hostname: portal.kong.7f000001.nip.io
+    hostname: developer.7f000001.nip.io
     path: /api
-    tls: kong-cert
+    tls: quickstart-kong-portal-cert
   tls:
     containerPort: 8447
     enabled: true
@@ -274,8 +278,10 @@ updateStrategy:
   type: RollingUpdate
 replicaCount: 1
 secretVolumes:
-- kong-cert
-- kong-cluster
+- quickstart-kong-proxy-cert
+- quickstart-kong-admin-cert
+- quickstart-kong-portal-cert
+- quickstart-kong-cluster-cert
 status:
   enabled: true
   http:

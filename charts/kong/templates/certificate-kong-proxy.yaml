@@ -1,18 +1,19 @@
-{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificate.proxy.enabled }}
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.proxy.enabled }}
 # Kong Proxy Certificate
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ include "kong.fullname" . }}-kong-cert
+  name: {{ include "kong.fullname" . }}-proxy-cert
   namespace:  {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
-  secretName: {{ include "kong.fullname" . }}-kong-cert
-  commonName: kong_clustering
+  secretName: {{ include "kong.fullname" . }}-proxy-cert
+  commonName: {{ .Values.certificates.proxy.commonName }}
   dnsNames:
-  {{- range .Values.certificate.proxy.dnsNames }}
+  - {{ .Values.certificates.proxy.commonName }}
+  {{- range .Values.certificates.proxy.dnsNames }}
   - {{ . | quote }}
   {{- end }}
   renewBefore: 360h
