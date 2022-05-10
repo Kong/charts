@@ -12,6 +12,7 @@ spec:
   secretName: {{ include "kong.fullname" . }}-admin-cert
   commonName: {{ .Values.certificates.admin.commonName }}
   dnsNames:
+  - {{ .Values.certificates.admin.commonName }}
   {{- range .Values.certificates.admin.dnsNames }}
   - {{ . | quote }}
   {{- end }}

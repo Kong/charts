@@ -2,9 +2,10 @@
 ---
 # Self Signed Cluster Issuer Root
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
+kind: Issuer
 metadata:
-  name: {{ template "kong.fullname" . }}-clusterissuer-selfsign-root
+  name:  {{ template "kong.certificate.issuer" . }}
+  namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
@@ -14,32 +15,21 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ template "kong.fullname" . }}-rootca-cert
-  namespace: kong
+  name: {{ template "kong.certificate.issuer.ca" . }}
+  namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
   isCA: true
   duration: 2160h
   renewBefore: 360h
-  commonName: {{ template "kong.fullname" . }}-selfsigned-rootca
-  secretName: {{ template "kong.fullname" . }}-selfsigned-rootca
+  commonName: {{ template "kong.certificate.issuer.ca" . }}
+  secretName: {{ template "kong.certificate.issuer.ca" . }}
   privateKey:
     size: 256
     algorithm: ECDSA
   issuerRef:
-    name: {{ template "kong.fullname" . }}-clusterissuer-selfsign-root
+    name:  {{ template "kong.certificate.issuer" . }}
     group: cert-manager.io
-    kind: ClusterIssuer
----
-# Self Signed Issuer
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: {{ template "kong.certificate.issuer" . }}
-  labels:
-    {{- include "kong.metaLabels" . | nindent 4 }}
-spec:
-  ca:
-    secretName: {{ template "kong.fullname" . }}-selfsigned-rootca
+    kind: Issuer
 {{- end }}

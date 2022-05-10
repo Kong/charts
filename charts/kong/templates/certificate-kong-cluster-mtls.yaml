@@ -14,7 +14,7 @@ spec:
   dnsNames:
   - "kong_cluster"
   issuerRef:
-    name: {{ template "kong.certificate.issuer" . }}
+    name: {{ template "kong.certificate.issuer.ca" . }}
     kind: ClusterIssuer
   renewBefore: 360h
   duration: 2160h

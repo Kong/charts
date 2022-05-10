@@ -636,11 +636,9 @@ certificates:
   cluster:
     enabled: false
 
-  # Deploy a Self Signed Issuer to the cert-manager namespace for development use if you have no other issuer.
+  # Deploy a Self Signed Issuer to the for development use if you have no other issuer.
   issuer:
     enabled: false
-    # Change to override the namespace of cert-manager
-    namespace: cert-manager
 
 # -----------------------------------------------------------------------------
 # Miscellaneous parameters
