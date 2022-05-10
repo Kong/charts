@@ -154,7 +154,6 @@ certificates:
     enabled: true
   issuer:
     enabled: true
-    namespace: kong
 image:
   repository: kong/kong-gateway
   tag: "2.8"
@@ -273,7 +272,7 @@ proxy:
     containerPort: 8443
     enabled: true
     hostPort: 443
-  type: ClusterIP
+  type: LoadBalancer
 updateStrategy:
   rollingUpdate:
     maxSurge: 100%
