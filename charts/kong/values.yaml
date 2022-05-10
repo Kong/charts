@@ -600,9 +600,9 @@ certificates:
     commonName: "app.example"
     # Remove the "{}" and uncomment/change the examples to add SANs
     dnsNames: []
-    #- "app.example"
-    #- "*.apps.example"
-    #- "*.kong.example"
+    # - "app.example"
+    # - "*.apps.example"
+    # - "*.kong.example"
 
   # Set admin.enabled true to issue kong admin api and manager certificate with cert-manager
   admin:
@@ -616,7 +616,7 @@ certificates:
     commonName: "kong.example"
     # Remove the "{}" and uncomment/change the examples to add SANs
     dnsNames: []
-    #- "manager.kong.example"
+    # - "manager.kong.example"
 
   # Set proxy.enabled to true to issue default kong-proxy certificate with cert-manager
   portal:
@@ -630,7 +630,7 @@ certificates:
     commonName: "developer.example"
     # Remove the "{}" and uncomment/change the examples to add SANs
     dnsNames: []
-    #- "manager.kong.example"
+    # - "manager.kong.example"
 
   # Set cluster.enabled true to issue kong hybrid mtls certificate with cert-manager
   cluster:
