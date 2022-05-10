@@ -8,6 +8,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- default .Release.Namespace .Values.namespace -}}
 {{- end -}}
 
+{{- define "kong.release" -}}
+{{- default .Release.Name -}}
+{{- end -}}
+
 {{- define "kong.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -22,8 +26,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- end -}}
 
 {{- define "kong.certificate.issuer" -}}
-{{- $name := default (printf "%s-%s" .Release.Name "kong-selfsigned-issuer") .Values.certificates.issuer -}}
-{{- printf "%s" $name -}}
+{{- printf "%s-%s-%s" .Release.Name .Chart.Name "selfsigned-issuer" -}}
 {{- end -}}
 
 {{- define "kong.metaLabels" -}}

@@ -15,7 +15,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: {{ template "kong.fullname" . }}-rootca-cert
-  namespace: {{ .Values.certificates.issuer.namespace }}
+  namespace: kong
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
@@ -28,7 +28,7 @@ spec:
     size: 256
     algorithm: ECDSA
   issuerRef:
-    name: {{ .Release.Name }}-kong-clusterissuer-selfsign-root
+    name: {{ template "kong.fullname" . }}-clusterissuer-selfsign-root
     group: cert-manager.io
     kind: ClusterIssuer
 ---
@@ -41,5 +41,5 @@ metadata:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
   ca:
-    secretName: {{ .Release.Name }}-kong-selfsigned-rootca
+    secretName: {{ template "kong.fullname" . }}-selfsigned-rootca
 {{- end }}
