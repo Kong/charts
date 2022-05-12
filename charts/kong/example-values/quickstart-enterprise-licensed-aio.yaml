@@ -14,7 +14,7 @@ admin:
       nginx.ingress.kubernetes.io/backend-protocol: HTTPS
       nginx.ingress.kubernetes.io/permanent-redirect-code: "301"
     enabled: true
-    hostname: kong.7f000001.nip.io
+    hostname: kong.127-0-0-1.nip.io
     path: /api
     tls: quickstart-kong-admin-cert
   tls:
@@ -68,12 +68,12 @@ env:
   admin_gui_ssl_cert_key: /etc/secrets/quickstart-kong-admin-cert/tls.key
   admin_ssl_cert: /etc/secrets/quickstart-kong-admin-cert/tls.crt
   admin_ssl_cert_key: /etc/secrets/quickstart-kong-admin-cert/tls.key
-  admin_gui_host: kong.7f000001.nip.io
-  admin_gui_url: https://kong.7f000001.nip.io/
-  admin_api_uri: https://kong.7f000001.nip.io/api
-  portal_gui_host: developer.7f000001.nip.io
-  portal_gui_url: https://developer.7f000001.nip.io/
-  portal_api_url: https://developer.7f000001.nip.io/api
+  admin_gui_host: kong.127-0-0-1.nip.io
+  admin_gui_url: https://kong.127-0-0-1.nip.io/
+  admin_api_uri: https://kong.127-0-0-1.nip.io/api
+  portal_gui_host: developer.127-0-0-1.nip.io
+  portal_gui_url: https://developer.127-0-0-1.nip.io/
+  portal_api_url: https://developer.127-0-0-1.nip.io/api
   portal_api_access_log: /dev/stdout
   portal_api_error_log: /dev/stdout
   portal_auth: basic-auth
@@ -141,15 +141,15 @@ certificates:
   enabled: true
   proxy:
     enabled: true
-    commonName: "7f000001.nip.io"
+    commonName: "127-0-0-1.nip.io"
     dnsNames:
-    - "*.7f000001.nip.io"
+    - "*.127-0-0-1.nip.io"
   admin:
     enabled: true
-    commonName: "kong.7f000001.nip.io"
+    commonName: "kong.127-0-0-1.nip.io"
   portal:
     enabled: true
-    commonName: "developer.7f000001.nip.io"
+    commonName: "developer.127-0-0-1.nip.io"
   cluster:
     enabled: true
   issuer:
@@ -189,7 +189,7 @@ manager:
       kubernetes.io/ingress.class: default
       nginx.ingress.kubernetes.io/backend-protocol: HTTPS
     enabled: true
-    hostname: kong.7f000001.nip.io
+    hostname: kong.127-0-0-1.nip.io
     path: /
     tls: quickstart-kong-admin-cert
   tls:
@@ -221,7 +221,7 @@ portal:
       konghq.com/strip-path: "false"
       kubernetes.io/ingress.class: default
     enabled: true
-    hostname: developer.7f000001.nip.io
+    hostname: developer.127-0-0-1.nip.io
     path: /
     tls: quickstart-kong-portal-cert
   tls:
@@ -245,7 +245,7 @@ portalapi:
       kubernetes.io/ingress.class: default
       nginx.ingress.kubernetes.io/app-root: /
     enabled: true
-    hostname: developer.7f000001.nip.io
+    hostname: developer.127-0-0-1.nip.io
     path: /api
     tls: quickstart-kong-portal-cert
   tls:
