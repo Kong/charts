@@ -1056,6 +1056,7 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
+{{- if (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha2") -}}
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
@@ -1095,6 +1096,7 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
   - get
   - list
   - watch
+{{- end -}}
 - apiGroups:
   - networking.internal.knative.dev
   resources:
@@ -1150,6 +1152,7 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
+{{- if (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha2") -}}
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
@@ -1165,6 +1168,7 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   verbs:
   - get
   - update
+{{- end -}}
 - apiGroups:
   - networking.k8s.io
   resources:
