@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Nothing yet.
+
+## 2.8.1
+
 ### Fixed
 
 * Fixed the stream default type, which should have been an empty array, not an
