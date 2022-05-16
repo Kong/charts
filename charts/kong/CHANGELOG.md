@@ -8,6 +8,13 @@ Nothing yet.
 
 ### Fixed
 
+* Fixed an unwanted newline chomp in fix PR #595.
+  ([594](https://github.com/Kong/charts/pull/594))
+
+## 2.8.1
+
+### Fixed
+
 * Fixed the stream default type, which should have been an empty array, not an
   empty map. This had no effect on chart behavior, but resulted in warning
   messages when user values.yamls contained non-empty stream configuration.
