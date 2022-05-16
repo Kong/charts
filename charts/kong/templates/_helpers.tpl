@@ -1096,7 +1096,7 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
   - get
   - list
   - watch
-{{- end -}}
+{{- end }}
 - apiGroups:
   - networking.internal.knative.dev
   resources:
@@ -1168,7 +1168,7 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   verbs:
   - get
   - update
-{{- end -}}
+{{- end }}
 - apiGroups:
   - networking.k8s.io
   resources:
