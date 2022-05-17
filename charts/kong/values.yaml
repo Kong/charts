@@ -595,13 +595,12 @@ certificates:
   proxy:
     enabled: true
     # Set `issuer` to name of alternate cert-manager clusterIssuer to override default
-    # self-signed issuer. Note: certificate.cluster.enabled must be set to true if this
-    # is not defined with a valid alternative.
+    # self-signed issuer.
     issuer: ""
     # Use commonName and dnsNames to set the common name and dns alt names which this
     # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
     commonName: "app.example"
-    # Remove the "{}" and uncomment/change the examples to add SANs
+    # Remove the "[]" and uncomment/change the examples to add SANs
     dnsNames: []
     # - "app.example"
     # - "*.apps.example"
@@ -611,17 +610,16 @@ certificates:
   admin:
     enabled: true
     # Set `issuer` to name of alternate cert-manager clusterIssuer to override default
-    # self-signed issuer. Note: certificate.cluster.enabled must be set to true if this
-    # is not defined with a valid alternative.
+    # self-signed issuer.
     issuer: ""
     # Use commonName and dnsNames to set the common name and dns alt names which this
     # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
     commonName: "kong.example"
-    # Remove the "{}" and uncomment/change the examples to add SANs
+    # Remove the "[]" and uncomment/change the examples to add SANs
     dnsNames: []
     # - "manager.kong.example"
 
-  # Set proxy.enabled to true to issue default kong-proxy certificate with cert-manager
+  # Set portal.enabled to true to issue a developer portal certificate with cert-manager
   portal:
     enabled: true
     # Set `issuer` to name of alternate cert-manager clusterIssuer to override default
