@@ -4,6 +4,25 @@
 
 Nothing yet.
 
+## 2.8.1
+
+### Fixed
+
+* Fixed an unwanted newline chomp in fix PR #595.
+  ([594](https://github.com/Kong/charts/pull/594))
+
+## 2.8.1
+
+### Fixed
+
+* Fixed the stream default type, which should have been an empty array, not an
+  empty map. This had no effect on chart behavior, but resulted in warning
+  messages when user values.yamls contained non-empty stream configuration.
+  ([594](https://github.com/Kong/charts/pull/594))
+* Gateway API permissions are no longer created if Gateway API CRDs are not
+  installed on the cluster. This would block installs by non-super admin users.
+  ([595](https://github.com/Kong/charts/pull/595))
+
 ## 2.8.0
 
 ### Breaking changes
