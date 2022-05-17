@@ -24,6 +24,33 @@ admin:
     - http2
     servicePort: 8444
   type: ClusterIP
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/instance
+            operator: In
+            values:
+            - dataplane
+        topologyKey: kubernetes.io/hostname
+      weight: 100
+certificates:
+  admin:
+    commonName: kong.127-0-0-1.nip.io
+    enabled: true
+  cluster:
+    enabled: true
+  enabled: true
+  portal:
+    commonName: developer.127-0-0-1.nip.io
+    enabled: true
+  proxy:
+    commonName: 127-0-0-1.nip.io
+    dnsNames:
+    - '*.127-0-0-1.nip.io'
+    enabled: true
 cluster:
   enabled: true
   labels:
@@ -60,48 +87,26 @@ enterprise:
     enabled: true
 env:
   admin_access_log: /dev/stdout
+  admin_api_uri: https://kong.127-0-0-1.nip.io/api
   admin_error_log: /dev/stdout
   admin_gui_access_log: /dev/stdout
   admin_gui_error_log: /dev/stdout
-  admin_gui_protocol: https
-  admin_gui_ssl_cert: /etc/secrets/quickstart-kong-admin-cert/tls.crt
-  admin_gui_ssl_cert_key: /etc/secrets/quickstart-kong-admin-cert/tls.key
-  admin_ssl_cert: /etc/secrets/quickstart-kong-admin-cert/tls.crt
-  admin_ssl_cert_key: /etc/secrets/quickstart-kong-admin-cert/tls.key
   admin_gui_host: kong.127-0-0-1.nip.io
+  admin_gui_protocol: https
   admin_gui_url: https://kong.127-0-0-1.nip.io/
-  admin_api_uri: https://kong.127-0-0-1.nip.io/api
-  portal_gui_host: developer.127-0-0-1.nip.io
-  portal_gui_url: https://developer.127-0-0-1.nip.io/
-  portal_api_url: https://developer.127-0-0-1.nip.io/api
-  portal_api_access_log: /dev/stdout
-  portal_api_error_log: /dev/stdout
-  portal_auth: basic-auth
-  portal_cors_origins: '*'
-  portal_gui_access_log: /dev/stdout
-  portal_gui_error_log: /dev/stdout
-  portal_gui_protocol: https
-  portal_session_conf:
-    valueFrom:
-      secretKeyRef:
-        key: portal_session_conf
-        name: kong-config-secret
-  portal: true
-  cluster_cert: /etc/secrets/quickstart-kong-cluster-cert/tls.crt
-  cluster_cert_key: /etc/secrets/quickstart-kong-cluster-cert/tls.key
   cluster_data_plane_purge_delay: 60
   cluster_listen: 0.0.0.0:8005
   cluster_telemetry_listen: 0.0.0.0:8006
   database: postgres
   log_level: debug
   lua_package_path: /opt/?.lua;;
-  lua_ssl_trusted_certificate: /etc/secrets/quickstart-kong-admin-cert/tls.crt,/etc/ssl/certs/ca-certificates.crt
   nginx_worker_processes: "2"
   password:
     valueFrom:
       secretKeyRef:
         key: kong_admin_password
         name: kong-config-secret
+  pg_database: kong
   pg_host:
     valueFrom:
       secretKeyRef:
@@ -112,48 +117,37 @@ env:
       secretKeyRef:
         key: password
         name: kong-config-secret
-  pg_database: kong
-  pg_user: kong
-  pg_ssl_verify: "off"
   pg_ssl: "off"
+  pg_ssl_verify: "off"
+  pg_user: kong
   plugins: bundled,openid-connect
+  portal: true
+  portal_api_access_log: /dev/stdout
+  portal_api_error_log: /dev/stdout
+  portal_api_url: https://developer.127-0-0-1.nip.io/api
+  portal_auth: basic-auth
+  portal_cors_origins: '*'
+  portal_gui_access_log: /dev/stdout
+  portal_gui_error_log: /dev/stdout
+  portal_gui_host: developer.127-0-0-1.nip.io
+  portal_gui_protocol: https
+  portal_gui_url: https://developer.127-0-0-1.nip.io/
+  portal_session_conf:
+    valueFrom:
+      secretKeyRef:
+        key: portal_session_conf
+        name: kong-config-secret
   prefix: /kong_prefix/
   proxy_access_log: /dev/stdout
   proxy_error_log: /dev/stdout
   proxy_stream_access_log: /dev/stdout
   proxy_stream_error_log: /dev/stdout
   smtp_mock: "on"
-  ssl_cert: /etc/secrets/quickstart-kong-proxy-cert/tls.crt
-  ssl_cert_key: /etc/secrets/quickstart-kong-proxy-cert/tls.key
   status_listen: 0.0.0.0:8100
   trusted_ips: 0.0.0.0/0,::/0
   vitals: true
 extraLabels:
   konghq.com/component: quickstart
-postgresql:
-  enabled: true
-  global:
-    postgresql:
-      database: kong
-      username: kong
-      existingSecret: kong-config-secret
-certificates:
-  enabled: true
-  proxy:
-    enabled: true
-    commonName: "127-0-0-1.nip.io"
-    dnsNames:
-    - "*.127-0-0-1.nip.io"
-  admin:
-    enabled: true
-    commonName: "kong.127-0-0-1.nip.io"
-  portal:
-    enabled: true
-    commonName: "developer.127-0-0-1.nip.io"
-  cluster:
-    enabled: true
-  issuer:
-    enabled: true
 image:
   repository: kong/kong-gateway
   tag: "2.8"
@@ -255,6 +249,13 @@ portalapi:
     - http2
     servicePort: 8447
   type: ClusterIP
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      database: kong
+      existingSecret: kong-config-secret
+      username: kong
 proxy:
   annotations:
     prometheus.io/port: "9542"
@@ -273,17 +274,8 @@ proxy:
     enabled: true
     hostPort: 443
   type: LoadBalancer
-updateStrategy:
-  rollingUpdate:
-    maxSurge: 100%
-    maxUnavailable: 100%
-  type: RollingUpdate
 replicaCount: 1
-secretVolumes:
-- quickstart-kong-proxy-cert
-- quickstart-kong-admin-cert
-- quickstart-kong-portal-cert
-- quickstart-kong-cluster-cert
+secretVolumes: []
 status:
   enabled: true
   http:
@@ -292,15 +284,8 @@ status:
   tls:
     containerPort: 8543
     enabled: false
-affinity:
-  podAntiAffinity:
-    preferredDuringSchedulingIgnoredDuringExecution:
-    - podAffinityTerm:
-        labelSelector:
-          matchExpressions:
-          - key: app.kubernetes.io/instance
-            operator: In
-            values:
-            - dataplane
-        topologyKey: kubernetes.io/hostname
-      weight: 100
+updateStrategy:
+  rollingUpdate:
+    maxSurge: 100%
+    maxUnavailable: 100%
+  type: RollingUpdate

@@ -422,6 +422,16 @@ The name of the service used for the ingress controller's validation webhook
   emptyDir: {}
 - name: {{ template "kong.fullname" . }}-tmp
   emptyDir: {}
+{{- if .Values.clusterCaSecretName -}}
+- name: cluster-ca
+  secret:
+    secretName: {{ .Values.clusterCaSecretName }}
+{{- end }}
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.proxy.enabled }}
+- name: {{ include "kong.fullname" . }}-proxy-cert
+  secret:
+    secretName: {{ include "kong.fullname" . }}-proxy-cert
+{{- end }}
 {{- if (and (.Values.postgresql.enabled) .Values.waitImage.enabled) }}
 - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
   configMap:
@@ -494,6 +504,14 @@ The name of the service used for the ingress controller's validation webhook
   mountPath: /kong_prefix/
 - name: {{ template "kong.fullname" . }}-tmp
   mountPath: /tmp
+{{- if .Values.clusterCaSecretName -}}
+- name: cluster-ca
+  mountPath: /etc/cluster/
+{{- end }}
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.proxy.enabled }}
+- name: {{ include "kong.fullname" . }}-proxy-cert
+  mountPath: /etc/cert-manager/proxy/
+{{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
   mountPath: /kong_dbless/
@@ -684,6 +702,15 @@ the template that it itself is using form the above sections.
   {{- $listenConfig := merge $listenConfig . -}}
   {{- $_ := set $listenConfig "address" $address -}}
   {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (include "kong.listen" $listenConfig) -}}
+{{- end -}}
+
+{{- if .Values.clusterCaSecretName -}}
+  {{- $_ := set $autoEnv "KONG_CLUSTER_CA_CERT" "/etc/cluster/ca.crt" -}}
+{{- end -}}
+
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.proxy.enabled }}
+  {{- $_ := set $autoEnv "KONG_SSL_CERT" "/etc/cert-manager/proxy/tls.crt" -}}
+  {{- $_ := set $autoEnv "KONG_SSL_CERT_KEY" "/etc/cert-manager/proxy/tls.key" -}}
 {{- end -}}
 
 {{- if .Values.admin.ingress.enabled }}
