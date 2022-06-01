@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-Nothing yet.
+* Added terminationDelaySeconds for Ingress Controller.
+  ([597](https://github.com/Kong/charts/pull/597))
 
 ## 2.8.1
 
