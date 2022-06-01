@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Added `deployment.kong.args` and `deployment.kong.args` options for Proxy container
+  ([601](https://github.com/Kong/charts/pull/601))
 * Added terminationDelaySeconds for Ingress Controller.
   ([597](https://github.com/Kong/charts/pull/597))
 

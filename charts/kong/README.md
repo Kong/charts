@@ -717,6 +717,8 @@ kong:
 | Parameter                          | Description                                                                           | Default             |
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | namespace                          | Namespace to deploy chart resources                                                   |                     |
+| deployment.kong.args               | Optionally override args field in proxy container                                     |                     |
+| deployment.kong.command            | Optionally override cmd field in proxy container                                      |                     |
 | deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
 | deployment.initContainers          | Create initContainers. Please go to Kubernetes doc for the spec of the initContainers |                     |
 | deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
