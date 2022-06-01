@@ -15,6 +15,14 @@
 
 deployment:
   kong:
+    ## Optionally supply args for the Kong container to use. Note that by default, the kong image's
+    # default ENTRYPOINT will be used
+    # args: ["docker-start"]
+
+    ## Optionally supply a command for the Kong container to use. Note that by default, the kong image's
+    # default CMD will be used
+    # command: ["kong"]
+
     # Enable or disable Kong itself
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
