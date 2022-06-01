@@ -2,8 +2,17 @@
 
 ## Unreleased
 
+Nothing yet.
+
+## 2.9.0
+
 * Added terminationDelaySeconds for Ingress Controller.
   ([597](https://github.com/Kong/charts/pull/597))
+* Made KNative permissions conditional on CRD availability.
+
+### Fixed
+
+* Removed KNative permission from the Gateway permissions set.
 
 ## 2.8.1
 
