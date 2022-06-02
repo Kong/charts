@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Fixed lint reported issue.
 * Added terminationDelaySeconds for Ingress Controller.
   ([597](https://github.com/Kong/charts/pull/597))
 
