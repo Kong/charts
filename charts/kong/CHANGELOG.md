@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-Nothing yet.
+* Added option to disable test job pods.
+  [#598](https://github.com/Kong/charts/issues/598)
 
 ## 2.9.0
 
