@@ -431,16 +431,13 @@ for more detail.
 
 ### Cert Manager Integration
 
-[cert-manager]:https://cert-manager.io/docs/
-[self-signed issuer]:https://cert-manager.io/docs/configuration/selfsigned/
-
 Kong services and proxied services have various certificate requirements.
-By default, this chart installs Kong without cert-manager integration and
+By default, this chart installs Kong without [cert-manager](https://cert-manager.io/docs/) integration and
 dataplanes generate a fallback self-signed certificate on each container if
 no other source for the default proxy certificate is explicitly provided.
 
 This cert-manager support requires that cert-manager be installed and
-a public or self-signed valid chain-of-trust issuer be ready before
+a public or [self-signed](https://cert-manager.io/docs/configuration/selfsigned/) valid chain-of-trust issuer be ready before
 deploying Kong.
 
 Kong Gateway's supported cert-manager integration includes:
