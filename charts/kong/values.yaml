@@ -549,43 +549,6 @@ ingressController:
   #     memory: 128Mi
 
 # -----------------------------------------------------------------------------
-# Postgres sub-chart parameters
-# -----------------------------------------------------------------------------
-
-# Kong can run without a database or use either Postgres or Cassandra
-# as a backend datatstore for it's configuration.
-# By default, this chart installs Kong without a database.
-
-# If you would like to use a database, there are two options:
-# - (recommended) Deploy and maintain a database and pass the connection
-#   details to Kong via the `env` section.
-# - You can use the below `postgresql` sub-chart to deploy a database
-#   along-with Kong as part of a single Helm release. Running a database
-#   independently is recommended for production, but the built-in Postgres is
-#   useful for quickly creating test instances.
-
-# PostgreSQL chart documentation:
-# https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md
-#
-# WARNING: by default, the Postgres chart generates a random password each
-# time it upgrades, which breaks access to existing volumes. You should set a
-# password explicitly:
-# https://github.com/Kong/charts/blob/main/charts/kong/FAQs.md#kong-fails-to-start-after-helm-upgrade-when-postgres-is-used-what-do-i-do
-
-postgresql:
-  enabled: false
-  auth:
-    username: kong
-    database: kong
-  image:
-    # use postgres < 14 until is https://github.com/Kong/kong/issues/8533 resolved and released
-    # enterprise (kong-gateway) supports postgres 14
-    tag: 13.6.0-debian-10-r52
-  service:
-    ports:
-      postgresql: "5432"
-
-# -----------------------------------------------------------------------------
 # Miscellaneous parameters
 # -----------------------------------------------------------------------------
 

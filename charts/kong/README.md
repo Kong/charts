@@ -27,7 +27,7 @@ $ helm install kong/kong --generate-name
 - [Deployment Options](#deployment-options)
   - [Database](#database)
     - [DB-less deployment](#db-less-deployment)
-    - [Using the Postgres sub-chart](#using-the-postgres-sub-chart)
+    - [Installing Postgres with a helm chart](#installing-postgres-with-a-helm-chart)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
@@ -166,17 +166,16 @@ Subsequent ConfigMap updates will require user-initiated new deployment rollouts
 to apply the new configuration. You should run `kubectl rollout restart deploy`
 after updating externally supplied ConfigMap content.
 
-#### Using the Postgres sub-chart
+#### Installing Postgres with a helm chart
 
-The chart can optionally spawn a Postgres instance using [Bitnami's Postgres
+To install a local database Kong recommends the following chart: [Bitnami's Postgres
 chart](https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md)
-as a sub-chart. Set `postgresql.enabled=true` to enable the sub-chart. Enabling
-this will auto-populate Postgres connection settings in Kong's environment.
 
-The Postgres sub-chart is best used to quickly provision temporary environments
-without installing and configuring your database separately. For longer-lived
-environments, we recommend you manage your database outside the Kong Helm
-release.
+You can install the chart with the following command
+
+```bash
+helm install <release> bitnami/postgresql
+```
 
 ### Runtime package
 
@@ -577,7 +576,6 @@ directory.
 | waitImage.repository               | Image used to wait for database to become ready. Uses the Kong image if none set      |                     |
 | waitImage.tag                      | Tag for image used to wait for database to become ready                               |                     |
 | waitImage.pullPolicy               | Wait image pull policy                                                                | `IfNotPresent`      |
-| postgresql.enabled                 | Spin up a new postgres instance for Kong                                              | `false`             |
 | dblessConfig.configMap             | Name of an existing ConfigMap containing the `kong.yml` file. This must have the key `kong.yml`.| `` |
 | dblessConfig.config                | Yaml configuration file for the dbless (declarative) configuration of Kong | see in `values.yaml`    |
 

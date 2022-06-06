@@ -10,10 +10,5 @@ maintainers:
   email: traines@konghq.com
 name: kong
 sources:
-version: 2.9.0
+version: 2.9.1
 appVersion: "2.8"
-dependencies:
-- name: postgresql
-  version: 11.1.15
-  repository: https://charts.bitnami.com/bitnami
-  condition: postgresql.enabled
