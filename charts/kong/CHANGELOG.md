@@ -4,6 +4,13 @@
 
 Nothing yet.
 
+## 2.9.1
+
+### Fixed
+
+* Fixed another unwanted newline chomp that broke GatewayClass
+  permissions.
+
 ## 2.9.0
 
 * Added terminationDelaySeconds for Ingress Controller.
