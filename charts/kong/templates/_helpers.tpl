@@ -1155,7 +1155,7 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
-{{- if (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha2") -}}
+{{- if (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha2") }}
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
