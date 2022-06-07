@@ -77,7 +77,7 @@ spec:
     - matches:
         - path:
             type: PathPrefix
-            value: "/httpbin-httproute"
+            value: "/httproute"
       backendRefs:
         - name: "{{ .Release.Name }}-httpbin"
           port: 80
