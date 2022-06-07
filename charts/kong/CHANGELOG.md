@@ -14,7 +14,7 @@ Nothing yet.
 
 * Removed KNative permission from the Gateway permissions set.
 
-## 2.8.1
+## 2.8.2
 
 ### Fixed
 
