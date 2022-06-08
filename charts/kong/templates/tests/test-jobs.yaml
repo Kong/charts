@@ -1,3 +1,4 @@
+{{- if  .Values.deployment.test.enabled }}
 ---
 apiVersion: v1
 kind: Pod
@@ -28,3 +29,4 @@ spec:
       command:
         - curl
         - "http://{{ .Release.Name }}-kong-proxy.{{ .Release.Namespace }}.svc.cluster.local/httproute"
+{{- end }}
