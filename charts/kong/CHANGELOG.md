@@ -5,6 +5,13 @@
 * Added option to disable test job pods.
   [#598](https://github.com/Kong/charts/issues/598)
 
+## 2.9.1
+
+### Fixed
+
+* Fixed another unwanted newline chomp that broke GatewayClass
+  permissions.
+
 ## 2.9.0
 
 * Added terminationDelaySeconds for Ingress Controller.
@@ -15,7 +22,7 @@
 
 * Removed KNative permission from the Gateway permissions set.
 
-## 2.8.1
+## 2.8.2
 
 ### Fixed
 
