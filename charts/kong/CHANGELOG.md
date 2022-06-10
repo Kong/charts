@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-Nothing yet.
+### Improvements
+
+* Added ClusterRole for cluster-scoped resources when using watchNamespaces.
+  [#611](https://github.com/Kong/charts/issues/611)
 
 ## 2.11.0
 

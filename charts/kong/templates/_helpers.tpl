@@ -1162,13 +1162,6 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
 */}}
 {{- define "kong.kubernetesRBACClusterRules" -}}
 - apiGroups:
-  - ""
-  resources:
-  - endpoints
-  verbs:
-  - list
-  - watch
-- apiGroups:
   - configuration.konghq.com
   resources:
   - kongclusterplugins
