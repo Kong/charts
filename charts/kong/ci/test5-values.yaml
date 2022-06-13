@@ -8,7 +8,6 @@
 
 ingressController:
   enabled: true
-  installCRDs: false
   env:
     anonymous_reports: "false"
 postgresql:

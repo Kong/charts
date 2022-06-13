@@ -30,4 +30,3 @@ secretVolumes:
 
 ingressController:
   enabled: false
-  installCRDs: false
