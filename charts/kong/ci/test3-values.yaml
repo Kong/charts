@@ -2,7 +2,6 @@
 # - disable ingress controller
 ingressController:
   enabled: false
-  installCRDs: false
 # - disable DB for kong
 env:
   anonymous_reports: "off"

@@ -87,7 +87,7 @@ To install Kong:
 $ helm repo add kong https://charts.konghq.com
 $ helm repo update
 
-$ helm install kong/kong --generate-name --set ingressController.installCRDs=false
+$ helm install kong/kong --generate-name
 ```
 
 ## Uninstall
@@ -675,7 +675,7 @@ section of `values.yaml` file:
 | image.effectiveSemver                   | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version                                      |                                    |
 | readinessProbe                          | Kong ingress controllers readiness probe                                                                                                                 |                                    |
 | livenessProbe                           | Kong ingress controllers liveness probe                                                                                                                  |                                    |
-| installCRDs                             | Creates managed CRDs.                                                                                                                                    | false                              |
+| installCRDs                             | Legacy toggle for Helm 2-style CRD management. Should not be set [unless necessary due to cluster permissions](#removing-cluster-scoped-permissions).    | false                              |
 | env                                     | Specify Kong Ingress Controller configuration via environment variables                                                                                  |                                    |
 | customEnv                               | Specify custom environment variables (without the CONTROLLER_ prefix)                                                                                    |                                    |
 | ingressClass                            | The name of this controller's ingressClass                                                                                                               | kong                               |

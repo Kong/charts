@@ -13,4 +13,3 @@ ingressController:
     anonymous_reports: "false"
   image:
     unifiedRepoTag: kong/kubernetes-ingress-controller:2.0.2
-  installCRDs: false

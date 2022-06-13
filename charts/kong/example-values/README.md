@@ -1,9 +1,7 @@
 # Example values.yaml configurations
 
 The YAML files in this directory provide basic example configurations for
-common Kong deployment scenarios on Kubernetes. All examples assume Helm 3 and
-disable legacy CRD templates (`ingressController.installCRDs: false`; you must
-change this value to `true` if you use Helm 2).
+common Kong deployment scenarios on Kubernetes.
 
 * [minimal-kong-controller.yaml](minimal-kong-controller.yaml) installs Kong
   open source with the ingress controller in DB-less mode.
@@ -56,11 +54,3 @@ change this value to `true` if you use Helm 2).
 
 All Enterprise examples require some level of additional user configuration to
 install properly. Read the comments at the top of each file for instructions.
-
-Examples are designed for use with Helm 3, and disable Helm 2 CRD installation.
-If you use Helm 2, you will need to enable it:
-
-```
-helm install kong/kong -f /path/to/values.yaml \
-  --set ingressController.installCRDs=true
-```
