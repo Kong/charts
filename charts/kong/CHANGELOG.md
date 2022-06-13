@@ -4,6 +4,7 @@
 
 * Added option to disable test job pods.
   [#598](https://github.com/Kong/charts/issues/598)
+* Admission failure policy is not set to `Ignore` by default.
 
 ## 2.9.1
 
