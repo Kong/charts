@@ -28,6 +28,7 @@ $ helm install kong/kong --generate-name
   - [Database](#database)
     - [DB-less deployment](#db-less-deployment)
     - [Using the Postgres sub-chart](#using-the-postgres-sub-chart)
+      - [Postgres sub-chart considerations for OpenShift](#postgres-sub-chart-considerations-for-openshift)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
@@ -177,6 +178,22 @@ The Postgres sub-chart is best used to quickly provision temporary environments
 without installing and configuring your database separately. For longer-lived
 environments, we recommend you manage your database outside the Kong Helm
 release.
+
+##### Postgres sub-chart considerations for OpenShift
+
+Due to the default `securityContexts` in the postgres sub-chart, you will need to add the following values to the `postgresql` section to get postgres running on OpenShift:
+
+```yaml
+  volumePermissions:
+    enabled: false
+    securityContext:
+      runAsUser: "auto"
+  primary:
+    containerSecurityContext:
+      enabled: false
+    podSecurityContext:
+      enabled: false
+```
 
 ### Runtime package
 
