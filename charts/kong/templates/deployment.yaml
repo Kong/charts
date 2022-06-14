@@ -65,10 +65,8 @@ spec:
       {{- end }}
       {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
       serviceAccountName: {{ template "kong.serviceAccountName" . }}
-      automountServiceAccountToken: true
-      {{- else }}
+      {{- end }}
       automountServiceAccountToken: false
-      {{ end }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
@@ -286,4 +284,14 @@ spec:
       volumes:
       {{- include "kong.volumes" . | nindent 8 -}}
       {{- include "kong.userDefinedVolumes" . | nindent 8 -}}
+      {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
+        - name: {{ template "kong.serviceAccountTokenName" . }}
+          secret:
+            secretName: {{ template "kong.serviceAccountTokenName" . }}
+            items:
+            - key: token
+              path: token
+            - key: ca.crt
+              path: ca.crt
+      {{- end }}
 {{- end }}

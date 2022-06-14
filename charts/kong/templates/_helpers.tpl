@@ -60,6 +60,13 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
+Create the name of the secret for service account token to use
+*/}}
+{{- define "kong.serviceAccountTokenName" -}}
+{{ include "kong.serviceAccountName" . }}-token
+{{- end -}}
+
+{{/*
 Create Ingress resource for a Kong service
 */}}
 {{- define "kong.ingress" -}}
@@ -619,6 +626,11 @@ The name of the service used for the ingress controller's validation webhook
 {{- if .Values.ingressController.admissionWebhook.enabled }}
   - name: webhook-cert
     mountPath: /admission-webhook
+    readOnly: true
+{{- end }}
+{{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
+  - name: {{ template "kong.serviceAccountTokenName" . }}
+    mountPath: /var/run/secrets/kubernetes.io/serviceaccount
     readOnly: true
 {{- end }}
   {{- include "kong.userDefinedVolumeMounts" .Values.ingressController | nindent 2 }}
