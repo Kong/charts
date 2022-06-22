@@ -1,3 +1,4 @@
+{{- if  .Values.deployment.test.enabled }}
 ---
 apiVersion: v1
 kind: Pod
@@ -17,21 +18,6 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ .Release.Name }}-test-ingress-v1beta1"
-  annotations:
-    "helm.sh/hook": test
-spec:
-  restartPolicy: OnFailure
-  containers:
-    - name: "{{ .Release.Name }}-curl"
-      image: curlimages/curl
-      command:
-        - curl
-        - "http://{{ .Release.Name }}-kong-proxy.{{ .Release.Namespace }}.svc.cluster.local/httpbin-v1beta1"
----
-apiVersion: v1
-kind: Pod
-metadata:
   name: "{{ .Release.Name }}-test-httproute"
   annotations:
     "helm.sh/hook": test
@@ -42,4 +28,5 @@ spec:
       image: curlimages/curl
       command:
         - curl
-        - "http://{{ .Release.Name }}-kong-proxy.{{ .Release.Namespace }}.svc.cluster.local/httpbin-httproute"
+        - "http://{{ .Release.Name }}-kong-proxy.{{ .Release.Namespace }}.svc.cluster.local/httproute"
+{{- end }}

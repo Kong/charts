@@ -191,7 +191,6 @@ postgresql:
 
 ingressController:
   enabled: true
-  installCRDs: false
   env:
     kong_admin_token:
       valueFrom:

@@ -10,7 +10,7 @@ maintainers:
   email: traines@konghq.com
 name: kong
 sources:
-version: 2.8.2
+version: 2.9.1
 appVersion: "2.8"
 dependencies:
 - name: postgresql

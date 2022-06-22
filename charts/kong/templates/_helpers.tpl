@@ -648,6 +648,7 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
   resources:
 {{ toYaml .Values.ingressController.resources | indent 4 }}
+  terminationGracePeriodSeconds: {{ .Values.ingressController.terminationGracePeriodSecond }}
   volumeMounts:
 {{- if .Values.ingressController.admissionWebhook.enabled }}
   - name: webhook-cert
@@ -1099,7 +1100,7 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
-{{- if (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha2") -}}
+{{- if (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha2") }}
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
@@ -1131,6 +1132,8 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
   verbs:
   - get
   - update
+{{- end }}
+{{- if (.Capabilities.APIVersions.Has "networking.internal.knative.dev/v1alpha1") }}
 - apiGroups:
   - networking.internal.knative.dev
   resources:
@@ -1139,7 +1142,6 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
   - get
   - list
   - watch
-{{- end }}
 - apiGroups:
   - networking.internal.knative.dev
   resources:
@@ -1148,6 +1150,7 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
+{{- end }}
 - apiGroups:
   - networking.k8s.io
   resources:
@@ -1195,7 +1198,7 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
-{{- if (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha2") -}}
+{{- if (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha2") }}
 - apiGroups:
   - gateway.networking.k8s.io
   resources:

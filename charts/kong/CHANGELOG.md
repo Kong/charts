@@ -2,9 +2,29 @@
 
 ## Unreleased
 
-Nothing yet.
+* Added option to disable test job pods.
+  [#598](https://github.com/Kong/charts/issues/598)
+* Changed default admission failure policy from `Fail` to `Ignore`.
+  [#612](https://github.com/Kong/charts/issues/612)
 
-## 2.8.1
+## 2.9.1
+
+### Fixed
+
+* Fixed another unwanted newline chomp that broke GatewayClass
+  permissions.
+
+## 2.9.0
+
+* Added terminationDelaySeconds for Ingress Controller.
+  ([597](https://github.com/Kong/charts/pull/597))
+* Made KNative permissions conditional on CRD availability.
+
+### Fixed
+
+* Removed KNative permission from the Gateway permissions set.
+
+## 2.8.2
 
 ### Fixed
 
@@ -29,6 +49,14 @@ Nothing yet.
 
 2.8 requires manual removal of existing IngressClass resources and updates the
 Postgres sub-chart version. Further details are available [in the upgrade guide](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#280).
+
+The chart honors `ingressController.installCRDs: false` again. Remove it from
+your values.yaml if it is currently present. Unless your install user [lacks
+permissions to read
+CRDs](https://github.com/Kong/charts/blob/main/charts/kong/README.md#removing-c
+luster-scoped-permissions), which would have prevented you from installing
+earlier chart versions, you should omit this setting and let the templates
+detect whether you use the legacy CRD installation method automatically.
 
 ### Improvements
 

@@ -31,7 +31,6 @@ env:
 
 ingressController:
   enabled: true
-  installCRDs: false
 
 proxy:
   # Enable creating a Kubernetes service for the proxy

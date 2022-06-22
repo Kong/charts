@@ -28,6 +28,7 @@ $ helm install kong/kong --generate-name
   - [Database](#database)
     - [DB-less deployment](#db-less-deployment)
     - [Using the Postgres sub-chart](#using-the-postgres-sub-chart)
+      - [Postgres sub-chart considerations for OpenShift](#postgres-sub-chart-considerations-for-openshift)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
@@ -91,7 +92,7 @@ To install Kong:
 $ helm repo add kong https://charts.konghq.com
 $ helm repo update
 
-$ helm install kong/kong --generate-name --set ingressController.installCRDs=false
+$ helm install kong/kong --generate-name
 ```
 
 ## Uninstall
@@ -181,6 +182,22 @@ The Postgres sub-chart is best used to quickly provision temporary environments
 without installing and configuring your database separately. For longer-lived
 environments, we recommend you manage your database outside the Kong Helm
 release.
+
+##### Postgres sub-chart considerations for OpenShift
+
+Due to the default `securityContexts` in the postgres sub-chart, you will need to add the following values to the `postgresql` section to get postgres running on OpenShift:
+
+```yaml
+  volumePermissions:
+    enabled: false
+    securityContext:
+      runAsUser: "auto"
+  primary:
+    containerSecurityContext:
+      enabled: false
+    podSecurityContext:
+      enabled: false
+```
 
 ### Runtime package
 
@@ -691,29 +708,30 @@ are configured using an array of objects under `proxy.stream` and `udpProxy.stre
 All of the following properties are nested under the `ingressController`
 section of `values.yaml` file:
 
-| Parameter                               | Description                                                                                                         | Default                                                                      |
-|-----------------------------------------|---------------------------------------------------------------------------------------------------------------------| ---------------------------------------------------------------------------- |
-| enabled                                 | Deploy the ingress controller, rbac and crd                                                                         | true                                                                         |
-| image.repository                        | Docker image with the ingress controller                                                                            | kong/kubernetes-ingress-controller                                           |
-| image.tag                               | Version of the ingress controller                                                                                   | 2.0                                                                          |
-| image.effectiveSemver                   | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version |                                                |
-| readinessProbe                          | Kong ingress controllers readiness probe                                                                            |                                                                              |
-| livenessProbe                           | Kong ingress controllers liveness probe                                                                             |                                                                              |
-| installCRDs                             | Creates managed CRDs.                                                                                               | false                                                                        |
-| env                                     | Specify Kong Ingress Controller configuration via environment variables                                             |                                                                              |
-| customEnv                               | Specify custom environment variables (without the CONTROLLER_ prefix)                                               |                                                                              |
-| ingressClass                            | The name of this controller's ingressClass                                                                          | kong                                                                         |
-| ingressClassAnnotations                 | The ingress-class value for controller                                                                              | kong                                                                         |
-| args                                    | List of ingress-controller cli arguments                                                                            | []                                                                           |
-| watchNamespaces                         | List of namespaces to watch. Watches all namespaces if empty                                                        | []                                                                           |
-| admissionWebhook.enabled                | Whether to enable the validating admission webhook                                                                  | false                                                                        |
-| admissionWebhook.failurePolicy          | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)                                    | Fail                                                                         |
-| admissionWebhook.port                   | The port the ingress controller will listen on for admission webhooks                                               | 8080                                                                         |
-| admissionWebhook.certificate.provided   | Whether to generate the admission webhook certificate if not provided                                               | false                                                                        |
-| admissionWebhook.certificate.secretName | Name of the TLS secret for the provided webhook certificate                                                         |                                                                              |
-| admissionWebhook.certificate.caBundle   | PEM encoded CA bundle which will be used to validate the provided webhook certificate                               |                                                                         |
-| deployment.userDefinedVolumes           | Create volumes. Please go to Kubernetes doc for the spec of the volumes                                             |                                                                              |
-| deployment.userDefinedVolumeMounts      | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts                                   |                                                                              |
+| Parameter                               | Description                                                                                                                                              | Default                            |
+|-----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------|
+| enabled                                 | Deploy the ingress controller, rbac and crd                                                                                                              | true                               |
+| image.repository                        | Docker image with the ingress controller                                                                                                                 | kong/kubernetes-ingress-controller |
+| image.tag                               | Version of the ingress controller                                                                                                                        | 2.0                                |
+| image.effectiveSemver                   | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version                                      |                                    |
+| readinessProbe                          | Kong ingress controllers readiness probe                                                                                                                 |                                    |
+| livenessProbe                           | Kong ingress controllers liveness probe                                                                                                                  |                                    |
+| installCRDs                             | Legacy toggle for Helm 2-style CRD management. Should not be set [unless necessary due to cluster permissions](#removing-cluster-scoped-permissions).    | false                              |
+| env                                     | Specify Kong Ingress Controller configuration via environment variables                                                                                  |                                    |
+| customEnv                               | Specify custom environment variables (without the CONTROLLER_ prefix)                                                                                    |                                    |
+| ingressClass                            | The name of this controller's ingressClass                                                                                                               | kong                               |
+| ingressClassAnnotations                 | The ingress-class value for controller                                                                                                                   | kong                               |
+| args                                    | List of ingress-controller cli arguments                                                                                                                 | []                                 |
+| watchNamespaces                         | List of namespaces to watch. Watches all namespaces if empty                                                                                             | []                                 |
+| admissionWebhook.enabled                | Whether to enable the validating admission webhook                                                                                                       | false                              |
+| admissionWebhook.failurePolicy          | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)                                                                         | Fail                               |
+| admissionWebhook.port                   | The port the ingress controller will listen on for admission webhooks                                                                                    | 8080                               |
+| admissionWebhook.certificate.provided   | Whether to generate the admission webhook certificate if not provided                                                                                    | false                              |
+| admissionWebhook.certificate.secretName | Name of the TLS secret for the provided webhook certificate                                                                                              |                                    |
+| admissionWebhook.certificate.caBundle   | PEM encoded CA bundle which will be used to validate the provided webhook certificate                                                                    |                                    |
+| deployment.userDefinedVolumes           | Create volumes. Please go to Kubernetes doc for the spec of the volumes                                                                                  |                                    |
+| deployment.userDefinedVolumeMounts      | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts                                                                        |                                    |
+| terminationGracePeriodSeconds           | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pod | 30                                 |
 
 #### The `env` section
 For a complete list of all configuration values you can set in the
@@ -749,6 +767,7 @@ kong:
 | deployment.serviceAccount.create   | Create Service Account for the Deployment / Daemonset and the migrations              | `true`              |
 | deployment.serviceAccount.name     | Name of the Service Account, a default one will be generated if left blank.           | ""                  |
 | deployment.serviceAccount.annotations | Annotations for the Service Account                                                | {}                  |
+| deployment.test.enabled            | Enable creation of test resources for use with "helm test"                            | `false`             |
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
 | autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
 | autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |

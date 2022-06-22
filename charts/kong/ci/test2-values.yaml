@@ -4,7 +4,6 @@
 # - a mixture of controller, Kong, and shared volumes successfully mount
 ingressController:
   enabled: true
-  installCRDs: false
   env:
     anonymous_reports: "false"
   customEnv:

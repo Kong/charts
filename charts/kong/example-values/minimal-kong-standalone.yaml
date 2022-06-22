@@ -27,4 +27,3 @@ postgresql:
 
 ingressController:
   enabled: false
-  installCRDs: false
