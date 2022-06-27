@@ -256,11 +256,11 @@ Parameters: takes a service (e.g. .Values.proxy) as its argument and returns KON
   {{- $portMaps := list -}}
 
   {{- if .http.enabled -}}
-		{{- $portMaps = append $portMaps (printf "%d:%d" (int64 .http.servicePort) (int64 .http.containerPort)) -}}
+        {{- $portMaps = append $portMaps (printf "%d:%d" (int64 .http.servicePort) (int64 .http.containerPort)) -}}
   {{- end -}}
 
   {{- if .tls.enabled -}}
-		{{- $portMaps = append $portMaps (printf "%d:%d" (int64 .tls.servicePort) (int64 .tls.containerPort)) -}}
+        {{- $portMaps = append $portMaps (printf "%d:%d" (int64 .tls.servicePort) (int64 .tls.containerPort)) -}}
   {{- end -}}
 
   {{- $portMapsString := ($portMaps | join ", ") -}}
@@ -610,8 +610,8 @@ The name of the service used for the ingress controller's validation webhook
   imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
      Helm value interpretation doesn't let you replace the default HTTP checks with any other
-	 check type, and all HTTP checks freeze when a debugger pauses operation.
-	 Setting disableReadiness to ANY value disables the probes.
+     check type, and all HTTP checks freeze when a debugger pauses operation.
+     Setting disableReadiness to ANY value disables the probes.
 */}}
 {{- if (not (hasKey .Values.ingressController "disableProbes")) }}
   readinessProbe:
@@ -631,15 +631,15 @@ The name of the service used for the ingress controller's validation webhook
 {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
   - name: {{ template "kong.serviceAccountTokenName" . }}
     mountPath: /var/run/secrets/kubernetes.io/serviceaccount/token
-	subPath: token
+    subPath: token
     readOnly: true
   - name: {{ template "kong.serviceAccountTokenName" . }}
     mountPath: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-	subPath: ca.crt
+    subPath: ca.crt
     readOnly: true
   - name: podinfo
     mountPath: /var/run/secrets/kubernetes.io/serviceaccount/namespace
-	subPath: namespace
+    subPath: namespace
     readOnly: true
 {{- end }}
   {{- include "kong.userDefinedVolumeMounts" .Values.ingressController | nindent 2 }}
