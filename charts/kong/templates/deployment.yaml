@@ -293,5 +293,11 @@ spec:
               path: token
             - key: ca.crt
               path: ca.crt
+        - name: podinfo
+          downwardAPI:
+            items:
+            - path: "namespace"
+              fieldRef:
+                fieldPath: metadata.namespace
       {{- end }}
 {{- end }}
