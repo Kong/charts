@@ -2,10 +2,19 @@
 
 ## Unreleased
 
+Nothing yet.
+
+## 2.10.0
+
+### Added
+
 * Added option to disable test job pods.
   [#598](https://github.com/Kong/charts/issues/598)
 * Changed default admission failure policy from `Fail` to `Ignore`.
   [#612](https://github.com/Kong/charts/issues/612)
+* ServiceAccount tokens are now only mounted in the controller container to
+  limit attack surface.
+  [#619](https://github.com/Kong/charts/issues/619)
 
 ## 2.9.1
 
