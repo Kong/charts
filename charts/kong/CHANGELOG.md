@@ -4,6 +4,13 @@
 
 Nothing yet.
 
+## 2.10.1
+
+### Fixed
+
+* Updated manual ServiceAccount Secret mount format for compatibility with
+  Kuma.
+
 ## 2.10.0
 
 ### Added
