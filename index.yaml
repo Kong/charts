@@ -3,6 +3,27 @@ entries:
   kong:
   - apiVersion: v2
     appVersion: "2.8"
+    created: "2022-06-28T20:17:37.88281846Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.1.15
+    description: The Cloud-Native Ingress and API-management
+    digest: b81045c3f1324fc72ce6857452ef3da9fdee6f7456f54fc02a94245d94470519
+    home: https://konghq.com/
+    icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
+    maintainers:
+    - email: harry@konghq.com
+      name: hbagdi
+    - email: traines@konghq.com
+      name: rainest
+    name: kong
+    urls:
+    - https://github.com/Kong/charts/releases/download/kong-2.10.1/kong-2.10.1.tgz
+    version: 2.10.1
+  - apiVersion: v2
+    appVersion: "2.8"
     created: "2022-06-27T23:54:37.846558708Z"
     dependencies:
     - condition: postgresql.enabled
@@ -959,4 +980,4 @@ entries:
     urls:
     - https://github.com/Kong/charts/releases/download/kong-0.36.5/kong-0.36.5.tgz
     version: 0.36.5
-generated: "2022-06-27T23:54:37.847022815Z"
+generated: "2022-06-28T20:17:37.883229166Z"
