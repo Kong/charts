@@ -4,6 +4,13 @@
 
 Nothing yet.
 
+## 2.10.2
+
+### Fixed
+
+* Kuma now also mounts ServiceAccount tokens on releases without a controller
+  container.
+
 ## 2.10.1
 
 ### Fixed
