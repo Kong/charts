@@ -38,6 +38,9 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
+        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
+        {{- end }}
         {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off" )) }}
         {{- if .Values.dblessConfig.config }}
         checksum/dbless.config: {{ toYaml .Values.dblessConfig.config | sha256sum }}
