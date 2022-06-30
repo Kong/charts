@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-Nothing yet.
+* Fix URL for more detail on Command Line Arguements / environment variables for Helm.
 
 ## 2.10.2
 

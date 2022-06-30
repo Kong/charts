@@ -712,7 +712,7 @@ section of `values.yaml` file:
 #### The `env` section
 For a complete list of all configuration values you can set in the
 `env` section, please read the Kong Ingress Controller's
-[configuration document](https://github.com/Kong/kubernetes-ingress-controller/blob/main/docs/references/cli-arguments.md).
+[configuration document](https://github.com/Kong/docs.konghq.com/blob/main/src/kubernetes-ingress-controller/references/cli-arguments.md).
 
 #### The `customEnv` section
 
