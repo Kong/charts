@@ -28,19 +28,50 @@ KUBECTL="kubectl --context kind-${TEST_ENV_NAME}"
 KUBERNETES_VERSION="$($KUBECTL version -o json | jq -r '.serverVersion.gitVersion')"
 
 # ------------------------------------------------------------------------------
+# Deploy Kuma configuration and test namespace
+# ------------------------------------------------------------------------------
+
+echo "---
+apiVersion: kuma.io/v1alpha1
+kind: Mesh
+metadata:
+  name: default
+spec:
+  mtls:
+    backends:
+    - conf:
+        caCert:
+          RSAbits: 2048
+          expiration: 10y
+      dpCert:
+        rotation:
+          expiration: 1d
+      name: ca-1
+      type: builtin
+    enabledBackend: ca-1
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kuma.io/sidecar-injection: enabled
+  name: ${RELEASE_NAMESPACE}
+" | kubectl --context "kind-${TEST_ENV_NAME}" apply -f -
+
+# ------------------------------------------------------------------------------
 # Deploy Chart - Kubernetes Ingress Controller
 # ------------------------------------------------------------------------------
 
 if [[ "${TAG}" == "default" ]]
 then
     echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
-    helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
+    helm install --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
         --set deployment.test.enabled=true \
 		--set ingressController.env.feature_gates="Gateway=true" \
 		charts/kong/
 else
     echo "INFO: installing chart as release ${RELEASE_NAME} with controller tag ${TAG} to namespace ${RELEASE_NAMESPACE}"
-    helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" \
+    helm install --namespace "${RELEASE_NAMESPACE}" \
         --set ingressController.image.tag="${TAG}" "${RELEASE_NAME}" --set deployment.test.enabled=true charts/kong/
 fi
 
