@@ -653,8 +653,8 @@ livenessProbe:
 lifecycle:
   preStop:
     exec:
-      # Note kong quit has a default timeout of 10 seconds, and a default
-      # wait of 0 seconds.
+      # kong quit has a default timeout of 10 seconds, and a default wait of 0 seconds.
+      # Note: together they should be less than the terminationGracePeriodSeconds setting below.
       command:
         - kong
         - quit
