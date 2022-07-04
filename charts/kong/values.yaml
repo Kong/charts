@@ -22,6 +22,7 @@ deployment:
   ## Specify the service account to create and to be assigned to the deployment / daemonset and for th migrations
   serviceAccount:
     create: true
+    automountServiceAccountToken: false
   ## Optionally specify the name of the service account to create and the annotations to add.
   #  name:
   #  annotations: {}

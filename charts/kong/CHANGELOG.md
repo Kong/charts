@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 2.10.3
+
 * Fix URL for more detail on Command Line Arguements / environment variables for Helm.
+* Make `automountServiceAccountToken` disabled but default, but configurable
 
 ## 2.10.2
 

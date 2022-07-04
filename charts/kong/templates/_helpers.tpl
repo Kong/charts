@@ -628,7 +628,7 @@ The name of the service used for the ingress controller's validation webhook
     mountPath: /admission-webhook
     readOnly: true
 {{- end }}
-{{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
+{{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
   - name: {{ template "kong.serviceAccountTokenName" . }}
     mountPath: /var/run/secrets/kubernetes.io/serviceaccount
     readOnly: true
