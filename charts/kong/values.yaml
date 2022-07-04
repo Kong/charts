@@ -649,10 +649,12 @@ livenessProbe:
 lifecycle:
   preStop:
     exec:
-      # Note kong quit has a default timeout of 10 seconds
+      # Note kong quit has a default timeout of 10 seconds, and a default
+      # wait of 0 seconds.
       command:
         - kong
         - quit
+        - '--timeout=10'
         - '--wait=15'
 
 # Sets the termination grace period for pods spawned by the Kubernetes Deployment.
