@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-* Fix URL for more detail on Command Line Arguements / environment variables for Helm.
+### Improvements
+
+* Bump controller version to 2.4.
+  [#627](https://github.com/Kong/charts/issues/627)
 
 ## 2.10.2
 
