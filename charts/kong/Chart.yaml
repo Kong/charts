@@ -10,6 +10,7 @@ maintainers:
   email: traines@konghq.com
 name: kong
 sources:
+- https://github.com/Kong/charts/tree/main/charts/kong
 version: 2.10.2
 appVersion: "2.8"
 dependencies:
