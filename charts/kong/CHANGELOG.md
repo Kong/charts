@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Fixed Deployment missing if in case of empty tolerations 
 
 ### Improvements
 
