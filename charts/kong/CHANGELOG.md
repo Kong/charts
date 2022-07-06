@@ -2,9 +2,14 @@
 
 ## Unreleased
 
-### Fixed
+###
 
 * Fix to avoid running out of ephmeral storage on kubernetes worker nodes.
+
+### Fixed
+
+* Fixed Deployment missing if in case of empty tolerations 
+  [#630](https://github.com/Kong/charts/issues/630)
 
 ### Improvements
 
