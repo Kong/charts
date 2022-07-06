@@ -1,7 +1,11 @@
 # Changelog
 
 ## Unreleased
+
+### Fixed
+
 * Fixed Deployment missing if in case of empty tolerations 
+  [#630](https://github.com/Kong/charts/issues/630)
 
 ### Improvements
 
