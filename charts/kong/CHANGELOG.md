@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+* Fix to avoid running out of ephmeral storage on kubernetes worker nodes.
+
 ### Improvements
 
 * Bump controller version to 2.4.
