@@ -56,7 +56,7 @@ deployment:
   # kong_prefix empty dir size
   prefixDir:
     sizeLimit: 256Mi
-  # tmp empty dir size  
+  # tmp empty dir size
   tmpDir:
     sizeLimit: 1Gi
 # Override namepsace for Kong chart resources. By default, the chart creates resources in the release namespace.
