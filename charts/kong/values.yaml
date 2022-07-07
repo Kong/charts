@@ -57,7 +57,12 @@ deployment:
   # Use a DaemonSet controller instead of a Deployment controller
   daemonset: false
   hostNetwork: false
-
+  # kong_prefix empty dir size
+  prefixDir:
+    sizeLimit: 256Mi
+  # tmp empty dir size
+  tmpDir:
+    sizeLimit: 1Gi
 # Override namepsace for Kong chart resources. By default, the chart creates resources in the release namespace.
 # This may not be desirable when using this chart as a dependency.
 # namespace: "example"
