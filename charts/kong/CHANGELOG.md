@@ -6,6 +6,9 @@
 
 * Fixed Deployment missing if in case of empty tolerations 
   [#630](https://github.com/Kong/charts/issues/630)
+* Use stdout and stderr by default for all logs. Several were writing to prefix
+  directory files.
+  [#634](https://github.com/Kong/charts/issues/634)
 
 ### Improvements
 
