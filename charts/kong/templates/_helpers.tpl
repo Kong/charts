@@ -668,6 +668,15 @@ the template that it itself is using form the above sections.
 
 {{- $_ := set $autoEnv "KONG_LUA_PACKAGE_PATH" "/opt/?.lua;/opt/?/init.lua;;" -}}
 
+{{- $_ := set $autoEnv "KONG_PROXY_ACCESS_LOG" "/dev/stdout" -}}
+{{- $_ := set $autoEnv "KONG_PROXY_STREAM_ACCESS_LOG" "/dev/stdout basic" -}}
+{{- $_ := set $autoEnv "KONG_ADMIN_ACCESS_LOG" "/dev/stdout" -}}
+{{- $_ := set $autoEnv "KONG_STATUS_ACCESS_LOG" "off" -}}
+{{- $_ := set $autoEnv "KONG_PROXY_ERROR_LOG" "/dev/stderr" -}}
+{{- $_ := set $autoEnv "KONG_PROXY_STREAM_ERROR_LOG" "/dev/stderr" -}}
+{{- $_ := set $autoEnv "KONG_ADMIN_ERROR_LOG" "/dev/stderr" -}}
+{{- $_ := set $autoEnv "KONG_STATUS_ERROR_LOG" "/dev/stderr" -}}
+
 {{- if .Values.ingressController.enabled -}}
   {{- $_ := set $autoEnv "KONG_KIC" "on" -}}
 {{- end -}}
@@ -717,6 +726,13 @@ the template that it itself is using form the above sections.
 {{- $_ := set $autoEnv "KONG_CLUSTER_LISTEN" (include "kong.listen" .Values.cluster) -}}
 
 {{- if .Values.enterprise.enabled }}
+  {{- $_ := set $autoEnv "KONG_PORTAL_API_ACCESS_LOG" "/dev/stdout" -}}
+  {{- $_ := set $autoEnv "KONG_PORTAL_GUI_ACCESS_LOG" "/dev/stdout" -}}
+  {{- $_ := set $autoEnv "KONG_ADMIN_GUI_ACCESS_LOG" "/dev/stdout" -}}
+  {{- $_ := set $autoEnv "KONG_PORTAL_API_ERROR_LOG" "/dev/stderr" -}}
+  {{- $_ := set $autoEnv "KONG_PORTAL_GUI_ERROR_LOG" "/dev/stderr" -}}
+  {{- $_ := set $autoEnv "KONG_ADMIN_GUI_ERROR_LOG" "/dev/stderr" -}}
+
   {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.listen" .Values.manager) -}}
   {{- if .Values.manager.ingress.enabled }}
     {{- $_ := set $autoEnv "KONG_ADMIN_GUI_URL" (include "kong.ingress.serviceUrl" .Values.manager.ingress) -}}
