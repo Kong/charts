@@ -13,6 +13,9 @@
 * Use stdout and stderr by default for all logs. Several were writing to prefix
   directory files.
   [#634](https://github.com/Kong/charts/issues/634)
+* Remove `terminationGracePeriodSeconds` from KIC's container spec since this
+  field is only applicable for pods, not containers.
+  [#640](https://github.com/Kong/charts/issues/640)
 
 ### Improvements
 

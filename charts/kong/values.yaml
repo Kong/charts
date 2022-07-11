@@ -466,10 +466,6 @@ ingressController:
     effectiveSemver:
   args: []
 
-  # Sets the termination grace period for pods spawned by the Kubernetes Deployment.
-  # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution
-  terminationGracePeriodSeconds: 30
-
   # Specify individual namespaces to watch for ingress configuration. By default,
   # when no namespaces are set, the controller watches all namespaces and uses a
   # ClusterRole to grant access to Kubernetes resources. When you list specific
