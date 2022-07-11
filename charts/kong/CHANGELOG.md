@@ -3,7 +3,7 @@
 ## Unreleased
 
 * Fix URL for more detail on Command Line Arguements / environment variables for Helm.
-* Make `automountServiceAccountToken` disabled but default, but configurable
+* Add `deployment.serviceAccount.automountServiceAccountToken` to force token mounting on.
 
 ## 2.10.2
 
