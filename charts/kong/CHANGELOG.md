@@ -8,7 +8,7 @@
 
 ### Fixed
 
-* Fixed Deployment missing if in case of empty tolerations 
+* Fixed Deployment missing if in case of empty tolerations
   [#630](https://github.com/Kong/charts/issues/630)
 * Use stdout and stderr by default for all logs. Several were writing to prefix
   directory files.
@@ -19,8 +19,8 @@
 
 ### Improvements
 
-* Bump controller version to 2.4.
-  [#627](https://github.com/Kong/charts/issues/627)
+* Bump controller version to 2.5.
+  [#642](https://github.com/Kong/charts/issues/642)
 * Added `fullnameOverride` to override the normal resource name string.
   [#635](https://github.com/Kong/charts/issues/635)
 
@@ -127,7 +127,7 @@ detect whether you use the legacy CRD installation method automatically.
 * Updated podDisruptionBudget from `policy/v1beta1` to `policy/v1`.
   ([574](https://github.com/Kong/charts/pull/574))
 * Updated controller version to 2.3.
-  
+
 ### Fixed
 
 * Removed CREATE from ValidatingWebhookConfiguration objectSelector for Secrets to align with changes in Kong/kubernetes-ingress-controller.
