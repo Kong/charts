@@ -623,7 +623,6 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
   resources:
 {{ toYaml .Values.ingressController.resources | indent 4 }}
-  terminationGracePeriodSeconds: {{ .Values.ingressController.terminationGracePeriodSecond }}
   volumeMounts:
 {{- if .Values.ingressController.admissionWebhook.enabled }}
   - name: webhook-cert
