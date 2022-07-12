@@ -38,7 +38,7 @@ spec:
   template:
     metadata:
       annotations:
-        {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
+        {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
         kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
         {{- end }}
         {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off" )) }}
@@ -69,7 +69,11 @@ spec:
       {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
       serviceAccountName: {{ template "kong.serviceAccountName" . }}
       {{- end }}
+      {{- if (and (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name) .Values.deployment.serviceAccount.automountServiceAccountToken) }}
+      automountServiceAccountToken: true
+      {{- else }}
       automountServiceAccountToken: false
+      {{ end }}
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
       {{- range .Values.image.pullSecrets }}
@@ -289,7 +293,7 @@ spec:
       volumes:
       {{- include "kong.volumes" . | nindent 8 -}}
       {{- include "kong.userDefinedVolumes" . | nindent 8 -}}
-      {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
+      {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
         - name: {{ template "kong.serviceAccountTokenName" . }}
           secret:
             secretName: {{ template "kong.serviceAccountTokenName" . }}

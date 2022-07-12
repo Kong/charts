@@ -19,9 +19,13 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
-  ## Specify the service account to create and to be assigned to the deployment / daemonset and for th migrations
+  ## Specify the service account to create and to be assigned to the deployment / daemonset and for the migrations
   serviceAccount:
     create: true
+    # Automount the service account token. By default, this is disabled, and the token is only mounted on the controller
+    # container. Some sidecars require enabling this. Note that enabling this exposes Kubernetes credentials to Kong
+    # Lua code, increasing potential attack surface.
+    automountServiceAccountToken: false
   ## Optionally specify the name of the service account to create and the annotations to add.
   #  name:
   #  annotations: {}
