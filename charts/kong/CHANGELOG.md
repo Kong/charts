@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-###
+Nothing yet.
 
-* Fix to avoid running out of ephmeral storage on kubernetes worker nodes.
+## 2.11.0
 
 ### Fixed
 
@@ -23,6 +23,8 @@
   [#642](https://github.com/Kong/charts/issues/642)
 * Added `fullnameOverride` to override the normal resource name string.
   [#635](https://github.com/Kong/charts/issues/635)
+* Added size limits for emptyDir mounts.
+  [#632](https://github.com/Kong/charts/issues/632)
 
 ## 2.10.2
 
