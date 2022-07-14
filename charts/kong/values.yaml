@@ -262,7 +262,7 @@ proxy:
   http:
     # Enable plaintext HTTP listen for the proxy
     enabled: true
-    servicePort: 80
+    hostPort: 80
     containerPort: 8000
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
@@ -272,7 +272,7 @@ proxy:
   tls:
     # Enable HTTPS listen for the proxy
     enabled: true
-    servicePort: 443
+    hostPort: 443
     containerPort: 8443
     # Set a target port for the TLS port in proxy service
     # overrideServiceTargetPort: 8000
