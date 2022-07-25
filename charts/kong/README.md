@@ -532,27 +532,17 @@ resource.
 ### Removing cluster-scoped permissions
 
 You can limit the controller's access to allow it to only watch specific
-namespaces for resources. By default, the controller watches all namespaces.
-Limiting access requires several changes to configuration:
+namespaces for namespaced resources. By default, the controller watches all
+namespaces. Limiting access requires several changes to configuration:
 
 - Set `ingressController.watchNamespaces` to a list of namespaces you want to
   watch. The chart will automatically generate roles for each namespace and
   assign them to the controller's service account.
-- Set `ingressController.env.enable_controller_kongclusterplugin=false` and
-  `ingressController.env.enable_controller_ingress_class_networkingv1=false`.
-  These are cluster-scoped resources, and controllers with no ClusterRole
-  cannot access them.
 - Optionally set `ingressContrller.installCRDs=false` if your user role (the
   role you use when running `helm install`, not the controller service
   account's role) does not have access to get CRDs. By default, the chart
   attempts to look up the controller CRDs for [a legacy behavior
   check](#crd-management).
-
-Because there is no namespaced version of IngressClass, controllers without
-cluster-scoped permissions cannot access them. The controller will rely
-entirely on whether the ingress class annotation or `ingressClassName` value
-matches the value set by `--ingress-class` or `CONTROLLER_INGRESS_CLASS` to
-determine which Ingresses it should use.
 
 ### Using a DaemonSet
 

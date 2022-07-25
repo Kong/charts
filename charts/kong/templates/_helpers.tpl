@@ -369,7 +369,6 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
 {{- if (not (eq (len .Values.ingressController.watchNamespaces) 0)) }}
   {{- $_ := set $autoEnv "CONTROLLER_WATCH_NAMESPACE" (.Values.ingressController.watchNamespaces | join ",") -}}
-  {{- $_ := set $autoEnv "CONTROLLER_ENABLE_CONTROLLER_KONGCLUSTERPLUGIN" false -}}
 {{- end }}
 
 {{/*
@@ -1161,13 +1160,6 @@ of a Role or ClusterRole) that provide the ingress controller access to the
 Kubernetes Cluster-scoped resources it uses to build Kong configuration.
 */}}
 {{- define "kong.kubernetesRBACClusterRules" -}}
-- apiGroups:
-  - ""
-  resources:
-  - endpoints
-  verbs:
-  - list
-  - watch
 - apiGroups:
   - configuration.konghq.com
   resources:
