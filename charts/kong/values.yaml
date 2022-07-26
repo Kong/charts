@@ -258,7 +258,19 @@ proxy:
   # "service.beta.kubernetes.io/aws-load-balancer-type": "elb"
   labels:
     enable-metrics: "true"
+  env: {}
+    # When using GitOps tooling such as ArgoCD and an external database
+    # such as RDS, you are required to indent the database variables inside the Proxy.
 
+    # pg_database: kong
+    # pg_host: "konghost"
+    # pg_port: "5432"
+    # pg_user: konguser
+    # pg_password:
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: kong-secret
+    #       key: RDSpassword
   http:
     # Enable plaintext HTTP listen for the proxy
     enabled: true
@@ -1007,6 +1019,13 @@ clustertelemetry:
     path: /
     # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
     pathType: ImplementationSpecific
+
+#Specify AWS Secrets from secret manager 
+aws:
+  secretManager:
+    enabled: false
+  #   name: aws-secret
+  #   path: path/to/the/secret
 
 extraConfigMaps: []
 # extraConfigMaps:

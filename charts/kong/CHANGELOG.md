@@ -7,6 +7,13 @@
 * Added ClusterRole for cluster-scoped resources when using watchNamespaces.
   [#611](https://github.com/Kong/charts/issues/611)
 
+## 2.11.1
+
+### Improvements
+* Added the ability to use AWS Secret Manager
+* Added GitOps usecase for proxy
+
+
 ## 2.11.0
 
 ### Fixed
