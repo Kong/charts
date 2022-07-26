@@ -263,9 +263,9 @@ proxy:
     # such as RDS, you are required to indent the database variables inside the Proxy.
 
     # pg_database: kong
-    # pg_host: "konghost"
+    # pg_host: "externalDbHost"
     # pg_port: "5432"
-    # pg_user: konguser
+    # pg_user: kongdbuser
     # pg_password:
     #   valueFrom:
     #     secretKeyRef:
