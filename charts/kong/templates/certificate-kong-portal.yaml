@@ -1,3 +1,6 @@
+{{- define "kong.certificate.issuer" -}}
+{{- printf "%s-%s-%s" .Release.Name .Chart.Name "selfsigned-issuer" -}}
+{{- end -}}
 {{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.portal.enabled }}
 # Kong Developer Portal Certificate
 ---
