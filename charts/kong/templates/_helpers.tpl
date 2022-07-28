@@ -422,15 +422,25 @@ The name of the service used for the ingress controller's validation webhook
   emptyDir: {}
 - name: {{ template "kong.fullname" . }}-tmp
   emptyDir: {}
-{{- if .Values.clusterCaSecretName -}}
-- name: cluster-ca
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.cluster.enabled }}
+- name: {{ include "kong.fullname" . }}-cluster-cert
   secret:
-    secretName: {{ .Values.clusterCaSecretName }}
+    secretName: {{ include "kong.fullname" . }}-cluster-cert
 {{- end }}
 {{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.proxy.enabled }}
 - name: {{ include "kong.fullname" . }}-proxy-cert
   secret:
     secretName: {{ include "kong.fullname" . }}-proxy-cert
+{{- end }}
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.admin.enabled }}
+- name: {{ include "kong.fullname" . }}-admin-cert
+  secret:
+    secretName: {{ include "kong.fullname" . }}-admin-cert
+{{- end }}
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.portal.enabled }}
+- name: {{ include "kong.fullname" . }}-portal-cert
+  secret:
+    secretName: {{ include "kong.fullname" . }}-portal-cert
 {{- end }}
 {{- if (and (.Values.postgresql.enabled) .Values.waitImage.enabled) }}
 - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
@@ -504,13 +514,21 @@ The name of the service used for the ingress controller's validation webhook
   mountPath: /kong_prefix/
 - name: {{ template "kong.fullname" . }}-tmp
   mountPath: /tmp
-{{- if .Values.clusterCaSecretName -}}
-- name: cluster-ca
-  mountPath: /etc/cluster/
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.cluster.enabled }}
+- name: {{ include "kong.fullname" . }}-cluster-cert
+  mountPath: /etc/cert-manager/cluster/
 {{- end }}
 {{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.proxy.enabled }}
 - name: {{ include "kong.fullname" . }}-proxy-cert
   mountPath: /etc/cert-manager/proxy/
+{{- end }}
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.admin.enabled }}
+- name: {{ include "kong.fullname" . }}-admin-cert
+  mountPath: /etc/cert-manager/admin/
+{{- end }}
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.portal.enabled }}
+- name: {{ include "kong.fullname" . }}-portal-cert
+  mountPath: /etc/cert-manager/portal/
 {{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
@@ -705,13 +723,27 @@ the template that it itself is using form the above sections.
   {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (include "kong.listen" $listenConfig) -}}
 {{- end -}}
 
-{{- if .Values.clusterCaSecretName -}}
-  {{- $_ := set $autoEnv "KONG_CLUSTER_CA_CERT" "/etc/cluster/ca.crt" -}}
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.cluster.enabled .Values.certificates.enabled .Values.certificates.cluster.enabled }}
+  {{- $_ := set $autoEnv "KONG_CLUSTER_CA_CERT" "/etc/cert-manager/cluster/ca.crt" -}}
 {{- end -}}
 
 {{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.proxy.enabled }}
   {{- $_ := set $autoEnv "KONG_SSL_CERT" "/etc/cert-manager/proxy/tls.crt" -}}
   {{- $_ := set $autoEnv "KONG_SSL_CERT_KEY" "/etc/cert-manager/proxy/tls.key" -}}
+{{- end -}}
+
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.admin.enabled }}
+  {{- $_ := set $autoEnv "KONG_ADMIN_SSL_CERT" "/etc/cert-manager/admin/tls.crt" -}}
+  {{- $_ := set $autoEnv "KONG_ADMIN_SSL_CERT_KEY" "/etc/cert-manager/admin/tls.key" -}}
+  {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SSL_CERT" "/etc/cert-manager/admin/tls.crt" -}}
+  {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SSL_CERT_KEY" "/etc/cert-manager/admin/tls.key" -}}
+{{- end -}}
+
+{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.portal.enabled }}
+  {{- $_ := set $autoEnv "KONG_PORTAL_API_SSL_CERT" "/etc/cert-manager/portal/tls.crt" -}}
+  {{- $_ := set $autoEnv "KONG_PORTAL_API_SSL_CERT_KEY" "/etc/cert-manager/portal/tls.key" -}}
+  {{- $_ := set $autoEnv "KONG_PORTAL_GUI_SSL_CERT" "/etc/cert-manager/portal/tls.crt" -}}
+  {{- $_ := set $autoEnv "KONG_PORTAL_GUI_SSL_CERT_KEY" "/etc/cert-manager/portal/tls.key" -}}
 {{- end -}}
 
 {{- if .Values.admin.ingress.enabled }}

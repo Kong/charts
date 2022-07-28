@@ -37,20 +37,20 @@ affinity:
         topologyKey: kubernetes.io/hostname
       weight: 100
 certificates:
-  admin:
-    commonName: kong.127-0-0-1.nip.io
-    enabled: true
+  enabled: true
   cluster:
     enabled: true
-  enabled: true
-  portal:
-    commonName: developer.127-0-0-1.nip.io
+  admin:
     enabled: true
+    commonName: kong.127-0-0-1.nip.io
+  portal:
+    enabled: true
+    commonName: developer.127-0-0-1.nip.io
   proxy:
+    enabled: true
     commonName: 127-0-0-1.nip.io
     dnsNames:
     - '*.127-0-0-1.nip.io'
-    enabled: true
 cluster:
   enabled: true
   labels:
