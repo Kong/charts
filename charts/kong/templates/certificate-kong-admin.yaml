@@ -1,4 +1,4 @@
-{{- define "kong.certificate.issuer" -}}
+{{- define "kong.builtin.issuerName" -}}
 {{- printf "%s-%s-%s" .Release.Name .Chart.Name "selfsigned-issuer" -}}
 {{- end -}}
 {{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.admin.enabled }}
@@ -22,7 +22,25 @@ spec:
   renewBefore: 360h
   duration: 2160h
   isCA: false
+  {{ if .Values.certificates.clusterIssuer }}
   issuerRef:
-    name: {{ template "kong.certificate.issuer" . }}
+    name: {{ .Values.certificate.clusterIssuer }}
+    kind: clusterIssuer
+  {{ else if .Values.certificates.issuer }}
+  issuerRef:
+    name: {{ .Values.certificate.issuer }}
     kind: Issuer
+  {{ else if .Values.certificates.admin.clusterIssuer }}
+  issuerRef:
+    name: {{ .Values.certificate.admin.clusterIssuer }}
+    kind: clusterIssuer
+  {{ else if .Values.certificates.admin.issuer }}
+  issuerRef:
+    name: {{ .Values.certificate.admin.issuer }}
+    kind: Issuer
+  {{ else }}
+  issuerRef:
+    name: {{ template "kong.builtin.issuerName" . }}
+    kind: Issuer
+  {{- end -}}
 {{- end }}

@@ -1,4 +1,4 @@
-{{- define "kong.certificate.issuer" -}}
+{{- define "kong.builtin.issuerName" -}}
 {{- printf "%s-%s-%s" .Release.Name .Chart.Name "selfsigned-issuer" -}}
 {{- end -}}
 {{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled .Values.certificates.cluster.enabled }}
@@ -17,7 +17,7 @@ spec:
   dnsNames:
   - "kong_cluster"
   issuerRef:
-    name: {{ template "kong.certificate.issuer" . }}
+    name: {{ template "kong.builtin.issuerName" . }}
     kind: Issuer
   renewBefore: 360h
   duration: 2160h

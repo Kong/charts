@@ -22,7 +22,25 @@ spec:
   renewBefore: 360h
   duration: 2160h
   isCA: false
+  {{ if .Values.certificates.clusterIssuer }}
   issuerRef:
-    name: {{ template "kong.certificate.issuer" . }}
+    name: {{ .Values.certificate.clusterIssuer }}
+    kind: clusterIssuer
+  {{ else if .Values.certificates.issuer }}
+  issuerRef:
+    name: {{ .Values.certificate.issuer }}
     kind: Issuer
+  {{ else if .Values.certificates.proxy.clusterIssuer }}
+  issuerRef:
+    name: {{ .Values.certificate.proxy.clusterIssuer }}
+    kind: clusterIssuer
+  {{ else if .Values.certificates.proxy.issuer }}
+  issuerRef:
+    name: {{ .Values.certificate.proxy.issuer }}
+    kind: Issuer
+  {{ else }}
+  issuerRef:
+    name: {{ template "kong.builtin.issuerName" . }}
+    kind: Issuer
+  {{- end -}}
 {{- end }}

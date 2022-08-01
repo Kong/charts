@@ -595,12 +595,18 @@ postgresql:
 certificates:
   enabled: false
 
+  # Set either `issuer` or `clusterIssuer` to the name of the desired cert manager issuer
+  # If left blank a built in self-signed issuer will be created and utilized
+  issuer: ""
+  clusterIssuer: ""
+
   # Set proxy.enabled to true to issue default kong-proxy certificate with cert-manager
   proxy:
     enabled: true
-    # Set `issuer` to name of alternate cert-manager clusterIssuer to override default
+    # Set `issuer` or `clusterIssuer` to name of alternate cert-manager clusterIssuer to override default
     # self-signed issuer.
     issuer: ""
+    clusterIssuer: ""
     # Use commonName and dnsNames to set the common name and dns alt names which this
     # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
     commonName: "app.example"
@@ -613,9 +619,10 @@ certificates:
   # Set admin.enabled true to issue kong admin api and manager certificate with cert-manager
   admin:
     enabled: true
-    # Set `issuer` to name of alternate cert-manager clusterIssuer to override default
+    # Set `issuer` or `clusterIssuer` to name of alternate cert-manager clusterIssuer to override default
     # self-signed issuer.
     issuer: ""
+    clusterIssuer: ""
     # Use commonName and dnsNames to set the common name and dns alt names which this
     # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
     commonName: "kong.example"
@@ -626,9 +633,10 @@ certificates:
   # Set portal.enabled to true to issue a developer portal certificate with cert-manager
   portal:
     enabled: true
-    # Set `issuer` to name of alternate cert-manager clusterIssuer to override default
+    # Set `issuer` or `clusterIssuer` to name of alternate cert-manager clusterIssuer to override default
     # self-signed issuer.
     issuer: ""
+    clusterIssuer: ""
     # Use commonName and dnsNames to set the common name and dns alt names which this
     # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
     commonName: "developer.example"
