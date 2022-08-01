@@ -22,21 +22,21 @@ spec:
   renewBefore: 360h
   duration: 2160h
   isCA: false
-  {{ if .Values.certificates.clusterIssuer }}
-  issuerRef:
-    name: {{ .Values.certificate.clusterIssuer }}
-    kind: clusterIssuer
-  {{ else if .Values.certificates.issuer }}
-  issuerRef:
-    name: {{ .Values.certificate.issuer }}
-    kind: Issuer
-  {{ else if .Values.certificates.admin.clusterIssuer }}
+  {{ if .Values.certificates.admin.clusterIssuer }}
   issuerRef:
     name: {{ .Values.certificate.admin.clusterIssuer }}
     kind: clusterIssuer
   {{ else if .Values.certificates.admin.issuer }}
   issuerRef:
     name: {{ .Values.certificate.admin.issuer }}
+    kind: Issuer
+  {{ else if .Values.certificates.clusterIssuer }}
+  issuerRef:
+    name: {{ .Values.certificate.clusterIssuer }}
+    kind: clusterIssuer
+  {{ else if .Values.certificates.issuer }}
+  issuerRef:
+    name: {{ .Values.certificate.issuer }}
     kind: Issuer
   {{ else }}
   issuerRef:
