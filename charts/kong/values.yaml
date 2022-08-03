@@ -1019,3 +1019,13 @@ extraSecrets: []
 # - name: my-secret
 #   mountPath: /mount/to/my/location
 #   subPath: my-subpath # Optional, if you wish to mount a single key and not the entire ConfigMap
+
+extraObjects: []
+# extraObjects:
+# - apiVersion: configuration.konghq.com/v1
+#   kind: KongClusterPlugin
+#   metadata:
+#     name: prometheus
+#   config:
+#     per_consumer: false
+#   plugin: prometheus
