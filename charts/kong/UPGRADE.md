@@ -150,19 +150,17 @@ proxy configuration. We recommend you establish an active maintenance window
 under which to perform this upgrade and inform users and stakeholders so as to
 avoid unexpected disruption.
 
-First, run an upgrade that keeps the current version, but disables the ingress
-controller:
+First, run an update on your deployment that disables the ingress controller:
 
 ```console
-$ helm upgrade --wait \
-  --set ingressController.enabled=false \
-  --version <CURRENT_CHART_VERSION> \
+$ kubectl patch deployment \
+  <YOUR_RELEASE_NAME>-kong \
   --namespace <YOUR_RELEASE_NAMESPACE> \
-  <YOUR_RELEASE_NAME> kong/kong
+  --type json -p='[{"op": "remove", "path": "/spec/template/spec/containers/0"}]'
 ```
 
-Once the upgrade completes you will only have the proxy itself running, and can
-run a second upgrade to re-enable the ingress controller and update to chart
+Once the update completes you will only have the proxy itself running, and can
+run a helm upgrade to re-enable the ingress controller and update to chart
 version 2.4:
 
 ```console
