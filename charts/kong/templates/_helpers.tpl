@@ -722,6 +722,8 @@ the template that it itself is using form the above sections.
 {{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled -}}
   {{- if (and .Values.certificates.cluster.enabled .Values.cluster.enabled) -}}
     {{- $_ := set $autoEnv "KONG_CLUSTER_CA_CERT" "/etc/cert-manager/cluster/ca.crt" -}}
+    {{- $_ := set $autoEnv "KONG_CLUSTER_CERT" "/etc/cert-manager/cluster/tls.crt" -}}
+    {{- $_ := set $autoEnv "KONG_CLUSTER_CERT_KEY" "/etc/cert-manager/cluster/tls.key" -}}
   {{- end -}}
 
   {{- if .Values.certificates.proxy.enabled -}}
