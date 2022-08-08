@@ -73,9 +73,5 @@ spec:
   issuerRef:
     name: {{ .globalIssuer }}
     kind: Issuer
-  {{ else -}}
-  issuerRef:
-    name: {{ .defaultIssuer }}
-    kind: Issuer
   {{- end -}}
 {{- end }}
