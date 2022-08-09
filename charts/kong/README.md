@@ -448,23 +448,26 @@ for more detail.
 
 ### Cert Manager Integration
 
-Kong services and proxied services have various certificate requirements.
-By default, this chart installs Kong without [cert-manager](https://cert-manager.io/docs/) integration and
-dataplanes generate a fallback self-signed certificate on each container if
-no other source for the default proxy certificate is explicitly provided.
+By default, Kong will create self-signed certificates on start for its TLS
+listens if you do not provide your own. The chart can create
+[cert-manager](https://cert-manager.io/docs/) Certificates for its Services and
+configure them for you. To use this integration, install cert-manager, create
+an issuer, set `certificates.enabled: true` in values.yaml, and set your issuer
+name in `certificates.issuer` or `certificates.clusterIssuer` depending on the
+issuer type. 
 
-This cert-manager support requires that cert-manager be installed and
-a public or [self-signed](https://cert-manager.io/docs/configuration/selfsigned/) valid chain-of-trust issuer be ready before
-deploying Kong.
+If you do not have an issuer available, you can install the example [self-signed ClusterIssuer](https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-issuers)
+and set `certificates.clusterIssuer: selfsigned-issuer` for testing. You
+should, however, migrate to an issuer using a CA your clients trust for actual
+usage.
 
-Kong Gateway's supported cert-manager integration includes:
-  - Kong Hybrid mode mtls certificates
-  - Kong Gateway default proxy certificates
-  - Kong Admin API & Manager certificates
-  - Kong Developer API & Portal certificates
+The `proxy`, `admin`, `portal`, and `cluster` subsections under `certificates`
+let you choose hostnames or override issuers on a per-certificate basis for the
+proxy, admin API and Manager, Portal and Portal API, and hybrid mode mTLS
+services, respectively.
 
-Currently cert-manager support on hybrid mode clusters is only valid
-on shared certificate type hybrid mode configuration.
+To use hybrid mode, the control and data plane releases must use the same
+issuer for their cluster certificates.
 
 ### CRD management
 

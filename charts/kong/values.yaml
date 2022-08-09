@@ -647,6 +647,11 @@ certificates:
   # Set cluster.enabled true to issue kong hybrid mtls certificate with cert-manager
   cluster:
     enabled: true
+    # Issuers used by the control and data plane releases must match for this certificate.
+    issuer: ""
+    clusterIssuer: ""
+    #commonName: "kong_cluster"
+    #dnsNames: []
 
 # -----------------------------------------------------------------------------
 # Miscellaneous parameters
