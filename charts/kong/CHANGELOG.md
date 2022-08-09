@@ -1,13 +1,14 @@
 # Changelog
 
-## Unreleased
+## 2.12.0
 
 ### Improvements
 
 * Added ClusterRole for cluster-scoped resources when using watchNamespaces.
   [#611](https://github.com/Kong/charts/issues/611)
-* Added `extraObjects` to create additional k8s resources as part of the helm release. 
-  [FTI-4149](https://konghq.atlassian.net/browse/FTI-4149)
+* Added `extraObjects` to create additional k8s resources as part of the helm release.
+  [#652](https://github.com/Kong/charts/issues/652)
+
 ## 2.11.0
 
 ### Fixed
