@@ -38,6 +38,7 @@ affinity:
       weight: 100
 certificates:
   enabled: true
+  issuer: quickstart-kong-selfsigned-issuer
   cluster:
     enabled: true
   admin:
