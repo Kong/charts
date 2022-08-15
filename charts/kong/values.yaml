@@ -19,9 +19,13 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
-  ## Specify the service account to create and to be assigned to the deployment / daemonset and for th migrations
+  ## Specify the service account to create and to be assigned to the deployment / daemonset and for the migrations
   serviceAccount:
     create: true
+    # Automount the service account token. By default, this is disabled, and the token is only mounted on the controller
+    # container. Some sidecars require enabling this. Note that enabling this exposes Kubernetes credentials to Kong
+    # Lua code, increasing potential attack surface.
+    automountServiceAccountToken: false
   ## Optionally specify the name of the service account to create and the annotations to add.
   #  name:
   #  annotations: {}
@@ -53,7 +57,12 @@ deployment:
   # Use a DaemonSet controller instead of a Deployment controller
   daemonset: false
   hostNetwork: false
-
+  # kong_prefix empty dir size
+  prefixDir:
+    sizeLimit: 256Mi
+  # tmp empty dir size
+  tmpDir:
+    sizeLimit: 1Gi
 # Override namepsace for Kong chart resources. By default, the chart creates resources in the release namespace.
 # This may not be desirable when using this chart as a dependency.
 # namespace: "example"
@@ -112,7 +121,6 @@ image:
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
-  ## If using the official Kong Enterprise registry above, you MUST provide a secret.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ##
   # pullSecrets:
@@ -452,7 +460,7 @@ ingressController:
   enabled: true
   image:
     repository: kong/kubernetes-ingress-controller
-    tag: "2.3"
+    tag: "2.5"
     # Optionally set a semantic version for version-gated features. This can normally
     # be left unset. You only need to set this if your tag is not a semver string,
     # such as when you are using a "next" tag. Set this to the effective semantic
@@ -461,16 +469,12 @@ ingressController:
     effectiveSemver:
   args: []
 
-  # Sets the termination grace period for pods spawned by the Kubernetes Deployment.
-  # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution
-  terminationGracePeriodSeconds: 30
-
   # Specify individual namespaces to watch for ingress configuration. By default,
   # when no namespaces are set, the controller watches all namespaces and uses a
   # ClusterRole to grant access to Kubernetes resources. When you list specific
   # namespaces, the controller will watch those namespaces only and will create
-  # namespaced-scoped Roles for each of them. Note that watching specific namespaces
-  # disables KongClusterPlugin usage, as KongClusterPlugins only exist as cluster resources.
+  # namespaced-scoped Roles for each of them. The controller will still use a
+  # ClusterRole for cluster-scoped resources.
   # Requires controller 2.0.0 or newer.
   watchNamespaces: []
 
@@ -717,7 +721,8 @@ livenessProbe:
 lifecycle:
   preStop:
     exec:
-      # Note kong quit has a default timeout of 10 seconds
+      # kong quit has a default timeout of 10 seconds, and a default wait of 0 seconds.
+      # Note: together they should be less than the terminationGracePeriodSeconds setting below.
       command:
         - kong
         - quit
@@ -1082,3 +1087,13 @@ extraSecrets: []
 # - name: my-secret
 #   mountPath: /mount/to/my/location
 #   subPath: my-subpath # Optional, if you wish to mount a single key and not the entire ConfigMap
+
+extraObjects: []
+# extraObjects:
+# - apiVersion: configuration.konghq.com/v1
+#   kind: KongClusterPlugin
+#   metadata:
+#     name: prometheus
+#   config:
+#     per_consumer: false
+#   plugin: prometheus
