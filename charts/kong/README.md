@@ -37,6 +37,7 @@ $ helm install kong/kong --generate-name
     - [Certificates](#certificates)
     - [Control plane node configuration](#control-plane-node-configuration)
     - [Data plane node configuration](#data-plane-node-configuration)
+  - [Cert Manager Integration](#cert-manager-integration)
   - [CRD management](#crd-management)
   - [InitContainers](#initcontainers)
   - [HostAliases](#hostaliases)
@@ -46,15 +47,18 @@ $ helm install kong/kong --generate-name
   - [User Defined Volume Mounts](#user-defined-volume-mounts)
   - [Removing cluster-scoped permissions](#removing-cluster-scoped-permissions)
   - [Using a DaemonSet](#using-a-daemonset)
+  - [Using dnsPolicy and dnsConfig](#using-dnspolicy-and-dnsconfig)
   - [Example configurations](#example-configurations)
 - [Configuration](#configuration)
   - [Kong parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
     - [Stream listens](#stream-listens)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
-  - [General Parameters](#general-parameters)
     - [The `env` section](#the-env-section)
-    - [The `customEnv` section](#the-customEnv-section)
+    - [The `customEnv` section](#the-customenv-section)
+  - [General Parameters](#general-parameters)
+    - [The `env` section](#the-env-section-1)
+    - [The `customEnv` section](#the-customenv-section-1)
     - [The `extraLabels` section](#the-extralabels-section)
 - [Kong Enterprise Parameters](#kong-enterprise-parameters)
   - [Overview](#overview)
@@ -441,6 +445,29 @@ environment. `control-plane-release-name` will change to your CP release name,
 documentation on Service
 DNS](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
 for more detail.
+
+### Cert Manager Integration
+
+By default, Kong will create self-signed certificates on start for its TLS
+listens if you do not provide your own. The chart can create
+[cert-manager](https://cert-manager.io/docs/) Certificates for its Services and
+configure them for you. To use this integration, install cert-manager, create
+an issuer, set `certificates.enabled: true` in values.yaml, and set your issuer
+name in `certificates.issuer` or `certificates.clusterIssuer` depending on the
+issuer type. 
+
+If you do not have an issuer available, you can install the example [self-signed ClusterIssuer](https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-issuers)
+and set `certificates.clusterIssuer: selfsigned-issuer` for testing. You
+should, however, migrate to an issuer using a CA your clients trust for actual
+usage.
+
+The `proxy`, `admin`, `portal`, and `cluster` subsections under `certificates`
+let you choose hostnames or override issuers on a per-certificate basis for the
+proxy, admin API and Manager, Portal and Portal API, and hybrid mode mTLS
+services, respectively.
+
+To use hybrid mode, the control and data plane releases must use the same
+issuer for their cluster certificates.
 
 ### CRD management
 
