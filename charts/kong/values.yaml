@@ -654,8 +654,8 @@ certificates:
     # Issuers used by the control and data plane releases must match for this certificate.
     issuer: ""
     clusterIssuer: ""
-    #commonName: "kong_cluster"
-    #dnsNames: []
+    # commonName: "kong_cluster"
+    # dnsNames: []
 
 # -----------------------------------------------------------------------------
 # Miscellaneous parameters
