@@ -1,6 +1,11 @@
 # Changelog
 
-## 2.12.0
+## Unreleased
+
+### Improvements
+
+* Added cert-manager issuer support for proxy default and cluster mtls certificates
+  ([592](https://github.com/Kong/charts/pull/592))
 
 ### Improvements
 
