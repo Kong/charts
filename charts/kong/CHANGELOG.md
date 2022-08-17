@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+* Added cert-manager issuer support for proxy default and cluster mtls certificates
+  ([592](https://github.com/Kong/charts/pull/592))
+
 ## 2.12.0
 
 ### Improvements
@@ -8,8 +15,6 @@
   [#611](https://github.com/Kong/charts/issues/611)
 * Added `extraObjects` to create additional k8s resources as part of the helm release.
   [#652](https://github.com/Kong/charts/issues/652)
-* Added cert-manager issuer support for proxy default and cluster mtls certificates
-  ([592](https://github.com/Kong/charts/pull/592))
 
 ## 2.11.0
 
