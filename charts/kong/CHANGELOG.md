@@ -7,6 +7,8 @@
 * Added cert-manager issuer support for proxy default and cluster mtls certificates
   ([592](https://github.com/Kong/charts/pull/592))
 
+## 2.12.0
+
 ### Improvements
 
 * Added ClusterRole for cluster-scoped resources when using watchNamespaces.
