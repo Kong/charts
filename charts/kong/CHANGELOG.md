@@ -6,6 +6,9 @@
 
 * Added cert-manager issuer support for proxy default and cluster mtls certificates
   ([592](https://github.com/Kong/charts/pull/592))
+* Updated CRDs with the new ordering field for KongPlugins, the new
+  IngressClassParameters resource, and assorted field description updates.
+  These [require a manual update](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#updates-to-crds).
 
 ## 2.12.0
 

@@ -1,15 +1,68 @@
 # generated using: kubectl kustomize github.com/kong/kubernetes-ingress-controller/config/crd?ref=main
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.2
+  creationTimestamp: null
+  name: ingressclassparameterses.configuration.konghq.com
+spec:
+  group: configuration.konghq.com
+  names:
+    kind: IngressClassParameters
+    listKind: IngressClassParametersList
+    plural: ingressclassparameterses
+    singular: ingressclassparameters
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: IngressClassParameters is the Schema for the IngressClassParameters
+          API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              enableLegacyRegexDetection:
+                default: false
+                description: EnableLegacyRegexDetection automatically detects if ImplementationSpecific
+                  Ingress paths are regular expression paths using the legacy 2.x
+                  heuristic. The controller adds the "~" prefix to those paths if
+                  the Kong version is 3.0 or higher.
+                type: boolean
+              serviceUpstream:
+                default: false
+                description: Offload load-balancing to kube-proxy or sidecar
+                type: boolean
+            type: object
+        type: object
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.7.0
+    controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
   name: kongclusterplugins.configuration.konghq.com
 spec:
   group: configuration.konghq.com
   names:
+    categories:
+    - kong-ingress-controller
     kind: KongClusterPlugin
     listKind: KongClusterPluginList
     plural: kongclusterplugins
@@ -86,6 +139,26 @@ spec:
             type: string
           metadata:
             type: object
+          ordering:
+            description: Ordering overrides the normal plugin execution order
+            properties:
+              after:
+                additionalProperties:
+                  items:
+                    type: string
+                  type: array
+                description: PluginOrderingPhase indicates which plugins in a phase
+                  should affect the target plugin's order
+                type: object
+              before:
+                additionalProperties:
+                  items:
+                    type: string
+                  type: array
+                description: PluginOrderingPhase indicates which plugins in a phase
+                  should affect the target plugin's order
+                type: object
+            type: object
           plugin:
             description: PluginName is the name of the plugin to which to apply the
               config
@@ -119,23 +192,19 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.7.0
+    controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
   name: kongconsumers.configuration.konghq.com
 spec:
   group: configuration.konghq.com
   names:
+    categories:
+    - kong-ingress-controller
     kind: KongConsumer
     listKind: KongConsumerList
     plural: kongconsumers
@@ -188,23 +257,19 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.7.0
+    controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
   name: kongingresses.configuration.konghq.com
 spec:
   group: configuration.konghq.com
   names:
+    categories:
+    - kong-ingress-controller
     kind: KongIngress
     listKind: KongIngressList
     plural: kongingresses
@@ -231,15 +296,21 @@ spec:
           metadata:
             type: object
           proxy:
-            description: KongIngressService contains KongIngress service configuration
+            description: Proxy defines additional connection options for the routes
+              to be configured in the Kong Gateway, e.g. `connection_timeout`, `retries`,
+              e.t.c.
             properties:
               connect_timeout:
+                description: The timeout in milliseconds for establishing a connection
+                  to the upstream server.
                 minimum: 0
                 type: integer
               path:
+                description: The path to be used in requests to the upstream server.(optional)
                 pattern: ^/.*$
                 type: string
               protocol:
+                description: The protocol used to communicate with the upstream.
                 enum:
                 - http
                 - https
@@ -250,38 +321,59 @@ spec:
                 - udp
                 type: string
               read_timeout:
+                description: The timeout in milliseconds between two successive read
+                  operations for transmitting a request to the upstream server.
                 minimum: 0
                 type: integer
               retries:
+                description: The number of retries to execute upon failure to proxy.
                 minimum: 0
                 type: integer
               write_timeout:
+                description: The timeout in milliseconds between two successive write
+                  operations for transmitting a request to the upstream server.
                 minimum: 0
                 type: integer
             type: object
           route:
-            description: KongIngressRoute contains KongIngress route configuration
+            description: Route define rules to match client requests. Each Route is
+              associated with a Service, and a Service may have multiple Routes associated
+              to it.
             properties:
               headers:
                 additionalProperties:
                   items:
                     type: string
                   type: array
+                description: Headers contains one or more lists of values indexed
+                  by header name that will cause this Route to match if present in
+                  the request. The Host header cannot be used with this attribute.
                 type: object
               https_redirect_status_code:
+                description: HTTPSRedirectStatusCode is the status code Kong responds
+                  with when all properties of a Route match except the protocol.
                 type: integer
               methods:
+                description: Methods is a list of HTTP methods that match this Route.
                 items:
                   type: string
                 type: array
               path_handling:
+                description: PathHandling controls how the Service path, Route path
+                  and requested path are combined when sending a request to the upstream.
                 enum:
                 - v0
                 - v1
                 type: string
               preserve_host:
+                description: PreserveHost sets When matching a Route via one of the
+                  hosts domain names, use the request Host header in the upstream
+                  request headers. If set to false, the upstream Host header will
+                  be that of the Service’s host.
                 type: boolean
               protocols:
+                description: Protocols is an array of the protocols this Route should
+                  allow.
                 items:
                   enum:
                   - http
@@ -294,41 +386,86 @@ spec:
                   type: string
                 type: array
               regex_priority:
+                description: RegexPriority is a number used to choose which route
+                  resolves a given request when several routes match it using regexes
+                  simultaneously.
                 type: integer
               request_buffering:
+                description: RequestBuffering sets whether to enable request body
+                  buffering or not.
                 type: boolean
               response_buffering:
+                description: ResponseBuffering sets whether to enable response body
+                  buffering or not.
                 type: boolean
               snis:
+                description: SNIs is a list of SNIs that match this Route when using
+                  stream routing.
                 items:
                   type: string
                 type: array
               strip_path:
+                description: StripPath sets When matching a Route via one of the paths
+                  strip the matching prefix from the upstream request URL.
                 type: boolean
             type: object
           upstream:
-            description: KongIngressUpstream contains KongIngress upstream configuration
+            description: Upstream represents a virtual hostname and can be used to
+              loadbalance incoming requests over multiple targets (e.g. Kubernetes
+              `Services` can be a target, OR `Endpoints` can be targets).
             properties:
               algorithm:
+                description: Algorithm is the load balancing algorithm to use.
                 enum:
                 - round-robin
                 - consistent-hashing
                 - least-connections
                 type: string
               hash_fallback:
+                description: 'HashFallback defines What to use as hashing input if
+                  the primary hash_on does not return a hash. Accepted values are:
+                  "none", "consumer", "ip", "header", "cookie".'
                 type: string
               hash_fallback_header:
+                description: HashFallbackHeader is the header name to take the value
+                  from as hash input. Only required when "hash_fallback" is set to
+                  "header".
+                type: string
+              hash_fallback_query_arg:
+                description: HashFallbackQueryArg is the "hash_fallback" version of
+                  HashOnQueryArg.
+                type: string
+              hash_fallback_uri_capture:
+                description: HashFallbackURICapture is the "hash_fallback" version
+                  of HashOnURICapture.
                 type: string
               hash_on:
+                description: 'HashOn defines what to use as hashing input. Accepted
+                  values are: "none", "consumer", "ip", "header", "cookie", "path",
+                  "query_arg", "uri_capture".'
                 type: string
               hash_on_cookie:
+                description: The cookie name to take the value from as hash input.
+                  Only required when "hash_on" or "hash_fallback" is set to "cookie".
                 type: string
               hash_on_cookie_path:
+                description: The cookie path to set in the response headers. Only
+                  required when "hash_on" or "hash_fallback" is set to "cookie".
                 type: string
               hash_on_header:
+                description: HashOnHeader defines the header name to take the value
+                  from as hash input. Only required when "hash_on" is set to "header".
+                type: string
+              hash_on_query_arg:
+                description: HashOnQueryArg is the query string parameter whose value
+                  is the hash input when "hash_on" is set to "query_arg".
+                type: string
+              hash_on_uri_capture:
+                description: HashOnURICapture is the name of the capture group whose
+                  value is the hash input when "hash_on" is set to "uri_capture".
                 type: string
               healthchecks:
-                description: Healthcheck represents a health-check config of an upstream
+                description: Healthchecks defines the health check configurations
                   in Kong.
                 properties:
                   active:
@@ -434,8 +571,11 @@ spec:
                     type: number
                 type: object
               host_header:
+                description: HostHeader is The hostname to be used as Host header
+                  when proxying requests through Kong.
                 type: string
               slots:
+                description: Slots is the number of slots in the load balancer algorithm.
                 minimum: 10
                 type: integer
             type: object
@@ -444,23 +584,19 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.7.0
+    controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
   name: kongplugins.configuration.konghq.com
 spec:
   group: configuration.konghq.com
   names:
+    categories:
+    - kong-ingress-controller
     kind: KongPlugin
     listKind: KongPluginList
     plural: kongplugins
@@ -533,6 +669,26 @@ spec:
             type: string
           metadata:
             type: object
+          ordering:
+            description: Ordering overrides the normal plugin execution order
+            properties:
+              after:
+                additionalProperties:
+                  items:
+                    type: string
+                  type: array
+                description: PluginOrderingPhase indicates which plugins in a phase
+                  should affect the target plugin's order
+                type: object
+              before:
+                additionalProperties:
+                  items:
+                    type: string
+                  type: array
+                description: PluginOrderingPhase indicates which plugins in a phase
+                  should affect the target plugin's order
+                type: object
+            type: object
           plugin:
             description: PluginName is the name of the plugin to which to apply the
               config
@@ -566,23 +722,19 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.7.0
+    controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
   name: tcpingresses.configuration.konghq.com
 spec:
   group: configuration.konghq.com
   names:
+    categories:
+    - kong-ingress-controller
     kind: TCPIngress
     listKind: TCPIngressList
     plural: tcpingresses
@@ -719,8 +871,8 @@ spec:
                                   the service port The format of the error shall comply
                                   with the following rules: - built-in error values
                                   shall be specified in this file and those shall
-                                  use   CamelCase names - cloud provider specific
-                                  error values must have names that comply with the   format
+                                  use CamelCase names - cloud provider specific error
+                                  values must have names that comply with the format
                                   foo.example.com/CamelCase. --- The regex it matches
                                   is (dns1123SubdomainFmt/)?(qualifiedNameFmt)'
                                 maxLength: 316
@@ -752,23 +904,19 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.7.0
+    controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
   name: udpingresses.configuration.konghq.com
 spec:
   group: configuration.konghq.com
   names:
+    categories:
+    - kong-ingress-controller
     kind: UDPIngress
     listKind: UDPIngressList
     plural: udpingresses
@@ -873,8 +1021,8 @@ spec:
                                   the service port The format of the error shall comply
                                   with the following rules: - built-in error values
                                   shall be specified in this file and those shall
-                                  use   CamelCase names - cloud provider specific
-                                  error values must have names that comply with the   format
+                                  use CamelCase names - cloud provider specific error
+                                  values must have names that comply with the format
                                   foo.example.com/CamelCase. --- The regex it matches
                                   is (dns1123SubdomainFmt/)?(qualifiedNameFmt)'
                                 maxLength: 316
@@ -906,9 +1054,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
