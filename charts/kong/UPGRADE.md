@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [2.13.0](#2130)
 - [2.8.0](#280)
 - [2.7.0](#270)
 - [2.4.0](#240)
@@ -65,6 +66,26 @@ text ending with `field is immutable`. This is typically due to a bug with the
 `init-migrations` job, which was not removed automatically prior to 1.5.0.
 If you encounter this error, deleting any existing `init-migrations` jobs will
 clear it.
+
+### Updates to CRDs
+
+Helm installs CRDs at initial install but [does not update them
+after](https://github.com/helm/community/blob/main/hips/hip-0011.md). Some
+chart releases include updates to CRDs that must be applied to successfully
+upgrade. Because Helm does not handle these updates, you must manually apply
+them before upgrading your release.
+
+``` kubectl apply -f
+https://raw.githubusercontent.com/Kong/charts/kong-<version>/charts/kong/crds/custom-resource-definitions.yaml
+```
+
+For example, if your release is 2.6.4, you would apply
+`https://raw.githubusercontent.com/Kong/charts/kong-2.6.4/charts/kong/crds/custom-resource-definitions.yaml`.
+
+## 2.13.0
+
+2.13.0 includes updated CRDs. You must [apply these manually](#updates-to-crds)
+before upgrading an existing release.
 
 ## 2.8.0
 
