@@ -998,6 +998,15 @@ Environment variables are sorted alphabetically
 kong.kubernetesRBACRoles outputs a static list of RBAC rules (the "rules" block
 of a Role or ClusterRole) that provide the ingress controller access to the
 Kubernetes namespace-scoped resources it uses to build Kong configuration.
+
+Collectively, these are built from:
+kubectl kustomize github.com/kong/kubernetes-ingress-controller/config/rbac?ref=main
+kubectl kustomize github.com/kong/kubernetes-ingress-controller/config/rbac/knative?ref=main
+kubectl kustomize github.com/kong/kubernetes-ingress-controller/config/rbac/gateway?ref=main
+
+However, there is no way to generate the split between cluster and namespaced
+role sets used in the charts. Updating these requires separating out cluster
+resource roles into their separate templates.
 */}}
 {{- define "kong.kubernetesRBACRules" -}}
 - apiGroups:
@@ -1068,6 +1077,14 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - ingressclassparameterses
+  verbs:
+  - get
+  - list
+  - watch
 - apiGroups:
   - configuration.konghq.com
   resources:
@@ -1193,6 +1210,65 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
   - gateway.networking.k8s.io
   resources:
   - httproutes/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - referencegrants
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - referencegrants/status
+  verbs:
+  - get
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - tcproutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - tcproutes/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - tlsroutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - tlsroutes/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - udproutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - udproutes/status
   verbs:
   - get
   - update
