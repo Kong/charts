@@ -81,6 +81,11 @@ deployment:
 # is set below. In general, you should not set values here if they are set elsewhere.
 env:
   database: "off"
+  # the chart uses the traditional router (for Kong 3.x+) because the ingress
+  # controller generates traditional routes. if you do not use the controller,
+  # you may set this to "traditional_compatible" or "expression" to use the new
+  # DSL-based router
+  router_flavor: "traditional"
   nginx_worker_processes: "2"
   proxy_access_log: /dev/stdout
   admin_access_log: /dev/stdout
