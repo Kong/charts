@@ -161,38 +161,44 @@ If you are configured with the following:
 - ingressController.enabled=true
 - postgresql.enabled=true
 
-and do not override the ingress controller version, you must perform a
-preliminary upgrade to disable the ingress controller prior to upgrading to the
-chart version 2.4.
+and do not override the ingress controller version, you must perform the
+upgrade in multiple steps:
+
+First, pin the controller version and upgrade to chart 2.4.0:
+
+```console
+$ helm upgrade --wait \
+  --set ingressController.image.tag=<CURRENT_CONTROLLER_VERSION> \
+  --version 2.4.0 \
+  --namespace <YOUR_RELEASE_NAMESPACE> \
+  <YOUR_RELEASE_NAME> kong/kong
+```
+Second, temporarily disable the ingress controller:
+
+```console
+$ helm upgrade --wait \
+  --set ingressController.enabled=false \
+  --set deployment.serviceaccount.create=true \
+  --version 2.4.0 \
+  --namespace <YOUR_RELEASE_NAMESPACE> \
+  <YOUR_RELEASE_NAME> kong/kong
+```
+Finally, re-enable the ingress controller at the new version:
+
+```console
+$ helm upgrade --wait \
+  --set ingressController.enabled=true \
+  --set ingressController.image.tag=<NEW_CONTROLLER_VERSION> \
+  --version 2.4.0 \
+  --namespace <YOUR_RELEASE_NAMESPACE> \
+  <YOUR_RELEASE_NAME> kong/kong
+```
 
 While the controller is disabled, changes to Kubernetes configuration (Ingress
 resources, KongPlugin resources, Service Endpoints, etc.) will not update Kong
 proxy configuration. We recommend you establish an active maintenance window
 under which to perform this upgrade and inform users and stakeholders so as to
 avoid unexpected disruption.
-
-First, run an upgrade that keeps the current version, but disables the ingress
-controller:
-
-```console
-$ helm upgrade --wait \
-  --set ingressController.enabled=false \
-  --version <CURRENT_CHART_VERSION> \
-  --namespace <YOUR_RELEASE_NAMESPACE> \
-  <YOUR_RELEASE_NAME> kong/kong
-```
-
-Once the upgrade completes you will only have the proxy itself running, and can
-run a second upgrade to re-enable the ingress controller and update to chart
-version 2.4:
-
-```console
-$ helm upgrade \
-  --set ingressController.enabled=true \
-  --version 2.4.0 \
-  --namespace <YOUR_RELEASE_NAMESPACE> \
-  <YOUR_RELEASE_NAME> kong/kong
-```
 
 ### Changed ServiceAccount configuration location
 
