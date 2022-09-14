@@ -87,6 +87,21 @@ For example, if your release is 2.6.4, you would apply
 2.13.0 includes updated CRDs. You must [apply these manually](#updates-to-crds)
 before upgrading an existing release.
 
+2.13 changes the default Kong tag to 3.0 and the default KIC tag to 2.6. We
+recommend that you set these versions (`image.tag` and
+`ingressController.image.tag`) in your values.yaml to allow updating the chart
+without also updating the container versions. If you do update to these
+container image versions, you should first review the Kong 3.0 breaking changes
+(see the [open
+source](https://github.com/Kong/kong/blob/master/CHANGELOG.md#300) and
+[Enterprise](https://docs.konghq.com/gateway/changelog/#3000) Kong changelogs)
+and the [ingress controller upgrade guide for Kong
+3.x](https://docs.konghq.com/kubernetes-ingress-controller/2.6.x/guides/upgrade-kong-3x).
+
+Kong 3.0 requires KIC version 2.6 at minimum. It will not work with any
+previous versions. Changes to regular expression paths in Kong 3.x furthermore
+require changes to Ingresses that use regular expression paths in rules.
+
 ## 2.8.0
 
 ### IngressClass controller name change requires manual delete

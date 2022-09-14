@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.13.0
 
 ### Improvements
 
@@ -9,6 +9,7 @@
 * Updated CRDs with the new ordering field for KongPlugins, the new
   IngressClassParameters resource, and assorted field description updates.
   These [require a manual update](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#updates-to-crds).
+* Updated default tags to Kong 3.0 and KIC 2.6.
 
 ## 2.12.0
 
