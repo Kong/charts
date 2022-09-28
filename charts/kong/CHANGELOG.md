@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.13.1
+
+### Improvements
+
+* Updated default controller version to [KIC 2.7](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md#270).
+
 ## 2.13.0
 
 ### Improvements
