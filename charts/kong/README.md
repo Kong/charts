@@ -303,7 +303,7 @@ scenario and several settings that are useful when using multiple controllers:
   service, e.g. `namespace/my-release-kong-proxy`.
 * `ingressController.ingressClass` should be set to a different value for each
   instance of the controller.
-* `ingressController.env.admin_filter_tag` should be set to a different value
+* `ingressController.env.kong_admin_filter_tag` should be set to a different value
   for each instance of the controller.
 * If using Kong Enterprise, `ingressController.env.kong_workspace` can
   optionally create configuration in a workspace other than `default`.
