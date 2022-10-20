@@ -113,11 +113,6 @@ env:
       secretKeyRef:
         key: pg_host
         name: kong-config-secret
-  pg_password:
-    valueFrom:
-      secretKeyRef:
-        key: password
-        name: kong-config-secret
   pg_ssl: "off"
   pg_ssl_verify: "off"
   pg_user: kong
@@ -167,7 +162,7 @@ ingressController:
     publish_service: kong/quickstart-kong-proxy
   image:
     repository: docker.io/kong/kubernetes-ingress-controller
-    tag: "2.2"
+    tag: "2.7"
   ingressClass: default
   installCRDs: false
 manager:
@@ -252,11 +247,9 @@ portalapi:
   type: ClusterIP
 postgresql:
   enabled: true
-  global:
-    postgresql:
-      database: kong
-      existingSecret: kong-config-secret
-      username: kong
+  auth:
+    database: kong
+    username: kong
 proxy:
   annotations:
     prometheus.io/port: "9542"
