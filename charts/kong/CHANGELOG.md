@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+* Supported `autoscaling/v2` API
+  ([#679](https://github.com/Kong/charts/pull/679))
+
 ## 2.13.1
 
 ### Improvements

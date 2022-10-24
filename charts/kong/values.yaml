@@ -776,9 +776,9 @@ autoscaling:
   minReplicas: 2
   maxReplicas: 5
   behavior: {}
-  ## targetCPUUtilizationPercentage only used if the cluster doesn't support autoscaling/v2beta
+  ## targetCPUUtilizationPercentage only used if the cluster doesn't support autoscaling/v2 or autoscaling/v2beta
   targetCPUUtilizationPercentage:
-  ## Otherwise for clusters that do support autoscaling/v2beta, use metrics
+  ## Otherwise for clusters that do support autoscaling/v2 or autoscaling/v2beta, use metrics
   metrics:
     - type: Resource
       resource:
