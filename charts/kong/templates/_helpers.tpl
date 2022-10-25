@@ -184,6 +184,15 @@ spec:
     protocol: TCP
   {{- end }}
   {{- if (hasKey . "stream") }}
+    {{- $defaultProtocol := "TCP" }}
+    {{- if (hasSuffix "udp-proxy" .serviceName) }}
+      {{- $defaultProtocol = "UDP" }}
+    {{- end }}
+    {{- range $index, $streamEntry := .stream }}
+      {{- if (not (hasKey $streamEntry "protocol")) }}
+        {{- $_ := set $streamEntry "protocol" $defaultProtocol }}
+      {{- end }}
+    {{- end }}
   {{- range .stream }}
   - name: stream{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
     port: {{ .servicePort }}
