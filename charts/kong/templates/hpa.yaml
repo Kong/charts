@@ -1,9 +1,5 @@
 {{- if .Values.autoscaling.enabled }}
-{{- if .Capabilities.APIVersions.Has "autoscaling/v2" }}
-apiVersion: autoscaling/v2
-{{- else }}
-apiVersion: {{ (.Capabilities.APIVersions.Has "autoscaling/v2beta2" | ternary "autoscaling/v2beta2" "autoscaling/v1") }}
-{{- end}}
+apiVersion: {{ include "kong.autoscalingVersion" . }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: "{{ template "kong.fullname" . }}"
