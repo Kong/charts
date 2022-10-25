@@ -1367,3 +1367,13 @@ networking.k8s.io/v1beta1
 extensions/v1beta1
 {{- end -}}
 {{- end -}}
+
+{{- define "kong.autoscalingVersion" -}}
+{{- if (.Capabilities.APIVersions.Has "autoscaling/v2") -}}
+autoscaling/v2
+{{- else if (.Capabilities.APIVersions.Has "autoscaling/v2beta2") -}}
+autoscaling/v2beta2
+{{- else -}}
+autoscaling/v1
+{{- end -}}
+{{- end -}}
