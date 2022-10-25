@@ -4,6 +4,9 @@
 
 ### Improvements
 
+* UDP proxy (udpProxy) assumes the UDP protocol by default for stream entries (udpProxy.stream). 
+  This can be still overridden to TCP by specifying the protocol explicitly, but it is not recommended to do so.
+  [#682](https://github.com/Kong/charts/pull/682)
 * Supported `autoscaling/v2` API
   ([#679](https://github.com/Kong/charts/pull/679))
 
