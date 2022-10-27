@@ -165,8 +165,10 @@ spec:
   {{- if .http.enabled }}
   - name: kong-{{ .serviceName }}
     port: {{ .http.servicePort }}
-    targetPort: {{ .http.containerPort }}
+    targetPort: {{ .http.containerPort }}-{{ .http.appProtocol }}
+  {{- if .http.appProtocol }}
     appProtocol: http
+  {{- end }}
   {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .http.nodePort))) }}
     nodePort: {{ .http.nodePort }}
   {{- end }}
@@ -177,7 +179,9 @@ spec:
   - name: kong-{{ .serviceName }}-tls
     port: {{ .tls.servicePort }}
     targetPort: {{ .tls.overrideServiceTargetPort | default .tls.containerPort }}
+  {{- if .tls.appProtocol }}
     appProtocol: https
+  {{- end }}
   {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .tls.nodePort))) }}
     nodePort: {{ .tls.nodePort }}
   {{- end }}
@@ -422,10 +426,10 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- define "kong.volumes" -}}
 - name: {{ template "kong.fullname" . }}-prefix-dir
-  emptyDir: 
+  emptyDir:
     sizeLimit: {{ .Values.deployment.prefixDir.sizeLimit }}
 - name: {{ template "kong.fullname" . }}-tmp
-  emptyDir: 
+  emptyDir:
     sizeLimit: {{ .Values.deployment.tmpDir.sizeLimit }}
 {{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled -}}
 {{- if .Values.certificates.cluster.enabled }}
