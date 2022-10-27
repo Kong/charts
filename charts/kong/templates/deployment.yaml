@@ -123,8 +123,8 @@ spec:
       {{- if .Values.deployment.kong.enabled }}
       - name: "proxy"
         image: {{ include "kong.getRepoTag" .Values.image }}
-        {{- if .Values.command }}
-        command: {{ .Values.command }}
+        {{- if .Values.deployment.command }}
+        command: {{ .Values.deployment.command }}
         {{- end }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         securityContext:

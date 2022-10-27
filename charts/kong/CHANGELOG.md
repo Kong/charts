@@ -10,6 +10,7 @@
 * Supported `autoscaling/v2` API
   ([#679](https://github.com/Kong/charts/pull/679))
 * Add ability to supply a command to the Deployment.
+  ([#683](https://github.com/Kong/charts/pull/683))
 
 ## 2.13.1
 
