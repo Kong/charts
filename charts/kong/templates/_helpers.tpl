@@ -165,7 +165,7 @@ spec:
   {{- if .http.enabled }}
   - name: kong-{{ .serviceName }}
     port: {{ .http.servicePort }}
-    targetPort: {{ .http.containerPort }}-{{ .http.appProtocol }}
+    targetPort: {{ .http.containerPort }}
   {{- if .http.appProtocol }}
     appProtocol: http
   {{- end }}
