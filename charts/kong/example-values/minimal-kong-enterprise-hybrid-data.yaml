@@ -17,6 +17,7 @@ image:
 env:
   role: data_plane
   cluster_control_plane: CHANGEME-control-service.CHANGEME-namespace.svc.cluster.local:8005
+  cluster_telemetry_endpoint: CHANGEME-cluster-telemetry-service.CHANGEME-namespace.svc.cluster.local:8006
   lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
   cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
   cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
