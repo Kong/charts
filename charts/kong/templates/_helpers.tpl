@@ -166,7 +166,7 @@ spec:
   - name: kong-{{ .serviceName }}
     port: {{ .http.servicePort }}
     targetPort: {{ .http.containerPort }}
-  {{- if .http.appProtocol }}
+  {{- if .http.setAppProtocol }}
     appProtocol: http
   {{- end }}
   {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .http.nodePort))) }}
@@ -179,7 +179,7 @@ spec:
   - name: kong-{{ .serviceName }}-tls
     port: {{ .tls.servicePort }}
     targetPort: {{ .tls.overrideServiceTargetPort | default .tls.containerPort }}
-  {{- if .tls.appProtocol }}
+  {{- if .tls.setAppProtocol }}
     appProtocol: https
   {{- end }}
   {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .tls.nodePort))) }}
