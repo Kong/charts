@@ -272,7 +272,7 @@ proxy:
     enabled: true
     servicePort: 80
     containerPort: 8000
-    appProtocol: true
+    setAppProtocol: true
     # Set a nodePort which is available if service type is NodePort
     # nodePort: 32080
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
@@ -283,7 +283,7 @@ proxy:
     enabled: true
     servicePort: 443
     containerPort: 8443
-    appProtocol: true
+    setAppProtocol: true
     # Set a target port for the TLS port in proxy service
     # overrideServiceTargetPort: 8000
     # Set a nodePort which is available if service type is NodePort
