@@ -19,6 +19,9 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
+  ## Minimum number of seconds for which a newly created pod should be ready without any of its container crashing,
+  ## for it to be considered available.
+  # minReadySeconds: 60
   ## Specify the service account to create and to be assigned to the deployment / daemonset and for the migrations
   serviceAccount:
     create: true
