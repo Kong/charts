@@ -618,7 +618,7 @@ directory.
 #### Kong Service Parameters
 
 The various `SVC.*` parameters below are common to the various Kong services
-(the admin API, proxy, Kong Manger, the Developer Portal, and the Developer
+(the admin API, proxy, Kong Manager, the Developer Portal, and the Developer
 Portal API) and define their listener configuration, K8S Service properties,
 and K8S Ingress properties. Defaults are listed only if consistent across the
 individual services: see values.yaml for their individual default values.
