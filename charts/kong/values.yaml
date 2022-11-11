@@ -695,10 +695,10 @@ updateStrategy: {}
 resources: {}
   # limits:
   #  cpu: 1
-  #  memory: 1G
+  #  memory: 2G
   # requests:
   #  cpu: 1
-  #  memory: 1G
+  #  memory: 2G
 
 # readinessProbe for Kong pods
 readinessProbe:
