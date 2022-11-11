@@ -12,6 +12,7 @@
 * Add support for specifying the minium number of seconds for which newly created pods should be ready without
   any of its container crashing, for it to be considered available. (`deployment.minReadySeconds`)
   ([#688](https://github.com/Kong/charts/pull/688))
+* Increased the default memory requests and limits for the Kong pod to 2G
 
 ### Fixed
 
