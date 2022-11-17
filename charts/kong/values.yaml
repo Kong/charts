@@ -57,8 +57,13 @@ deployment:
   test:
     # Enable creation of test resources for use with "helm test"
     enabled: false
+
   # Use a DaemonSet controller instead of a Deployment controller
   daemonset: false
+  # Use a StatefulSet controller instead of a Deployment / DaemonSet controller
+  # daemonset flag will take precedence if both are set to true
+  statefulset: false
+
   hostNetwork: false
   # kong_prefix empty dir size
   prefixDir:

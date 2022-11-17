@@ -2,6 +2,8 @@
 apiVersion: apps/v1
 {{- if .Values.deployment.daemonset }}
 kind: DaemonSet
+{{- else if .Values.deployment.statefulset }}
+kind: StatefulSet
 {{- else }}
 kind: Deployment
 {{- end }}
@@ -22,6 +24,9 @@ spec:
   {{- if not .Values.deployment.daemonset }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  {{- end }}
+  {{- if .Values.deployment.statefulset }}
+  serviceName: {{ .Values.deployment.statefulsetServiceName }}
   {{- end }}
   selector:
     matchLabels:
