@@ -1,16 +1,23 @@
 {{- if .Values.deployment.kong.enabled }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
-{{- if not .Values.dblessConfig.configMap }}
+{{- if not (or .Values.dblessConfig.configMap .Values.dblessConfig.secret)  }}
 apiVersion: v1
-kind: ConfigMap
 metadata:
   name: {{ template "kong.dblessConfig.fullname" . }}
   namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
+{{- if eq "secret" (lower .Values.dblessConfig.kind) }}
+kind: Secret
 data:
-  kong.yml:
-{{ .Values.dblessConfig.config | toYaml | indent 4 }}
+  kong.yml: {{ .Values.dblessConfig.config | b64enc }}
+{{- else if eq "configmap" (lower .Values.dblessConfig.kind) }}
+kind: ConfigMap
+data:
+  kong.yml: {{ .Values.dblessConfig.config | toYaml | nindent 4 }}
+{{- else }}
+  {{- fail ".Values.dblessConfig.kind must be set to either \"ConfigMap\" or \"Secret\"" }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

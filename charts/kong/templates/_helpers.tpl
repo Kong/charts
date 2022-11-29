@@ -479,12 +479,21 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
+  {{- if .Values.dblessConfig.configMap }}
   configMap:
-    {{- if .Values.dblessConfig.configMap }}
     name: {{ .Values.dblessConfig.configMap }}
-    {{- else }}
+  {{- else if .Values.dblessConfig.secret }}
+  secret:
+    secretName: {{ .Values.dblessConfig.secret }}
+  {{- else if eq "secret" (lower .Values.dblessConfig.kind) }}
+  secret:
+    secretName: {{ template "kong.dblessConfig.fullname" . }}
+  {{- else if eq "configmap" (lower .Values.dblessConfig.kind) }}
+  configMap:
     name: {{ template "kong.dblessConfig.fullname" . }}
-    {{- end }}
+  {{- else }}
+    {{- fail ".Values.dblessConfig.kind must be set to either \"ConfigMap\" or \"Secret\"" }}
+  {{- end }}
 {{- end }}
 {{- if .Values.ingressController.admissionWebhook.enabled }}
 - name: webhook-cert
