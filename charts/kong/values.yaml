@@ -453,7 +453,8 @@ dblessConfig:
       #     paths:
       #     - "/example"
   # How to store the passed-in configuration; set to "Secret" to store using a
-  # Secret instead of a ConfigMap
+  # Secret instead of a ConfigMap. Note that this value is ignored if you are
+  # not passing in a configuration through .dblessConfig.config above.
   kind: ConfigMap
   ## Optionally specify any extra sidecar containers to be included in the
   ## migration jobs
