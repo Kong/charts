@@ -48,7 +48,7 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
 
 {{- define "kong.dblessConfig.fullname" -}}
-{{- $name := default "kong-custom-dbless-config" .Values.dblessConfig.nameOverride -}}
+{{- $name := default "kong-custom-dbless-config" .Values.dblessConfig.createConfig.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
