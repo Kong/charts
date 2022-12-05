@@ -478,6 +478,9 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
 {{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
+{{- if gt (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) 1 -}}
+    {{- fail "Ambiguous configuration: only one of of .Values.dblessConfig.configMap, .Values.dblessConfig.secret, and .Values.dblessConfig.config can be set." -}}
+{{- end }}
 - name: kong-custom-dbless-config-volume
   {{- if .Values.dblessConfig.configMap }}
   configMap:
