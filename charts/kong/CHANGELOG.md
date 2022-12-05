@@ -4,8 +4,9 @@
 
 ### Improvements
 
-* Add `dblessConfig.secret` and `dblessConfig.kind` Values options, to allow
-  users to generate or provide their db-less config as a Secret
+* Restructure the `dblessConfig` section of the values file, giving the keys
+  more meaningful names and making it possible to specify the Kind (either
+  ConfigMap or Secret) of the config resources.
   [#695](https://github.com/Kong/charts/pull/695)
 * Add support for version `v1beta1` of the Gateway API when generating RBAC rules.
 * Add support for version `v1beta1` of the Gateway API when generating RBAC rules.
