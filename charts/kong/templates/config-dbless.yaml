@@ -7,17 +7,9 @@ metadata:
   namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
-{{- if .Values.dblessConfig.createConfig.kind | lower | eq "secret" }}
-kind: Secret
-data:
-  kong.yml: {{ .Values.dblessConfig.createConfig.data | b64enc }}
-{{- else if .Values.dblessConfig.createConfig.kind | lower | eq "configmap" }}
 kind: ConfigMap
 data:
   kong.yml: {{- .Values.dblessConfig.createConfig.data | toYaml | nindent 4 }}
-{{- else }}
-  {{- fail ".Values.dblessConfig.createConfig.kind must be set to either \"ConfigMap\" or \"Secret\"" }}
-{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
