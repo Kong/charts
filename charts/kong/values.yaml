@@ -447,10 +447,6 @@ dblessConfig:
   # Or the configuration is passed in full-text below
   createConfig:
     enabled: true
-    # This can be set to either ConfigMap or Secret; it is recommended to keep
-    # this at its default value though, as storing sensitive data in Helm
-    # release values is not recommended.
-    kind: ConfigMap
     data: |
       _format_version: "1.1"
       services:
