@@ -57,6 +57,9 @@ webhooks:
 {{- if (semverCompare ">= 2.0.4" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
     - kongclusterplugins
 {{- end }}
+{{- if (semverCompare ">= 2.8.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+    - kongingresses
+{{- end }}
   - apiGroups:
     - ''
     apiVersions:
