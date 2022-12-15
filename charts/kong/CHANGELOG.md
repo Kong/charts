@@ -2,8 +2,17 @@
 
 ## Unreleased
 
+Nothing yet.
+
+## 2.14.0
+
+Note: KIC 2.8 does include several updates to CRDs, but only for documentation and validation.
+You can [upgrade CRDs](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#updates-to-crds),
+but doing so is not required.
+
 ### Improvements
 
+* Default Kong and KIC versions bumped to 3.1 and 2.8.
 * UDP proxy (udpProxy) assumes the UDP protocol by default for stream entries (udpProxy.stream). 
   This can be still overridden to TCP by specifying the protocol explicitly, but it is not recommended to do so.
   [#682](https://github.com/Kong/charts/pull/682)
