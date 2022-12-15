@@ -14,6 +14,8 @@
   ([#688](https://github.com/Kong/charts/pull/688))
 * Increased the default memory requests and limits for the Kong pod to 2G
   ([#690](https://github.com/Kong/charts/pull/690))
+* Add a rule for `KongIngress` to the ValidatingWebhookConfiguration.
+  ([#702](https://github.com/Kong/charts/pull/702))
 
 ### Fixed
 
