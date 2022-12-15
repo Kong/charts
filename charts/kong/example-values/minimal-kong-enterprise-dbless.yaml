@@ -4,7 +4,7 @@
 
 image:
   repository: kong/kong-gateway
-  tag: "3.0"
+  tag: "3.1"
 
 enterprise:
   enabled: true
