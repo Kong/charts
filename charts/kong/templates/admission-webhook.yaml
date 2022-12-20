@@ -17,6 +17,8 @@
 {{- if $certSecret }}
 {{- $certCert = (b64dec (get $certSecret.data "tls.crt")) -}}
 {{- $certKey = (b64dec (get $certSecret.data "tls.key")) -}}
+{{- end }}
+{{- if $caSecret }}
 {{- $caCert = (b64dec (get $caSecret.data "tls.crt")) -}}
 {{- $caKey = (b64dec (get $caSecret.data "tls.key")) -}}
 {{- end }}

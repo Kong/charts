@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-Nothing yet.
+### Fixed
+
+* Fix lookup for CA certificate secret for admission webhook.
+  ([#704](https://github.com/Kong/charts/pull/704))
 
 ## 2.14.0
 
