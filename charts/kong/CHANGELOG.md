@@ -4,9 +4,8 @@
 
 ### Improvements
 
-* Restructure the `dblessConfig` section of the values file, giving the keys
-  more meaningful names and making it possible to specify the Kind (either
-  ConfigMap or Secret) of the config resources.
+* Add the `dblessConfig.secret` key to the values file, allowing the user to
+  supply a Secret for their dbless config file.
   [#695](https://github.com/Kong/charts/pull/695)
 * Add support for version `v1beta1` of the Gateway API when generating RBAC rules.
 * Add support for version `v1beta1` of the Gateway API when generating RBAC rules.
