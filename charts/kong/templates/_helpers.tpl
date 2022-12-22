@@ -48,7 +48,7 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
 
 {{- define "kong.dblessConfig.fullname" -}}
-{{- $name := default "kong-custom-dbless-config" .Values.dblessConfig.createConfig.nameOverride -}}
+{{- $name := default "kong-custom-dbless-config" .Values.dblessConfig.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -478,24 +478,20 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
 {{- end }}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
-{{- if and .Values.dblessConfig.existingConfig.enabled .Values.dblessConfig.createConfig.enabled -}}
-    {{- fail "Ambiguous configuration: .Values.dblessConfig.existingConfig.enabled and .Values.dblessConfig.createConfig.enabled cannot both be set" -}}
+{{- if gt (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) 1 -}}
+    {{- fail "Ambiguous configuration: only one of of .Values.dblessConfig.configMap, .Values.dblessConfig.secret, and .Values.dblessConfig.config can be set." -}}
 {{- end }}
-{{- with .Values.dblessConfig }}
 - name: kong-custom-dbless-config-volume
-  {{- if or (.existingConfig.kind | lower | eq "configmap" | and .existingConfig.enabled) (.createConfig.kind | lower | eq "configmap" | and .createConfig.enabled) }}
+  {{- if .Values.dblessConfig.configMap }}
   configMap:
-    name:
-  {{- else if or (.existingConfig.kind | lower | eq "secret" | and .existingConfig.enabled) (.createConfig.kind | lower | eq "secret" | and .createConfig.enabled) }}
+    name: {{ .Values.dblessConfig.configMap }}
+  {{- else if .Values.dblessConfig.secret }}
   secret:
-    secretName:
+    secretName: {{ .Values.dblessConfig.secret }}
   {{- else }}
-    {{- fail "\"kind\" options under .Values.dblessConfig must be set to either \"ConfigMap\" or \"Secret\"" }}
+  configMap:
+    name: {{ template "kong.dblessConfig.fullname" . }}
   {{- end }}
-  {{- if .existingConfig.enabled }} {{ .existingConfig.name -}}
-  {{- else if .createConfig.enabled }} {{ template "kong.dblessConfig.fullname" $ -}}
-  {{- end }}
-{{- end }}
 {{- end }}
 {{- if .Values.ingressController.admissionWebhook.enabled }}
 - name: webhook-cert
