@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Add support for version `v1beta1` of the Gateway API when generating RBAC rules.
+  ([#706](https://github.com/Kong/charts/pull/706))
+
 ### Fixed
 
 * Fix lookup for CA certificate secret for admission webhook.
