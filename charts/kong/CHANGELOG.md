@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Removed appProtocol to fix AKS load balancer
+  ([#705](https://github.com/Kong/charts/pull/705))
+
 ### Fixed
 
 * Fix lookup for CA certificate secret for admission webhook.
