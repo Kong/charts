@@ -2,11 +2,15 @@
 
 ## Unreleased
 
+### Improvements
+
 * Add support for version `v1beta1` of the Gateway API when generating RBAC rules.
   ([#706](https://github.com/Kong/charts/pull/706))
 
 ### Fixed
 
+* Removed appProtocol to fix AKS load balancer
+  ([#705](https://github.com/Kong/charts/pull/705))
 * Fix lookup for CA certificate secret for admission webhook.
   ([#704](https://github.com/Kong/charts/pull/704))
 
