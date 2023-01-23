@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.15.1
+
+### Fixed
+
+* Remove unnecessary failure condition from [#695](https://github.com/Kong/charts/pull/695).
+
 ## 2.15.0
 
 ### Improvements
