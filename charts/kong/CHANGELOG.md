@@ -8,6 +8,10 @@
   ([#706](https://github.com/Kong/charts/pull/706))
 * Prevent supplying duplicate plugin inclusion to `KONG_PLUGINS` env variable.
   ([#711](https://github.com/Kong/charts/pull/711))
+* Allow specifying affinity and topologySpreadConstraints as strings through
+  values.yaml. String values are fed through helms `tpl` function to allow
+  using both values and helpers.
+  ([#712](https://github.com/Kong/charts/pull/712))
 
 ### Fixed
 

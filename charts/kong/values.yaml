@@ -742,10 +742,12 @@ terminationGracePeriodSeconds: 30
 
 # Affinity for pod assignment
 # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+# Supports value of type object and string. String values are fed through helm tpl function.
 # affinity: {}
 
 # Topology spread constraints for pod assignment (requires Kubernetes >= 1.19)
 # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+# Supports value of type array and string. String values are fed through helm tpl function.
 # topologySpreadConstraints: []
 
 # Tolerations for pod assignment
