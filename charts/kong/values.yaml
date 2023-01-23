@@ -439,17 +439,19 @@ migrations:
 dblessConfig:
   # Either Kong's configuration is managed from an existing ConfigMap (with Key: kong.yml)
   configMap: ""
+  # Or Kong's configuration is managed from an existing Secret (with Key: kong.yml)
+  secret: ""
   # Or the configuration is passed in full-text below
   config: |
-    _format_version: "1.1"
-    services:
-      # Example configuration
-      # - name: example.com
-      #   url: http://example.com
-      #   routes:
-      #   - name: example
-      #     paths:
-      #     - "/example"
+  # # _format_version: "1.1"
+  # # services:
+  # #   # Example configuration
+  # #   # - name: example.com
+  # #   #   url: http://example.com
+  # #   #   routes:
+  # #   #   - name: example
+  # #   #     paths:
+  # #   #     - "/example"
   ## Optionally specify any extra sidecar containers to be included in the
   ## migration jobs
   ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core

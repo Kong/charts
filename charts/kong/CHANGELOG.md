@@ -4,6 +4,10 @@
 
 ### Improvements
 
+* Add the `dblessConfig.secret` key to the values file, allowing the user to
+  supply a Secret for their dbless config file.
+  [#695](https://github.com/Kong/charts/pull/695)
+* Add support for version `v1beta1` of the Gateway API when generating RBAC rules.
 * Add support for version `v1beta1` of the Gateway API when generating RBAC rules.
   ([#706](https://github.com/Kong/charts/pull/706))
 * Prevent supplying duplicate plugin inclusion to `KONG_PLUGINS` env variable.
