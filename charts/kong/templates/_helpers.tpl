@@ -480,7 +480,6 @@ The name of the service used for the ingress controller's validation webhook
 {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
 {{- if gt $dblessSourceCount 1 -}}
     {{- fail "Ambiguous configuration: only one of of .Values.dblessConfig.configMap, .Values.dblessConfig.secret, and .Values.dblessConfig.config can be set." -}}
-{{- end }}
 - name: kong-custom-dbless-config-volume
   {{- if .Values.dblessConfig.configMap }}
   configMap:
@@ -492,6 +491,7 @@ The name of the service used for the ingress controller's validation webhook
   configMap:
     name: {{ template "kong.dblessConfig.fullname" . }}
   {{- end }}
+{{- end }}
 {{- end }}
 {{- if .Values.ingressController.admissionWebhook.enabled }}
 - name: webhook-cert
@@ -550,6 +550,8 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
 {{- end }}
 {{- end }}
+{{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
+{{- if gt $dblessSourceCount 1 -}}
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
   mountPath: /kong_dbless/
@@ -557,6 +559,7 @@ The name of the service used for the ingress controller's validation webhook
 {{- range .Values.secretVolumes }}
 - name:  {{ . }}
   mountPath: /etc/secrets/{{ . }}
+{{- end }}
 {{- end }}
 {{- range .Values.plugins.configMaps }}
 {{- $mountPath := printf "/opt/kong/plugins/%s" .pluginName }}
@@ -909,7 +912,10 @@ the template that it itself is using form the above sections.
 {{- end }}
 
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
+{{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
+{{- if gt $dblessSourceCount 1 -}}
   {{- $_ := set $autoEnv "KONG_DECLARATIVE_CONFIG" "/kong_dbless/kong.yml" -}}
+{{- end }}
 {{- end }}
 
 {{- $_ := set $autoEnv "KONG_PLUGINS" (include "kong.plugins" .) -}}
