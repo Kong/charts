@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.15.2
+
+### Fixed
+
+* Do not attempt to mount DB-less config if none provided by chart.
+
 ## 2.15.1
 
 ### Fixed
