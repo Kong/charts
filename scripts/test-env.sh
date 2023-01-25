@@ -30,7 +30,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
-KIND_VERSION="${KIND_VERSION:-v0.11.1}"
+KIND_VERSION="${KIND_VERSION:-v0.17.0}"
 
 # ------------------------------------------------------------------------------
 # Setup Tools - Docker
@@ -53,7 +53,7 @@ docker info 1>/dev/null
 # ensure kind command is accessible
 if ! command -v kind &> /dev/null
 then
-    go get -v sigs.k8s.io/kind@"${KIND_VERSION}"
+    go install sigs.k8s.io/kind@"${KIND_VERSION}"
 fi
 
 # ensure kind is functional
@@ -78,9 +78,9 @@ ktf 1>/dev/null
 # Create Testing Environment
 # ------------------------------------------------------------------------------
 
-ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma --kubernetes-version 1.24.4
+ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma --kubernetes-version 1.25.3
 
-kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.4.0" | kubectl apply -f -
+kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd/experimental?ref=v0.5.1" | kubectl apply -f -
 
 echo "INFO: Updating helm dependencies"
 helm dependency update charts/kong/
