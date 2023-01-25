@@ -33,7 +33,9 @@ KUBERNETES_VERSION="$($KUBECTL version -o json | jq -r '.serverVersion.gitVersio
 
 echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
 helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-    --set deployment.test.enabled=true charts/kong/
+    --set ingressController.env.anonymous_reports="false" \
+    --set deployment.test.enabled=true \
+    charts/kong/
 
 # ------------------------------------------------------------------------------
 # Test Chart - Kubernetes Ingress Controller
@@ -47,8 +49,12 @@ helm test --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}"
 # ------------------------------------------------------------------------------
 
 echo "INFO: upgrading the helm chart to image tag ${TAG}"
-helm upgrade --namespace "${RELEASE_NAMESPACE}" --set ingressController.image.tag="${TAG}" "${RELEASE_NAME}" \
-    --set deployment.test.enabled=true --set ingressController.image.effectiveSemver="${EFFECTIVE_TAG}" charts/kong/
+helm upgrade --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
+    --set ingressController.image.tag="${TAG}" \
+    --set deployment.test.enabled=true \
+    --set ingressController.env.anonymous_reports="false" \
+    --set ingressController.image.effectiveSemver="${EFFECTIVE_TAG}" \
+    charts/kong/
 
 # ------------------------------------------------------------------------------
 # Test Upgraded Chart

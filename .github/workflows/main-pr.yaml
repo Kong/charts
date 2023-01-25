@@ -17,14 +17,14 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v3
         with:
-          version: v3.9.0
+          version: v3.11.0
 
       - name: Add Bitnami
         run: helm repo add bitnami https://charts.bitnami.com/bitnami
 
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.3.1
@@ -51,11 +51,9 @@ jobs:
         run: ct install --all
 
   integration-test:
-    # Not a real requirement, but due to worker CPU contention, this can fail if it runs concurrent with lint-test
-    needs: lint-test
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -63,7 +61,7 @@ jobs:
       - name: setup helm
         uses: azure/setup-helm@v3
         with:
-          version: v3.9.0
+          version: v3.11.0
 
       - name: setup testing environment (kind-cluster)
         run: ./scripts/test-env.sh
