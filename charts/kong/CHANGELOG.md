@@ -2,9 +2,13 @@
 
 ## Unreleased
 
+
+## 2.15.3
+
 ### Fixed
 
 * Changed `ingressController.readinessProbe` to use `/readyz` to prevent pods from becoming ready and serving 404s prior to the `ingress-controller` first syncing config to the `proxy` [#716](https://github.com/Kong/charts/pull/716).
+* Fixed incorrect `if` block order in volume mount templates.
 
 ## 2.15.2
 
