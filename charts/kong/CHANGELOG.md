@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Improvements
+
+* Enable users to specify their own labels and annotations to generated PodSecurityPolicy
+  [#721](https://github.com/Kong/charts/pull/721)
 
 ## 2.15.3
 

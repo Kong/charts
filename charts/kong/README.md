@@ -788,6 +788,8 @@ kong:
 | podDisruptionBudget.maxUnavailable | Represents the minimum number of Pods that can be unavailable (integer or percentage) | `50%`               |
 | podDisruptionBudget.minAvailable   | Represents the number of Pods that must be available (integer or percentage)          |                     |
 | podSecurityPolicy.enabled          | Enable podSecurityPolicy for Kong                                                     | `false`             |
+| podSecurityPolicy.labels           | Labels to add to podSecurityPolicy for Kong                                           | `{}`             |
+| podSecurityPolicy.annotations      | Annotations to add to podSecurityPolicy for Kong                                      | `{}`             |
 | podSecurityPolicy.spec             | Collection of [PodSecurityPolicy settings](https://kubernetes.io/docs/concepts/policy/pod-security-policy/#what-is-a-pod-security-policy) | |
 | priorityClassName                  | Set pod scheduling priority class for Kong pods                                       | `""`                |
 | secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |

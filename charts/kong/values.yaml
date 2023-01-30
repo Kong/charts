@@ -801,6 +801,8 @@ podDisruptionBudget:
 
 podSecurityPolicy:
   enabled: false
+  labels: {}
+  annotations: {}
   spec:
     privileged: false
     fsGroup:
