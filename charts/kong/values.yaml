@@ -819,6 +819,7 @@ podSecurityPolicy:
       - 'configMap'
       - 'secret'
       - 'emptyDir'
+      - 'projected'
     allowPrivilegeEscalation: false
     hostNetwork: false
     hostIPC: false
