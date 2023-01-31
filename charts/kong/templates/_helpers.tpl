@@ -478,19 +478,19 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
   {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
-    {{- if gt $dblessSourceCount 1 -}}
-      {{- fail "Ambiguous configuration: only one of of .Values.dblessConfig.configMap, .Values.dblessConfig.secret, and .Values.dblessConfig.config can be set." -}}
+  {{- if gt $dblessSourceCount 1 -}}
+    {{- fail "Ambiguous configuration: only one of of .Values.dblessConfig.configMap, .Values.dblessConfig.secret, and .Values.dblessConfig.config can be set." -}}
+  {{- end }}
 - name: kong-custom-dbless-config-volume
-    {{- if .Values.dblessConfig.configMap }}
+  {{- if .Values.dblessConfig.configMap }}
   configMap:
     name: {{ .Values.dblessConfig.configMap }}
-    {{- else if .Values.dblessConfig.secret }}
+  {{- else if .Values.dblessConfig.secret }}
   secret:
     secretName: {{ .Values.dblessConfig.secret }}
-    {{- else }}
+  {{- else }}
   configMap:
     name: {{ template "kong.dblessConfig.fullname" . }}
-    {{- end }}
   {{- end }}
 {{- end }}
 
@@ -551,13 +551,13 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
 {{- end }}
 {{- end }}
-{{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
-  {{- if gt $dblessSourceCount 1 -}}
-    {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
+{{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
+  {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
+  {{- if eq $dblessSourceCount 1 }}
 - name: kong-custom-dbless-config-volume
   mountPath: /kong_dbless/
-    {{- end }}
   {{- end }}
+{{- end }}
 {{- range .Values.secretVolumes }}
 - name:  {{ . }}
   mountPath: /etc/secrets/{{ . }}
@@ -913,10 +913,10 @@ the template that it itself is using form the above sections.
 {{- end }}
 
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
-{{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
-{{- if gt $dblessSourceCount 1 -}}
-  {{- $_ := set $autoEnv "KONG_DECLARATIVE_CONFIG" "/kong_dbless/kong.yml" -}}
-{{- end }}
+  {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
+  {{- if eq $dblessSourceCount 1 -}}
+    {{- $_ := set $autoEnv "KONG_DECLARATIVE_CONFIG" "/kong_dbless/kong.yml" -}}
+  {{- end }}
 {{- end }}
 
 {{- $_ := set $autoEnv "KONG_PLUGINS" (include "kong.plugins" .) -}}
