@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Nothing yet.
+
+## 2.16.0
+
 ### Improvements
 
 * Enable users to specify their own labels and annotations to generated PodSecurityPolicy
