@@ -508,7 +508,7 @@ ingressController:
   #   TZ: "Europe/Berlin"
 
   admissionWebhook:
-    enabled: false
+    enabled: true
     failurePolicy: Ignore
     port: 8080
     certificate:
