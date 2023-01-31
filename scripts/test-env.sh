@@ -31,6 +31,7 @@ set -euo pipefail
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 KIND_VERSION="${KIND_VERSION:-v0.17.0}"
+KUBERNETES_VERSION="${KUBERNETES_VERSION:-1.26.0}"
 
 # ------------------------------------------------------------------------------
 # Setup Tools - Docker
@@ -67,7 +68,7 @@ kind version 1>/dev/null
 if ! command -v ktf 1>/dev/null
 then
     mkdir -p "${HOME}"/.local/bin
-    curl --proto '=https' -sSf https://kong.github.io/kubernetes-testing-framework/install.sh | bash
+    GOBIN="${HOME}"/.local/bin go install github.com/kong/kubernetes-testing-framework/cmd/ktf@latest
     export PATH="${HOME}/.local/bin:$PATH"
 fi
 
@@ -78,7 +79,7 @@ ktf 1>/dev/null
 # Create Testing Environment
 # ------------------------------------------------------------------------------
 
-ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma --kubernetes-version 1.25.3
+ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma --kubernetes-version ${KUBERNETES_VERSION}
 
 kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd/experimental?ref=v0.5.1" | kubectl apply -f -
 
