@@ -298,6 +298,7 @@ spec:
       {{- include "kong.userDefinedVolumes" . | nindent 8 -}}
       {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
         - name: {{ template "kong.serviceAccountTokenName" . }}
+          {{- if semverCompare ">=1.20" .Capabilities.KubeVersion.Version }}
           projected:
             sources:
             - serviceAccountToken:
@@ -314,5 +315,16 @@ spec:
                     apiVersion: v1
                     fieldPath: metadata.namespace
                   path: namespace
+          {{- else }}
+          secret:
+            secretName: {{ template "kong.serviceAccountTokenName" . }}
+            items:
+            - key: token
+              path: token
+            - key: ca.crt
+              path: ca.crt
+            - key: namespace
+              path: namespace
+          {{- end }}
       {{- end }}
 {{- end }}
