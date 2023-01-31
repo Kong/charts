@@ -52,6 +52,17 @@ jobs:
 
   integration-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        kubernetes-version:
+        - "1.19.16"
+        - "1.20.15"
+        - "1.21.14"
+        - "1.22.15"
+        - "1.23.13"
+        - "1.24.7"
+        - "1.25.3"
+        - "1.26.0"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -64,6 +75,8 @@ jobs:
           version: v3.11.0
 
       - name: setup testing environment (kind-cluster)
+        env:
+          KUBERNETES_VERSION: ${{ matrix.kubernetes-version }}
         run: ./scripts/test-env.sh
 
       - name: run integration tests (integration)
