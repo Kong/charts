@@ -19,6 +19,8 @@
   [#721](https://github.com/Kong/charts/pull/721)
 * Replaced static secret with projected volume in deployment.
   [#722](https://github.com/Kong/charts/pull/722)
+* Respect setting `.Values.deployment.serviceAccount.automountServiceAccountToken` in
+  migrations Jobs. This was already the case for the Deployment.
 
 ## 2.15.3
 
