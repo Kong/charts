@@ -8,7 +8,7 @@
   `.Values.ingressController.env.*` (to set environment variables of ingress
   controller container) only allow strings. Specifying values with other types
   (bool, int) will raise error in rendering the template.
-  If you want to set an enviroment varialble to a numerical value or keywords
+  If you want to set an environment variable to a numerical value or keywords
   for boolean values  (like `true`,`yes`,`off`) via helm command, please use 
   `--set-string` flag.
   [#728](https://github.com/Kong/charts/pull/728)
