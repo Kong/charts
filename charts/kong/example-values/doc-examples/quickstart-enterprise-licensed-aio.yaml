@@ -151,7 +151,7 @@ ingressController:
   enabled: true
   env:
     kong_admin_filter_tag: ingress_controller_default
-    kong_admin_tls_skip_verify: true
+    kong_admin_tls_skip_verify: "true"
     kong_admin_token:
       valueFrom:
         secretKeyRef:
