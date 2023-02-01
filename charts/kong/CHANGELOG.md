@@ -21,6 +21,7 @@
   [#722](https://github.com/Kong/charts/pull/722)
 * Respect setting `.Values.deployment.serviceAccount.automountServiceAccountToken` in
   migrations Jobs. This was already the case for the Deployment.
+  [#729](https://github.com/Kong/charts/pull/729)
 
 ## 2.15.3
 
