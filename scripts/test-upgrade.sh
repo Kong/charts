@@ -33,7 +33,7 @@ KUBERNETES_VERSION="$($KUBECTL version -o json | jq -r '.serverVersion.gitVersio
 
 echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
 helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-    --set ingressController.env.anonymous_reports="false" \
+    --set-string ingressController.env.anonymous_reports="false" \
     --set deployment.test.enabled=true \
     charts/kong/
 
@@ -52,7 +52,7 @@ echo "INFO: upgrading the helm chart to image tag ${TAG}"
 helm upgrade --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
     --set ingressController.image.tag="${TAG}" \
     --set deployment.test.enabled=true \
-    --set ingressController.env.anonymous_reports="false" \
+    --set-string ingressController.env.anonymous_reports="false" \
     --set ingressController.image.effectiveSemver="${EFFECTIVE_TAG}" \
     charts/kong/
 
