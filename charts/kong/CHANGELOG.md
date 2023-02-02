@@ -8,9 +8,8 @@
   [#721](https://github.com/Kong/charts/pull/721)
 * Replaced static secret with projected volume in deployment.
   [#722](https://github.com/Kong/charts/pull/722)
-
-### Updates
-
+* Reject invalid log config values.
+  [#733](https://github.com/Kong/charts/pull/733)
 * Update custom resource definitions to latest v2.8.1 from
   kong/kubernetes-ingress-controller
   [#730](https://github.com/Kong/charts/pull/730)

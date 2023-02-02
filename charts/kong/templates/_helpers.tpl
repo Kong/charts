@@ -927,6 +927,11 @@ the template that it itself is using form the above sections.
 
 {{- $userEnv := dict -}}
 {{- range $key, $val := .Values.env }}
+  {{- if (contains "_log" $key) -}}
+    {{- if (eq (typeOf $val) "bool") -}}
+      {{- fail (printf "env.%s must use string 'off' to disable. Without quotes, YAML will coerce the value to a boolean and Kong will reject it" $key) -}}
+	{{- end -}}
+  {{- end -}}
   {{- $upper := upper $key -}}
   {{- $var := printf "KONG_%s" $upper -}}
   {{- $_ := set $userEnv $var $val -}}
