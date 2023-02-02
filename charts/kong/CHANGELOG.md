@@ -13,6 +13,9 @@
 * Update custom resource definitions to latest v2.8.1 from
   kong/kubernetes-ingress-controller
   [#730](https://github.com/Kong/charts/pull/730)
+* Respect setting `.Values.deployment.serviceAccount.automountServiceAccountToken` in
+  migrations Jobs. This was already the case for the Deployment.
+  [#729](https://github.com/Kong/charts/pull/729)
 
 ## 2.15.3
 
