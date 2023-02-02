@@ -2,10 +2,19 @@
 
 ## Unreleased
 
+Nothing yet.
+
+## 2.16.0
+
 ### Improvements
 
-* Enable users to specify their own labels and annotations to generated PodSecurityPolicy
+* Let users specify their own labels and annotations for generated PodSecurityPolicy.
   [#721](https://github.com/Kong/charts/pull/721)
+* Enable the admission webhook by default. This can reject configuration, but
+  is not expected to be a meaningfully breaking change. Existing configuration
+  is not affected, and any new changes that the webhook would reject would also
+  be rejected by Kong.
+  [#727](https://github.com/Kong/charts/pull/727)
 * Replaced static secret with projected volume in deployment.
   [#722](https://github.com/Kong/charts/pull/722)
 * Reject invalid log config values.
