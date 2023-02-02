@@ -68,14 +68,14 @@ then
     helm install --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
         --set deployment.test.enabled=true \
         --set ingressController.env.feature_gates="GatewayAlpha=true" \
-        --set-string ingressController.env.anonymous_reports="false" \
+        --set ingressController.env.anonymous_reports="false" \
         charts/kong/
 else
     echo "INFO: installing chart as release ${RELEASE_NAME} with controller tag ${TAG} to namespace ${RELEASE_NAMESPACE}"
     helm install --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
         --set ingressController.image.tag="${TAG}" \
         --set ingressController.env.feature_gates="GatewayAlpha=true" \
-        --set-string ingressController.env.anonymous_reports="false" \
+        --set ingressController.env.anonymous_reports="false" \
         --set deployment.test.enabled=true \
         charts/kong/
 fi

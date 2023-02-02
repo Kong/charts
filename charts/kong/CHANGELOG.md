@@ -2,26 +2,14 @@
 
 ## Unreleased
 
-### Breaking Changes
-
-* `.Values.env.*` (to set environment variables of Kong proxy container) and
-  `.Values.ingressController.env.*` (to set environment variables of ingress
-  controller container) only allow strings. Specifying values with other types
-  (bool, int) will raise error in rendering the template.
-  If you want to set an environment variable to a numerical value or keywords
-  for boolean values  (like `true`,`yes`,`off`) via helm command, please use
-  `--set-string` flag.
-  [#728](https://github.com/Kong/charts/pull/728)
-
 ### Improvements
 
 * Enable users to specify their own labels and annotations to generated PodSecurityPolicy
   [#721](https://github.com/Kong/charts/pull/721)
 * Replaced static secret with projected volume in deployment.
   [#722](https://github.com/Kong/charts/pull/722)
-
-### Updates
-
+* Reject invalid log config values.
+  [#733](https://github.com/Kong/charts/pull/733)
 * Update custom resource definitions to latest v2.8.1 from
   kong/kubernetes-ingress-controller
   [#730](https://github.com/Kong/charts/pull/730)
