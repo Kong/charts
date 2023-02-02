@@ -565,7 +565,7 @@ namespaces. Limiting access requires several changes to configuration:
 - Set `ingressController.watchNamespaces` to a list of namespaces you want to
   watch. The chart will automatically generate roles for each namespace and
   assign them to the controller's service account.
-- Optionally set `ingressContrller.installCRDs=false` if your user role (the
+- Optionally set `ingressController.installCRDs=false` if your user role (the
   role you use when running `helm install`, not the controller service
   account's role) does not have access to get CRDs. By default, the chart
   attempts to look up the controller CRDs for [a legacy behavior

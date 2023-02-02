@@ -370,7 +370,7 @@ The name of the service used for the ingress controller's validation webhook
 */}}
 
 {{- $autoEnv := dict -}}
-{{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY" "true" -}}
+{{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY" true -}}
 {{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" (printf "%s/%s-proxy" ( include "kong.namespace" . ) (include "kong.fullname" .)) -}}
 {{- $_ := set $autoEnv "CONTROLLER_INGRESS_CLASS" .Values.ingressController.ingressClass -}}
 {{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
@@ -927,6 +927,11 @@ the template that it itself is using form the above sections.
 
 {{- $userEnv := dict -}}
 {{- range $key, $val := .Values.env }}
+  {{- if (contains "_log" $key) -}}
+    {{- if (eq (typeOf $val) "bool") -}}
+      {{- fail (printf "env.%s must use string 'off' to disable. Without quotes, YAML will coerce the value to a boolean and Kong will reject it" $key) -}}
+	{{- end -}}
+  {{- end -}}
   {{- $upper := upper $key -}}
   {{- $var := printf "KONG_%s" $upper -}}
   {{- $_ := set $userEnv $var $val -}}
@@ -974,7 +979,8 @@ Environment variables are sorted alphabetically
   value: {{ $val | quote }}
 {{- end }}
 {{- else }}
-{{ fail (printf "Invalid type: required string or map[string]interface {}, actual %s" $valueType)}}
+- name: {{ . }}
+  value: {{ $val | quote }}
 {{- end }}
 {{- end -}}
 

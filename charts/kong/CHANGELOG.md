@@ -2,23 +2,17 @@
 
 ## Unreleased
 
-### Breaking Changes
-
-* `.Values.env.*` (to set environment variables of Kong proxy container) and 
-  `.Values.ingressController.env.*` (to set environment variables of ingress
-  controller container) only allow strings. Specifying values with other types
-  (bool, int) will raise error in rendering the template.
-  If you want to set an environment variable to a numerical value or keywords
-  for boolean values  (like `true`,`yes`,`off`) via helm command, please use 
-  `--set-string` flag.
-  [#728](https://github.com/Kong/charts/pull/728)
-
 ### Improvements
 
 * Enable users to specify their own labels and annotations to generated PodSecurityPolicy
   [#721](https://github.com/Kong/charts/pull/721)
 * Replaced static secret with projected volume in deployment.
   [#722](https://github.com/Kong/charts/pull/722)
+* Reject invalid log config values.
+  [#733](https://github.com/Kong/charts/pull/733)
+* Update custom resource definitions to latest v2.8.1 from
+  kong/kubernetes-ingress-controller
+  [#730](https://github.com/Kong/charts/pull/730)
 * Respect setting `.Values.deployment.serviceAccount.automountServiceAccountToken` in
   migrations Jobs. This was already the case for the Deployment.
   [#729](https://github.com/Kong/charts/pull/729)
@@ -71,7 +65,7 @@ but doing so is not required.
 ### Improvements
 
 * Default Kong and KIC versions bumped to 3.1 and 2.8.
-* UDP proxy (udpProxy) assumes the UDP protocol by default for stream entries (udpProxy.stream). 
+* UDP proxy (udpProxy) assumes the UDP protocol by default for stream entries (udpProxy.stream).
   This can be still overridden to TCP by specifying the protocol explicitly, but it is not recommended to do so.
   [#682](https://github.com/Kong/charts/pull/682)
 * Supported `autoscaling/v2` API
