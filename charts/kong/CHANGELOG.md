@@ -1,8 +1,11 @@
 # Changelog
 
-## Unreleased
+## 2.16.1
 
-Nothing yet.
+### Fixed 
+
+* serviceAccount projected volume is properly provisioned for GKE clusters >= 1.20.
+  [#735](https://github.com/Kong/charts/pull/735)
 
 ## 2.16.0
 
