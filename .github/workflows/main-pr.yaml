@@ -93,3 +93,31 @@ jobs:
 
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
+
+  golden-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: setup helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.11.0
+
+      - name: Setup go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '^1.19'
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-build-codegen-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-build-codegen-
+
+      - name: Run tests
+        run: cd ./charts/kong/ci && go test .
