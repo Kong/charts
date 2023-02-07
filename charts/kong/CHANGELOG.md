@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.16.2
+
+### Fixed 
+
+* The admission webhook is disabled when the ingress controller is disabled, as
+  the admission webhook requires a service provided by the ingress controller.
+
 ## 2.16.1
 
 ### Fixed 
