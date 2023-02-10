@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 2.16.3
 
 * Fix template issue preventing custom dblessconfig volume from being mounted.
+  [#741](https://github.com/Kong/charts/pull/741)
 
 ## 2.16.2
 
