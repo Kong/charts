@@ -478,8 +478,9 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
   {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
-    {{- if gt $dblessSourceCount 1 -}}
-      {{- fail "Ambiguous configuration: only one of of .Values.dblessConfig.configMap, .Values.dblessConfig.secret, and .Values.dblessConfig.config can be set." -}}
+  {{- if gt $dblessSourceCount 1 -}}
+    {{- fail "Ambiguous configuration: only one of of .Values.dblessConfig.configMap, .Values.dblessConfig.secret, and .Values.dblessConfig.config can be set." -}}
+  {{- else if eq $dblessSourceCount 1 }}
 - name: kong-custom-dbless-config-volume
     {{- if .Values.dblessConfig.configMap }}
   configMap:
@@ -552,7 +553,7 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
 {{- end }}
 {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
-  {{- if gt $dblessSourceCount 1 -}}
+  {{- if eq $dblessSourceCount 1 -}}
     {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
   mountPath: /kong_dbless/
@@ -914,7 +915,7 @@ the template that it itself is using form the above sections.
 
 {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
 {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
-{{- if gt $dblessSourceCount 1 -}}
+{{- if eq $dblessSourceCount 1 -}}
   {{- $_ := set $autoEnv "KONG_DECLARATIVE_CONFIG" "/kong_dbless/kong.yml" -}}
 {{- end }}
 {{- end }}

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Fix template issue preventing custom dblessconfig volume from being mounted.
+
 ## 2.16.2
 
 ### Fixed 
