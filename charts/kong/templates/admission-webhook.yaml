@@ -97,7 +97,9 @@ spec:
     targetPort: webhook
   selector:
     {{- include "kong.metaLabels" . | nindent 4 }}
-    app.kubernetes.io/component: app
+    {{- if .Values.deployment.singleController.enabled -}}
+    {{- include "kong.selectorLabels.component" (dict "component" "controller" ) | nindent 4 }}
+    {{- end -}}
 {{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
 ---
 apiVersion: v1

@@ -21,6 +21,16 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- default (printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-") .Values.fullnameOverride -}}
 {{- end -}}
 
+{{- define "kong.deployment.proxy.fullname" -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- default (printf "%s-%s-proxy" .Release.Name $name | trunc 63 | trimSuffix "-") .Values.fullnameOverride -}}
+{{- end -}}
+
+{{- define "kong.deployment.controller.fullname" -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- default (printf "%s-%s-controller" .Release.Name $name | trunc 63 | trimSuffix "-") .Values.fullnameOverride -}}
+{{- end -}}
+
 {{- define "kong.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -40,6 +50,30 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/name: {{ template "kong.name" . }}
 app.kubernetes.io/component: app
 app.kubernetes.io/instance: "{{ .Release.Name }}"
+{{- end -}}
+
+{{- define "kong.selectorLabels.component" -}}
+app.kubernetes.io/component: {{ .component }}
+{{- end -}}
+
+{{- define "kong.selectorLabels.proxy" -}}
+{{- if .Values.deployment.singleController.enabled -}}
+app.kubernetes.io/name: {{ template "kong.name" . }}
+{{ include "kong.selectorLabels.component" (dict "component" "proxy") }}
+app.kubernetes.io/instance: "{{ .Release.Name }}"
+{{- else -}}
+{{- include "kong.selectorLabels" . -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "kong.selectorLabels.controller" -}}
+{{- if .Values.deployment.singleController.enabled -}}
+app.kubernetes.io/name: {{ template "kong.name" . }}
+{{ include "kong.selectorLabels.component" (dict "component" "controller") }}
+app.kubernetes.io/instance: "{{ .Release.Name }}"
+{{- else -}}
+{{- include "kong.selectorLabels" . -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "kong.postgresql.fullname" -}}
@@ -173,7 +207,8 @@ spec:
   {{- end }}
   {{- end }}
   {{- if .tls.enabled }}
-  - name: kong-{{ .serviceName }}-tls
+  # - name: kong-{{ .serviceName }}-tls #TODO
+  - name: {{ .serviceName }} #TODO
     port: {{ .tls.servicePort }}
     targetPort: {{ .tls.overrideServiceTargetPort | default .tls.containerPort }}
   {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .tls.nodePort))) }}
@@ -374,7 +409,11 @@ The name of the service used for the ingress controller's validation webhook
 {{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" (printf "%s/%s-proxy" ( include "kong.namespace" . ) (include "kong.fullname" .)) -}}
 {{- $_ := set $autoEnv "CONTROLLER_INGRESS_CLASS" .Values.ingressController.ingressClass -}}
 {{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
+{{- if .Values.deployment.singleController.enabled -}}
+{{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_SVC" (printf "%s/%s-admin" (include "kong.namespace" .) (include "kong.fullname" .) ) -}}
+{{- else -}}
 {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_URL" (include "kong.adminLocalURL" .) -}}
+{{- end -}}
 {{- if .Values.ingressController.admissionWebhook.enabled }}
   {{- $_ := set $autoEnv "CONTROLLER_ADMISSION_WEBHOOK_LISTEN" (printf "0.0.0.0:%d" (int64 .Values.ingressController.admissionWebhook.port)) -}}
 {{- end }}
@@ -1336,6 +1375,14 @@ resource roles into their separate templates.
   - get
   - patch
   - update
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
 {{- end -}}
 
 {{/*
@@ -1404,5 +1451,21 @@ autoscaling/v2
 autoscaling/v2beta2
 {{- else -}}
 autoscaling/v1
+{{- end -}}
+{{- end -}}
+
+{{- define "kong.deployment.controller.replicaCount" -}}
+{{- if .Values.deployment.singleController.enabled -}}
+{{- .Values.deployment.controller.replicaCount -}}
+{{- else -}}
+{{- .Values.replicaCount -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "kong.deployment.proxy.replicaCount" -}}
+{{- if .Values.deployment.singleController.enabled -}}
+{{- .Values.deployment.kong.replicaCount -}}
+{{- else -}}
+{{- .Values.replicaCount -}}
 {{- end -}}
 {{- end -}}

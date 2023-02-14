@@ -14,11 +14,27 @@
 # -----------------------------------------------------------------------------
 
 deployment:
+  # Single controller controlls if kong and controller are deployed in separate
+  # deployments.
+  # This allows independent scaling and separation of concerns.
+  singleController:
+    enabled: false
+
   kong:
     # Enable or disable Kong itself
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
+
+    ## This is in effect only when deployment.singleController.enabled is true.
+    ## This sets the number of replicas for Kong's Gateway deployment.
+    replicaCount: 1
+
+  ## This is in effect only when deployment.singleController.enabled is true.
+  controller:
+    ## This sets the number of replicas for Kong's Ingress Controller deployment.
+    replicaCount: 1
+
   ## Minimum number of seconds for which a newly created pod should be ready without any of its container crashing,
   ## for it to be considered available.
   # minReadySeconds: 60
