@@ -1398,9 +1398,9 @@ extensions/v1beta1
 {{- end -}}
 
 {{- define "kong.autoscalingVersion" -}}
-{{- if (.Capabilities.APIVersions.Has "autoscaling/v2") -}}
+{{- if (.Capabilities.APIVersions.Has "autoscaling/v2/HorizontalPodAutoscaler") -}}
 autoscaling/v2
-{{- else if (.Capabilities.APIVersions.Has "autoscaling/v2beta2") -}}
+{{- else if (.Capabilities.APIVersions.Has "autoscaling/v2beta2/HorizontalPodAutoscaler") -}}
 autoscaling/v2beta2
 {{- else -}}
 autoscaling/v1
