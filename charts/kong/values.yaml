@@ -565,6 +565,19 @@ ingressController:
   #     cpu: 50m
   #     memory: 128Mi
 
+  konnect:
+    enabled: false
+
+    # Specifies a Konnect Runtime Group's ID that the controller will push its data-plane config to.
+    runtimeGroupID: ""
+
+    # Specifies Konnect's account region. One of `us`, `eu`.
+    region: "us"
+
+    # Specifies a secret that contains a client TLS certificate that the controller
+    # will use to authenticate against Konnect APIs.
+    tlsClientCertSecretName: "konnect-client-tls"
+
 # -----------------------------------------------------------------------------
 # Postgres sub-chart parameters
 # -----------------------------------------------------------------------------

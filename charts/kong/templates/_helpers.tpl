@@ -383,6 +383,24 @@ The name of the service used for the ingress controller's validation webhook
 {{- end }}
 
 {{/*
+    ====== KONNECT ENVIRONMENT VARIABLES ======
+*/}}
+
+{{- if .Values.ingressController.konnect.enabled }}
+  {{- $konnect := .Values.ingressController.konnect -}}
+  {{- $_ := required "ingressController.konnect.runtimeGroupID is required when ingressController.konnect.enabled" $konnect.runtimeGroupID -}}
+
+  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_SYNC_ENABLED" true -}}
+  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_RUNTIME_GROUP_ID" $konnect.runtimeGroupID -}}
+  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_ADDRESS" (printf "https://%s.kic.api.konghq.com" $konnect.region) -}}
+
+  {{- $tlsCert := include "secretkeyref" (dict "name" $konnect.tlsClientCertSecretName "key" "tls.crt") -}}
+  {{- $tlsKey := include "secretkeyref" (dict "name" $konnect.tlsClientCertSecretName "key" "tls.key") -}}
+  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_TLS_CLIENT_CERT" $tlsCert -}}
+  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_TLS_CLIENT_KEY" $tlsKey -}}
+{{- end }}
+
+{{/*
     ====== USER-SET ENVIRONMENT VARIABLES ======
 */}}
 

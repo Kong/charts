@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+* Experimental support for the ingress controller's Konnect sync feature was added. One can enable that
+  by setting `ingressController.konnect.*` values.
+  [#746](https://github.com/Kong/charts/pull/746)
+
 ## 2.16.4
 
 ### Fixed

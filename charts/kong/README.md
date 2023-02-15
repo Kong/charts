@@ -725,6 +725,10 @@ section of `values.yaml` file:
 | userDefinedVolumes                      | Create volumes. Please go to Kubernetes doc for the spec of the volumes                                                                                  |                                    |
 | userDefinedVolumeMounts                 | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts                                                                        |                                    |
 | terminationGracePeriodSeconds           | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pod | 30                                 |
+| konnect.enabled                         | Enable synchronisation of data-plane configuration with Konnect Runtime Group                                                                            | false                              |
+| konnect.runtimeGroupID                  | Konnect Runtime Group's unique identifier.                                                                                                               |                                    |
+| konnect.region                          | Konnect account's region. One of `us`, `eu`.                                                                                                             | us                                 |
+| konnect.tlsClientCertSecretName         | Name of a secret that contains Konnect Runtime Group's client TLS certificate.                                                                           | konnect-client-tls                 |
 
 #### The `env` section
 For a complete list of all configuration values you can set in the
