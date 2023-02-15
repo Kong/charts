@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+* Don't include a clear-stale-pid initContainer when kong gateway is not
+  enabled in the deployment.
+  [#744](https://github.com/Kong/charts/pull/744)
+
 ## 2.16.4
 
 ### Fixed
