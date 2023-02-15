@@ -4,10 +4,13 @@
 
 ### Improvements
 
-* Added support for single controller deployments.
-  With `deployment.singleControler.enabled` set to `true` you can instruct helm
-  to produce separate deployments for Kong Gateway and Kong Ingress Controller.
+* Added support for controller's admin API service discovery.
+  With `ingressController.serviceDiscovery.enabled` set to `true` Kong Ingress Controller
+  will enable service discovery for admin API service.
+  For more information on this please see [the corresponding README.md section][x]
   [#744](https://github.com/Kong/charts/pull/744)
+
+[x]: ./README.md
 
 ## 2.16.5
 
@@ -17,7 +20,6 @@
   [#744](https://github.com/Kong/charts/pull/744)
 * Don't include a clear-stale-pid initContainer when kong gateway is not
   enabled in the deployment.
-
 
 ## 2.16.4
 
