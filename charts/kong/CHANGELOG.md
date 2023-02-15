@@ -1,12 +1,23 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+* Added support for single controller deployments.
+  With `deployment.singleControler.enabled` set to `true` you can instruct helm
+  to produce separate deployments for Kong Gateway and Kong Ingress Controller.
+  [#744](https://github.com/Kong/charts/pull/744)
+
 ## 2.16.5
+
+### Fixed
 
 * Fix autoscaling version detection.
   [#744](https://github.com/Kong/charts/pull/744)
 * Don't include a clear-stale-pid initContainer when kong gateway is not
   enabled in the deployment.
-  [#744](https://github.com/Kong/charts/pull/744)
+
 
 ## 2.16.4
 
@@ -24,14 +35,14 @@
 
 ## 2.16.2
 
-### Fixed 
+### Fixed
 
 * The admission webhook is disabled when the ingress controller is disabled, as
   the admission webhook requires a service provided by the ingress controller.
 
 ## 2.16.1
 
-### Fixed 
+### Fixed
 
 * serviceAccount projected volume is properly provisioned for GKE clusters >= 1.20.
   [#735](https://github.com/Kong/charts/pull/735)

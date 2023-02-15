@@ -317,6 +317,15 @@ Create a single listen (IP+port+parameter combo)
 {{- end -}}
 
 {{/*
+Return the admin API service name for service discovery
+*/}}
+{{- define "kong.adminSvc" -}}
+{{- $_namespace := .Values.ingressController.serviceDiscovery.adminApiService.namespace | default ( include "kong.namespace" . ) -}}
+{{- $_name := .Values.ingressController.serviceDiscovery.adminApiService.name -}}
+{{- printf "%s/%s" $_namespace $_name -}}
+{{- end -}}
+
+{{/*
 Return the local admin API URL, preferring HTTPS if available
 */}}
 {{- define "kong.adminLocalURL" -}}
@@ -371,10 +380,14 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- $autoEnv := dict -}}
 {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY" true -}}
-{{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" (printf "%s/%s-proxy" ( include "kong.namespace" . ) (include "kong.fullname" .)) -}}
+{{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" (printf "%s/%s" ( include "kong.namespace" . ) ( .Values.proxy.nameOverride | default ( printf "%s-proxy" (include "kong.fullname" . )))) -}}
 {{- $_ := set $autoEnv "CONTROLLER_INGRESS_CLASS" .Values.ingressController.ingressClass -}}
 {{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
+{{- if .Values.ingressController.serviceDiscovery.enabled -}}
+{{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_SVC" (include "kong.adminSvc" . ) -}}
+{{- else -}}
 {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_URL" (include "kong.adminLocalURL" .) -}}
+{{- end -}}
 {{- if .Values.ingressController.admissionWebhook.enabled }}
   {{- $_ := set $autoEnv "CONTROLLER_ADMISSION_WEBHOOK_LISTEN" (printf "0.0.0.0:%d" (int64 .Values.ingressController.admissionWebhook.port)) -}}
 {{- end }}
@@ -1336,6 +1349,14 @@ resource roles into their separate templates.
   - get
   - patch
   - update
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
 {{- end -}}
 
 {{/*
