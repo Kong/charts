@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+* Don't include a clear-stale-pid initContainer when kong gateway is not
+  enabled in the deployment.
+  [#744](https://github.com/Kong/charts/pull/744)
 * Experimental support for the ingress controller's Konnect sync feature was added. One can enable that
   by setting `ingressController.konnect.*` values.
   [#746](https://github.com/Kong/charts/pull/746)
