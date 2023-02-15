@@ -1,0 +1,16 @@
+# Basic values.yaml configuration for Kong for Kubernetes with the ingress controller
+# and the controller's Konnect integration enabled.
+
+image:
+  repository: kong
+  tag: "3.1"
+
+env:
+  database: "off"
+
+ingressController:
+  enabled: true
+
+  konnect:
+    enabled: true
+    runtimeGroupID: "523f592f-9828-48a2-ab2e-cf113276369d"

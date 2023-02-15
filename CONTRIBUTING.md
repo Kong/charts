@@ -11,7 +11,7 @@ maintainers.
 
 Before submitting a pull request, please run through the following steps:
 - Rebase your branch off the current tip of the `main` branch.
-- Run `helm lint` and correct any issues it finds.
+- Run `helm lint`, `make test` and correct any issues they find.
 - If your change adds new user-facing (exposed in values.yaml) features or
   changes existing features, update README.md accordingly. Documentation should
   adhere to the [Microsoft Writing Style Guide](https://docs.microsoft.com/en-us/style-guide/welcome/).
@@ -75,4 +75,3 @@ To ensure our backlog is organized and up to date, we will close issues and
 pull requests that have been inactive awaiting a community response for over 2
 weeks. Please feel free to reopen an inactive closed issue if you would like to
 continue work on it.
-
