@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+* Added support for single controller deployments.
+  With `deployment.singleControler.enabled` set to `true` you can instruct helm
+  to produce separate deployments for Kong Gateway and Kong Ingress Controller.
+  [#744](https://github.com/Kong/charts/pull/744)
+
 ## 2.16.4
 
 ### Fixed
