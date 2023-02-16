@@ -11,10 +11,6 @@ env:
 ingressController:
   enabled: true
 
-  image:
-    repository: kong/nightly-ingress-controller
-    tag: "2023-02-15"
-    effectiveSemver: "2.9.0"
 
   konnect:
     enabled: true
