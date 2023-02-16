@@ -1,10 +1,3 @@
-# Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
-ifeq (,$(shell go env GOBIN))
-GOBIN=$(shell go env GOPATH)/bin
-else
-GOBIN=$(shell go env GOBIN)
-endif
-
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 
 .PHONY: _download_tool
@@ -21,8 +14,13 @@ kube-linter:
 	@$(MAKE) _download_tool TOOL=kube-linter
 
 .PHONY: lint
-lint: ./scripts/*
+lint: tools lint.charts.kong lint.shellcheck
+
+.PHONY: lint.charts.kong
+lint.charts.kong:
+	$(KUBE_LINTER) lint charts/kong
+
+lint.shellcheck: ./scripts/*
 	@for script in $^ ; do \
 		shellcheck $${script} ; \
 	done
-	$(KUBE_LINTER) lint charts/kong

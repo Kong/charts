@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Under the hood 
+
+* Add kube-linter to the CI pipeline to ensure produced manifests comply
+  with community best practices.
+  [#751](https://github.com/Kong/charts/pull/751)
+
+## 2.16.5
+
+* Fix autoscaling version detection.
+  [#744](https://github.com/Kong/charts/pull/744)
 * Don't include a clear-stale-pid initContainer when kong gateway is not
   enabled in the deployment.
   [#744](https://github.com/Kong/charts/pull/744)
