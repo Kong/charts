@@ -725,6 +725,9 @@ section of `values.yaml` file:
 | userDefinedVolumes                      | Create volumes. Please go to Kubernetes doc for the spec of the volumes                                                                                  |                                    |
 | userDefinedVolumeMounts                 | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts                                                                        |                                    |
 | terminationGracePeriodSeconds           | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pod | 30                                 |
+| serviceDiscovery.enabled                | Enables Kong instance service discovery for single controller deployments                                                                                |  false                             |
+| serviceDiscovery.adminApiService.namespace | The namespace of the Kong admin API service for a single controller deployment                                                                        |  ""                                |
+| serviceDiscovery.adminApiService.name   | The nameof the Kong admin API service for a single controller deployment                                                                                 |  ""                                |
 
 #### The `env` section
 For a complete list of all configuration values you can set in the
