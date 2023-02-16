@@ -725,9 +725,9 @@ section of `values.yaml` file:
 | userDefinedVolumes                      | Create volumes. Please go to Kubernetes doc for the spec of the volumes                                                                                  |                                    |
 | userDefinedVolumeMounts                 | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts                                                                        |                                    |
 | terminationGracePeriodSeconds           | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pod | 30                                 |
-| serviceDiscovery.enabled                | Enables Kong instance service discovery for single controller deployments                                                                                |  false                             |
-| serviceDiscovery.adminApiService.namespace | The namespace of the Kong admin API service for a single controller deployment                                                                        |  ""                                |
-| serviceDiscovery.adminApiService.name   | The nameof the Kong admin API service for a single controller deployment                                                                                 |  ""                                |
+| serviceDiscovery.enabled                | Enables Kong instance service discovery                                                                                                                  |  false                             |
+| serviceDiscovery.adminApiService.namespace | The namespace of the Kong admin API service                                                                                                           |  ""                                |
+| serviceDiscovery.adminApiService.name   | The name of the Kong admin API service                                                                                                                   |  ""                                |
 
 #### The `env` section
 For a complete list of all configuration values you can set in the
@@ -748,6 +748,19 @@ kong:
     customEnv:
       TZ: "Europe/Berlin"
 ```
+
+#### The `serviceDiscovery` section
+
+With Kong Ingress Controller v2.9 a new way of configuration has been introduced
+which allows the controller to discover Gateway instances.
+In order to use that feature you'll have to enable the service discovery by
+setting `ingressController.serviceDiscovery.enabled` to `true` and configuring
+admin API service name and namespace via
+
+- `ingressController.serviceDiscovery.adminApiServie.name`
+- and `ingressController.serviceDiscovery.adminApiServie.namespace`
+
+For exemplar `values.yaml` files which use this feature please see: [examples README.md](./example-values/README.md).
 
 ### General Parameters
 
