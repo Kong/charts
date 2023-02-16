@@ -32,6 +32,11 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Run kube-linter
+        uses: stackrox/kube-linter-action@v1
+        with:
+          directory: charts/kong
+
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.3.1
 
