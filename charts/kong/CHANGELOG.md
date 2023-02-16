@@ -2,12 +2,29 @@
 
 ## Unreleased
 
-* Don't include a clear-stale-pid initContainer when kong gateway is not
-  enabled in the deployment.
-  [#744](https://github.com/Kong/charts/pull/744)
+### Improvements
+
+* Added support for controller's admin API service discovery.
+  With `ingressController.serviceDiscovery.enabled` set to `true` Kong Ingress Controller
+  will enable service discovery for admin API service.
+  For more information on this please see
+  [the corresponding README.md section][kic_service_discovery_readme]
+  [#747](https://github.com/Kong/charts/pull/747)
 * Experimental support for the ingress controller's Konnect sync feature was added. One can enable that
   by setting `ingressController.konnect.*` values.
   [#746](https://github.com/Kong/charts/pull/746)
+
+[kic_service_discovery_readme]: ./README.md#the-servicediscovery-section
+
+## 2.16.5
+
+### Fixed
+
+* Fix autoscaling version detection.
+  [#752](https://github.com/Kong/charts/pull/752)
+* Don't include a clear-stale-pid initContainer when kong gateway is not
+  enabled in the deployment.
+  [#749](https://github.com/Kong/charts/pull/749)
 
 ## 2.16.4
 
@@ -25,14 +42,14 @@
 
 ## 2.16.2
 
-### Fixed 
+### Fixed
 
 * The admission webhook is disabled when the ingress controller is disabled, as
   the admission webhook requires a service provided by the ingress controller.
 
 ## 2.16.1
 
-### Fixed 
+### Fixed
 
 * serviceAccount projected volume is properly provisioned for GKE clusters >= 1.20.
   [#735](https://github.com/Kong/charts/pull/735)

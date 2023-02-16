@@ -258,6 +258,8 @@ proxy:
   # Enable creating a Kubernetes service for the proxy
   enabled: true
   type: LoadBalancer
+  # Override proxy Service name
+  nameOverride: ""
   # To specify annotations or labels for the proxy service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -478,6 +480,12 @@ ingressController:
     # version, set this to "3.1.0".
     effectiveSemver:
   args: []
+
+  serviceDiscovery:
+    enabled: false
+    adminApiService:
+      namespace: ""
+      name: ""
 
   # Specify individual namespaces to watch for ingress configuration. By default,
   # when no namespaces are set, the controller watches all namespaces and uses a
