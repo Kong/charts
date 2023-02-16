@@ -52,8 +52,8 @@ common Kong deployment scenarios on Kubernetes.
   restarts them, so starting control planes second, but around the same time
   will usually work), but is the smoothest option.
 
-* [minimal-kong-scd-controller.yaml](minimal-kong-scd-controller.yaml) and
-  [minimal-kong-scd-gateway.yaml](minimal-kong-scd-gateway.yaml) install a
+* [minimal-kong-sd-controller.yaml](minimal-kong-sd-controller.yaml) and
+  [minimal-kong-sd-gateway.yaml](minimal-kong-sd-gateway.yaml) install a
   single controller and cluster of gateway instances. The controller release
   configuration must specify the names of the gateway proxy and and admin
   Services. The examples use `gw` as the gateway release name. If you wish to

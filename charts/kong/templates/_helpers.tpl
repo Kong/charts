@@ -322,6 +322,9 @@ Return the admin API service name for service discovery
 {{- define "kong.adminSvc" -}}
 {{- $_namespace := .Values.ingressController.serviceDiscovery.adminApiService.namespace | default ( include "kong.namespace" . ) -}}
 {{- $_name := .Values.ingressController.serviceDiscovery.adminApiService.name -}}
+{{- if and (not $_name) (.Values.ingressController.serviceDiscovery.enabled) -}}
+{{- fail ".ingressController.serviceDiscovery.adminApiService.name has to be provided when .Values.ingressController.serviceDiscovery.enabled is set to true" -}}
+{{- end -}}
 {{- printf "%s/%s" $_namespace $_name -}}
 {{- end -}}
 
