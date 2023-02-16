@@ -10,6 +10,8 @@
   For more information on this please see
   [the corresponding README.md section][kic_service_discovery_readme]
   [#747](https://github.com/Kong/charts/pull/747)
+* Added experimental support for the ingress controller's Konnect sync feature via `ingressController.konnect.*` values.
+  [#746](https://github.com/Kong/charts/pull/746)
 
 [kic_service_discovery_readme]: ./README.md#the-servicediscovery-section
 

@@ -728,6 +728,10 @@ section of `values.yaml` file:
 | serviceDiscovery.enabled                | Enables Kong instance service discovery (for more details see [serviceDiscovery section][sd_section])                                                    |  false                             |
 | serviceDiscovery.adminApiService.namespace | The namespace of the Kong admin API service (for more details see [serviceDiscovery section][sd_section])                                             |  `.Release.Namespace`              |
 | serviceDiscovery.adminApiService.name   | The name of the Kong admin API service (for more details see [serviceDiscovery section][sd_section])                                                     |  ""                                |
+| konnect.enabled                         | Enable synchronisation of data plane configuration with Konnect Runtime Group                                                                            | false                              |
+| konnect.runtimeGroupID                  | Konnect Runtime Group's unique identifier.                                                                                                               |                                    |
+| konnect.region                          | Konnect account's region. One of `us`, `eu`.                                                                                                             | us                                 |
+| konnect.tlsClientCertSecretName         | Name of the secret that contains Konnect Runtime Group's client TLS certificate.                                                                           | konnect-client-tls                 |
 
 [sd_section]: #the-servicediscovery-section
 
