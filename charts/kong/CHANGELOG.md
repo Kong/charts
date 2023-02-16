@@ -2,19 +2,32 @@
 
 ## Unreleased
 
+### Improvements
+
+* Added support for controller's admin API service discovery.
+  With `ingressController.serviceDiscovery.enabled` set to `true` Kong Ingress Controller
+  will enable service discovery for admin API service.
+  For more information on this please see
+  [the corresponding README.md section][kic_service_discovery_readme]
+  [#747](https://github.com/Kong/charts/pull/747)
+
 ### Under the hood 
 
 * Add kube-linter to the CI pipeline to ensure produced manifests comply
   with community best practices.
   [#751](https://github.com/Kong/charts/pull/751)
 
+[kic_service_discovery_readme]: ./README.md#the-servicediscovery-section
+
 ## 2.16.5
 
+### Fixed
+
 * Fix autoscaling version detection.
-  [#744](https://github.com/Kong/charts/pull/744)
+  [#752](https://github.com/Kong/charts/pull/752)
 * Don't include a clear-stale-pid initContainer when kong gateway is not
   enabled in the deployment.
-  [#744](https://github.com/Kong/charts/pull/744)
+  [#749](https://github.com/Kong/charts/pull/749)
 
 ## 2.16.4
 
@@ -32,14 +45,14 @@
 
 ## 2.16.2
 
-### Fixed 
+### Fixed
 
 * The admission webhook is disabled when the ingress controller is disabled, as
   the admission webhook requires a service provided by the ingress controller.
 
 ## 2.16.1
 
-### Fixed 
+### Fixed
 
 * serviceAccount projected volume is properly provisioned for GKE clusters >= 1.20.
   [#735](https://github.com/Kong/charts/pull/735)

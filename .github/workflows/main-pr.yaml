@@ -36,7 +36,7 @@ jobs:
       - name: Run linters
         run: make lint
 
-  lint-test-with-ct:
+  lint-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
