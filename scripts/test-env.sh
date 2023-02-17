@@ -79,7 +79,7 @@ ktf 1>/dev/null
 # Create Testing Environment
 # ------------------------------------------------------------------------------
 
-ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma --kubernetes-version ${KUBERNETES_VERSION}
+ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma --kubernetes-version "${KUBERNETES_VERSION}"
 
 kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd/experimental?ref=v0.5.1" | kubectl apply -f -
 
