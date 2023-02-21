@@ -329,10 +329,10 @@ Return the admin API service name for service discovery
   {{- fail (printf "Admin API service discovery is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
   {{- end }}
 
-  {{- $_namespace := $adminApiService.namespace | default ( include "kong.namespace" . ) -}}
-  {{- $_name := $adminApiService.name -}}
-  {{- $_ := required ".ingressController.serviceDiscovery.adminApiService.name has to be provided when .Values.ingressController.serviceDiscovery.enabled is set to true"  $_name -}}
-  {{- printf "%s/%s" $_namespace $_name -}}
+  {{- $namespace := $adminApiService.namespace | default ( include "kong.namespace" . ) -}}
+  {{- $name := $adminApiService.name -}}
+  {{- $_ := required ".ingressController.serviceDiscovery.adminApiService.name has to be provided when .Values.ingressController.serviceDiscovery.enabled is set to true"  $name -}}
+  {{- printf "%s/%s" $namespace $name -}}
 {{- else -}}
   {{- fail "Can't use service discovery when .Values.ingressController.serviceDiscovery.enabled is set to false." -}}
 {{- end -}}
@@ -419,6 +419,10 @@ The name of the service used for the ingress controller's validation webhook
 */}}
 
 {{- if .Values.ingressController.konnect.enabled }}
+  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  {{- fail (printf "Konnect sync is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  {{- end }}
+
   {{- $konnect := .Values.ingressController.konnect -}}
   {{- $_ := required "ingressController.konnect.runtimeGroupID is required when ingressController.konnect.enabled" $konnect.runtimeGroupID -}}
 
