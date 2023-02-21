@@ -15,6 +15,12 @@
 * Added experimental support for the ingress controller's Konnect sync feature via `ingressController.konnect.*` values.
   [#746](https://github.com/Kong/charts/pull/746)
 
+### Under the hood 
+
+* Add kube-linter to the CI pipeline to ensure produced manifests comply
+  with community best practices.
+  [#751](https://github.com/Kong/charts/pull/751)
+
 [kic_service_discovery_readme]: ./README.md#the-servicediscovery-section
 
 ## 2.16.5
