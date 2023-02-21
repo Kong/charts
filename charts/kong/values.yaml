@@ -297,7 +297,7 @@ proxy:
 
   # Define stream (TCP) listen
   # To enable, remove "[]", uncomment the section below, and select your desired
-  # ports and parameters. Listens are dynamically named after their servicePort,
+  # ports and parameters. Listens are dynamically named after their containerPort,
   # e.g. "stream-9000" for the below.
   # Note: although you can select the protocol here, you cannot set UDP if you
   # use a LoadBalancer Service due to limitations in current Kubernetes versions.
