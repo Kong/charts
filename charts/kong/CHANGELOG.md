@@ -14,7 +14,7 @@
   This feature is only available when deploying chart with Kong Ingress Controller in version 2.9 or higher.
   [#746](https://github.com/Kong/charts/pull/746)
 
-### Under the hood 
+### Under the hood
 
 * Add kube-linter to the CI pipeline to ensure produced manifests comply
   with community best practices.

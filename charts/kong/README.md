@@ -777,9 +777,10 @@ For admin API service discovery:
   The following admin API Service flags have to be provided in order for service
   discovery to work:
 
-  - `ingressController.serviceDiscovery.adminApiServie.name`
-  - `ingressController.serviceDiscovery.adminApiServie.namespace`
+  - `ingressController.serviceDiscovery.adminApiService.name`
+  - `ingressController.serviceDiscovery.adminApiService.namespace`
 
+Using this feature requires a split release installation of Gateways and Ingress Controller.
 For exemplar `values.yaml` files which use this feature please see: [examples README.md](./example-values/README.md).
 
 ### General Parameters
