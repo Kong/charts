@@ -7,10 +7,11 @@
 * Added support for controller's admin API service discovery.
   With `ingressController.serviceDiscovery.enabled` set to `true` Kong Ingress Controller
   will enable service discovery for admin API service.
-  For more information on this please see
-  [the corresponding README.md section][kic_service_discovery_readme]
+  For more information on this please see [the corresponding README.md section][kic_service_discovery_readme].
+  This feature is only available when deploying chart with Kong Ingress Controller in version 2.9 or higher.
   [#747](https://github.com/Kong/charts/pull/747)
 * Added experimental support for the ingress controller's Konnect sync feature via `ingressController.konnect.*` values.
+  This feature is only available when deploying chart with Kong Ingress Controller in version 2.9 or higher.
   [#746](https://github.com/Kong/charts/pull/746)
 
 ### Under the hood 

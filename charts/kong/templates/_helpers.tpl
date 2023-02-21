@@ -320,12 +320,22 @@ Create a single listen (IP+port+parameter combo)
 Return the admin API service name for service discovery
 */}}
 {{- define "kong.adminSvc" -}}
-{{- $_namespace := .Values.ingressController.serviceDiscovery.adminApiService.namespace | default ( include "kong.namespace" . ) -}}
-{{- $_name := .Values.ingressController.serviceDiscovery.adminApiService.name -}}
-{{- if and (not $_name) (.Values.ingressController.serviceDiscovery.enabled) -}}
-{{- fail ".ingressController.serviceDiscovery.adminApiService.name has to be provided when .Values.ingressController.serviceDiscovery.enabled is set to true" -}}
+{{- $serviceDiscovery := .Values.ingressController.serviceDiscovery -}}
+{{- if $serviceDiscovery.enabled -}}
+  {{- $adminApiService := $serviceDiscovery.adminApiService -}}
+  {{- $_ := required ".ingressController.serviceDiscovery.adminApiService has to be provided when .Values.ingressController.serviceDiscovery.enabled is set to true"  $adminApiService -}}
+
+  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  {{- fail (printf "Admin API service discovery is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  {{- end }}
+
+  {{- $namespace := $adminApiService.namespace | default ( include "kong.namespace" . ) -}}
+  {{- $name := $adminApiService.name -}}
+  {{- $_ := required ".ingressController.serviceDiscovery.adminApiService.name has to be provided when .Values.ingressController.serviceDiscovery.enabled is set to true"  $name -}}
+  {{- printf "%s/%s" $namespace $name -}}
+{{- else -}}
+  {{- fail "Can't use service discovery when .Values.ingressController.serviceDiscovery.enabled is set to false." -}}
 {{- end -}}
-{{- printf "%s/%s" $_namespace $_name -}}
 {{- end -}}
 
 {{/*
@@ -382,27 +392,37 @@ The name of the service used for the ingress controller's validation webhook
 */}}
 
 {{- $autoEnv := dict -}}
-{{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY" true -}}
-{{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" (printf "%s/%s" ( include "kong.namespace" . ) ( .Values.proxy.nameOverride | default ( printf "%s-proxy" (include "kong.fullname" . )))) -}}
-{{- $_ := set $autoEnv "CONTROLLER_INGRESS_CLASS" .Values.ingressController.ingressClass -}}
-{{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
-{{- if .Values.ingressController.serviceDiscovery.enabled -}}
-{{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_SVC" (include "kong.adminSvc" . ) -}}
-{{- else -}}
-{{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_URL" (include "kong.adminLocalURL" .) -}}
-{{- end -}}
-{{- if .Values.ingressController.admissionWebhook.enabled }}
-  {{- $_ := set $autoEnv "CONTROLLER_ADMISSION_WEBHOOK_LISTEN" (printf "0.0.0.0:%d" (int64 .Values.ingressController.admissionWebhook.port)) -}}
-{{- end }}
-{{- if (not (eq (len .Values.ingressController.watchNamespaces) 0)) }}
-  {{- $_ := set $autoEnv "CONTROLLER_WATCH_NAMESPACE" (.Values.ingressController.watchNamespaces | join ",") -}}
-{{- end }}
+  {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY" true -}}
+  {{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" (printf "%s/%s" ( include "kong.namespace" . ) ( .Values.proxy.nameOverride | default ( printf "%s-proxy" (include "kong.fullname" . )))) -}}
+  {{- $_ := set $autoEnv "CONTROLLER_INGRESS_CLASS" .Values.ingressController.ingressClass -}}
+  {{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
+
+  {{- if .Values.ingressController.admissionWebhook.enabled }}
+    {{- $_ := set $autoEnv "CONTROLLER_ADMISSION_WEBHOOK_LISTEN" (printf "0.0.0.0:%d" (int64 .Values.ingressController.admissionWebhook.port)) -}}
+  {{- end }}
+  {{- if (not (eq (len .Values.ingressController.watchNamespaces) 0)) }}
+    {{- $_ := set $autoEnv "CONTROLLER_WATCH_NAMESPACE" (.Values.ingressController.watchNamespaces | join ",") -}}
+  {{- end }}
+
+{{/*
+    ====== ADMIN API CONFIGURATION ======
+*/}}
+
+  {{- if .Values.ingressController.serviceDiscovery.enabled -}}
+    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_SVC" (include "kong.adminSvc" . ) -}}
+  {{- else -}}
+    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_URL" (include "kong.adminLocalURL" .) -}}
+  {{- end -}}
 
 {{/*
     ====== KONNECT ENVIRONMENT VARIABLES ======
 */}}
 
 {{- if .Values.ingressController.konnect.enabled }}
+  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  {{- fail (printf "Konnect sync is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  {{- end }}
+
   {{- $konnect := .Values.ingressController.konnect -}}
   {{- $_ := required "ingressController.konnect.runtimeGroupID is required when ingressController.konnect.enabled" $konnect.runtimeGroupID -}}
 
