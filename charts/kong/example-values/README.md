@@ -55,12 +55,17 @@ common Kong deployment scenarios on Kubernetes.
 * [minimal-kong-sd-controller.yaml](minimal-kong-sd-controller.yaml) and
   [minimal-kong-sd-gateway.yaml](minimal-kong-sd-gateway.yaml) install a
   single controller and cluster of gateway instances. The controller release
-  configuration must specify the names of the gateway proxy and and admin
+  configuration must specify the names of the gateway proxy and admin
   Services. The examples use `gw` as the gateway release name. If you wish to
   use another name, set the controller configuration to match. For example, if
   you use `hydrogen` as your gateway release name, set
   `proxy.nameOverride=hydrogen-kong-proxy` and
   `ingressController.adminApiService.name=hydrogen-kong-admin`.
+
+* [minimal-kong-controller-konnect.yaml](minimal-kong-controller-konnect.yaml) installs Kong
+  open source with the ingress controller in DB-less mode, with Kong's Konnect sync feature
+  enabled. In order to make it work, `ingressController.konnect.runtimeGroupID` has to be
+  supplied.
 
 All Enterprise examples require some level of additional user configuration to
 install properly. Read the comments at the top of each file for instructions.

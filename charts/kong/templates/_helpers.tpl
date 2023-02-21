@@ -329,6 +329,10 @@ Return the admin API service name for service discovery
   {{- fail (printf "Admin API service discovery is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
   {{- end }}
 
+  {{- if .Values.deployment.kong.enabled }}
+  {{- fail "deployment.kong.enabled and ingressController.serviceDiscovery.enabled are mutually exclusive and cannot be enabled at once. Admin API service discovery requires a split release installation of Gateways and Ingress Controller." }}
+  {{- end }}
+
   {{- $namespace := $adminApiService.namespace | default ( include "kong.namespace" . ) -}}
   {{- $name := $adminApiService.name -}}
   {{- $_ := required ".ingressController.serviceDiscovery.adminApiService.name has to be provided when .Values.ingressController.serviceDiscovery.enabled is set to true"  $name -}}
