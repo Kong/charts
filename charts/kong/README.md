@@ -701,39 +701,39 @@ are configured using an array of objects under `proxy.stream` and `udpProxy.stre
 All of the following properties are nested under the `ingressController`
 section of `values.yaml` file:
 
-| Parameter                               | Description                                                                                                                                              | Default                            |
-|-----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------|
-| enabled                                 | Deploy the ingress controller, rbac and crd                                                                                                              | true                               |
-| image.repository                        | Docker image with the ingress controller                                                                                                                 | kong/kubernetes-ingress-controller |
-| image.tag                               | Version of the ingress controller                                                                                                                        | 2.0                                |
-| image.effectiveSemver                   | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version                                      |                                    |
-| readinessProbe                          | Kong ingress controllers readiness probe                                                                                                                 |                                    |
-| livenessProbe                           | Kong ingress controllers liveness probe                                                                                                                  |                                    |
-| installCRDs                             | Legacy toggle for Helm 2-style CRD management. Should not be set [unless necessary due to cluster permissions](#removing-cluster-scoped-permissions).    | false                              |
-| env                                     | Specify Kong Ingress Controller configuration via environment variables                                                                                  |                                    |
-| customEnv                               | Specify custom environment variables (without the CONTROLLER_ prefix)                                                                                    |                                    |
-| ingressClass                            | The name of this controller's ingressClass                                                                                                               | kong                               |
-| ingressClassAnnotations                 | The ingress-class value for controller                                                                                                                   | kong                               |
-| args                                    | List of ingress-controller cli arguments                                                                                                                 | []                                 |
-| watchNamespaces                         | List of namespaces to watch. Watches all namespaces if empty                                                                                             | []                                 |
-| admissionWebhook.enabled                | Whether to enable the validating admission webhook                                                                                                       | true                               |
-| admissionWebhook.failurePolicy          | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)                                                                         | Ignore                             |
-| admissionWebhook.port                   | The port the ingress controller will listen on for admission webhooks                                                                                    | 8080                               |
-| admissionWebhook.certificate.provided   | Use a provided certificate. When set to false, the chart will automatically generate a certificate.                                                      | false                              |
-| admissionWebhook.certificate.secretName | Name of the TLS secret for the provided webhook certificate                                                                                              |                                    |
-| admissionWebhook.certificate.caBundle   | PEM encoded CA bundle which will be used to validate the provided webhook certificate                                                                    |                                    |
-| userDefinedVolumes                      | Create volumes. Please go to Kubernetes doc for the spec of the volumes                                                                                  |                                    |
-| userDefinedVolumeMounts                 | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts                                                                        |                                    |
-| terminationGracePeriodSeconds           | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pod | 30                                 |
-| serviceDiscovery.enabled                | Enables Kong instance service discovery (for more details see [serviceDiscovery section][sd_section])                                                    |  false                             |
-| serviceDiscovery.adminApiService.namespace | The namespace of the Kong admin API service (for more details see [serviceDiscovery section][sd_section])                                             |  `.Release.Namespace`              |
-| serviceDiscovery.adminApiService.name   | The name of the Kong admin API service (for more details see [serviceDiscovery section][sd_section])                                                     |  ""                                |
-| konnect.enabled                         | Enable synchronisation of data plane configuration with Konnect Runtime Group                                                                            | false                              |
-| konnect.runtimeGroupID                  | Konnect Runtime Group's unique identifier.                                                                                                               |                                    |
-| konnect.region                          | Konnect account's region. One of `us`, `eu`.                                                                                                             | us                                 |
-| konnect.tlsClientCertSecretName         | Name of the secret that contains Konnect Runtime Group's client TLS certificate.                                                                           | konnect-client-tls                 |
+| Parameter                                  | Description                                                                                                                                              | Default                            |
+|--------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------|
+| enabled                                    | Deploy the ingress controller, rbac and crd                                                                                                              | true                               |
+| image.repository                           | Docker image with the ingress controller                                                                                                                 | kong/kubernetes-ingress-controller |
+| image.tag                                  | Version of the ingress controller                                                                                                                        | 2.0                                |
+| image.effectiveSemver                      | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version                                      |                                    |
+| readinessProbe                             | Kong ingress controllers readiness probe                                                                                                                 |                                    |
+| livenessProbe                              | Kong ingress controllers liveness probe                                                                                                                  |                                    |
+| installCRDs                                | Legacy toggle for Helm 2-style CRD management. Should not be set [unless necessary due to cluster permissions](#removing-cluster-scoped-permissions).    | false                              |
+| env                                        | Specify Kong Ingress Controller configuration via environment variables                                                                                  |                                    |
+| customEnv                                  | Specify custom environment variables (without the CONTROLLER_ prefix)                                                                                    |                                    |
+| ingressClass                               | The name of this controller's ingressClass                                                                                                               | kong                               |
+| ingressClassAnnotations                    | The ingress-class value for controller                                                                                                                   | kong                               |
+| args                                       | List of ingress-controller cli arguments                                                                                                                 | []                                 |
+| watchNamespaces                            | List of namespaces to watch. Watches all namespaces if empty                                                                                             | []                                 |
+| admissionWebhook.enabled                   | Whether to enable the validating admission webhook                                                                                                       | true                               |
+| admissionWebhook.failurePolicy             | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)                                                                         | Ignore                             |
+| admissionWebhook.port                      | The port the ingress controller will listen on for admission webhooks                                                                                    | 8080                               |
+| admissionWebhook.certificate.provided      | Use a provided certificate. When set to false, the chart will automatically generate a certificate.                                                      | false                              |
+| admissionWebhook.certificate.secretName    | Name of the TLS secret for the provided webhook certificate                                                                                              |                                    |
+| admissionWebhook.certificate.caBundle      | PEM encoded CA bundle which will be used to validate the provided webhook certificate                                                                    |                                    |
+| userDefinedVolumes                         | Create volumes. Please go to Kubernetes doc for the spec of the volumes                                                                                  |                                    |
+| userDefinedVolumeMounts                    | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts                                                                        |                                    |
+| terminationGracePeriodSeconds              | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pod | 30                                 |
+| gatewayDiscovery.enabled                   | Enables Kong instance service discovery (for more details see [gatewayDiscovery section][gd_section])                                                    | false                              |
+| gatewayDiscovery.adminApiService.namespace | The namespace of the Kong admin API service (for more details see [gatewayDiscovery section][gd_section])                                                | `.Release.Namespace`               |
+| gatewayDiscovery.adminApiService.name      | The name of the Kong admin API service (for more details see [gatewayDiscovery section][gd_section])                                                     | ""                                 |
+| konnect.enabled                            | Enable synchronisation of data plane configuration with Konnect Runtime Group                                                                            | false                              |
+| konnect.runtimeGroupID                     | Konnect Runtime Group's unique identifier.                                                                                                               |                                    |
+| konnect.region                             | Konnect account's region. One of `us`, `eu`.                                                                                                             | us                                 |
+| konnect.tlsClientCertSecretName            | Name of the secret that contains Konnect Runtime Group's client TLS certificate.                                                                         | konnect-client-tls                 |
 
-[sd_section]: #the-servicediscovery-section
+[gd_section]: #the-gatewayDiscovery-section
 
 #### The `env` section
 For a complete list of all configuration values you can set in the
@@ -755,30 +755,29 @@ kong:
       TZ: "Europe/Berlin"
 ```
 
-#### The `serviceDiscovery` section
+#### The `gatewayDiscovery` section
 
-Kong Ingress Controller v2.9 has introduced service discovery which allows
-the controller to discover Gateway instances that it should configure.
+Kong Ingress Controller v2.9 has introduced gateway discovery which allows
+the controller to discover Gateway instances that it should configure using
+an Admin API Kubernetes service.
 
 You'll be able to configure this feature through configuration section under
-`ingressController.serviceDiscovery`.
+`ingressController.gatewayDiscovery`:
 
-For admin API service discovery:
-
-- If `ingressController.serviceDiscovery.enable` is set to `false`: the ingress controller
+- If `ingressController.gatewayDiscovery.enabled` is set to `false`: the ingress controller
   will control a pre-determined set of Gateway instances based on Admin API URLs
   (provided under the hood via `CONTROLLER_KONG_ADMIN_URL` environment variable).
 
-- If `ingressController.serviceDiscovery.enable` is set to `true`: the ingress controller
+- If `ingressController.gatewayDiscovery.enabled` is set to `true`: the ingress controller
   will dynamically locate Gateway instances by watching the specified Kubernetes
   service.
   (provided under the hood via `CONTROLLER_KONG_ADMIN_SVC` environment variable).
 
-  The following admin API Service flags have to be provided in order for service
+  The following admin API Service flags have to be provided in order for gateway
   discovery to work:
 
-  - `ingressController.serviceDiscovery.adminApiService.name`
-  - `ingressController.serviceDiscovery.adminApiService.namespace`
+  - `ingressController.gatewayDiscovery.adminApiService.name`
+  - `ingressController.gatewayDiscovery.adminApiService.namespace`
 
 Using this feature requires a split release installation of Gateways and Ingress Controller.
 For exemplar `values.yaml` files which use this feature please see: [examples README.md](./example-values/README.md).

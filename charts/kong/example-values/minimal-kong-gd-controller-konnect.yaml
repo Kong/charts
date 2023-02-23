@@ -10,14 +10,15 @@ proxy:
 
 ingressController:
   enabled: true
-  ## This example creates a static 2-Pod Kong Igress Controller deployment
-  ## With service discovery enabled leader election will be enabled and only one
-  ## instance will ever talk to the accompanying Gateways.
-  replicaCount: 2
-  serviceDiscovery:
+
+  gatewayDiscovery:
     enabled: true
     adminApiService:
       ## This must match the gateway release's admin Service name.
       ## The Service name uses the pattern "<release name>-kong-admin".
       ## In this example, the companion gateway release is named "gw"
       name: gw-kong-admin
+
+  konnect:
+    enabled: true
+    runtimeGroupID: "00000000-0000-0000-0000-000000000000" # CHANGEME
