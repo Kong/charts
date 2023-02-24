@@ -481,7 +481,7 @@ ingressController:
     effectiveSemver:
   args: []
 
-  serviceDiscovery:
+  gatewayDiscovery:
     enabled: false
     adminApiService:
       namespace: ""

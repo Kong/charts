@@ -4,14 +4,15 @@
 
 ### Improvements
 
-* Added support for controller's admin API service discovery.
-  With `ingressController.serviceDiscovery.enabled` set to `true` Kong Ingress Controller
-  will enable service discovery for admin API service.
-  For more information on this please see [the corresponding README.md section][kic_service_discovery_readme].
+* Added support for controller's gateway discovery.
+  With `ingressController.gatewayDiscovery.enabled` set to `true` Kong Ingress Controller
+  will enable gateway discovery using an Admin API service.
+  For more information on this please see [the corresponding README.md section][kic_gateway_discovery_readme].
   This feature is only available when deploying chart with Kong Ingress Controller in version 2.9 or higher.
   [#747](https://github.com/Kong/charts/pull/747)
 * Added experimental support for the ingress controller's Konnect sync feature via `ingressController.konnect.*` values.
-  This feature is only available when deploying chart with Kong Ingress Controller in version 2.9 or higher.
+  This feature is only available when deploying chart with Kong Ingress Controller in version 2.9 or higher and
+  requires `ingressController.gatewayDiscovery.enabled` set to `true`. 
   [#746](https://github.com/Kong/charts/pull/746)
 
 ### Under the hood
@@ -20,7 +21,7 @@
   with community best practices.
   [#751](https://github.com/Kong/charts/pull/751)
 
-[kic_service_discovery_readme]: ./README.md#the-servicediscovery-section
+[kic_gateway_discovery_readme]: ./README.md#the-gatewaydiscovery-section
 
 ## 2.16.5
 
