@@ -730,7 +730,7 @@ section of `values.yaml` file:
 | gatewayDiscovery.adminApiService.name      | The name of the Kong admin API service (for more details see [gatewayDiscovery section][gd_section])                                                     | ""                                 |
 | konnect.enabled                            | Enable synchronisation of data plane configuration with Konnect Runtime Group                                                                            | false                              |
 | konnect.runtimeGroupID                     | Konnect Runtime Group's unique identifier.                                                                                                               |                                    |
-| konnect.region                             | Konnect account's region. One of `us`, `eu`.                                                                                                             | us                                 |
+| konnect.apiHostname                        | Konnect API hostname. Defaults to a production US-region.                                                                                                | us.kic.api.konghq.com              |
 | konnect.tlsClientCertSecretName            | Name of the secret that contains Konnect Runtime Group's client TLS certificate.                                                                         | konnect-client-tls                 |
 
 [gd_section]: #the-gatewayDiscovery-section
