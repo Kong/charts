@@ -14,6 +14,8 @@
   This feature is only available when deploying chart with Kong Ingress Controller in version 2.9 or higher and
   requires `ingressController.gatewayDiscovery.enabled` set to `true`. 
   [#746](https://github.com/Kong/charts/pull/746)
+* Added support for annotations on the admission webhook ValidatingWebhookConfiguration.
+  [#760](https://github.com/Kong/charts/pull/760)
 
 ### Under the hood
 
