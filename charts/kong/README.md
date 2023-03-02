@@ -462,7 +462,7 @@ should, however, migrate to an issuer using a CA your clients trust for actual
 usage.
 
 The `proxy`, `admin`, `portal`, and `cluster` subsections under `certificates`
-let you choose hostnames or override issuers on a per-certificate basis for the
+let you choose hostnames, override issuers, set `subject` or set `privateKey` on a per-certificate basis for the
 proxy, admin API and Manager, Portal and Portal API, and hybrid mode mTLS
 services, respectively.
 
