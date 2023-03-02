@@ -6,6 +6,8 @@
 {{- $_ := set $genericCertificateConfig "metaLabels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $genericCertificateConfig "globalIssuer" .Values.certificates.issuer -}}
 {{- $_ := set $genericCertificateConfig "globalClusterIssuer" .Values.certificates.clusterIssuer -}}
+{{- $_ := set $genericCertificateConfig "globalSubject" .Values.kong.certificates.subject -}}
+{{- $_ := set $genericCertificateConfig "globalPrivateKey" .Values.kong.certificates.privateKey -}}
 {{- $_ := set $genericCertificateConfig "defaultIssuer" (printf "%s-%s-%s" .Release.Name .Chart.Name "selfsigned-issuer") -}}
 
 {{- if .Values.certificates.admin.enabled }}
@@ -57,6 +59,20 @@ spec:
   renewBefore: 360h
   duration: 2160h
   isCA: false
+  {{ if .subject -}}
+  subject:
+    {{- toYaml .subject | nindent 4 }}
+  {{ else if .globalSubject -}}
+  subject:
+    {{- toYaml .globalSubject | nindent 4 }}
+  {{- end }}
+  {{ if .privateKey -}}
+  privateKey:
+    {{- toYaml .privateKey | nindent 4 }}
+  {{ else if .globalPrivateKey -}}
+  privateKey:
+    {{- toYaml .globalPrivateKey | nindent 4 }}
+  {{- end }}
   {{ if .clusterIssuer -}}
   issuerRef:
     name: {{ .clusterIssuer }}
