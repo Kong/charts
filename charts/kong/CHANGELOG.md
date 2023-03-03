@@ -16,6 +16,8 @@
   [#746](https://github.com/Kong/charts/pull/746)
 * Added support for annotations on the admission webhook ValidatingWebhookConfiguration.
   [#760](https://github.com/Kong/charts/pull/760)
+* Added support for `subject` and `privateKey` properties on certificates.
+  [#762](https://github.com/Kong/charts/pull/762)
 
 ### Under the hood
 
