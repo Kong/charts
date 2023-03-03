@@ -6,8 +6,8 @@
 {{- $_ := set $genericCertificateConfig "metaLabels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $genericCertificateConfig "globalIssuer" .Values.certificates.issuer -}}
 {{- $_ := set $genericCertificateConfig "globalClusterIssuer" .Values.certificates.clusterIssuer -}}
-{{- $_ := set $genericCertificateConfig "globalSubject" .Values.kong.certificates.subject -}}
-{{- $_ := set $genericCertificateConfig "globalPrivateKey" .Values.kong.certificates.privateKey -}}
+{{- $_ := set $genericCertificateConfig "globalSubject" .Values.certificates.subject -}}
+{{- $_ := set $genericCertificateConfig "globalPrivateKey" .Values.certificates.privateKey -}}
 {{- $_ := set $genericCertificateConfig "defaultIssuer" (printf "%s-%s-%s" .Release.Name .Chart.Name "selfsigned-issuer") -}}
 
 {{- if .Values.certificates.admin.enabled }}
