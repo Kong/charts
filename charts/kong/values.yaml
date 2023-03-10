@@ -141,6 +141,7 @@ admin:
   # Enterprise users that wish to use Kong Manager with the controller should enable this
   enabled: false
   type: NodePort
+  loadBalancerClass:
   # To specify annotations or labels for the admin service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -235,6 +236,7 @@ cluster:
     parameters: []
 
   type: ClusterIP
+  loadBalancerClass:
 
   # Kong cluster ingress settings. Useful if you want to split CP and DP
   # in different clusters.
@@ -258,6 +260,7 @@ proxy:
   # Enable creating a Kubernetes service for the proxy
   enabled: true
   type: LoadBalancer
+  loadBalancerClass:
   # Override proxy Service name
   nameOverride: ""
   # To specify annotations or labels for the proxy service, add them to the respective
@@ -346,6 +349,7 @@ udpProxy:
   # Enable creating a Kubernetes service for UDP proxying
   enabled: false
   type: LoadBalancer
+  loadBalancerClass:
   # To specify annotations or labels for the proxy service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -945,6 +949,7 @@ manager:
   # Enable creating a Kubernetes service for Kong Manager
   enabled: true
   type: NodePort
+  loadBalancerClass:
   # To specify annotations or labels for the Manager service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -991,6 +996,7 @@ portal:
   # Enable creating a Kubernetes service for the Developer Portal
   enabled: true
   type: NodePort
+  loadBalancerClass:
   # To specify annotations or labels for the Portal service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1037,6 +1043,7 @@ portalapi:
   # Enable creating a Kubernetes service for the Developer Portal API
   enabled: true
   type: NodePort
+  loadBalancerClass:
   # To specify annotations or labels for the Portal API service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1094,6 +1101,7 @@ clustertelemetry:
     parameters: []
 
   type: ClusterIP
+  loadBalancerClass:
 
   # Kong clustertelemetry ingress settings. Useful if you want to split
   # CP and DP in different clusters.

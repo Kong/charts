@@ -668,6 +668,7 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.tls.parameters                 | Array of additional listen parameters                                                 | `["http2"]`              |
 | SVC.type                           | k8s service type. Options: NodePort, ClusterIP, LoadBalancer                          |                          |
 | SVC.clusterIP                      | k8s service clusterIP                                                                 |                          |
+| SVC.loadBalancerClass              | loadBalancerClass to use for LoadBalancer provisionning                               |                          |
 | SVC.loadBalancerSourceRanges       | Limit service access to CIDRs if set and service type is `LoadBalancer`               | `[]`                     |
 | SVC.loadBalancerIP                 | Reuse an existing ingress static IP for the service                                   |                          |
 | SVC.externalIPs                    | IPs for which nodes in the cluster will also accept traffic for the servic            | `[]`                     |
