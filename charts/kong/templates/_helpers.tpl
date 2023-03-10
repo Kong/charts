@@ -153,6 +153,9 @@ spec:
   - {{ $cidr }}
   {{- end }}
   {{- end }}
+  {{- if .loadBalancerClass }}
+  loadBalancerClass: {{ .loadBalancerClass }}
+  {{- end }}
   {{- end }}
   {{- if .externalIPs }}
   externalIPs:

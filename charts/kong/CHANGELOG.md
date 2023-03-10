@@ -18,6 +18,8 @@
   [#760](https://github.com/Kong/charts/pull/760)
 * Added support for `subject` and `privateKey` properties on certificates.
   [#762](https://github.com/Kong/charts/pull/762)
+* Added support for loadBalancerClass in LoadBalancer type services.
+  [#767](https://github.com/Kong/charts/pull/767)
 
 ### Under the hood
 
