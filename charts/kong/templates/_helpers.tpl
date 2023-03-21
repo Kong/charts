@@ -1366,6 +1366,22 @@ resource roles into their separate templates.
   verbs:
   - get
   - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - grpcroutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - grpcroutes/status
+  verbs:
+  - get
+  - patch
+  - update
 {{- end }}
 {{- if (.Capabilities.APIVersions.Has "networking.internal.knative.dev/v1alpha1") }}
 - apiGroups:

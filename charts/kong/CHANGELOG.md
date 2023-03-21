@@ -20,6 +20,8 @@
   [#762](https://github.com/Kong/charts/pull/762)
 * Added support for loadBalancerClass in LoadBalancer type services.
   [#767](https://github.com/Kong/charts/pull/767)
+* Added support for `GRPCRoute`s.
+  [#772](https://github.com/Kong/charts/pull/772)
 
 ### Under the hood
 
