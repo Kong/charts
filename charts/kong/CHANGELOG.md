@@ -22,6 +22,8 @@
   [#767](https://github.com/Kong/charts/pull/767)
 * Added support for `GRPCRoute`s.
   [#772](https://github.com/Kong/charts/pull/772)
+* Default Kong version is bumped to 3.2.
+  [#773](https://github.com/Kong/charts/pull/773)
 
 ### Under the hood
 
