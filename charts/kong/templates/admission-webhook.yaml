@@ -95,7 +95,9 @@ metadata:
   namespace: {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
-    {{- toYaml .Values.ingressController.admissionWebhook.service.labels | nindent 4 }}
+    {{- if .Values.ingressController.admissionWebhook.service.labels }}
+      {{- toYaml .Values.ingressController.admissionWebhook.service.labels | nindent 4 }}
+    {{- end }}
 spec:
   ports:
   - name: webhook
