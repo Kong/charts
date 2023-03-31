@@ -24,6 +24,8 @@
   [#772](https://github.com/Kong/charts/pull/772)
 * Default Kong version is bumped to 3.2.
   [#773](https://github.com/Kong/charts/pull/773)
+* Added support for admissionhook to include labels.
+  [#768](https://github.com/Kong/charts/pull/768)
 
 ### Under the hood
 
