@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.17.1
+
+### Fixed
+
+* The `-redhat` suffix on official KIC images is no longer considered part of
+  the semver string for version checks.
+  [#779](https://github.com/Kong/charts/pull/779)
+
 ## 2.17.0
 
 ### Improvements
