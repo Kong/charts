@@ -704,7 +704,7 @@ The name of the service used for the ingress controller's validation webhook
 {{- if .effectiveSemver -}}
 {{- .effectiveSemver -}}
 {{- else -}}
-{{- .tag -}}
+{{- (trimSuffix "-redhat" .tag) -}}
 {{- end -}}
 {{- end -}}
 
