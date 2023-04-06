@@ -173,6 +173,14 @@ admin:
     parameters:
     - http2
 
+    # Specify the CA certificate to use for TLS verification of the Admin API client by:
+    # - secretName - the secret must contain a key named "tls.crt" with the PEM-encoded certificate.
+    # - caBundle (PEM-encoded certificate string).
+    # If both are set, caBundle takes precedence.
+    client:
+      caBundle: ""
+      secretName: ""
+
   # Kong admin ingress settings. Useful if you want to expose the Admin
   # API of Kong outside the k8s cluster.
   ingress:
@@ -594,6 +602,27 @@ ingressController:
     # Specifies a secret that contains a client TLS certificate that the controller
     # will use to authenticate against Konnect APIs.
     tlsClientCertSecretName: "konnect-client-tls"
+
+  adminApi:
+    tls:
+      client:
+        # Enable TLS client authentication for the Admin API.
+        enabled: false
+
+        # If set to false, Helm will generate certificates for you.
+        # If set to true, you are expected to provide your own secret (see secretName, caSecretName).
+        certProvided: false
+
+        # Client TLS certificate/key pair secret name that Ingress Controller will use to authenticate with Kong Admin API.
+        # If certProvided is set to false, it is optional (can be specified though if you want to force Helm to use
+        # a specific secret name).
+        secretName: ""
+
+        # CA TLS certificate/key pair secret name that the client TLS certificate is signed by.
+        # If certProvided is set to false, it is optional (can be specified though if you want to force Helm to use
+        # a specific secret name).
+        caSecretName: ""
+
 
 # -----------------------------------------------------------------------------
 # Postgres sub-chart parameters

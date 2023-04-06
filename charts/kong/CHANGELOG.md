@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.18.0
+
+### Improvements
+
+* Added support for the Admin API service TLS client verification.
+  [#780](https://github.com/Kong/charts/pull/780
+
 ## 2.17.1
 
 ### Fixed

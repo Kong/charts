@@ -2,6 +2,9 @@ admin:
   enabled: true
   type: ClusterIP
   clusterIP: None
+  tls:
+    client:
+      secretName: "admin-api-ca-cert"
 
 ingressController:
   enabled: false

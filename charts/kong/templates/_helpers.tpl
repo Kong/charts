@@ -421,6 +421,11 @@ The name of the service used for the ingress controller's validation webhook
     {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_URL" (include "kong.adminLocalURL" .) -}}
   {{- end -}}
 
+  {{- if .Values.ingressController.adminApi.tls.client.enabled }}
+    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_CLIENT_CERT_FILE" "/etc/secrets/admin-api-cert/tls.crt" -}}
+    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_CLIENT_KEY_FILE" "/etc/secrets/admin-api-cert/tls.key" -}}
+  {{- end }}
+
 {{/*
     ====== KONNECT ENVIRONMENT VARIABLES ======
 */}}
@@ -569,6 +574,11 @@ The name of the service used for the ingress controller's validation webhook
     secretName: {{ template "kong.fullname" . }}-validation-webhook-keypair
     {{- end }}
 {{- end }}
+{{- if or $.Values.admin.tls.client.secretName $.Values.admin.tls.client.caBundle }}
+- name: admin-client-ca
+  configMap:
+    name: {{ template "kong.fullname" . }}-admin-client-ca
+{{- end -}}
 {{- range $secretVolume := .Values.secretVolumes }}
 - name: {{ . }}
   secret:
@@ -584,6 +594,19 @@ The name of the service used for the ingress controller's validation webhook
   secret:
     secretName: {{ .name }}
 {{- end }}
+{{- if and .Values.ingressController.adminApi.tls.client.enabled .Values.ingressController.enabled }}
+- name: admin-api-cert
+  secret:
+    secretName: {{ template "adminApiService.certSecretName" . }}
+{{- end }}
+{{- end -}}
+
+{{- define "controller.adminApiCertVolumeMount" -}}
+{{- if and .Values.ingressController.adminApi.tls.client.enabled .Values.ingressController.enabled }}
+- name: admin-api-cert
+  mountPath: /etc/secrets/admin-api-cert
+  readOnly: true
+{{- end -}}
 {{- end -}}
 
 {{- define "kong.userDefinedVolumeMounts" -}}
@@ -624,6 +647,11 @@ The name of the service used for the ingress controller's validation webhook
   mountPath: /kong_dbless/
     {{- end }}
   {{- end }}
+{{- if or $.Values.admin.tls.client.caBundle $.Values.admin.tls.client.secretName }}
+- name: admin-client-ca
+  mountPath: /etc/admin-client-ca/
+  readOnly: true
+{{- end -}}
 {{- range .Values.secretVolumes }}
 - name:  {{ . }}
   mountPath: /etc/secrets/{{ . }}
@@ -768,6 +796,7 @@ The name of the service used for the ingress controller's validation webhook
     readOnly: true
 {{- end }}
   {{- include "kong.userDefinedVolumeMounts" .Values.ingressController | nindent 2 }}
+  {{- include "controller.adminApiCertVolumeMount" . | nindent 2 }}
 {{- end -}}
 
 {{- define "secretkeyref" -}}
@@ -824,6 +853,12 @@ the template that it itself is using form the above sections.
   {{- $listenConfig := merge $listenConfig . -}}
   {{- $_ := set $listenConfig "address" $address -}}
   {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (include "kong.listen" $listenConfig) -}}
+
+  {{- if or .tls.client.secretName .tls.client.caBundle -}}
+    {{- $_ := set $autoEnv "KONG_NGINX_ADMIN_SSL_VERIFY_CLIENT" "on" -}}
+    {{- $_ := set $autoEnv "KONG_NGINX_ADMIN_SSL_CLIENT_CERTIFICATE" "/etc/admin-client-ca/tls.crt" -}}
+  {{- end -}}
+
 {{- end -}}
 
 {{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled -}}
