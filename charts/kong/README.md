@@ -804,13 +804,14 @@ When using `gatewayDiscovery`, you should consider configuring the Admin service
 this interface secure. Without that, anyone who can access the Admin API from inside the cluster can configure the Gateway
 instances.
 
-On the controller release side, that can be achieved by setting `ingressController.adminApi.tls.client.enabled` to `true`
-(Helm will generate certificates automatically), or by setting `ingressController.adminApi.tls.client.certProvided` to
-`true` and providing your own certificates via `ingressController.adminApi.tls.client.secretName` and
-`ingressController.adminApi.tls.client.caSecretName`.
+On the controller release side, that can be achieved by setting `ingressController.adminApi.tls.client.enabled` to `true`.
+By default, Helm will generate a certificate Secret named `<release name>-admin-api-keypair` and
+a CA Secret named `<release name>-admin-api-ca-keypair` for you.
 
-On the Gateway release side, `admin.tls.client.secretName` or `admin.tls.client.caBundle` have to be set to actually
-enable mTLS client verification and use the provided CA certificate for that.
+To provide your own cert, set `ingressController.adminApi.tls.client.certProvided` to
+`true`, `ingressController.adminApi.tls.client.secretName` to the name of the Secret containing your client cert, and `ingressController.adminApi.tls.client.caSecretName` to the name of the Secret containing your CA cert.
+
+On the Gateway release side, set either `admin.tls.client.secretName` to the name of your CA Secret or set `admin.tls.client.caBundle` to the CA certificate string.
 
 ### General Parameters
 
