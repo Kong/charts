@@ -1,11 +1,11 @@
 # Changelog
 
-## Unreleased
+## 2.19.0
 
 ### Improvements
 
 * Security context enforces read-only root filesystem by default. This is not
-  expected to affect most configurations, but [will afffect custom plugins that
+  expected to affect most configurations, but [will affect custom plugins that
   write to the container filesystem](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#2170).
   [#770](https://github.com/Kong/charts/pull/770)
 
