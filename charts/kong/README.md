@@ -52,6 +52,7 @@ $ helm install kong/kong --generate-name
 - [Configuration](#configuration)
   - [Kong parameters](#kong-parameters)
     - [Kong Service Parameters](#kong-service-parameters)
+    - [Admin Service mTLS](#admin-service-mtls)
     - [Stream listens](#stream-listens)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
     - [The `env` section](#the-env-section)
@@ -683,6 +684,17 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.annotations                    | Service annotations                                                                   | `{}`                     |
 | SVC.labels                         | Service labels                                                                        | `{}`                     |
 
+#### Admin Service mTLS
+
+On top of the common parameters listed above, the `admin` service supports parameters for mTLS client verification. 
+If any of `admin.tls.client.caBundle` or `admin.tls.client.secretName` are set, the admin service will be configured to
+require mTLS client verification. If both are set, `admin.tls.client.caBundle` will take precedence.
+
+| Parameter                   | Description                                                                                 | Default |
+|-----------------------------|---------------------------------------------------------------------------------------------|---------|
+| admin.tls.client.caBundle   | CA certificate to use for TLS verification of the Admin API client (PEM-encoded).           | `""`    |
+| admin.tls.client.secretName | CA certificate secret name - must contain a `tls.crt` key with the PEM-encoded certificate. | `""`    |
+
 #### Stream listens
 
 The proxy configuration additionally supports creating stream listens. These
@@ -719,8 +731,8 @@ section of `values.yaml` file:
 | watchNamespaces                            | List of namespaces to watch. Watches all namespaces if empty                                                                                             | []                                 |
 | admissionWebhook.enabled                   | Whether to enable the validating admission webhook                                                                                                       | true                               |
 | admissionWebhook.failurePolicy             | How unrecognized errors from the admission endpoint are handled (Ignore or Fail)                                                                         | Ignore                             |
-| admissionWebhook.port                      | The port the ingress controller will listen on for admission webhooks                                                                                     | 8080                               |
-| admissionWebhook.annotations               | Annotations for the Validation Webhook Configuration                                                                                                    |                                    |
+| admissionWebhook.port                      | The port the ingress controller will listen on for admission webhooks                                                                                    | 8080                               |
+| admissionWebhook.annotations               | Annotations for the Validation Webhook Configuration                                                                                                     |                                    |
 | admissionWebhook.certificate.provided      | Use a provided certificate. When set to false, the chart will automatically generate a certificate.                                                      | false                              |
 | admissionWebhook.certificate.secretName    | Name of the TLS secret for the provided webhook certificate                                                                                              |                                    |
 | admissionWebhook.certificate.caBundle      | PEM encoded CA bundle which will be used to validate the provided webhook certificate                                                                    |                                    |
@@ -734,6 +746,10 @@ section of `values.yaml` file:
 | konnect.runtimeGroupID                     | Konnect Runtime Group's unique identifier.                                                                                                               |                                    |
 | konnect.apiHostname                        | Konnect API hostname. Defaults to a production US-region.                                                                                                | us.kic.api.konghq.com              |
 | konnect.tlsClientCertSecretName            | Name of the secret that contains Konnect Runtime Group's client TLS certificate.                                                                         | konnect-client-tls                 |
+| adminApi.tls.client.enabled                | Enable TLS client verification for the Admin API. By default, Helm will generate certificates automatically.                                             | false                              |
+| adminApi.tls.client.certProvided           | Use user-provided certificates. If set to false, Helm will generate certificates.                                                                        | false                              |
+| adminApi.tls.client.secretName             | Client TLS certificate/key pair secret name. Can be also set when `certProvided` is false to enforce a generated secret's name.                          | ""                                 |
+| adminApi.tls.client.caSecretName           | CA TLS certificate/key pair secret name. Can be also set when `certProvided` is false to enforce a generated secret's name.                              | ""                                 |
 
 [gd_section]: #the-gatewayDiscovery-section
 
@@ -783,6 +799,19 @@ You'll be able to configure this feature through configuration section under
 
 Using this feature requires a split release installation of Gateways and Ingress Controller.
 For exemplar `values.yaml` files which use this feature please see: [examples README.md](./example-values/README.md).
+
+When using `gatewayDiscovery`, you should consider configuring the Admin service to use mTLS client verification to make
+this interface secure. Without that, anyone who can access the Admin API from inside the cluster can configure the Gateway
+instances.
+
+On the controller release side, that can be achieved by setting `ingressController.adminApi.tls.client.enabled` to `true`.
+By default, Helm will generate a certificate Secret named `<release name>-admin-api-keypair` and
+a CA Secret named `<release name>-admin-api-ca-keypair` for you.
+
+To provide your own cert, set `ingressController.adminApi.tls.client.certProvided` to
+`true`, `ingressController.adminApi.tls.client.secretName` to the name of the Secret containing your client cert, and `ingressController.adminApi.tls.client.caSecretName` to the name of the Secret containing your CA cert.
+
+On the Gateway release side, set either `admin.tls.client.secretName` to the name of your CA Secret or set `admin.tls.client.caBundle` to the CA certificate string.
 
 ### General Parameters
 
