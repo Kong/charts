@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.19.1
+
+### Fixed
+
+* Fix `webhook-cert` being mounted regardless if `.Values.ingressController.enabled`
+  is set.
+  [#779](https://github.com/Kong/charts/pull/779)
+
 ## 2.19.0
 
 ### Improvements

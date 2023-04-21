@@ -565,7 +565,7 @@ The name of the service used for the ingress controller's validation webhook
   {{- end }}
 {{- end }}
 
-{{- if .Values.ingressController.admissionWebhook.enabled }}
+{{- if and .Values.ingressController.enabled .Values.ingressController.admissionWebhook.enabled }}
 - name: webhook-cert
   secret:
     {{- if .Values.ingressController.admissionWebhook.certificate.provided }}
