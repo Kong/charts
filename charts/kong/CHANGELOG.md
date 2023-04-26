@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.20.0
+
+### Improvements
+
+* Added support for automatic license provisioning for Gateways managed by
+  Ingress Controllers in Konnect mode (`.Values.ingressController.konnect.enabled=true`).
+  [#787](https://github.com/Kong/charts/pull/787)
+
 ## 2.19.1
 
 ### Fixed
