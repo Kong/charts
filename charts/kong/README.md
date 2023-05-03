@@ -839,6 +839,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | updateStrategy                     | update strategy for deployment                                                        | `{}`                |
 | readinessProbe                     | Kong readiness probe                                                                  |                     |
 | livenessProbe                      | Kong liveness probe                                                                   |                     |
+| startupProbe                       | Kong startup probe                                                                    |                     |
 | lifecycle                          | Proxy container lifecycle hooks                                                       | see `values.yaml`   |
 | terminationGracePeriodSeconds      | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pods | 30                  |
 | affinity                           | Node/pod affinities                                                                   |                     |

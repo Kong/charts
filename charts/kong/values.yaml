@@ -785,6 +785,18 @@ livenessProbe:
   successThreshold: 1
   failureThreshold: 3
 
+# startupProbe for Kong pods
+# startupProbe:
+#   httpGet:
+#     path: "/status"
+#     port: status
+#     scheme: HTTP
+#   initialDelaySeconds: 5
+#   timeoutSeconds: 5
+#   periodSeconds: 2
+#   successThreshold: 1
+#   failureThreshold: 40
+
 # Proxy container lifecycle hooks
 # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
 lifecycle:
