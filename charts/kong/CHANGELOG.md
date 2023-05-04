@@ -4,7 +4,8 @@
 
 ### Fixed
 
-* Fix correct timestamp format and remove ``isCA`` in certificates [#791](https://github.com/Kong/charts/pull/791)
+* Fix correct timestamp format and remove `isCA` in certificates
+  [#791](https://github.com/Kong/charts/pull/791)
 
 ## 2.20.0
 
