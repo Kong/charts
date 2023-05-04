@@ -56,9 +56,8 @@ spec:
   {{- range (append .dnsNames .commonName) }}
   - {{ . | quote }}
   {{- end }}
-  renewBefore: 360h
-  duration: 2160h
-  isCA: false
+  renewBefore: 360h0m0s
+  duration: 2160h0m0s
   {{ if .subject -}}
   subject:
     {{- toYaml .subject | nindent 4 }}

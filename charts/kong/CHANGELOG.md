@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.20.1
+
+### Fixed
+
+* Fix correct timestamp format and remove `isCA` in certificates
+  [#791](https://github.com/Kong/charts/pull/791)
+
 ## 2.20.0
 
 ### Improvements
@@ -52,7 +59,7 @@
   [#747](https://github.com/Kong/charts/pull/747)
 * Added experimental support for the ingress controller's Konnect sync feature via `ingressController.konnect.*` values.
   This feature is only available when deploying chart with Kong Ingress Controller in version 2.9 or higher and
-  requires `ingressController.gatewayDiscovery.enabled` set to `true`. 
+  requires `ingressController.gatewayDiscovery.enabled` set to `true`.
   [#746](https://github.com/Kong/charts/pull/746)
 * Added support for annotations on the admission webhook ValidatingWebhookConfiguration.
   [#760](https://github.com/Kong/charts/pull/760)
