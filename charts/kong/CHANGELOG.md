@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+* Added support for `startupProbe` on Kong pods. This can be configured via
+  `.Values.startupProbe`. To maintain backward compatibility, it is disabled by default.
+  [#792](https://github.com/Kong/charts/pull/792)
+
 ## 2.20.1
 
 ### Fixed
