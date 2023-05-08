@@ -450,6 +450,10 @@ The name of the service used for the ingress controller's validation webhook
   {{- $tlsKey := include "secretkeyref" (dict "name" $konnect.tlsClientCertSecretName "key" "tls.key") -}}
   {{- $_ = set $autoEnv "CONTROLLER_KONNECT_TLS_CLIENT_CERT" $tlsCert -}}
   {{- $_ = set $autoEnv "CONTROLLER_KONNECT_TLS_CLIENT_KEY" $tlsKey -}}
+
+  {{- if $konnect.license.enabled }}
+  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_LICENSING_ENABLED" true -}}
+  {{- end }}
 {{- end }}
 
 {{/*

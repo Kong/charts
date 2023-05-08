@@ -603,6 +603,10 @@ ingressController:
     # will use to authenticate against Konnect APIs.
     tlsClientCertSecretName: "konnect-client-tls"
 
+    license:
+      # Specifies whether the controller should fetch a license from Konnect and apply it to managed Gateways.
+      enabled: false
+
   adminApi:
     tls:
       client:
