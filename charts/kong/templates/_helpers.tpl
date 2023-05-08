@@ -443,7 +443,6 @@ The name of the service used for the ingress controller's validation webhook
   {{- $_ := required "ingressController.konnect.runtimeGroupID is required when ingressController.konnect.enabled" $konnect.runtimeGroupID -}}
 
   {{- $_ = set $autoEnv "CONTROLLER_KONNECT_SYNC_ENABLED" true -}}
-  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_LICENSING_ENABLED" true -}}
   {{- $_ = set $autoEnv "CONTROLLER_KONNECT_RUNTIME_GROUP_ID" $konnect.runtimeGroupID -}}
   {{- $_ = set $autoEnv "CONTROLLER_KONNECT_ADDRESS" (printf "https://%s" .Values.ingressController.konnect.apiHostname) -}}
 
