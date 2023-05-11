@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+* Customize Admission Webhook namespaceSelectors and compose them from values.
+  [#794](https://github.com/Kong/charts/pull/794)
+
 ## 2.20.2
 
 ### Fixed 
