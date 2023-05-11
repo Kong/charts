@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.20.2
+
+### Fixed 
+
+* Automatic license provisioning for Gateways managed by Ingress Controllers in Konnect mode
+  is disabled by default.
+  To enable it, set `.Values.ingressController.konnect.license.enabled=true`.
+  [#793](https://github.com/Kong/charts/pull/793)
+
 ## 2.20.1
 
 ### Fixed
