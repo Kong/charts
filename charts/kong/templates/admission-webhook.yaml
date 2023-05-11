@@ -42,6 +42,10 @@ metadata:
   {{- end }}
 webhooks:
 - name: validations.kong.konghq.com
+  {{- with .Values.ingressController.admissionWebhook.namespaceSelector }}
+  namespaceSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   objectSelector:
     matchExpressions:
     - key: owner
