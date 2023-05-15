@@ -533,6 +533,7 @@ ingressController:
     port: 8080
     certificate:
       provided: false
+    namespaceSelector: {}
     # Specifiy the secretName when the certificate is provided via a TLS secret
     # secretName: ""
     # Specifiy the CA bundle of the provided certificate.
@@ -602,6 +603,10 @@ ingressController:
     # Specifies a secret that contains a client TLS certificate that the controller
     # will use to authenticate against Konnect APIs.
     tlsClientCertSecretName: "konnect-client-tls"
+
+    license:
+      # Specifies whether the controller should fetch a license from Konnect and apply it to managed Gateways.
+      enabled: false
 
   adminApi:
     tls:
