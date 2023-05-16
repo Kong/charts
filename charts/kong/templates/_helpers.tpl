@@ -1488,6 +1488,15 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
+{{- if (semverCompare ">= 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - list
+  - watch
+{{- end }}
 {{- if or (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha2") (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1beta1") }}
 - apiGroups:
   - gateway.networking.k8s.io
