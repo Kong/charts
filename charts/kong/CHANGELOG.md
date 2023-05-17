@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+* Removed redundant RBAC permissions for non-existing subresources `secrets/status`
+  and `endpoints/status`.
+  [#798](https://github.com/Kong/charts/pull/798)
+* For Kong Ingress Controller in version >= 2.10, RBAC permissions for `Endpoints`
+  are not configured anymore (because it uses `EndpointSlices`).
+  [#798](https://github.com/Kong/charts/pull/798)
+
+
 ## 2.21.0
 
 ### Improvements
