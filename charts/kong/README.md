@@ -432,7 +432,7 @@ admin:
 ```yaml
 env:
   role: data_plane
-  database: off
+  database: "off"
   cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
   cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
   lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-cert/tls.crt
