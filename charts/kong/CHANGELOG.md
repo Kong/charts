@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.22.0
+
 ### Improvements
 
 * Removed redundant RBAC permissions for non-existing subresources `secrets/status`
@@ -10,7 +12,9 @@
 * For Kong Ingress Controller in version >= 2.10, RBAC permissions for `Endpoints`
   are not configured anymore (because it uses `EndpointSlices`).
   [#798](https://github.com/Kong/charts/pull/798)
-
+* Added support for setting `certificates.cluster.commonName`. This allows a custom
+  certificate `CommonName` to be provided when deploying Kong Gateway in hybrid
+  mode using Cert Manager [#804](https://github.com/Kong/charts/pull/804)
 
 ## 2.21.0
 
