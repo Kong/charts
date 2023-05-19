@@ -30,10 +30,7 @@
 
 {{- if .Values.certificates.cluster.enabled }}
 {{- $certificateConfig := dict -}}
-{{- $certificateConfig = mustMerge (mustDeepCopy $genericCertificateConfig) $certificateConfig -}}
-{{- $_ := set $certificateConfig "dnsNames" (list) -}}
-{{- $_ := set $certificateConfig "commonName" "kong_cluster" -}}
-{{- $certificateConfig = (mustMerge $certificateConfig .Values.certificates.cluster) -}}
+{{- $certificateConfig = mustMerge (mustDeepCopy $genericCertificateConfig) .Values.certificates.cluster -}}
 {{- $_ := set $certificateConfig "serviceName" "cluster" -}}
 {{- include "kong.certificate" $certificateConfig -}}
 {{- end }}
