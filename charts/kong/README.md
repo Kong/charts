@@ -336,6 +336,9 @@ first and then upgrade the data plane release](https://docs.konghq.com/gateway/l
 
 #### Certificates
 
+> This example shows how to use Kong Hybrid mode with `cluster_mtls: shared`.
+> For an example of `cluster_mtls: pki` see the [hybrid-cert-manager example](https://github.com/Kong/charts/blob/main/charts/kong/example-values/hybrid-cert-manager/)
+
 Hybrid mode uses TLS to secure the CP/DP node communication channel, and
 requires certificates for it. You can generate these either using `kong hybrid
 gen_cert` on a local Kong installation or using OpenSSL:
