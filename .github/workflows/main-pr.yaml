@@ -49,8 +49,10 @@ jobs:
         with:
           version: v3.11.0
 
-      - name: Add Bitnami
-        run: helm repo add bitnami https://charts.bitnami.com/bitnami
+      - name: Add Helm repos
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add kong https://charts.konghq.com
 
       - uses: actions/setup-python@v4
         with:
@@ -78,7 +80,7 @@ jobs:
         # always is fine
 
       - name: Run chart-testing (install)
-        run: ct install --all
+        run: ct install --charts charts/kong
 
   integration-test:
     runs-on: ubuntu-latest
@@ -97,6 +99,9 @@ jobs:
         - "1.25.9"
         - "1.26.4"
         - "1.27.1"
+        chart-name:
+          - kong
+          - ingress
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -114,9 +119,13 @@ jobs:
         run: ./scripts/test-env.sh
 
       - name: run integration tests (integration)
+        env:
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-run.sh
 
       - name: run upgrade integration tests (integration-upgrade)
+        env:
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-upgrade.sh
 
       - name: cleanup integration tests (cleanup)
