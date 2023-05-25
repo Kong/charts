@@ -16,4 +16,4 @@ $ helm repo update
 $ helm install kong kong/ingress -n kong
 ```
 
-If you need more control over what is deployed, see the [kong/kong chart](https://github.com/Kong/charts/blob/main/charts/kong/README.md). Any `values.yaml` setting can be specified in the `controller` or `proxy` section of your `values.yaml` using this chart.
+If you need more control over what is deployed, see the [kong/kong chart](https://github.com/Kong/charts/blob/main/charts/kong/README.md). Any `values.yaml` setting can be specified in the `controller` or `gateway` section of your `values.yaml` using this chart.
