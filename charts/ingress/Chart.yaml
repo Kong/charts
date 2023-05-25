@@ -1,0 +1,24 @@
+apiVersion: v2
+description: Deploy Kong Ingress Controller and Kong Gateway
+engine: gotpl
+home: https://konghq.com/
+icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
+maintainers:
+  - name: mheap
+    email: michael.heap@konghq.com
+name: ingress
+sources:
+  - https://github.com/Kong/charts/tree/main/charts/kong
+version: 0.1.0
+appVersion: "3.2"
+dependencies:
+  - name: kong
+    version: ">=2.22.0"
+    repository: https://charts.konghq.com
+    alias: controller
+    condition: controller.enabled
+  - name: kong
+    version: ">=2.22.0"
+    repository: https://charts.konghq.com
+    alias: gateway
+    condition: gateway.enabled

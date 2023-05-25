@@ -84,4 +84,6 @@ ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma -
 kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd/experimental?ref=v0.6.1" | kubectl apply -f -
 
 echo "INFO: Updating helm dependencies"
-helm dependency update charts/kong/
+for i in charts/*; do
+  helm dependency update "$i"
+done

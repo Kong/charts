@@ -1,0 +1,37 @@
+deployment:
+  test:
+    enabled: false
+
+controller:
+  proxy:
+    nameOverride: kong-gateway-proxy
+
+  enabled: true
+
+  deployment:
+    kong:
+      enabled: false
+
+  ingressController:
+    enabled: true
+
+    gatewayDiscovery:
+      enabled: true
+      adminApiService:
+        name: kong-gateway-admin
+
+gateway:
+  enabled: true
+  deployment:
+    kong:
+      enabled: true
+
+  admin:
+    enabled: true
+
+  ingressController:
+    enabled: false
+
+  env:
+    role: traditional
+    database: "off"
