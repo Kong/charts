@@ -8,6 +8,11 @@ on:
 jobs:
   lint-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chart-name:
+          - kong
+          - ingress
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -27,17 +32,20 @@ jobs:
         uses: helm/chart-testing-action@v2.4.0
 
       - name: Run chart-testing (lint)
-        run: ct lint
+        run: ct lint --charts ${{ matrix.chart-name }}
         working-directory: charts
 
       - name: setup testing environment (kind-cluster)
         run: ./scripts/test-env.sh
 
       - name: run chart-testing (install)
-        run: ct install
+        run: ct install --charts ${{ matrix.chart-name }}
         working-directory: charts
+        if: matrix.chart-name == 'kong'
 
       - name: run integration tests (integration)
+        env:
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-run.sh
 
       - name: cleanup integration tests (cleanup)
@@ -66,6 +74,7 @@ jobs:
       - name: Add dependency chart repos
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add kong https://charts.konghq.com
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
