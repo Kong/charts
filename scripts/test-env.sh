@@ -32,6 +32,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 KIND_VERSION="${KIND_VERSION:-v0.19.0}"
 KUBERNETES_VERSION="${KUBERNETES_VERSION:-1.27.1}"
+OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+ARCH="$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')"
+KTF_URL=https://github.com/Kong/kubernetes-testing-framework/releases/latest/download/ktf.${OS}.${ARCH}
 
 # ------------------------------------------------------------------------------
 # Setup Tools - Docker
@@ -68,7 +71,10 @@ kind version 1>/dev/null
 if ! command -v ktf 1>/dev/null
 then
     mkdir -p "${HOME}"/.local/bin
-    GOBIN="${HOME}"/.local/bin go install github.com/kong/kubernetes-testing-framework/cmd/ktf@latest
+    echo "Downloading KTF from ${KTF_URL}"
+    # grep location header to show the actual URL
+    curl -vL -o "${HOME}"/.local/bin/ktf ${KTF_URL} 2>&1 | grep "location: https://github.com/Kong/kubernetes-testing-framework/releases/download/"
+    chmod +x "${HOME}"/.local/bin/ktf
     export PATH="${HOME}/.local/bin:$PATH"
 fi
 
