@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Improvements
+
+* Add custom label configuration option for Kong proxy `Ingress`.
+
 ## 2.22.0
 
 ### Improvements

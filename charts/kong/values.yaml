@@ -338,8 +338,10 @@ proxy:
     # TLS secret name.
     # tls: kong-proxy.example.com-tls
     hostname:
-    # Map of ingress annotations.
+    # To specify annotations or labels for the ingress, add them to the respective
+    # "annotations" or "labels" dictionaries below.
     annotations: {}
+    labels: {}
     # Ingress path.
     path: /
     # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)

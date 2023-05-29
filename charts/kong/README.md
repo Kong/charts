@@ -684,6 +684,7 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.ingress.path                   | Ingress path.                                                                         | `/`                      |
 | SVC.ingress.pathType               | Ingress pathType. One of `ImplementationSpecific`, `Exact` or `Prefix`                | `ImplementationSpecific` |
 | SVC.ingress.annotations            | Ingress annotations. See documentation for your ingress controller for details        | `{}`                     |
+| SVC.ingress.labels                 | Ingress labels. Additional custom labels to add to the ingress.                       | `{}`                     |
 | SVC.annotations                    | Service annotations                                                                   | `{}`                     |
 | SVC.labels                         | Service labels                                                                        | `{}`                     |
 

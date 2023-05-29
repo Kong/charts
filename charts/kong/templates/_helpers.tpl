@@ -85,6 +85,9 @@ metadata:
   namespace: {{ .namespace }}
   labels:
   {{- .metaLabels | nindent 4 }}
+  {{- range $key, $value := .ingress.labels }}
+    {{- $key | nindent 4 }}: {{ $value | quote }}
+  {{- end }}
   {{- if .ingress.annotations }}
   annotations:
     {{- range $key, $value := .ingress.annotations }}
