@@ -99,8 +99,8 @@ spec:
   ingressClassName: {{ .ingress.ingressClassName }}
 {{- end }}
   rules:
-  - host: {{ $hostname | quote }}
-    http:
+  {{- if ( not (or $hostname .ingress.hosts)) }}
+  - http:
       paths:
         - backend:
           {{- if (not (eq .ingressVersion "networking.k8s.io/v1")) }}
@@ -116,12 +116,74 @@ spec:
           {{- if (not (eq .ingressVersion "extensions/v1beta1")) }}
           pathType: {{ $pathType }}
           {{- end }}
+  {{- else if $hostname }}
+  - host: {{ $hostname | quote }}
+    http:
+      paths:
+        - backend:
+          {{- if (not (eq .ingressVersion "networking.k8s.io/v1")) }}
+            serviceName: {{ .fullName }}-{{ .serviceName }}
+            servicePort: {{ $servicePort }}
+          {{- else }}
+            service:
+              name: {{ .fullName }}-{{ .serviceName }}
+              port:
+                number: {{ $servicePort }}
+          {{- end }}
+          path: {{ $path }}
+          {{- if (not (eq .ingressVersion "extensions/v1beta1")) }}
+          pathType: {{ $pathType }}
+          {{- end }}
+  {{- end }}
+  {{- range .ingress.hosts }}
+  - host: {{ .host | quote }}
+    http:
+      paths:
+        {{- range .paths }}
+        - backend:
+          {{- if .backend -}}
+            {{ .backend | toYaml | nindent 12 }}
+          {{- else }}
+          {{- if (not (eq $.ingressVersion "networking.k8s.io/v1")) }}
+            serviceName: {{ $.fullName }}-{{ $.serviceName }}
+            servicePort: {{ $servicePort }}
+          {{- else }}
+            service:
+              name: {{ $.fullName }}-{{ $.serviceName }}
+              port:
+                number: {{ $servicePort }}
+          {{- end }}
+          {{- end }}
+          {{- if (and $hostname (and (eq $path .path))) }}
+          {{- fail "duplication of specified ingress path" }}
+          {{- end }}
+          path: {{ .path }}
+          {{- if (not (eq $.ingressVersion "extensions/v1beta1")) }}
+          pathType: {{ .pathType }}
+          {{- end }}
+        {{- end }}
+  {{- end }}
   {{- if (hasKey .ingress "tls") }}
   tls:
-  - hosts:
-    - {{ $hostname | quote }}
-    secretName: {{ .ingress.tls }}
-  {{- end -}}
+  {{- if (kindIs "string" .ingress.tls) }}
+    - hosts:
+      {{- range .ingress.hosts }}
+        - {{ .host | quote }}
+      {{- end }}
+      {{- if $hostname }}
+        - {{ $hostname | quote }}
+      {{- end }}
+      secretName: {{ .ingress.tls }}
+  {{- else if (kindIs "slice" .ingress.tls) }}
+    {{- range .ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
 {{- end -}}
 
 {{/*
