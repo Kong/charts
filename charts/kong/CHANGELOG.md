@@ -5,7 +5,7 @@
 ### Improvements
 
 * Add custom label configuration option for Kong proxy `Ingress`.
-* Running `tpl` against user-supplied labels
+* Running `tpl` against user-supplied labels and annotations used in Deployment
 
 ## 2.22.0
 
