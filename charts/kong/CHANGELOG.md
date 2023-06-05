@@ -1,10 +1,14 @@
 # Changelog
 
-## Unreleased
+## 2.23.0
 
 ### Improvements
 
 * Add custom label configuration option for Kong proxy `Ingress`.
+  [#812](https://github.com/Kong/charts/pull/812)
+* Bump default `kong/kubernetes-ingress-controller` image tag to 2.10.
+  Bump default `kong` image tag to 3.3.
+  [#815](https://github.com/Kong/charts/pull/815)
 
 ## 2.22.0
 
