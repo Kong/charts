@@ -1,10 +1,12 @@
 # Changelog
 
-## Unreleased
+## 2.23.0 
 
 ### Improvements
 
 * Add custom label configuration option for Kong proxy `Ingress`.
+* Bump default Kubernetes Ingress Controller version to 2.10.
+  []()
 
 ## 2.22.0
 
