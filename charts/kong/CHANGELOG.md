@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.23.0
 
 ### Improvements
 
@@ -11,6 +11,10 @@
   podLabels: 
     version: "{{ .Values.image.tag }}"  # Will render dynamically when overridden downstream
   ```
+  [#812](https://github.com/Kong/charts/pull/812)
+* Bump default `kong/kubernetes-ingress-controller` image tag to 2.10.
+  Bump default `kong` image tag to 3.3.
+  [#815](https://github.com/Kong/charts/pull/815)
 
 ## 2.22.0
 
