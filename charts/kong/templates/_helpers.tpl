@@ -32,7 +32,7 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 app.kubernetes.io/managed-by: "{{ .Release.Service }}"
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- range $key, $value := .Values.extraLabels }}
-{{ $key }}: {{ $value | quote }}
+{{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote }}
 {{- end }}
 {{- end -}}
 
@@ -1533,4 +1533,12 @@ autoscaling/v2beta2
 {{- else -}}
 autoscaling/v1
 {{- end -}}
+{{- end -}}
+
+{{- define "kong.renderTpl" -}}
+    {{- if typeIs "string" .value }}
+{{- tpl .value .context }}
+    {{- else }}
+{{- tpl (.value | toYaml) .context }}
+    {{- end }}
 {{- end -}}

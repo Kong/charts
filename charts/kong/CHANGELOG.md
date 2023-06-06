@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+* Running `tpl` against user-supplied labels and annotations used in Deployment
+  #### example:
+  ```yaml
+  podLabels:
+    version: "{{ .Values.image.tag }}"  # Will render dynamically when overridden downstream
+  ```
+  [#814](https://github.com/Kong/charts/pull/814)
+
 ## 2.23.0
 
 ### Improvements
