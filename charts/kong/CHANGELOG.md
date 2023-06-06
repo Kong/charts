@@ -1,16 +1,21 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+* Running `tpl` against user-supplied labels and annotations used in Deployment
+  #### example:
+  ```yaml
+  podLabels:
+    version: "{{ .Values.image.tag }}"  # Will render dynamically when overridden downstream
+  ```
+  [#814](https://github.com/Kong/charts/pull/814)
+
 ## 2.23.0
 
 ### Improvements
 
 * Add custom label configuration option for Kong proxy `Ingress`.
-* Running `tpl` against user-supplied labels and annotations used in Deployment
-  #### example:
-  ```yaml
-  podLabels: 
-    version: "{{ .Values.image.tag }}"  # Will render dynamically when overridden downstream
-  ```
   [#812](https://github.com/Kong/charts/pull/812)
 * Bump default `kong/kubernetes-ingress-controller` image tag to 2.10.
   Bump default `kong` image tag to 3.3.
