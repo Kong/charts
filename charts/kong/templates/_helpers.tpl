@@ -78,7 +78,7 @@ Create Ingress resource for a Kong service
 {{- $path := .ingress.path -}}
 {{- $hostname := .ingress.hostname -}}
 {{- $pathType := .ingress.pathType -}}
-apiVersion: {{ .ingressVersion }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .fullName }}-{{ .serviceName }}
@@ -95,7 +95,7 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-{{- if (and (not (eq .ingressVersion "extensions/v1beta1")) .ingress.ingressClassName) }}
+{{- if .ingress.ingressClassName }}
   ingressClassName: {{ .ingress.ingressClassName }}
 {{- end }}
   rules:
@@ -103,37 +103,23 @@ spec:
   - http:
       paths:
         - backend:
-          {{- if (not (eq .ingressVersion "networking.k8s.io/v1")) }}
-            serviceName: {{ .fullName }}-{{ .serviceName }}
-            servicePort: {{ $servicePort }}
-          {{- else }}
             service:
               name: {{ .fullName }}-{{ .serviceName }}
               port:
                 number: {{ $servicePort }}
-            {{- end }}
           path: {{ $path }}
-          {{- if (not (eq .ingressVersion "extensions/v1beta1")) }}
           pathType: {{ $pathType }}
-          {{- end }}
   {{- else if $hostname }}
   - host: {{ $hostname | quote }}
     http:
       paths:
         - backend:
-          {{- if (not (eq .ingressVersion "networking.k8s.io/v1")) }}
-            serviceName: {{ .fullName }}-{{ .serviceName }}
-            servicePort: {{ $servicePort }}
-          {{- else }}
             service:
               name: {{ .fullName }}-{{ .serviceName }}
               port:
                 number: {{ $servicePort }}
-          {{- end }}
           path: {{ $path }}
-          {{- if (not (eq .ingressVersion "extensions/v1beta1")) }}
           pathType: {{ $pathType }}
-          {{- end }}
   {{- end }}
   {{- range .ingress.hosts }}
   - host: {{ .host | quote }}
@@ -144,23 +130,16 @@ spec:
           {{- if .backend -}}
             {{ .backend | toYaml | nindent 12 }}
           {{- else }}
-          {{- if (not (eq $.ingressVersion "networking.k8s.io/v1")) }}
-            serviceName: {{ $.fullName }}-{{ $.serviceName }}
-            servicePort: {{ $servicePort }}
-          {{- else }}
             service:
               name: {{ $.fullName }}-{{ $.serviceName }}
               port:
                 number: {{ $servicePort }}
           {{- end }}
-          {{- end }}
           {{- if (and $hostname (and (eq $path .path))) }}
           {{- fail "duplication of specified ingress path" }}
           {{- end }}
           path: {{ .path }}
-          {{- if (not (eq $.ingressVersion "extensions/v1beta1")) }}
           pathType: {{ .pathType }}
-          {{- end }}
         {{- end }}
   {{- end }}
   {{- if (hasKey .ingress "tls") }}
@@ -1575,16 +1554,6 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   - get
   - list
   - watch
-{{- end -}}
-
-{{- define "kong.ingressVersion" -}}
-{{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1") -}}
-networking.k8s.io/v1
-{{- else if (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1") -}}
-networking.k8s.io/v1beta1
-{{- else -}}
-extensions/v1beta1
-{{- end -}}
 {{- end -}}
 
 {{- define "kong.autoscalingVersion" -}}
