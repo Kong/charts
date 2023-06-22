@@ -1535,6 +1535,14 @@ autoscaling/v1
 {{- end -}}
 {{- end -}}
 
+{{- define "kong.policyVersion" -}}
+{{- if (.Capabilities.APIVersions.Has "policy/v1beta1" ) -}}
+policy/v1beta1
+{{- else -}}
+{{- fail (printf "Cluster doesn't have policy/v1beta1 API." ) }}
+{{- end -}}
+{{- end -}}
+
 {{- define "kong.renderTpl" -}}
     {{- if typeIs "string" .value }}
 {{- tpl .value .context }}

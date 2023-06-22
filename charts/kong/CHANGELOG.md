@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Improvements
+
 * Running `tpl` against user-supplied labels and annotations used in Deployment
   #### example:
   ```yaml
@@ -10,6 +11,9 @@
     version: "{{ .Values.image.tag }}"  # Will render dynamically when overridden downstream
   ```
   [#814](https://github.com/Kong/charts/pull/814)
+* Fail to render templates when PodSecurityPolicy was requested but cluster doesn't
+  serve its API.
+  [#823](https://github.com/Kong/charts/pull/823)
 
 ## 2.23.0
 
