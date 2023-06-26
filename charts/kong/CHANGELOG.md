@@ -14,6 +14,8 @@
 * Fail to render templates when PodSecurityPolicy was requested but cluster doesn't
   serve its API.
   [#823](https://github.com/Kong/charts/pull/823)
+* Run `tpl` against user-defined initContainers.
+  [#826](https://github.com/Kong/charts/pull/826)
 
 ## 2.23.0
 
