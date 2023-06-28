@@ -1516,9 +1516,9 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
 {{- end -}}
 
 {{- define "kong.ingressVersion" -}}
-{{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress") -}}
+{{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1") -}}
 networking.k8s.io/v1
-{{- else if (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress") -}}
+{{- else if (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1") -}}
 networking.k8s.io/v1beta1
 {{- else -}}
 extensions/v1beta1
@@ -1526,9 +1526,9 @@ extensions/v1beta1
 {{- end -}}
 
 {{- define "kong.autoscalingVersion" -}}
-{{- if (.Capabilities.APIVersions.Has "autoscaling/v2/HorizontalPodAutoscaler") -}}
+{{- if (.Capabilities.APIVersions.Has "autoscaling/v2") -}}
 autoscaling/v2
-{{- else if (.Capabilities.APIVersions.Has "autoscaling/v2beta2/HorizontalPodAutoscaler") -}}
+{{- else if (.Capabilities.APIVersions.Has "autoscaling/v2beta2") -}}
 autoscaling/v2beta2
 {{- else -}}
 autoscaling/v1
