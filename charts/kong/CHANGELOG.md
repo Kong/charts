@@ -14,6 +14,8 @@
 * Fail to render templates when PodSecurityPolicy was requested but cluster doesn't
   serve its API.
   [#823](https://github.com/Kong/charts/pull/823)
+* Fix Ingress and HPA API versions during capabilities checking 
+  [#827](https://github.com/Kong/charts/pull/827)
 
 ## 2.23.0
 
