@@ -14,8 +14,10 @@
 * Fail to render templates when PodSecurityPolicy was requested but cluster doesn't
   serve its API.
   [#823](https://github.com/Kong/charts/pull/823)
-* Fix Ingress and HPA API versions during capabilities checking 
+* Fix Ingress and HPA API versions during capabilities checking
   [#827](https://github.com/Kong/charts/pull/827)
+* Changed `readinessProbe` to use new Status API endpoint `/status/ready` to prevent pods from becoming ready before the it can serve traffic. See [Readiness Check](https://docs.konghq.com/gateway/latest/production/monitoring/readiness-check/).
+  [#829](https://github.com/Kong/charts/pull/829).
 
 ## 2.23.0
 

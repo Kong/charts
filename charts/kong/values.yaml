@@ -771,10 +771,10 @@ resources: {}
 # readinessProbe for Kong pods
 readinessProbe:
   httpGet:
-    path: "/status"
+    path: "/status/ready"
     port: status
     scheme: HTTP
-  initialDelaySeconds: 5
+  initialDelaySeconds: 10
   timeoutSeconds: 5
   periodSeconds: 10
   successThreshold: 1
