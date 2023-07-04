@@ -278,8 +278,4 @@ status:
   tls:
     containerPort: 8543
     enabled: false
-updateStrategy:
-  rollingUpdate:
-    maxSurge: 100%
-    maxUnavailable: 100%
-  type: RollingUpdate
+
