@@ -78,7 +78,7 @@ Create Ingress resource for a Kong service
 {{- $path := .ingress.path -}}
 {{- $hostname := .ingress.hostname -}}
 {{- $pathType := .ingress.pathType -}}
-apiVersion: {{ .ingressVersion }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ .fullName }}-{{ .serviceName }}
@@ -95,33 +95,74 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-{{- if (and (not (eq .ingressVersion "extensions/v1beta1")) .ingress.ingressClassName) }}
+{{- if .ingress.ingressClassName }}
   ingressClassName: {{ .ingress.ingressClassName }}
 {{- end }}
   rules:
-  - host: {{ $hostname | quote }}
-    http:
+  {{- if ( not (or $hostname .ingress.hosts)) }}
+  - http:
       paths:
         - backend:
-          {{- if (not (eq .ingressVersion "networking.k8s.io/v1")) }}
-            serviceName: {{ .fullName }}-{{ .serviceName }}
-            servicePort: {{ $servicePort }}
-          {{- else }}
             service:
               name: {{ .fullName }}-{{ .serviceName }}
               port:
                 number: {{ $servicePort }}
-            {{- end }}
           path: {{ $path }}
-          {{- if (not (eq .ingressVersion "extensions/v1beta1")) }}
           pathType: {{ $pathType }}
+  {{- else if $hostname }}
+  - host: {{ $hostname | quote }}
+    http:
+      paths:
+        - backend:
+            service:
+              name: {{ .fullName }}-{{ .serviceName }}
+              port:
+                number: {{ $servicePort }}
+          path: {{ $path }}
+          pathType: {{ $pathType }}
+  {{- end }}
+  {{- range .ingress.hosts }}
+  - host: {{ .host | quote }}
+    http:
+      paths:
+        {{- range .paths }}
+        - backend:
+          {{- if .backend -}}
+            {{ .backend | toYaml | nindent 12 }}
+          {{- else }}
+            service:
+              name: {{ $.fullName }}-{{ $.serviceName }}
+              port:
+                number: {{ $servicePort }}
           {{- end }}
+          {{- if (and $hostname (and (eq $path .path))) }}
+          {{- fail "duplication of specified ingress path" }}
+          {{- end }}
+          path: {{ .path }}
+          pathType: {{ .pathType }}
+        {{- end }}
+  {{- end }}
   {{- if (hasKey .ingress "tls") }}
   tls:
-  - hosts:
-    - {{ $hostname | quote }}
-    secretName: {{ .ingress.tls }}
-  {{- end -}}
+  {{- if (kindIs "string" .ingress.tls) }}
+    - hosts:
+      {{- range .ingress.hosts }}
+        - {{ .host | quote }}
+      {{- end }}
+      {{- if $hostname }}
+        - {{ $hostname | quote }}
+      {{- end }}
+      secretName: {{ .ingress.tls }}
+  {{- else if (kindIs "slice" .ingress.tls) }}
+    {{- range .ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
 {{- end -}}
 
 {{/*
@@ -1513,16 +1554,6 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   - get
   - list
   - watch
-{{- end -}}
-
-{{- define "kong.ingressVersion" -}}
-{{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1") -}}
-networking.k8s.io/v1
-{{- else if (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1") -}}
-networking.k8s.io/v1beta1
-{{- else -}}
-extensions/v1beta1
-{{- end -}}
 {{- end -}}
 
 {{- define "kong.autoscalingVersion" -}}
