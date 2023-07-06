@@ -691,7 +691,7 @@ postgresql:
   image:
     # use postgres < 14 until is https://github.com/Kong/kong/issues/8533 resolved and released
     # enterprise (kong-gateway) supports postgres 14
-    tag: 13.6.0-debian-10-r52
+    tag: 13.11.0-debian-11-r20
   service:
     ports:
       postgresql: "5432"
