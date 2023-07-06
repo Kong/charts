@@ -1581,3 +1581,13 @@ policy/v1beta1
 {{- tpl (.value | toYaml) .context }}
     {{- end }}
 {{- end -}}
+
+{{- define "kong.ingressVersion" -}}
+{{- if (.Capabilities.APIVersions.Has "networking.k8s.io/v1") -}}
+networking.k8s.io/v1
+{{- else if (.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1") -}}
+networking.k8s.io/v1beta1
+{{- else -}}
+extensions/v1beta1
+{{- end -}}
+{{- end -}}
