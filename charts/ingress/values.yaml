@@ -28,6 +28,8 @@ gateway:
 
   admin:
     enabled: true
+    type: ClusterIP
+    clusterIP: None
 
   ingressController:
     enabled: false
