@@ -93,9 +93,14 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         command:
-        - "rm"
-        - "-vrf"
-        - "$KONG_PREFIX/pids"
+        - sh
+        - -c
+        - 'if test -S $KONG_PREFIX/worker_events.sock; then
+              rm $KONG_PREFIX/worker_events.sock;
+              rm -vrf $KONG_PREFIX/pids;
+           else
+              rm -vrf $KONG_PREFIX/pids;
+           fi'
         env:
         {{- include "kong.env" . | nindent 8 }}
         volumeMounts:
