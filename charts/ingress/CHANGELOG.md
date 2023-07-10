@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+### Fixes
+
+- Changed default `gateway.admin` service from `NodePort` to headless `ClusterIP`
+  which is expected for Gateway Discovery to work.
+  [#835](https://github.com/Kong/charts/pull/835)
+
 ## 0.2.0
 
 ### Improvements

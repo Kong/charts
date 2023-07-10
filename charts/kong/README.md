@@ -679,10 +679,11 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.externalTrafficPolicy          | k8s service's externalTrafficPolicy. Options: Cluster, Local                          |                          |
 | SVC.ingress.enabled                | Enable ingress resource creation (works with SVC.type=ClusterIP)                      | `false`                  |
 | SVC.ingress.ingressClassName       | Set the ingressClassName to associate this Ingress with an IngressClass               |                          |
-| SVC.ingress.tls                    | Name of secret resource, containing TLS secret                                        |                          |
 | SVC.ingress.hostname               | Ingress hostname                                                                      | `""`                     |
 | SVC.ingress.path                   | Ingress path.                                                                         | `/`                      |
 | SVC.ingress.pathType               | Ingress pathType. One of `ImplementationSpecific`, `Exact` or `Prefix`                | `ImplementationSpecific` |
+| SVC.ingress.hosts                  | Slice of hosts configurations, including `hostname`, `path` and `pathType` keys       | `[]`                     |
+| SVC.ingress.tls                    | Name of secret resource or slice of `secretName` and `hosts` keys                     |                          |
 | SVC.ingress.annotations            | Ingress annotations. See documentation for your ingress controller for details        | `{}`                     |
 | SVC.ingress.labels                 | Ingress labels. Additional custom labels to add to the ingress.                       | `{}`                     |
 | SVC.annotations                    | Service annotations                                                                   | `{}`                     |

@@ -334,18 +334,46 @@ proxy:
     # Enable/disable exposure using ingress.
     enabled: false
     ingressClassName:
-    # Ingress hostname
-    # TLS secret name.
-    # tls: kong-proxy.example.com-tls
-    hostname:
     # To specify annotations or labels for the ingress, add them to the respective
     # "annotations" or "labels" dictionaries below.
     annotations: {}
     labels: {}
-    # Ingress path.
+    # Ingress hostname
+    hostname:
+    # Ingress path (when used with hostname above).
     path: /
-    # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    # Each path in an Ingress is required to have a corresponding path type (when used with hostname above). (ImplementationSpecific/Exact/Prefix)
     pathType: ImplementationSpecific
+    # Ingress hosts. Use this instead of or in combination with hostname to specify multiple ingress host configurations
+    hosts: []
+    # - host: kong-proxy.example.com
+    #   paths:
+    #   # Ingress path.
+    #   - path: /*
+    #   # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    #     pathType: ImplementationSpecific
+    # - host: kong-proxy-other.example.com
+    #   paths:
+    #   # Ingress path.
+    #   - path: /other
+    #   # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
+    #     pathType: ImplementationSpecific
+    #     backend:
+    #       service:
+    #         name: kong-other-proxy
+    #         port:
+    #           number: 80
+    #
+    # TLS secret(s)
+    # tls: kong-proxy.example.com-tls
+    # Or if multiple hosts/secrets needs to be configured:
+    # tls:
+    # - secretName: kong-proxy.example.com-tls
+    #   hosts:
+    #   - kong-proxy.example.com
+    # - secretName: kong-proxy-other.example.com-tls
+    #   hosts:
+    #   - kong-proxy-other.example.com
 
   # Optionally specify a static load balancer IP.
   # loadBalancerIP:
@@ -663,7 +691,7 @@ postgresql:
   image:
     # use postgres < 14 until is https://github.com/Kong/kong/issues/8533 resolved and released
     # enterprise (kong-gateway) supports postgres 14
-    tag: 13.6.0-debian-10-r52
+    tag: 13.11.0-debian-11-r20
   service:
     ports:
       postgresql: "5432"
