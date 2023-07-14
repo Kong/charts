@@ -370,7 +370,18 @@ Return the admin API service name for service discovery
 {{- $gatewayDiscovery := .Values.ingressController.gatewayDiscovery -}}
 {{- if $gatewayDiscovery.enabled -}}
   {{- $adminApiService := $gatewayDiscovery.adminApiService -}}
-  {{- $_ := required ".ingressController.gatewayDiscovery.adminApiService has to be provided when .Values.ingressController.gatewayDiscovery.enabled is set to true"  $adminApiService -}}
+  {{- $adminApiServiceName := $gatewayDiscovery.adminApiService.name -}}
+  {{- $generateAdminApiService := $gatewayDiscovery.generateAdminApiService -}}
+
+  {{- if and $generateAdminApiService $adminApiService.name -}}
+    {{- fail (printf ".Values.ingressController.gatewayDiscovery.adminApiService and .Values.ingressController.gatewayDiscovery.generateAdminApiService must not be provided at the same time")  -}}
+  {{- end -}}
+
+  {{- if $generateAdminApiService -}}
+    {{- $adminApiServiceName = (printf "%s-%s" .Release.Name "gateway-admin") -}}
+  {{- else }}
+    {{- $_ := required ".ingressController.gatewayDiscovery.adminApiService.name has to be provided when .Values.ingressController.gatewayDiscovery.enabled is set to true"  $adminApiServiceName -}}
+  {{- end }}
 
   {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
   {{- fail (printf "Gateway discovery is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
@@ -381,9 +392,7 @@ Return the admin API service name for service discovery
   {{- end }}
 
   {{- $namespace := $adminApiService.namespace | default ( include "kong.namespace" . ) -}}
-  {{- $name := $adminApiService.name -}}
-  {{- $_ := required ".ingressController.gatewayDiscovery.adminApiService.name has to be provided when .Values.ingressController.gatewayDiscovery.enabled is set to true"  $name -}}
-  {{- printf "%s/%s" $namespace $name -}}
+  {{- printf "%s/%s" $namespace $adminApiServiceName -}}
 {{- else -}}
   {{- fail "Can't use gateway discovery when .Values.ingressController.gatewayDiscovery.enabled is set to false." -}}
 {{- end -}}

@@ -525,6 +525,7 @@ ingressController:
 
   gatewayDiscovery:
     enabled: false
+    generateAdminApiService: false
     adminApiService:
       namespace: ""
       name: ""
