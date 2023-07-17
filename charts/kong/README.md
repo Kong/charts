@@ -805,8 +805,8 @@ You'll be able to configure this feature through configuration section under
   - `ingressController.gatewayDiscovery.adminApiService.name`
   - `ingressController.gatewayDiscovery.adminApiService.namespace`
 
-  If you set `ingressController.gatewayDiscovery.generateAdminApiService` to `true`
-  and the chart will generate values for `name` and `namespace` based on the current release name and
+  If you set `ingressController.gatewayDiscovery.generateAdminApiService` to `true`,
+  the chart will generate values for `name` and `namespace` based on the current release name and
   namespace. This is useful when consuming the `kong` chart as a subchart.
 
 Using this feature requires a split release installation of Gateways and Ingress Controller.
