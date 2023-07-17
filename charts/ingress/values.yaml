@@ -17,8 +17,7 @@ controller:
 
     gatewayDiscovery:
       enabled: true
-      adminApiService:
-        name: kong-gateway-admin
+      generateAdminApiService: true
 
 gateway:
   enabled: true
