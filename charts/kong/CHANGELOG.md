@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Breaking changes
+
+- The Kong proxy container probe now defaults to `/status/ready` on the status
+  listen. This requires Kong 3.3 or higher. If you wish to continue using an
+  older version and did not have a custom probe configured, you must set the
+  [previous default](https://github.com/Kong/charts/blob/kong-2.25.0/charts/kong/values.yaml#L800-L810)
+  in your values.yaml.
+
 ## 2.25.0
 
 - Generate the `adminApiService.name` value from `.Release.Name` rather than

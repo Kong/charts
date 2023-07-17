@@ -17,7 +17,8 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
-- [2.17.0](#2170)
+- [2.26.0](#2260)
+- [2.19.0](#2190)
 - [2.13.0](#2130)
 - [2.8.0](#280)
 - [2.7.0](#270)
@@ -82,6 +83,25 @@ https://raw.githubusercontent.com/Kong/charts/kong-<version>/charts/kong/crds/cu
 
 For example, if your release is 2.6.4, you would apply
 `https://raw.githubusercontent.com/Kong/charts/kong-2.6.4/charts/kong/crds/custom-resource-definitions.yaml`.
+
+## 2.26.0
+
+2.26 sets the Kong proxy container readiness probe to a new endpoint introduced
+in Kong 3.3. This readiness endpoint reports the container ready when the proxy
+is configured, whereas the earlier endpoint only indicated if the proxy had
+started.
+
+If you have not yet upgraded to Kong 3.3 or higher and do not use a custom
+readiness endpoint, you must set the [previous default](https://github.com/Kong/charts/blob/kong-2.25.0/charts/kong/values.yaml#L800-L810)
+readiness endpoint in your values.yaml:
+
+```
+readinessProbe:
+  httpGet:
+    path: "/status"
+    port: status
+    scheme: HTTP
+```
 
 ## 2.19.0
 
