@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.25.0
+
+- Generate the `adminApiService.name` value from `.Release.Name` rather than
+  hardcoding to `kong`
+  [#839](https://github.com/Kong/charts/pull/839)
+
 ## 2.24.0
 
 ### Improvements
