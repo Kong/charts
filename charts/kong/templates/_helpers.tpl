@@ -1600,3 +1600,13 @@ networking.k8s.io/v1beta1
 extensions/v1beta1
 {{- end -}}
 {{- end -}}
+
+{{- define "kong.proxy.compatibleReadiness" -}}
+{{- $proxyReadiness := .Values.readinessProbe -}}
+{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image))) -}}
+    {{- if (eq $proxyReadiness.httpGet.path "/status/ready") -}}
+        {{- $_ := set $proxyReadiness.httpGet "path" "/status" -}}
+    {{- end -}}
+{{- end -}}
+{{- (toYaml $proxyReadiness) -}}
+{{- end -}}
