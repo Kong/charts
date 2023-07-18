@@ -1600,3 +1600,31 @@ networking.k8s.io/v1beta1
 extensions/v1beta1
 {{- end -}}
 {{- end -}}
+
+{{- define "kong.proxy.readinessProbe" -}}
+{{- if .Values.readinessProbe -}}
+{{ toYaml .Values.readinessProbe }}
+{{- else -}}
+{{- if (and (semverCompare ">= 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image)) (semverCompare ">= 3.3.0" (include "kong.effectiveVersion" .Values.image))) }}
+httpGet:
+  path: "/status/ready"
+  port: status
+  scheme: HTTP
+initialDelaySeconds: 5
+timeoutSeconds: 5
+periodSeconds: 10
+successThreshold: 1
+failureThreshold: 3
+{{- else -}}
+httpGet:
+  path: "/status"
+  port: status
+  scheme: HTTP
+initialDelaySeconds: 5
+timeoutSeconds: 5
+periodSeconds: 10
+successThreshold: 1
+failureThreshold: 3
+{{- end -}}
+{{- end -}}
+{{- end -}}

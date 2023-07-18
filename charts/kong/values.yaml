@@ -797,18 +797,6 @@ resources: {}
   #  cpu: 1
   #  memory: 2G
 
-# readinessProbe for Kong pods
-readinessProbe:
-  httpGet:
-    path: "/status"
-    port: status
-    scheme: HTTP
-  initialDelaySeconds: 5
-  timeoutSeconds: 5
-  periodSeconds: 10
-  successThreshold: 1
-  failureThreshold: 3
-
 # livenessProbe for Kong pods
 livenessProbe:
   httpGet:
