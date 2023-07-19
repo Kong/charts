@@ -513,14 +513,14 @@ dblessConfig:
 ingressController:
   enabled: true
   image:
-    repository: kong/kubernetes-ingress-controller
-    tag: "2.10"
+    repository: kong/nightly-ingress-controller
+    tag: "2023-07-18"
     # Optionally set a semantic version for version-gated features. This can normally
     # be left unset. You only need to set this if your tag is not a semver string,
     # such as when you are using a "next" tag. Set this to the effective semantic
     # version of your tag: for example if using a "next" image for an unreleased 3.1.0
     # version, set this to "3.1.0".
-    effectiveSemver:
+    effectiveSemver: 2.11.0
   args: []
 
   gatewayDiscovery:
