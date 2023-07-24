@@ -35,7 +35,10 @@ ADDITIONAL_FLAGS=()
 # ------------------------------------------------------------------------------
 if [[ "${CHART_NAME}" == "ingress" ]]; then
   CONTROLLER_PREFIX="controller."
-  ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.gatewayDiscovery.adminApiService.name=${RELEASE_NAME}-gateway-admin ")
+  # this is intentionally a no-op at present. this originally had a set that was
+  # made obsolete by a values default change. it's now a placeholder showing an
+  # example modification
+  # ADDITIONAL_FLAGS+=("<replace with a --set command>")
 fi
 
 # ------------------------------------------------------------------------------
