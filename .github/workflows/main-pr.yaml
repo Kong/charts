@@ -130,3 +130,18 @@ jobs:
 
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
+
+  # Workaround to allow checking the matrix tests as required tests without adding the individual cases
+  # Ref: https://github.com/orgs/community/discussions/26822#discussioncomment-3305794
+  passed:
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - lint-test
+      - integration-test
+    if: always()
+    steps:
+      - if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: |
+          echo "Some jobs failed or were cancelled."
+          exit 1
