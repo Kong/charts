@@ -1603,7 +1603,7 @@ extensions/v1beta1
 
 {{- define "kong.proxy.compatibleReadiness" -}}
 {{- $proxyReadiness := .Values.readinessProbe -}}
-{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image))) -}}
+{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (and .Values.ingressController.enabled (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image)))) -}}
     {{- if (eq $proxyReadiness.httpGet.path "/status/ready") -}}
         {{- $_ := set $proxyReadiness.httpGet "path" "/status" -}}
     {{- end -}}
