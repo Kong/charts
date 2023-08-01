@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+* Use the Kong 3.3 `/status/ready` endpoint for readiness probes by default if
+  available. If not available, use the old `/status` default.
+  [#844](https://github.com/Kong/charts/pull/844)
+
 ## 2.25.0
 
 - Generate the `adminApiService.name` value from `.Release.Name` rather than
