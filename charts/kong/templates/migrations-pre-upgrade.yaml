@@ -13,6 +13,8 @@ metadata:
   annotations:
     helm.sh/hook: "pre-upgrade"
     helm.sh/hook-delete-policy: "before-hook-creation"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
   {{- range $key, $value := .Values.migrations.jobAnnotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
