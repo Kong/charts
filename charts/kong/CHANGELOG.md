@@ -9,6 +9,9 @@
   [#844](https://github.com/Kong/charts/pull/844)
 * Add ArgoCD `Sync` and `BeforeHookCreation` [hook policies](https://argo-cd.readthedocs.io/en/stable/user-guide/resource_hooks/)
   to the the init and pre-upgrade migrations Jobs.
+* Add controller's RBAC rules for `KongConsumerGroups` CRD.
+  [#850](https://github.com/Kong/charts/pull/850)
+
 
 ## 2.25.0
 
