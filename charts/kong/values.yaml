@@ -306,6 +306,27 @@ proxy:
     parameters:
     - http2
 
+  # Define extra ports
+  # To enable, remove "[]", uncomment the section below, and select your desired
+  # ports and parameters. Listens are dynamically named after their containerPort,
+  # e.g. "extra-9080" for the below.
+  # Note: although you can select the protocol here, you cannot set UDP if you
+  # use a LoadBalancer Service due to limitations in current Kubernetes versions.
+  # To proxy both TCP and UDP with LoadBalancers, you must enable the udpProxy Service
+  # in the next section and place all UDP stream listen configuration under it.
+  extraPorts: []
+    #   # Set the container (internal) and service (external) ports for this extra port.
+    #   # These values should normally be the same. If your environment requires they
+    #   # differ, note that Kong will match routes based on the containerPort only.
+    # - servicePort: 4432
+    #   containerPort: 9080
+    #   protocol: TCP
+    #   # Optionally set a static nodePort if the service type is NodePort
+    #   # nodePort: 33443
+    #   # Additional listen parameters, e.g. "ssl", "reuseport", "backlog=16384"
+    #   # "ssl" is required for SNI-based routes. It is not supported on versions <2.0
+    #   parameters: []
+
   # Define stream (TCP) listen
   # To enable, remove "[]", uncomment the section below, and select your desired
   # ports and parameters. Listens are dynamically named after their containerPort,

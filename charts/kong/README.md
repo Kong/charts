@@ -670,6 +670,12 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.tls.hostPort                   | Host port to use for TLS                                                              |                          |
 | SVC.tls.overrideServiceTargetPort  | Override service port to use for TLS without touching Kong containerPort              |                          |
 | SVC.tls.parameters                 | Array of additional listen parameters                                                 | `["http2"]`              |
+| SVC.extraPorts                     | Array of additional listen ports                                                      | `[]`                     |
+| SVC.extraPorts.[].containerPort    | Container port to use for the additional lister                                       |                          |
+| SVC.extraPorts.[].servicePort      | Service port to use for the additional lister                                         |                          |
+| SVC.extraPorts.[].nodePort         | Node port to use for the additional lister                                            |                          |
+| SVC.extraPorts.[].hostPort         | Host port to use for the additional lister                                            |                          |
+| SVC.extraPorts.[].parameters       | Array of additional listen parameters                                                 | `[]`                     |
 | SVC.type                           | k8s service type. Options: NodePort, ClusterIP, LoadBalancer                          |                          |
 | SVC.clusterIP                      | k8s service clusterIP                                                                 |                          |
 | SVC.loadBalancerClass              | loadBalancerClass to use for LoadBalancer provisionning                               |                          |

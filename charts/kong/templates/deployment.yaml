@@ -176,6 +176,14 @@ spec:
           {{- end}}
           protocol: {{ .protocol }}
         {{- end }}
+        {{- range .Values.proxy.extraPorts }}
+        - name: extra{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
+          containerPort: {{ .containerPort }}
+          {{- if .hostPort }}
+          hostPort: {{ .hostPort }}
+          {{- end}}
+          protocol: {{ .protocol }}
+        {{- end }}
         {{- range .Values.udpProxy.stream }}
         - name: streamudp-{{ .containerPort }}
           containerPort: {{ .containerPort }}

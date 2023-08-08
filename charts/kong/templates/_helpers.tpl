@@ -248,6 +248,15 @@ spec:
     protocol: {{ .protocol | default "TCP" }}
   {{- end }}
   {{- end }}
+  {{- range .extraPorts }}
+  - name: extra{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
+    port: {{ .servicePort }}
+    targetPort: {{ .containerPort }}
+  {{- if (and (or (eq $.type "LoadBalancer") (eq $.type "NodePort")) (not (empty .nodePort))) }}
+    nodePort: {{ .nodePort }}
+  {{- end }}
+    protocol: {{ .protocol | default "TCP" }}
+  {{- end }}
   {{- if .externalTrafficPolicy }}
   externalTrafficPolicy: {{ .externalTrafficPolicy }}
   {{- end }}
@@ -279,7 +288,6 @@ Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
       {{- $unifiedListen = append $unifiedListen $httpListen -}}
     {{- end -}}
   {{- end -}}
-
   {{- if .tls -}}
     {{- if .tls.enabled -}}
       {{/*
@@ -297,6 +305,16 @@ Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
       {{- $tlsListen := (include "kong.singleListen" $listenConfig) -}}
       {{- $unifiedListen = append $unifiedListen $tlsListen -}}
     {{- end -}}
+  {{- end -}}
+ 
+  {{- if .extraPorts -}}
+    {{- range .extraPorts }}
+      {{- $listenConfig := dict -}}
+      {{- $listenConfig := merge $listenConfig . -}}
+      {{- $_ := set $listenConfig "address" (default "0.0.0.0" .address) -}}
+      {{- $extraListen := (include "kong.singleListen" $listenConfig) -}}
+      {{- $unifiedListen = append $unifiedListen $extraListen -}}      
+    {{- end }}
   {{- end -}}
 
   {{- $listenString := ($unifiedListen | join ", ") -}}
