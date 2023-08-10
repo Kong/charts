@@ -786,10 +786,22 @@ The name of the service used for the ingress controller's validation webhook
 
 {{/* effectiveVersion takes an image dict from values.yaml. if .effectiveSemver is set, it returns that, else it returns .tag */}}
 {{- define "kong.effectiveVersion" -}}
+{{- /* Because Kong Gateway enterprise uses versions with 4 segments and not 3 */ -}}
+{{- /* as semver does, we need to account for that here by extracting */ -}}
+{{- /* first 3 segments for comparison */ -}}
 {{- if .effectiveSemver -}}
-{{- .effectiveSemver -}}
+  {{- if regexMatch "^[0-9]+.[0-9]+.[0-9]+" .effectiveSemver -}}
+  {{- regexFind "^[0-9]+.[0-9]+.[0-9]+" .effectiveSemver -}}
+  {{- else -}}
+  {{- .effectiveSemver -}}
+  {{- end -}}
 {{- else -}}
-{{- (trimSuffix "-redhat" .tag) -}}
+  {{- $tag := (trimSuffix "-redhat" .tag) -}}
+  {{- if regexMatch "^[0-9]+.[0-9]+.[0-9]+" .tag -}}
+  {{- regexFind "^[0-9]+.[0-9]+.[0-9]+" .tag -}}
+  {{- else -}}
+  {{- .tag -}}
+  {{- end -}}
 {{- end -}}
 {{- end -}}
 
