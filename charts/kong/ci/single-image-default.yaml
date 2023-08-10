@@ -13,3 +13,8 @@ ingressController:
     anonymous_reports: "false"
   image:
     unifiedRepoTag: kong/kubernetes-ingress-controller:2.0.2
+
+# For the sake of getting the test results from CI faster
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1

@@ -14,3 +14,8 @@ extraObjects:
   metadata:
     name: kong.proxy.example.secret
   type: kubernetes.io/tls
+
+# For the sake of getting the test results from CI faster
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
