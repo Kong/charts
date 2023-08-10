@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.1
+
+### Improvements
+
+- Bumped dependencies on `kong/kong` chart to `>=2.26.0`.
+  [#859](https://github.com/Kong/charts/pull/859)
+
 ## 0.4.0
 
 ### Improvements
