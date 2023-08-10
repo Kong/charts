@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Nothing yet.
+
+## 2.26.0
+
 ### Improvements
 
 * Use the Kong 3.3 `/status/ready` endpoint for readiness probes by default if
@@ -11,7 +15,7 @@
   to the the init and pre-upgrade migrations Jobs.
 * Add controller's RBAC rules for `KongConsumerGroups` CRD.
   [#850](https://github.com/Kong/charts/pull/850)
-
+* Updated controller version to 2.11.
 
 ## 2.25.0
 
