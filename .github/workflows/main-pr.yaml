@@ -90,8 +90,6 @@ jobs:
     strategy:
       matrix:
         kubernetes-version:
-        - "1.19.16"
-        - "1.20.15"
         - "1.21.14"
         - "1.22.15"
         - "1.23.13"
