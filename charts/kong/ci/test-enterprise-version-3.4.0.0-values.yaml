@@ -1,0 +1,17 @@
+ingressController:
+  enabled: false
+
+proxy:
+  type: NodePort
+
+image:
+  repository: kong/kong-gateway
+  tag: "3.4.0.0"
+
+readinessProbe:
+  httpGet:
+    path: "/status"
+    port: status
+    scheme: HTTP
+  initialDelaySeconds: 1
+  periodSeconds: 1
