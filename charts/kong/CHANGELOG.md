@@ -19,6 +19,17 @@ Nothing yet.
 
 ## 2.26.0
 
+### Breaking changes
+
+2.26 changes the default proxy readiness endpoint for newer Kong versions. This
+causes an issue in a narrow edge case. If all of the following are true:
+
+* You use Kong 3.3 or newer.
+* You use controller 2.10 or older.
+* You run the controller and proxy in separate Deployments.
+
+you are affected and should review [the 2.26 upgrade instructions](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#2260).
+
 ### Improvements
 
 * Use the Kong 3.3 `/status/ready` endpoint for readiness probes by default if
