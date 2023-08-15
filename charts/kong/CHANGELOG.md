@@ -4,6 +4,12 @@
 
 Nothing yet.
 
+## 2.26.2
+
+### Fixed 
+
+* Add missing CRD KongConsumerGroup and extend status subresource for CRDs
+
 ## 2.26.1
 
 ### Fixed
