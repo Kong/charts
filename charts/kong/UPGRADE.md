@@ -101,7 +101,7 @@ This section goes under the `gateway` section when using the `ingress` chart.
 2.26 changes the default proxy readiness endpoint to the `/status/ready`
 endpoint introduced in Kong 3.3. This endpoint reports true when Kong has
 configuration available, whereas the previous `/status` endpoint returned true
-immediately after start, and could result in proxy instances attemtpting to
+immediately after start, and could result in proxy instances attempting to
 serve requests before they had configuration.
 
 The chart has logic to fall back to the older endpoint if the proxy and
