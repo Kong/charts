@@ -21,13 +21,11 @@ env:
   database: "postgres"
 # - ingress resources are created without hosts
 admin:
-  type: NodePort
   ingress:
     enabled: true
     hosts: []
     path: /
 proxy:
-  type: NodePort
   ingress:
     enabled: true
     hostname: proxy.kong.example
