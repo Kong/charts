@@ -4,6 +4,12 @@
 
 Nothing yet.
 
+## 2.26.3
+
+### Fixed 
+
+* Enabled Service and Ingress in Kong Manager for non enterprise users.
+
 ## 2.26.2
 
 ### Fixed 
