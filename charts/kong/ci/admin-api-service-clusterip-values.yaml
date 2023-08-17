@@ -1,0 +1,14 @@
+admin:
+  enabled: true
+  type: ClusterIP
+
+# Add /status readiness probe because without KIC there's nothing to make
+# Gateway ready by sending the config.
+readinessProbe:
+  httpGet:
+    path: "/status"
+    port: status
+    scheme: HTTP
+
+ingressController:
+  enabled: false
