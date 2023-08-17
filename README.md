@@ -4,21 +4,32 @@ This is the official Helm Charts repository for installing Kong on Kubernetes.
 
 ## Setup
 
+Add the repo on your machine:
+
 ```bash
-$ helm repo add kong https://charts.konghq.com
-$ helm repo update
+helm repo add kong https://charts.konghq.com
+helm repo update
+```
 
-# Helm 2
-$ helm install kong/kong
+If you plan to use the Kong Ingress Controller, use the `kong/ingress` chart:
 
-# Helm 3
-$ helm install kong/kong --generate-name --set ingressController.installCRDs=false
+```bash
+helm install kong/ingress --generate-name
+```
+
+If you plan to install Kong on Kubernetes in Hybrid or Traditional mode use the `kong/kong` chart:
+
+```bash
+helm install kong/kong --generate-name
 ```
 
 ## Documentation
 
-The documentation for Kong's Helm Chart is available at
-[here](https://github.com/Kong/charts/blob/main/charts/kong/README.md).
+The documentation for Kong's Helm Charts is available on GitHub:
+
+* [kong/ingress](https://github.com/Kong/charts/blob/main/charts/ingress/README.md)
+* [kong/kong](https://github.com/Kong/charts/blob/main/charts/kong/README.md)
+
 
 ## Seeking help
 
