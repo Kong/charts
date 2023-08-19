@@ -4,6 +4,12 @@
 
 Nothing yet.
 
+## 2.26.4
+
+### Fixed 
+
+* updated `admin_api_uri` to `admin_gui_api_url` as per [kong documentation](https://docs.konghq.com/gateway/3.4.x/reference/configuration/#admin_api_uri). 
+
 ## 2.26.3
 
 ### Fixed 
