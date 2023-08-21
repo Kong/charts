@@ -1046,7 +1046,7 @@ must know where other Kong services (namely the admin and files APIs) can be
 accessed in order to function properly. Kong's default behavior for attempting
 to locate these absent configuration is unlikely to work in common Kubernetes
 environments. Because of this, you should set each of `admin_gui_url`,
-`admin_api_uri`, `proxy_url`, `portal_api_url`, `portal_gui_host`, and
+`admin_gui_api_url`, `proxy_url`, `portal_api_url`, `portal_gui_host`, and
 `portal_gui_protocol` under the `.env` key in values.yaml to locations where
 each of their respective services can be accessed to ensure that Kong services
 can locate one another and properly set CORS headers. See the
