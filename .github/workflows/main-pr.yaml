@@ -121,6 +121,45 @@ jobs:
 
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
+  oldversion-integration-test:
+    runs-on: ubuntu-latest
+    env:
+      # Specify this here because these tests rely on ktf to run kind for cluster creation.
+      KIND_VERSION: v0.20.0
+    strategy:
+      matrix:
+        kic-version:
+        - "2.10"
+        - "2.9"
+        kong-version:
+        - "3.3"
+        - "3.2"
+        chart-name:
+          - kong
+          - ingress
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: setup helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.11.0
+
+      - name: setup testing environment (kind-cluster)
+        run: ./scripts/test-env.sh
+
+      - name: run integration tests (integration)
+        env:
+          CHART_NAME: ${{ matrix.chart-name }}
+          KONG_VERSION: ${{ matrix.kong-version }}
+          KIC_VERSION: ${{ matrix.kic-version }}
+        run: ./scripts/test-run.sh
+
+      - name: cleanup integration tests (cleanup)
+        run: ./scripts/test-env.sh cleanup
 
   # Workaround to allow checking the matrix tests as required tests without adding the individual cases
   # Ref: https://github.com/orgs/community/discussions/26822#discussioncomment-3305794
@@ -130,6 +169,7 @@ jobs:
       - lint
       - lint-test
       - integration-test
+      - oldversion-integration-test
     if: always()
     steps:
       - if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
