@@ -965,6 +965,7 @@ the template that it itself is using form the above sections.
 
 {{- if .Values.admin.ingress.enabled }}
   {{- $_ := set $autoEnv "KONG_ADMIN_GUI_API_URL" (include "kong.ingress.serviceUrl" .Values.admin.ingress) -}}
+  {{- $_ := set $autoEnv "KONG_ADMIN_API_URI" (include "kong.ingress.serviceUrl" .Values.admin.ingress) -}}
 {{- end -}}
 
 {{- $_ := set $autoEnv "KONG_PROXY_LISTEN" (include "kong.listen" .Values.proxy) -}}
