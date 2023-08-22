@@ -20,6 +20,11 @@ environment. It is the recommended chart for new installations. To use it:
 helm install kong/ingress --generate-name
 ```
 
+`kong/ingress` is an umbrella chart using two instances of the `kong/kong`
+chart with some pre-configured values.yaml settings. The `controller` and
+`gateway` subsections support additional settings available in the `kong/kong`
+values.yaml.
+
 `kong/kong` is a flexible building block for supporting a wide variety of
 environment configurations not supported by `kong/ingress`, such as hybrid mode
 or unmanaged (no controller) Kong instances. To use it:
