@@ -4,21 +4,46 @@ This is the official Helm Charts repository for installing Kong on Kubernetes.
 
 ## Setup
 
+Add the repo on your machine:
+
 ```bash
-$ helm repo add kong https://charts.konghq.com
-$ helm repo update
-
-# Helm 2
-$ helm install kong/kong
-
-# Helm 3
-$ helm install kong/kong --generate-name --set ingressController.installCRDs=false
+helm repo add kong https://charts.konghq.com
+helm repo update
 ```
+
+There are two available charts.
+
+`kong/ingress` provides an opinionated ingress controller-managed DB-less
+environment. It is the recommended chart for new installations. To use it:
+
+```bash
+helm install kong/ingress --generate-name
+```
+
+`kong/ingress` is an umbrella chart using two instances of the `kong/kong`
+chart with some pre-configured values.yaml settings. The `controller` and
+`gateway` subsections support additional settings available in the `kong/kong`
+values.yaml.
+
+`kong/kong` is a flexible building block for supporting a wide variety of
+environment configurations not supported by `kong/ingress`, such as hybrid mode
+or unmanaged (no controller) Kong instances. To use it:
+
+```bash
+helm install kong/kong --generate-name
+```
+
+For more details about the configuration required to support various
+environments, see the "Deployment Options" subsection of the `kong/kong`
+documentation's table of contents.
 
 ## Documentation
 
-The documentation for Kong's Helm Chart is available at
-[here](https://github.com/Kong/charts/blob/main/charts/kong/README.md).
+The documentation for Kong's Helm Charts is available on GitHub:
+
+* [kong/ingress](https://github.com/Kong/charts/blob/main/charts/ingress/README.md)
+* [kong/kong](https://github.com/Kong/charts/blob/main/charts/kong/README.md)
+
 
 ## Seeking help
 
