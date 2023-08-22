@@ -11,17 +11,26 @@ helm repo add kong https://charts.konghq.com
 helm repo update
 ```
 
-If you plan to use the Kong Ingress Controller, use the `kong/ingress` chart:
+There are two available charts.
+
+`kong/ingress` provides an opinionated ingress controller-managed DB-less
+environment. It is the recommended chart for new installations. To use it:
 
 ```bash
 helm install kong/ingress --generate-name
 ```
 
-If you plan to install Kong on Kubernetes in Hybrid or Traditional mode use the `kong/kong` chart:
+`kong/kong` is a flexible building block for supporting a wide variety of
+environment configurations not supported by `kong/ingress`, such as hybrid mode
+or unmanaged (no controller) Kong instances. To use it:
 
 ```bash
 helm install kong/kong --generate-name
 ```
+
+For more details about the configuration required to support various
+environments, see the "Deployment Options" subsection of the `kong/kong`
+documentation's table of contents.
 
 ## Documentation
 
