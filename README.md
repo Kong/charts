@@ -44,7 +44,6 @@ The documentation for Kong's Helm Charts is available on GitHub:
 * [kong/ingress](https://github.com/Kong/charts/blob/main/charts/ingress/README.md)
 * [kong/kong](https://github.com/Kong/charts/blob/main/charts/kong/README.md)
 
-
 ## Seeking help
 
 If you run into an issue, bug or have a question, please reach out to the Kong
@@ -66,11 +65,13 @@ the Helm repo:
 2. Open a PR to main and merge once approved.
 3. Wait for CI to release the new version. Investigate errors if the release job fails.
 
+Chart `kong/ingress` uses `kong/kong` as a dependency, so when changes released in `kong/kong` are beneficial for users of `kong/ingress` bump its version `cd charts/ingress && helm dependency update` and prepare a new release of `kong/ingress` as described above.
+
 Forks of this repo can use this release functionality without (much) additional
 configuration. Enabling GitHub pages for the `gh-pages` branch will make a Helm
 repo with your fork's changes available on your GitHub Pages URL. You can then
 use this with:
 
-```
+```sh
 helm repo add kong-fork https://myuser.github.io/charts/
 ```
