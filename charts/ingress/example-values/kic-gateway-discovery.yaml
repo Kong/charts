@@ -1,0 +1,15 @@
+controller:
+  ingressController:
+    enabled: true
+    image:
+      repository: kong/kubernetes-ingress-controller
+
+    gatewayDiscovery:
+      enabled: true
+    adminApi:
+      tls:
+        client:
+          enabled: true
+
+gateway:
+  nameOverride: gateway

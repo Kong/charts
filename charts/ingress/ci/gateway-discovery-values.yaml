@@ -1,0 +1,19 @@
+controller:
+  ingressController:
+    env:
+      anonymous_reports: "false"
+    enabled: true
+    image:
+      repository: kong/kubernetes-ingress-controller
+
+    gatewayDiscovery:
+      enabled: true
+    adminApi:
+      tls:
+        client:
+          enabled: true
+
+gateway:
+  env:
+    anonymous_reports: "off"
+  nameOverride: gateway
