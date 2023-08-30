@@ -41,6 +41,11 @@ jobs:
     env:
       # Specify this here because these tests rely on ktf to run kind for cluster creation.
       KIND_VERSION: v0.20.0
+    strategy:
+      matrix:
+        chart-name:
+          - kong
+          - ingress
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -73,7 +78,7 @@ jobs:
         run: ./scripts/test-env.sh
 
       - name: Run chart-testing (install)
-        run: ct install --charts charts/kong
+        run: ct install --charts charts/${{ matrix.chart-name}}
 
   integration-test:
     runs-on: ubuntu-latest
