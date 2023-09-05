@@ -850,6 +850,8 @@ The name of the service used for the ingress controller's validation webhook
   - {{ $val }}
   {{- end }}
   {{- end }}
+  lifecycle:
+    {{- toYaml .Values.ingressController.lifecycle | nindent 4 }}
   ports:
   {{- if .Values.ingressController.admissionWebhook.enabled }}
   - name: webhook

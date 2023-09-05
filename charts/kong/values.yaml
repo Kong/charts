@@ -558,6 +558,14 @@ ingressController:
   # customEnv:
   #   TZ: "Europe/Berlin"
 
+  # Ingress Controllet container lifecycle hooks
+  # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
+  # lifecycle:
+  #   postStart:
+  #     httpGet:
+  #       path: /healthz/ready
+  #       port: 15020
+
   admissionWebhook:
     enabled: true
     failurePolicy: Ignore
