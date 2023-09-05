@@ -130,7 +130,6 @@ jobs:
       matrix:
         kic-version:
         - "2.10"
-        - "2.9"
         kong-version:
         - "3.3"
         - "3.2"
