@@ -4,6 +4,14 @@
 
 Nothing yet.
 
+## 2.27.0
+
+### Improvements
+
+* Listens now all support `.address` configuration. This was an existing
+  setting that was not applied properly for some listens.
+  [#881](https://github.com/Kong/charts/pull/881)
+
 ## 2.26.5
 
 ### Fixed 
