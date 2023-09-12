@@ -330,10 +330,11 @@ Create KONG_STREAM_LISTEN string
 */}}
 {{- define "kong.streamListen" -}}
   {{- $unifiedListen := list -}}
+  {{- $address := (default "0.0.0.0" .address) -}}
   {{- range .stream -}}
     {{- $listenConfig := dict -}}
     {{- $listenConfig := merge $listenConfig . -}}
-    {{- $_ := set $listenConfig "address" "0.0.0.0" -}}
+    {{- $_ := set $listenConfig "address" $address -}}
     {{/* You set NGINX stream listens to UDP using a parameter due to historical reasons.
          Our configuration is dual-purpose, for both the Service and listen string, so we
          forcibly inject this parameter if that's the Service protocol. The default handles
@@ -458,7 +459,8 @@ The name of the service used for the ingress controller's validation webhook
   {{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
 
   {{- if .Values.ingressController.admissionWebhook.enabled }}
-    {{- $_ := set $autoEnv "CONTROLLER_ADMISSION_WEBHOOK_LISTEN" (printf "0.0.0.0:%d" (int64 .Values.ingressController.admissionWebhook.port)) -}}
+    {{- $address := (default "0.0.0.0" .Values.ingressController.admissionWebhook.address) -}}
+    {{- $_ := set $autoEnv "CONTROLLER_ADMISSION_WEBHOOK_LISTEN" (printf "%s:%d" $address (int64 .Values.ingressController.admissionWebhook.port)) -}}
   {{- end }}
   {{- if (not (eq (len .Values.ingressController.watchNamespaces) 0)) }}
     {{- $_ := set $autoEnv "CONTROLLER_WATCH_NAMESPACE" (.Values.ingressController.watchNamespaces | join ",") -}}
@@ -955,7 +957,7 @@ the template that it itself is using form the above sections.
   {{- end -}}
   {{- $listenConfig := dict -}}
   {{- $listenConfig := merge $listenConfig . -}}
-  {{- $_ := set $listenConfig "address" $address -}}
+  {{- $_ := set $listenConfig "address" (default $address .address) -}}
   {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (include "kong.listen" $listenConfig) -}}
 
   {{- if or .tls.client.secretName .tls.client.caBundle -}}
