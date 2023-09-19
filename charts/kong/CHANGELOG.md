@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-Nothing yet.
+### Improvements
+
+* Bump default `kong` image tag to 3.4.
+  [#883](https://github.com/Kong/charts/pull/883)
 
 ## 2.27.0
 
