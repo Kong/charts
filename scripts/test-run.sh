@@ -28,6 +28,7 @@ KUBECTL="kubectl --context kind-${TEST_ENV_NAME}"
 KUBERNETES_VERSION="$($KUBECTL version -o json | jq -r '.serverVersion.gitVersion')"
 
 CONTROLLER_PREFIX=""
+GATEWAY_PREFIX=""
 ADDITIONAL_FLAGS=()
 
 # ------------------------------------------------------------------------------
@@ -35,6 +36,7 @@ ADDITIONAL_FLAGS=()
 # ------------------------------------------------------------------------------
 if [[ "${CHART_NAME}" == "ingress" ]]; then
   CONTROLLER_PREFIX="controller."
+  GATEWAY_PREFIX="gateway."
   # this is intentionally a no-op at present. this originally had a set that was
   # made obsolete by a values default change. it's now a placeholder showing an
   # example modification
@@ -88,6 +90,16 @@ fi
 ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.env.feature_gates=GatewayAlpha=true")
 # Tests should not show up in reporting
 ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports=false")
+
+if [[ -n "${KONG_VERSION-}" ]]
+then
+ADDITIONAL_FLAGS+=("--set ${GATEWAY_PREFIX}image.tag=${KONG_VERSION}")
+fi
+
+if [[ -n "${KIC_VERSION-}" ]]
+then
+ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.image.tag=${KIC_VERSION}")
+fi
 
 echo "INFO: installing chart as release ${RELEASE_NAME} ${TAG_MESSAGE}to namespace ${RELEASE_NAMESPACE}"
 set -x
