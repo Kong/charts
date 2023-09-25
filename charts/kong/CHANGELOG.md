@@ -2,10 +2,18 @@
 
 ## Unreleased
 
+Nothing yet.
+
+## 2.28.0
+
 ### Improvements
 
 * Bump default `kong` image tag to 3.4.
   [#883](https://github.com/Kong/charts/pull/883)
+* Bump default ingress controller image tag to 2.12.
+* Added validation rule for `latency` upstream load balancing algorithm to
+  CRDs. [Upgrade your CRDs](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#updates-to-crds)
+  when installing this release.
 
 ## 2.27.0
 
