@@ -1,2 +1,3 @@
 charts/kong/charts
 charts/ingress/charts
+**/Chart.lock
