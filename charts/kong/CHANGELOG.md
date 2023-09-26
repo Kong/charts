@@ -4,18 +4,18 @@
 
 Nothing yet.
 
-## 2.29.0
-
-### Improvements
-* Make it possible to set the admission webhook's `timeoutSeconds`.
-
-## 2.28.1
+## 2.29.1
 
 ### Fixed
 
 * The admission webhook now includes Gateway API resources and Ingress
   resources for controller versions 2.12+. This version introduces new
   validations for Kong's regex path implementation.
+
+## 2.29.0
+
+### Improvements
+* Make it possible to set the admission webhook's `timeoutSeconds`.
 
 ## 2.28.0
 
