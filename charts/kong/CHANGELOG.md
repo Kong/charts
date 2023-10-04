@@ -4,6 +4,11 @@
 
 Nothing yet.
 
+## 2.29.0
+
+### Improvements
+* Make it possible to set the admission webhook's `timeoutSeconds`.
+
 ## 2.28.1
 
 ### Fixed
