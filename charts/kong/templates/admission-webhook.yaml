@@ -46,6 +46,9 @@ webhooks:
   namespaceSelector:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .Values.ingressController.admissionWebhook.timeoutSeconds }}
+  timeoutSeconds: {{ . }}
+  {{- end }}
   objectSelector:
     matchExpressions:
     - key: owner
