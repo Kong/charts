@@ -576,6 +576,8 @@ ingressController:
     service:
       # Specify custom labels for the validation webhook service.
       labels: {}
+    # Tune the default Kubernetes timeoutSeconds of 10 seconds
+    # timeoutSeconds: 10
 
   ingressClass: kong
   # annotations for IngressClass resource (Kubernetes 1.18+)
