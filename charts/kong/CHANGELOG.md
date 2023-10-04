@@ -4,6 +4,14 @@
 
 Nothing yet.
 
+## 2.28.1
+
+### Fixed
+
+* The admission webhook now includes Gateway API resources and Ingress
+  resources for controller versions 2.12+. This version introduces new
+  validations for Kong's regex path implementation.
+
 ## 2.28.0
 
 ### Improvements
