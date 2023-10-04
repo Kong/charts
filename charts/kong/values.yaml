@@ -126,6 +126,8 @@ image:
   # repository: kong/kong-gateway
   # tag: "3.4"
 
+  # Specify a semver version if your image tag is not one (e.g. "nightly")
+  effectiveSemver:
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
