@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+
+- Bumped dependency `kong/kong` minimum to `2.28.1`. Review the [kong chart
+  changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md#2281)
+  for details.
+
 ## 0.6.0
 
 ### Improvements
