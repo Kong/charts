@@ -1,7 +1,7 @@
 version: 2
 updates:
 - package-ecosystem: github-actions
-  directory: /
+  directory: /third_party/
   schedule:
     interval: daily
   labels:
