@@ -20,7 +20,5 @@ lint: tools lint.charts.kong lint.shellcheck
 lint.charts.kong:
 	$(KUBE_LINTER) lint charts/kong
 
-lint.shellcheck: ./scripts/*
-	@for script in $^ ; do \
-		shellcheck $${script} ; \
-	done
+lint.shellcheck:
+	shellcheck ./scripts/*

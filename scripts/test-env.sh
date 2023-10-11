@@ -73,7 +73,7 @@ then
     mkdir -p "${HOME}"/.local/bin
     echo "Downloading KTF from ${KTF_URL}"
     # grep location header to show the actual URL
-    curl -vL -o "${HOME}"/.local/bin/ktf ${KTF_URL} 2>&1 | grep "location: https://github.com/Kong/kubernetes-testing-framework/releases/download/"
+    curl -vL -o "${HOME}"/.local/bin/ktf "${KTF_URL}" 2>&1 | grep "location: https://github.com/Kong/kubernetes-testing-framework/releases/download/"
     chmod +x "${HOME}"/.local/bin/ktf
     export PATH="${HOME}/.local/bin:$PATH"
 fi

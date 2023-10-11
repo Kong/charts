@@ -1,6 +1,6 @@
 module github.com/kong/charts/tools
 
-go 1.19
+go 1.21
 
 require golang.stackrox.io/kube-linter v0.4.0
 
