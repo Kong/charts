@@ -1,8 +1,14 @@
 version: 2
 updates:
 - package-ecosystem: github-actions
-  directory: /third_party/
+  directory: /
   schedule:
     interval: daily
   labels:
   - github_actions
+- package-ecosystem: gomod
+  directory: /third_party/
+  schedule:
+    interval: daily
+  labels:
+  - dependencies

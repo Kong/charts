@@ -20,18 +20,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: setup golang
+      - name: Setup Go
         uses: actions/setup-go@v4
         with:
           go-version-file: third_party/go.mod
-
-      - name: cache go modules
-        uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-build-codegen-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-build-codegen-
 
       - name: Run linters
         run: make lint
