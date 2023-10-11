@@ -454,7 +454,10 @@ The name of the service used for the ingress controller's validation webhook
 
 {{- $autoEnv := dict -}}
   {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY" true -}}
-  {{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" (printf "%s/%s" ( include "kong.namespace" . ) ( .Values.proxy.nameOverride | default ( printf "%s-proxy" (include "kong.fullname" . )))) -}}
+
+  {{ $controllerServiceEnvVarName := ternary "CONTROLLER_PUBLISH_SERVICE" "CONTROLLER_INGRESS_SERVICE" (semverCompare "< 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) -}}
+  {{- $_ := set $autoEnv $controllerServiceEnvVarName (printf "%s/%s" ( include "kong.namespace" . ) ( .Values.proxy.nameOverride | default ( printf "%s-proxy" (include "kong.fullname" . )))) -}}
+
   {{- $_ := set $autoEnv "CONTROLLER_INGRESS_CLASS" .Values.ingressController.ingressClass -}}
   {{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
 
