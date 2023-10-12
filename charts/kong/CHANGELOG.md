@@ -4,7 +4,7 @@
 
 ### Improvements
 
-* Prevent installing PodDisruptionBudget for `replicaCount: 1`.
+* Prevent installing PodDisruptionBudget for `replicaCount: 1` or `autoscaling.minReplicas: 1`.
 
 ## 2.29.0
 
