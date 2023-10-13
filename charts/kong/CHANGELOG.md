@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-Nothing yet.
+### Improvements
+
+* Prevent installing PodDisruptionBudget for `replicaCount: 1` or `autoscaling.minReplicas: 1`.
 
 ## 2.29.0
 
