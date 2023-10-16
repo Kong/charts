@@ -1,0 +1,11 @@
+{{- /*
+This file contains checks of prerequisites to render a fully correct chart that will install a fully functioning application.
+In case of failure, it will cause the whole chart to fail with a descriptive message.
+*/}}
+
+{{ $kicVersion := (include "kong.effectiveVersion" .Values.controller.ingressController.image) -}}
+{{ $kongGatewayVersion := (include "kong.effectiveVersion" .Values.gateway.image) -}}
+{{- if (and (semverCompare ">= 3.0.0" $kicVersion ) (semverCompare "< 3.4.1" $kongGatewayVersion )) -}}
+    {{- fail (printf "Kong Gateway in version: %s is not supported by Kong Kubernetes Ingress Controller in version: %s (>=3.0.0), the lowest supported version is 3.4.1"
+            $kongGatewayVersion $kicVersion) -}}
+{{- end -}}

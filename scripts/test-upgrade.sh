@@ -27,6 +27,9 @@ TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
 KUBECTL="kubectl --context kind-${TEST_ENV_NAME}"
 KUBERNETES_VERSION="$($KUBECTL version -o json | jq -r '.serverVersion.gitVersion')"
 
+# TODO: Remove this one when Kong Gateway will updated from 3.4.
+KONG_GATEWAY_EFFECTIVE_VERSION="3.4.1"
+
 CONTROLLER_PREFIX=""
 ADDITIONAL_FLAGS=()
 
@@ -51,6 +54,7 @@ set -x
 helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
     --set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports="false" \
     --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
+    --set ${CONTROLLER_PREFIX}image.effectiveSemver="${KONG_GATEWAY_EFFECTIVE_VERSION}" \
     "charts/${CHART_NAME}"
 set +x
 # ------------------------------------------------------------------------------
@@ -72,6 +76,7 @@ helm upgrade --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
     --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
     --set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports="false" \
     --set ${CONTROLLER_PREFIX}ingressController.image.effectiveSemver="${EFFECTIVE_TAG}" \
+    --set ${CONTROLLER_PREFIX}image.effectiveSemver="${KONG_GATEWAY_EFFECTIVE_VERSION}" \
     "charts/${CHART_NAME}"
 set +x
 # ------------------------------------------------------------------------------

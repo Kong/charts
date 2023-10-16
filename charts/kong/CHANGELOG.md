@@ -16,6 +16,8 @@
   world-accessible and runtime-created files are created in temporary
   directories created for the run as user.
   [#911](https://github.com/Kong/charts/pull/911)
+* Check version of Kong Gateway to ensure compatible one when KIC is in version >= 3.0.0.
+  [#900](https://github.com/Kong/charts/pull/900)
 
 ## 2.29.0
 
