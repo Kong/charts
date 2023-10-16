@@ -32,6 +32,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 KIND_VERSION="${KIND_VERSION:-v0.19.0}"
 KUBERNETES_VERSION="${KUBERNETES_VERSION:-1.27.1}"
+GATEWAY_API_VERSION="${GATEWAY_API_VERSION:-v0.8.1}"
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')"
 KTF_URL=https://github.com/Kong/kubernetes-testing-framework/releases/latest/download/ktf.${OS}.${ARCH}
@@ -87,7 +88,7 @@ ktf 1>/dev/null
 
 ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma --kubernetes-version "${KUBERNETES_VERSION}"
 
-kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd/experimental?ref=v0.6.1" | kubectl apply -f -
+kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd/experimental?ref=${GATEWAY_API_VERSION}" | kubectl apply -f -
 
 echo "INFO: Updating helm dependencies"
 for i in charts/*; do
