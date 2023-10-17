@@ -1,20 +1,19 @@
 apiVersion: v2
 description: The Cloud-Native Ingress and API-management
-engine: gotpl
 home: https://konghq.com/
 icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
 maintainers:
-- name: hbagdi
-  email: harry@konghq.com
-- name: rainest
-  email: traines@konghq.com
+  - name: hbagdi
+    email: harry@konghq.com
+  - name: rainest
+    email: traines@konghq.com
 name: kong
 sources:
-- https://github.com/Kong/charts/tree/main/charts/kong
+  - https://github.com/Kong/charts/tree/main/charts/kong
 version: 2.29.0
 appVersion: "3.4"
 dependencies:
-- name: postgresql
-  version: 11.9.13
-  repository: https://charts.bitnami.com/bitnami
-  condition: postgresql.enabled
+  - name: postgresql
+    version: 11.9.13
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
