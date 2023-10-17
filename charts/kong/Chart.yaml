@@ -3,10 +3,8 @@ description: The Cloud-Native Ingress and API-management
 home: https://konghq.com/
 icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
 maintainers:
-  - name: hbagdi
-    email: harry@konghq.com
-  - name: rainest
-    email: traines@konghq.com
+  - name: team-k8s-bot
+    email: team-k8s@konghq.com
 name: kong
 sources:
   - https://github.com/Kong/charts/tree/main/charts/kong

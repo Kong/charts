@@ -3,8 +3,8 @@ description: Deploy Kong Ingress Controller and Kong Gateway
 home: https://konghq.com/
 icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
 maintainers:
-  - name: mheap
-    email: michael.heap@konghq.com
+  - name: team-k8s-bot
+    email: team-k8s@konghq.com
 name: ingress
 sources:
   - https://github.com/Kong/charts/tree/main/charts/ingress
