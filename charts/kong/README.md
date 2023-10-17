@@ -11,10 +11,10 @@ This chart bootstraps all the components needed to run Kong on a
 ## TL;DR;
 
 ```bash
-$ helm repo add kong https://charts.konghq.com
-$ helm repo update
+helm repo add kong https://charts.konghq.com
+helm repo update
 
-$ helm install kong/kong --generate-name
+helm install kong/kong --generate-name
 ```
 
 ## Table of contents
@@ -91,10 +91,10 @@ $ helm install kong/kong --generate-name
 To install Kong:
 
 ```bash
-$ helm repo add kong https://charts.konghq.com
-$ helm repo update
+helm repo add kong https://charts.konghq.com
+helm repo update
 
-$ helm install kong/kong --generate-name
+helm install kong/kong --generate-name
 ```
 
 ## Uninstall
@@ -102,7 +102,7 @@ $ helm install kong/kong --generate-name
 To uninstall/delete a Helm release `my-release`:
 
 ```bash
-$ helm delete my-release
+helm delete my-release
 ```
 
 The command removes all the Kubernetes components associated with the
@@ -1013,7 +1013,7 @@ If you have paid for a license, but you do not have a copy of yours, please
 contact Kong Support. Once you have it, you will need to store it in a Secret:
 
 ```bash
-$ kubectl create secret generic kong-enterprise-license --from-file=license=./license.json
+kubectl create secret generic kong-enterprise-license --from-file=license=./license.json
 ```
 
 Set the secret name in `values.yaml`, in the `.enterprise.license_secret` key.
@@ -1031,7 +1031,7 @@ from \<your username\> \> Edit Profile \> API Key. Use this to create registry
 secrets:
 
 ```bash
-$ kubectl create secret docker-registry kong-enterprise-edition-docker \
+kubectl create secret docker-registry kong-enterprise-edition-docker \
     --docker-server=hub.docker.io \
     --docker-username=<username-provided-to-you> \
     --docker-password=<password-provided-to-you>
@@ -1107,14 +1107,30 @@ whereas this is optional for the Developer Portal on versions 0.36+. Providing
 Portal session configuration in values.yaml provides the default session
 configuration, which can be overridden on a per-workspace basis.
 
+```bash
+cat admin_gui_session_conf
 ```
-$ cat admin_gui_session_conf
+
+```json
 {"cookie_name":"admin_session","cookie_samesite":"off","secret":"admin-secret-CHANGEME","cookie_secure":true,"storage":"kong"}
-$ cat portal_session_conf
+```
+
+```bash
+cat portal_session_conf
+```
+
+```json
 {"cookie_name":"portal_session","cookie_samesite":"off","secret":"portal-secret-CHANGEME","cookie_secure":true,"storage":"kong"}
-$ kubectl create secret generic kong-session-config --from-file=admin_gui_session_conf --from-file=portal_session_conf
+```
+
+```bash
+kubectl create secret generic kong-session-config --from-file=admin_gui_session_conf --from-file=portal_session_conf
+```
+
+```bash
 secret/kong-session-config created
 ```
+
 The exact plugin settings may vary in your environment. The `secret` should
 always be changed for both configurations.
 
@@ -1175,7 +1191,7 @@ between the initial install and upgrades. Both operations are a "sync" in Argo
 terms. This affects when migration Jobs execute in database-backed Kong
 installs.
 
-The chart sets the `Sync` and `BeforeHookCreation` deletion 
+The chart sets the `Sync` and `BeforeHookCreation` deletion
 [hook policies](https://argo-cd.readthedocs.io/en/stable/user-guide/resource_hooks/)
 on the `init-migrations` and `pre-upgrade-migrations` Jobs.
 
