@@ -7,7 +7,7 @@ maintainers:
     email: michael.heap@konghq.com
 name: ingress
 sources:
-  - https://github.com/Kong/charts/tree/main/charts/kong
+  - https://github.com/Kong/charts/tree/main/charts/ingress
 version: 0.7.0
 appVersion: "3.3"
 dependencies:
