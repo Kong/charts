@@ -80,6 +80,9 @@ webhooks:
     apiVersions:
     - 'v1'
     operations:
+{{- if (semverCompare ">= 2.12.1" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+    - CREATE
+{{- end }}
     - UPDATE
     resources:
     - secrets

@@ -5,11 +5,15 @@
 ### Improvements
 
 * Prevent installing PodDisruptionBudget for `replicaCount: 1` or `autoscaling.minReplicas: 1`.
+  [#896](https://github.com/Kong/charts/pull/896)
+* The admission webhook now will be triggered on Secrets creation for KIC 2.12.1+.
+  [#907](https://github.com/Kong/charts/pull/907)
 
 ## 2.29.0
 
 ### Improvements
 * Make it possible to set the admission webhook's `timeoutSeconds`.
+  [#894](https://github.com/Kong/charts/pull/894)
 
 ## 2.28.1
 
@@ -18,6 +22,7 @@
 * The admission webhook now includes Gateway API resources and Ingress
   resources for controller versions 2.12+. This version introduces new
   validations for Kong's regex path implementation.
+  [#892](https://github.com/Kong/charts/pull/892)
 
 ## 2.28.0
 
