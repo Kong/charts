@@ -878,7 +878,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | priorityClassName                  | Set pod scheduling priority class for Kong pods                                       | `""`                |
 | secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |
 | securityContext                    | Set the securityContext for Kong Pods                                                 | `{}`                |
-| containerSecurityContext           | Set the securityContext for Containers                                                | `{"readOnlyRootFilesystem": true}`                |
+| containerSecurityContext           | Set the securityContext for Containers                                                | See values.yaml     |
 | serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | `false`             |
 | serviceMonitor.interval            | Scraping interval                                                                     | `30s`               |
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
