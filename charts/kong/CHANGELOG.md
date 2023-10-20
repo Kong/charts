@@ -1,7 +1,5 @@
 # Changelog
 
-## Unreleased
-
 ### Improvements
 
 * Prevent installing PodDisruptionBudget for `replicaCount: 1` or `autoscaling.minReplicas: 1`.

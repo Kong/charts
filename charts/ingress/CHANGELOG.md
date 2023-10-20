@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Breaking changes
+
+* The `env.router_flavor` default is now `expressions`. This requires Kong
+  3.4.1 or higher and controller 3.0.0 or higher. Releases using older image
+  versions should change this value to `traditional`
+  [#911](https://github.com/Kong/charts/pull/911)
+
 ## 0.7.0
 
 - Bumped dependency `kong/kong` minimum to `2.28.1`. Review the [kong chart

@@ -36,3 +36,4 @@ gateway:
   env:
     role: traditional
     database: "off"
+    router_flavor: "expressions"
