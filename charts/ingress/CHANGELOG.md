@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+- Controller Pods now include annotations to exempt the gateway admin API port
+  from Kuma and Istio mesh interception. Controller to admin API configuration
+  uses its own mTLS configuration, which is not compatible with mesh mTLS.
+  [#913](https://github.com/Kong/charts/pull/913)
+
 ## 0.7.0
 
 - Bumped dependency `kong/kong` minimum to `2.28.1`. Review the [kong chart
