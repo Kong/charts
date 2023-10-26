@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.30.0
 
 ### Improvements
 
@@ -16,6 +16,8 @@
   world-accessible and runtime-created files are created in temporary
   directories created for the run as user.
   [#911](https://github.com/Kong/charts/pull/911)
+* Allow using templates (via `tpl`) when specifying `controller.proxy.nameOverride`.
+  [#914](https://github.com/Kong/charts/pull/914)
 
 ## 2.29.0
 

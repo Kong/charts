@@ -447,14 +447,28 @@ The name of the service used for the ingress controller's validation webhook
 {{ include "kong.fullname" . }}-validation-webhook
 {{- end -}}
 
+
+{{/*
+The name of the Service which will be used by the controller to update the Ingress status field.
+*/}}
+
+{{- define "kong.controller-publish-service" -}}
+{{- $proxyOverride := "" -}}
+  {{- if .Values.proxy.nameOverride -}}
+    {{- $proxyOverride = ( tpl .Values.proxy.nameOverride . ) -}}
+  {{- end -}}
+{{- (printf "%s/%s" ( include "kong.namespace" . ) ( default ( printf "%s-proxy" (include "kong.fullname" . )) $proxyOverride )) -}}
+{{- end -}}
+
 {{- define "kong.ingressController.env" -}}
 {{/*
     ====== AUTO-GENERATED ENVIRONMENT VARIABLES ======
 */}}
 
+
 {{- $autoEnv := dict -}}
   {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY" true -}}
-  {{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" (printf "%s/%s" ( include "kong.namespace" . ) ( .Values.proxy.nameOverride | default ( printf "%s-proxy" (include "kong.fullname" . )))) -}}
+  {{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" ( include "kong.controller-publish-service" . ) -}}
   {{- $_ := set $autoEnv "CONTROLLER_INGRESS_CLASS" .Values.ingressController.ingressClass -}}
   {{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
 
