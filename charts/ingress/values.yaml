@@ -4,7 +4,7 @@ deployment:
 
 controller:
   proxy:
-    nameOverride: kong-gateway-proxy
+    nameOverride: "{{ .Release.Name }}-gateway-proxy"
 
   enabled: true
 
