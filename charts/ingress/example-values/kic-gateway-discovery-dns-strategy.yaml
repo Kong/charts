@@ -1,0 +1,8 @@
+controller:
+  ingressController:
+    env:
+      # There are 3 options that are accepted as values for this flag:
+      # - service - for service scoped pod dns names: pod-ip-address.service-name.my-namespace.svc.cluster-domain.example
+      # - pod - for namespace scope pod dns names: pod-ip-address.my-namespace.pod.cluster-domain.example
+      # - ip (default, retains behavior introduced in v2.9) - for regular IP addresses
+      gateway_discovery_dns_strategy: pod

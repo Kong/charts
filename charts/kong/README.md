@@ -791,6 +791,12 @@ Kong Ingress Controller v2.9 has introduced gateway discovery which allows
 the controller to discover Gateway instances that it should configure using
 an Admin API Kubernetes service.
 
+Using this feature requires a split release installation of Gateways and Ingress Controller.
+For exemplar `values.yaml` files which use this feature please see: [examples README.md](./example-values/README.md).
+or use the [`ingress` chart](../ingress/README.md) which can handle this for you.
+
+##### Configuration
+
 You'll be able to configure this feature through configuration section under
 `ingressController.gatewayDiscovery`:
 
@@ -813,12 +819,17 @@ You'll be able to configure this feature through configuration section under
   the chart will generate values for `name` and `namespace` based on the current release name and
   namespace. This is useful when consuming the `kong` chart as a subchart.
 
-Using this feature requires a split release installation of Gateways and Ingress Controller.
-For exemplar `values.yaml` files which use this feature please see: [examples README.md](./example-values/README.md).
+Additionally you can controller the addresses that are generated for your Gateways
+via the `--gateway-discovery-dns-strategy` CLI flag that can be set on the Ingress Controller
+(or an equivalent environment variable: `CONTROLLER_GATEWAY_DISCOVERY_DNS_STRATEGY`).
+It accepts 3 values which change the way that Gateway addresses are generated:
+- `service` - for service scoped pod dns names: `pod-ip-address.service-name.my-namespace.svc.cluster-domain.example`
+- `pod` - for namespace scope pod dns names: `pod-ip-address.my-namespace.pod.cluster-domain.example`
+- `ip` (default, retains behavior introduced in v2.9) - for regular IP addresses
 
 When using `gatewayDiscovery`, you should consider configuring the Admin service to use mTLS client verification to make
-this interface secure. Without that, anyone who can access the Admin API from inside the cluster can configure the Gateway
-instances.
+this interface secure.
+Without that, anyone who can access the Admin API from inside the cluster can configure the Gateway instances.
 
 On the controller release side, that can be achieved by setting `ingressController.adminApi.tls.client.enabled` to `true`.
 By default, Helm will generate a certificate Secret named `<release name>-admin-api-keypair` and
