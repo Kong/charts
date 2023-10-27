@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.8.0
 
 ### Improvements
 
@@ -8,6 +8,10 @@
   from Kuma and Istio mesh interception. Controller to admin API configuration
   uses its own mTLS configuration, which is not compatible with mesh mTLS.
   [#913](https://github.com/Kong/charts/pull/913)
+- Allow using templates (via `tpl`) when specifying `controller.proxy.nameOverride`.
+  [#915](https://github.com/Kong/charts/pull/915)
+- Bumped dependency `kong/kong` to `2.30.0`.
+  [#915](https://github.com/Kong/charts/pull/915)
 
 ## 0.7.0
 
