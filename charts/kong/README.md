@@ -819,12 +819,12 @@ You'll be able to configure this feature through configuration section under
   the chart will generate values for `name` and `namespace` based on the current release name and
   namespace. This is useful when consuming the `kong` chart as a subchart.
 
-Additionally you can controller the addresses that are generated for your Gateways
+Additionally, you can control the addresses that are generated for your Gateways
 via the `--gateway-discovery-dns-strategy` CLI flag that can be set on the Ingress Controller
 (or an equivalent environment variable: `CONTROLLER_GATEWAY_DISCOVERY_DNS_STRATEGY`).
 It accepts 3 values which change the way that Gateway addresses are generated:
-- `service` - for service scoped pod dns names: `pod-ip-address.service-name.my-namespace.svc.cluster-domain.example`
-- `pod` - for namespace scope pod dns names: `pod-ip-address.my-namespace.pod.cluster-domain.example`
+- `service` - for service scoped pod DNS names: `pod-ip-address.service-name.my-namespace.svc.cluster-domain.example`
+- `pod` - for namespace scope pod DNS names: `pod-ip-address.my-namespace.pod.cluster-domain.example`
 - `ip` (default, retains behavior introduced in v2.9) - for regular IP addresses
 
 When using `gatewayDiscovery`, you should consider configuring the Admin service to use mTLS client verification to make
