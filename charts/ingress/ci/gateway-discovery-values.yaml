@@ -16,4 +16,3 @@ controller:
 gateway:
   env:
     anonymous_reports: "off"
-  nameOverride: gateway
