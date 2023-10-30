@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Improvements
+
+* Added controller's RBAC rules for `KongUpstreamPolicy` CRD.
+  [#917](https://github.com/Kong/charts/pull/917)
+
 ## 2.30.0
 
 ### Improvements
