@@ -581,7 +581,11 @@ namespaces. Limiting access requires several changes to configuration:
 Setting `deployment.daemonset: true` deploys Kong using a [DaemonSet
 controller](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
 instead of a Deployment controller. This runs a Kong Pod on every kubelet in
-the Kubernetes cluster.
+the Kubernetes cluster. For such configuration it may be desirable to configure
+Pods to use the network of the host they run on instead of a dedicated network
+namespace. The benefit of this approach is that the Kong can bind ports directly
+to Kubernetes nodes' network interfaces, without the extra network translation
+imposed by NodePort Services. It can be achieved by setting `deployment.hostNetwork: true`.
 
 ### Using dnsPolicy and dnsConfig
 
