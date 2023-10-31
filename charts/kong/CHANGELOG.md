@@ -6,6 +6,8 @@
 
 * Added controller's RBAC rules for `KongUpstreamPolicy` CRD.
   [#917](https://github.com/Kong/charts/pull/917)
+* Added services resource to admission webhook config for KIC >= 3.0.0.
+  [#919](https://github.com/Kong/charts/pull/919)
 
 ## 2.30.0
 
