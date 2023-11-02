@@ -13,7 +13,98 @@
 # Deployment parameters
 # -----------------------------------------------------------------------------
 
+# TODO 921 we added this key to hold Deployment-level settings, though it does
+# not contain all of them. Many settings (e.g. `.deploymentAnnotations`) were
+# created at the root earlier in the chart's life, before we thought to
+# organize them by resource better.
+#
+# The same is true of Pod settings, which naturally nest under Deployment
+# settings, but were often created at the root (e.g. `.env`).
+#
+# We already have a `kong` key here, so adding a `controller` key follows
+# pretty naturally for a separate controller Deployment. Moving the current
+# contents of `.ingressController` under here would be simplest for migration,
+# but would keep some other bad organization.
+#
+# The keys under `ingressController` are a mixture of container-level (e.g.
+# `readinessProbe`), application-level (e.g. `gatewayDiscovery`), and external
+# resource-level (e.g. `admissionWebhook`) settings. The former two can
+# reasonably enough be grouped under here, but the external resources arguably
+# should not be. For maximum reorganization, I'd recommend something like:
+# 
+# ```
+# deployment:
+#   controller:
+#     annotations: {} # Deployment-level annotations
+#     autoscaling: {} # A duplicate of the current root key, for the controller Deployment. This may actually be a separate autoscaling.controller section.
+#     pod:
+#       annotations: {} # Pod-level annotations. currently there is a single root-level .podAnnotations used for the single unified Pod
+#       serviceAccount: {}
+#       container:
+#         env: {...} # controller environment
+#         image: {}
+#       sidecarContainers: [] # attach a tcpdump or what have you
+#   kong: {} # same as the controller section
+#
+# admissionWebhook: {} # the current contents for .ingressController.admissionWebhook
+# ```
+#
+# A more conservative approach is to preserve existing settings where
+# available. This means that existing configuration doesn't need to be
+# modified, but will be incongruous. You would have, for example,
+# `.deployment.controller.pod.annotations` to set Pod annotations for the
+# controller Deployment, but `.podAnnotations` for the Kong Deployment's Pods.
 deployment:
+  controller:
+    annotations: {} # TODO 921 add any defaults
+    # TODO 921 the equivalent root setting has "default" values: https://github.com/Kong/charts/blob/kong-2.30.0/charts/kong/values.yaml#L887-L904
+    # These are no-oped with an `enabled=false` key, but are somewhat
+    # misleading in that we didn't really design them for any particular
+    # purpose--they're just values to show the structure. Given how values.yaml
+    # defaults work IDK if maybe we'd consider making the _actual_ values.yaml
+    # base not set defaults in these cases, and then having a dedicated example
+    # values.yaml that just shows structure.
+    autoscaling: {}
+    # TODO 921 parity, though it really makes _no_ sense for a daemonset
+    # controller. that said, we may be able to use the same templates for both
+    # Deployments' basic Deployment-y things and get it for free.
+    daemonset: false
+    pod:
+      annotations: {} # .podAnnotations, for the controller
+      serviceAccount:
+        create: true
+        # TODO 921 we arguably don't need this with a split controller
+        # Deployment, since we use it to hide the token from Kong and its
+        # arbitrary plugin codeTODO 921 we arguably don't need this with a
+        # split controller Deployment, since we use it to hide the token from
+        # Kong and its arbitrary plugin code.
+        automountServiceAccountToken: false
+      container:
+        env:
+          # The controller disables TLS verification by default because Kong
+          # generates self-signed certificates by default. Set this to false once you
+          # have installed CA-signed certificates.
+          kong_admin_tls_skip_verify: true
+          # If using Kong Enterprise with RBAC enabled, uncomment the section below
+          # and specify the secret/key containing your admin token.
+          # kong_admin_token:
+          #   valueFrom:
+          #     secretKeyRef:
+          #        name: CHANGEME-admin-token-secret
+          #        key: CHANGEME-admin-token-key
+        image:
+          repository: kong/kubernetes-ingress-controller
+          tag: "2.12"
+          # Optionally set a semantic version for version-gated features. This can normally
+          # be left unset. You only need to set this if your tag is not a semver string,
+          # such as when you are using a "next" tag. Set this to the effective semantic
+          # version of your tag: for example if using a "next" image for an unreleased 3.1.0
+          # version, set this to "3.1.0".
+          effectiveSemver:
+        userDefinedVolumeMounts: []
+      sidecarContainers: []
+      userDefinedVolumes: []
+      initContainers: []
   kong:
     # Enable or disable Kong itself
     # Setting this to false with ingressController.enabled=true will create a
@@ -22,6 +113,7 @@ deployment:
   ## Minimum number of seconds for which a newly created pod should be ready without any of its container crashing,
   ## for it to be considered available.
   # minReadySeconds: 60
+  # TODO 921 Kong presumably no longer needs a service account at all.
   ## Specify the service account to create and to be assigned to the deployment / daemonset and for the migrations
   serviceAccount:
     create: true
@@ -51,6 +143,7 @@ deployment:
   # userDefinedVolumes:
   # - name: "volumeName"
   #   emptyDir: {}
+  # TODO 921 these would live inside the container section
   # userDefinedVolumeMounts:
   # - name: "volumeName"
   #   mountPath: "/opt/user/dir/mount"
@@ -60,6 +153,9 @@ deployment:
   # Use a DaemonSet controller instead of a Deployment controller
   daemonset: false
   hostNetwork: false
+  # TODO 921 part of the container section. this is kong-specific functionality
+  # though--dunno if we want to handle stuff that isn't generic to either 
+  # Deployment's container differently than stuff that does
   # kong_prefix empty dir size
   prefixDir:
     sizeLimit: 256Mi
@@ -82,6 +178,7 @@ deployment:
 # Values here take precedence over values from other sections of values.yaml,
 # e.g. setting pg_user here will override the value normally set when postgresql.enabled
 # is set below. In general, you should not set values here if they are set elsewhere.
+# TODO 921 deployments.kong.pod.container.env
 env:
   database: "off"
   # the chart uses the traditional router (for Kong 3.x+) because the ingress
@@ -107,6 +204,7 @@ env:
 # Note that these environment variables will only apply to the proxy and init container. The ingress-controller
 # container has its own customEnv section.
 
+# TODO 921 deployments.kong.pod.container.customEnv
 # customEnv:
 #   api_token:
 #     valueFrom:
@@ -118,6 +216,7 @@ env:
 # This section can be used to configure some extra labels that will be added to each Kubernetes object generated.
 extraLabels: {}
 
+# TODO 921 deployments.kong.pod.container.image
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
@@ -136,6 +235,14 @@ image:
   # pullSecrets:
   #   - myRegistrKeySecretName
 
+# TODO 921 we can probably leave the service definitions at the root. Although
+# they're specific to a particular Deployment, they can't be defined
+# arbitrarily (you can only configure admin, proxy, etc. that we've given you)
+# and we know what Deployment they target. Controller-related Services AFAIK
+# have no such configuration (we create a webhook service, but it's done
+# through the webhook config, not through anything that uses the standard
+# service template.
+#
 # Specify Kong admin API service and listener configuration
 admin:
   # Enable creating a Kubernetes service for the admin API
@@ -415,6 +522,10 @@ udpProxy:
     #   # "ssl" is required for SNI-based routes. It is not supported on versions <2.0
     #   parameters: []
 
+# TODO 921 these go into the Kong deployment but probably don't need to move
+# there's no controller equivalent we'd ever need controller/kong separate
+# config.
+#
 # Custom Kong plugins can be loaded into Kong by mounting the plugin code
 # into the file-system of Kong container.
 # The plugin code should be present in ConfigMap or Secret inside the same
@@ -435,6 +546,22 @@ plugins: {}
   # secrets:
   # - pluginName: rewriter
   #   name: kong-plugin-rewriter
+
+# TODO 921 We could maybe convert these into standard user mounts? a basic
+# rearrange migration doesn't work, but you can basically handle these by
+# creating a defined volume that fills in the automatic fields:
+#
+# userDefinedVolumes:
+# - name: "<secret-name>"
+#   secret:
+#     name: whatever
+# userDefinedVolumeMounts:
+# - name: "<secret-name>"
+#   mountPath: "/etc/secrets/secret-name"
+#
+# if we leave it as-is, probably no reason to port it to the controller
+# deployment--we can just require creating the full mount config there.
+
 # Inject specified secrets as a volume in Kong Container at path /etc/secrets/{secret-name}/
 # This can be used to override default SSL certificates.
 # Be aware that the secret name will be used verbatim, and that certain types
@@ -447,10 +574,18 @@ secretVolumes: []
 
 # Enable/disable migration jobs, and set annotations for them
 migrations:
+  # TODO 921 the new pattern would have individual configurations for each
+  # migration, which is probably more annoying than useful. there shouldn't be
+  # a reason to assign, say, more resources to post migrations.
   # Enable pre-upgrade migrations (run "kong migrations up")
   preUpgrade: true
   # Enable post-upgrade migrations (run "kong migrations finish")
   postUpgrade: true
+  # TODO 921 these do not follow the pattern, but it's probably less crucial
+  # that they do. our allowed configuration for migrations is pretty limited.
+  # we may want to just do it anyway--once you're using a migration tool,
+  # there's not a whole lot of reason to be conservative. the work required is
+  # all on the dev side, and adding more key remaps is easy.
   # Annotations to apply to migrations job pods
   # By default, these disable service mesh sidecar injection for Istio and Kuma,
   # as the sidecar containers do not terminate and prevent the jobs from completing
@@ -462,6 +597,7 @@ migrations:
   jobAnnotations: {}
   # Optionally set a backoffLimit. If none is set, Jobs will use the cluster default
   backoffLimit:
+  # TODO 921 if we do move stuff here, this is part of the container
   resources: {}
   # Example reasonable setting for "resources":
   # resources:
@@ -512,8 +648,10 @@ dblessConfig:
 # Kong Ingress Controller's primary purpose is to satisfy Ingress resources
 # created in k8s.  It uses CRDs for more fine grained control over routing and
 # for Kong specific configuration.
+# TODO 921 deployments.controller.enabled
 ingressController:
   enabled: true
+  # TODO 921 deployments.controller.pod.container.image
   image:
     repository: kong/kubernetes-ingress-controller
     tag: "2.12"
@@ -523,8 +661,13 @@ ingressController:
     # version of your tag: for example if using a "next" image for an unreleased 3.1.0
     # version, set this to "3.1.0".
     effectiveSemver:
+  # TODO 921 deployments.controller.pod.container.args
   args: []
 
+  # TODO 921 probably goes under a root-level controller field, which is, well,
+  # where it is now. this is config for the controller _not_ related to its
+  # kubernetes resources, so it doesn't necessarily fit under the `deployment`
+  # section.
   gatewayDiscovery:
     enabled: false
     generateAdminApiService: false
@@ -532,6 +675,7 @@ ingressController:
       namespace: ""
       name: ""
 
+  # TODO 921 app-level config, probably remains here
   # Specify individual namespaces to watch for ingress configuration. By default,
   # when no namespaces are set, the controller watches all namespaces and uses a
   # ClusterRole to grant access to Kubernetes resources. When you list specific
@@ -542,6 +686,7 @@ ingressController:
   watchNamespaces: []
 
   # Specify Kong Ingress Controller configuration via environment variables
+  # TODO 921 deployments.controller.pod.container.env
   env:
     # The controller disables TLS verification by default because Kong
     # generates self-signed certificates by default. Set this to false once you
@@ -560,6 +705,8 @@ ingressController:
   # customEnv:
   #   TZ: "Europe/Berlin"
 
+  # TODO 921 separate resource config, probably remains here. only loosely-tied
+  # to the deployment through a service we generate for you.
   admissionWebhook:
     enabled: true
     failurePolicy: Ignore
@@ -579,6 +726,7 @@ ingressController:
     # Tune the default Kubernetes timeoutSeconds of 10 seconds
     # timeoutSeconds: 10
 
+  # TODO 921 app-level config, probably remains here
   ingressClass: kong
   # annotations for IngressClass resource (Kubernetes 1.18+)
   ingressClassAnnotations: {}
@@ -589,11 +737,13 @@ ingressController:
   # - name: "volumeName"
   #   mountPath: "/opt/user/dir/mount"
 
+  # TODO 921 separate resource config, probably remains here
   rbac:
     # Specifies whether RBAC resources should be created
     create: true
 
   # general properties
+  # TODO 921 deployments.controller.pod.container.livenessProbe
   livenessProbe:
     httpGet:
       path: "/healthz"
@@ -604,6 +754,7 @@ ingressController:
     periodSeconds: 10
     successThreshold: 1
     failureThreshold: 3
+  # TODO 921 deployments.controller.pod.container.readinessProbe
   readinessProbe:
     httpGet:
       path: "/readyz"
@@ -614,6 +765,7 @@ ingressController:
     periodSeconds: 10
     successThreshold: 1
     failureThreshold: 3
+  # TODO 921 deployments.controller.pod.container.resources
   resources: {}
   # Example reasonable setting for "resources":
   # resources:
@@ -624,6 +776,7 @@ ingressController:
   #     cpu: 50m
   #     memory: 128Mi
 
+  # TODO 921 app-level config, probably remains here
   konnect:
     enabled: false
 
@@ -643,6 +796,7 @@ ingressController:
       # Specifies whether the controller should fetch a license from Konnect and apply it to managed Gateways.
       enabled: false
 
+  # TODO 921 app-level config, probably remains here
   adminApi:
     tls:
       client:
@@ -770,6 +924,8 @@ certificates:
 # Miscellaneous parameters
 # -----------------------------------------------------------------------------
 
+# TODO 921 kinda part of the kong deployment, but not generic deployment
+# functionality.
 waitImage:
   # Wait for the database to come online before starting Kong or running migrations
   # If Kong is to access the database through a service mesh that injects a sidecar to
@@ -784,6 +940,7 @@ waitImage:
   # tag: 5
   pullPolicy: IfNotPresent
 
+# TODO 921 deployment.*.updateStrategy
 # update strategy
 updateStrategy: {}
   # type: RollingUpdate
@@ -791,6 +948,7 @@ updateStrategy: {}
   #   maxSurge: "100%"
   #   maxUnavailable: "0%"
 
+# TODO 921 deployments.kong.pod.container.resources
 # If you want to specify resources, uncomment the following
 # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 resources: {}
@@ -801,6 +959,7 @@ resources: {}
   #  cpu: 1
   #  memory: 2G
 
+# TODO 921 deployments.kong.pod.container.readinessProbe
 # readinessProbe for Kong pods
 readinessProbe:
   httpGet:
@@ -813,6 +972,7 @@ readinessProbe:
   successThreshold: 1
   failureThreshold: 3
 
+# TODO 921 deployments.kong.pod.container.livenessProbe
 # livenessProbe for Kong pods
 livenessProbe:
   httpGet:
@@ -825,6 +985,7 @@ livenessProbe:
   successThreshold: 1
   failureThreshold: 3
 
+# TODO 921 deployments.kong.pod.container.startupProbe
 # startupProbe for Kong pods
 # startupProbe:
 #   httpGet:
@@ -837,6 +998,7 @@ livenessProbe:
 #   successThreshold: 1
 #   failureThreshold: 40
 
+# TODO 921 deployments.kong.pod.container.lifecycle
 # Proxy container lifecycle hooks
 # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
 lifecycle:
@@ -849,41 +1011,54 @@ lifecycle:
         - quit
         - '--wait=15'
 
+# TODO 921 deployments.kong.pod.terminationGracePeriodSeconds
 # Sets the termination grace period for pods spawned by the Kubernetes Deployment.
 # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution
 terminationGracePeriodSeconds: 30
 
+# TODO 921 deployments.kong.pod.affinity
 # Affinity for pod assignment
 # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 # affinity: {}
 
+# TODO 921 deployments.kong.pod.topologySpreadConstraints
 # Topology spread constraints for pod assignment (requires Kubernetes >= 1.19)
 # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 # topologySpreadConstraints: []
 
+# TODO 921 deployments.kong.pod.tolerations
 # Tolerations for pod assignment
 # Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 tolerations: []
 
+# TODO 921 either part of the pod or deployment (or under affinity?), not sure
+# need to look up
 # Node labels for pod assignment
 # Ref: https://kubernetes.io/docs/user-guide/node-selection/
 nodeSelector: {}
 
+# TODO 921 deployments.kong.pod.annotations
 # Annotation to be added to Kong pods
 podAnnotations:
   kuma.io/gateway: enabled
   traffic.sidecar.istio.io/includeInboundPorts: ""
 
+# TODO 921 deployments.kong.pod.labels
 # Labels to be added to Kong pods
 podLabels: {}
 
+# TODO 921 deployments.kong.replicaCount
 # Kong pod count.
 # It has no effect when autoscaling.enabled is set to true
 replicaCount: 1
 
+# TODO 921 deployments.kong.annotations
 # Annotations to be added to Kong deployment
 deploymentAnnotations: {}
 
+# TODO 921 this is a resource separate from the Deployment, but attached to it
+# not sure if we should nest under deployment config or create
+# `autoscaling.kong` and `autoscaling.controller` keys.
 # Enable autoscaling using HorizontalPodAutoscaler
 # When configuring an HPA, you must set resource requests on all containers via
 # "resources" and, if using the controller, "ingressController.resources" in values.yaml
@@ -903,6 +1078,7 @@ autoscaling:
           type: Utilization
           averageUtilization: 80
 
+# TODO 921 ditto autoscaling
 # Kong Pod Disruption Budget
 podDisruptionBudget:
   enabled: false
@@ -910,6 +1086,9 @@ podDisruptionBudget:
   # maxUnavailable: "50%"
   # minAvailable: "50%"
 
+# TODO 921 discard this? unrelated to the task mostly since PSP is separate,
+# but it's basically removed at this point. need to confirm what the minimum
+# Pod security standards version is instead
 podSecurityPolicy:
   enabled: false
   labels: {}
@@ -939,12 +1118,14 @@ podSecurityPolicy:
     # If you use Kong Enterprise <1.5, this must be set to false.
     readOnlyRootFilesystem: true
 
-
+# TODO 921 figure out what this is and where it should go
 priorityClassName: ""
 
+# TODO 921 deployments.*.pod.securityContext
 # securityContext for Kong pods.
 securityContext: {}
 
+# TODO 921 deployments.*.pod.container.securityContext
 # securityContext for containers.
 containerSecurityContext:
   readOnlyRootFilesystem: true
@@ -957,6 +1138,7 @@ containerSecurityContext:
     drop:
     - ALL
 
+# TODO 921 deployments.*.pod.dnsPolicy probably. confirm its actual location
 ## Optional DNS configuration for Kong pods
 # dnsPolicy: ClusterFirst
 # dnsConfig:
@@ -971,6 +1153,7 @@ containerSecurityContext:
 #   - cluster.local
 #   - us-east-1.compute.internal
 
+# TODO 921 figure out if anything is necessary for this
 serviceMonitor:
   # Specifies whether ServiceMonitor for Prometheus operator should be created
   # If you wish to gather metrics from a Kong instance with the proxy disabled (such as a hybrid control plane), see:
@@ -990,6 +1173,10 @@ serviceMonitor:
 # -----------------------------------------------------------------------------
 # Kong Enterprise parameters
 # -----------------------------------------------------------------------------
+
+# TODO 921 the `enterprise` section is Kong-specific application-level
+# configurtion. As such it does not really map to any location in a Kubernetes
+# resource, so it probably just remains here at the root.
 
 # Toggle Kong Enterprise features on or off
 # RBAC and SMTP configuration have additional options that must all be set together
@@ -1213,6 +1400,8 @@ clustertelemetry:
     # Each path in an Ingress is required to have a corresponding path type. (ImplementationSpecific/Exact/Prefix)
     pathType: ImplementationSpecific
 
+# TODO 921 maybe keep these as-is but do not add them to the generic handler.
+# They are also features that are special cases of userDefinedVolume(Mount)s
 extraConfigMaps: []
 # extraConfigMaps:
 # - name: my-config-map
