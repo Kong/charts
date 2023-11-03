@@ -9,6 +9,11 @@
 * Added services resource to admission webhook config for KIC >= 3.0.0.
   [#919](https://github.com/Kong/charts/pull/919)
 
+### Fixed
+
+* The target port for cmetrics should only be applied if the ingress controller is enabled.
+  [#926](https://github.com/Kong/charts/pull/926)
+
 ## 2.30.0
 
 ### Improvements
