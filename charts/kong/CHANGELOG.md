@@ -15,6 +15,8 @@
   [#926](https://github.com/Kong/charts/pull/926)
 * Fix RBAC for Gateway API v1.
   [#928](https://github.com/Kong/charts/pull/928)
+* Enable Admission webhook for Gateway API v1 resources.
+  [#928](https://github.com/Kong/charts/pull/928)
 
 ## 2.30.0
 
