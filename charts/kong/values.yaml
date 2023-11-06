@@ -510,13 +510,13 @@ dblessConfig:
 # -----------------------------------------------------------------------------
 
 # Kong Ingress Controller's primary purpose is to satisfy Ingress resources
-# created in k8s.  It uses CRDs for more fine grained control over routing and
+# created in k8s. It uses CRDs for more fine grained control over routing and
 # for Kong specific configuration.
 ingressController:
   enabled: true
   image:
     repository: kong/kubernetes-ingress-controller
-    tag: "2.12"
+    tag: "3.0"
     # Optionally set a semantic version for version-gated features. This can normally
     # be left unset. You only need to set this if your tag is not a semver string,
     # such as when you are using a "next" tag. Set this to the effective semantic
