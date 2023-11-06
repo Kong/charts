@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.9.0
+
+### Improvements
+
+- Bumped dependencies on `kong/kong` chart to `>=2.31.0`.
+  This most notably brings a default version of KIC to [v3.0][kic_3_0].
+  [#930](https://github.com/Kong/charts/pull/930)
+
+[kic_3_0]: https://github.com/Kong/kubernetes-ingress-controller/releases/tag/v3.0.0
+
 ## 0.8.0
 
 ### Improvements
