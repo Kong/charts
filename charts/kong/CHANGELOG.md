@@ -13,6 +13,8 @@
 
 * The target port for cmetrics should only be applied if the ingress controller is enabled.
   [#926](https://github.com/Kong/charts/pull/926)
+* Fix RBAC for Gateway API v1.
+  [#928](https://github.com/Kong/charts/pull/928)
 
 ## 2.30.0
 
