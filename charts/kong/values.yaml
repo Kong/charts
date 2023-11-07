@@ -105,6 +105,7 @@ deployment:
       # Node labels for pod assignment
       # Ref: https://kubernetes.io/docs/user-guide/node-selection/
       nodeSelector: {}
+      securityContext: {}
       container:
         env:
           # The controller disables TLS verification by default because Kong
@@ -1120,9 +1121,6 @@ podSecurityPolicy:
 # TODO 921 .deployment.*.pod.priorityClassName
 priorityClassName: ""
 
-# TODO 921 deployments.*.pod.securityContext
-# securityContext for Kong pods.
-securityContext: {}
 
 # TODO 921 deployments.*.pod.container.securityContext
 # securityContext for containers.

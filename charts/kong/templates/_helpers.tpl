@@ -1008,13 +1008,6 @@ valueFrom:
     key: {{ .key }}
 {{- end -}}
 
-{{/*
-Use the Pod security context defined in Values or set the UID by default
-*/}}
-{{- define "kong.podsecuritycontext" -}}
-{{ .Values.securityContext | toYaml }}
-{{- end -}}
-
 {{- define "kong.no_daemon_env" -}}
 {{- template "kong.env" . }}
 - name: KONG_NGINX_DAEMON

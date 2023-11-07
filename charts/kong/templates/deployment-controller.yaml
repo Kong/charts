@@ -315,8 +315,8 @@ spec:
 {{ toYaml .pod.topologySpreadConstraints | indent 8 }}
     {{- end }}
       securityContext:
-      # TODO 921 pass in
-      {{- include "kong.podsecuritycontext" . | nindent 8 }}
+      # TODO 921 this previously used a helper but it only did the below and seemed kinda useless
+      {{- .pod.securityContext | toYaml | nindent 8 }}
     {{- if .pod.nodeSelector }}
       nodeSelector:
 {{ toYaml .pod.nodeSelector | indent 8 }}
