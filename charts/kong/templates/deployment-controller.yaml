@@ -150,6 +150,7 @@ spec:
       {{- if .Values.deployment.sidecarContainers }}
       {{- toYaml .Values.deployment.sidecarContainers | nindent 6 }}
       {{- end }}
+      # TODO 921 this presumably goes away
       {{- if .Values.deployment.kong.enabled }}
       - name: "proxy"
         image: {{ include "kong.getRepoTag" .Values.image }}
@@ -309,22 +310,24 @@ spec:
       affinity:
 {{ toYaml .pod.affinity | indent 8 }}
     {{- end }}
-    {{- if .Values.topologySpreadConstraints }}
+    {{- if .pod.topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .Values.topologySpreadConstraints | indent 8 }}
+{{ toYaml .pod.topologySpreadConstraints | indent 8 }}
     {{- end }}
       securityContext:
+      # TODO 921 pass in
       {{- include "kong.podsecuritycontext" . | nindent 8 }}
-    {{- if .Values.nodeSelector }}
+    {{- if .pod.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+{{ toYaml .pod.nodeSelector | indent 8 }}
     {{- end }}
-      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
-    {{- if .Values.tolerations }}
+      terminationGracePeriodSeconds: {{ .pod.terminationGracePeriodSeconds }}
+    {{- if .pod.tolerations }}
       tolerations:
-{{ toYaml .Values.tolerations | indent 8 }}
+{{ toYaml .pod.tolerations | indent 8 }}
     {{- end }}
       volumes:
+      # TODO 921 pass in
       {{- include "kong.volumes" . | nindent 8 -}}
       {{- include "kong.userDefinedVolumes" . | nindent 8 -}}
 

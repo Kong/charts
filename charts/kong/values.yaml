@@ -75,6 +75,9 @@ deployment:
       # rollingUpdate:
       #   maxSurge: "100%"
       #   maxUnavailable: "0%"
+    sidecarContainers: []
+    userDefinedVolumes: []
+    initContainers: []
     pod:
       annotations: {} # .podAnnotations, for the controller
       serviceAccount:
@@ -99,6 +102,9 @@ deployment:
       # Tolerations for pod assignment
       # Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
       tolerations: []
+      # Node labels for pod assignment
+      # Ref: https://kubernetes.io/docs/user-guide/node-selection/
+      nodeSelector: {}
       container:
         env:
           # The controller disables TLS verification by default because Kong
@@ -122,9 +128,16 @@ deployment:
           # version, set this to "3.1.0".
           effectiveSemver:
         userDefinedVolumeMounts: []
-      sidecarContainers: []
-      userDefinedVolumes: []
-      initContainers: []
+        # If you want to specify resources, uncomment the following
+        # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+        resources: {}
+          # limits:
+          #  cpu: 1
+          #  memory: 2G
+          # requests:
+          #  cpu: 1
+          #  memory: 2G
+
   kong:
     # Enable or disable Kong itself
     # Setting this to false with ingressController.enabled=true will create a
@@ -963,17 +976,10 @@ waitImage:
   pullPolicy: IfNotPresent
 
 
-# TODO 921 deployments.kong.pod.container.resources
-# If you want to specify resources, uncomment the following
-# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-resources: {}
-  # limits:
-  #  cpu: 1
-  #  memory: 2G
-  # requests:
-  #  cpu: 1
-  #  memory: 2G
 
+# TODO 921 not moving these til we have a kong new-style section
+# they need different values for the controller and I want to preserve the existing defaults
+# for now
 # TODO 921 deployments.kong.pod.container.readinessProbe
 # readinessProbe for Kong pods
 readinessProbe:
@@ -1029,11 +1035,6 @@ lifecycle:
 
 
 
-# TODO 921 either part of the pod or deployment (or under affinity?), not sure
-# need to look up
-# Node labels for pod assignment
-# Ref: https://kubernetes.io/docs/user-guide/node-selection/
-nodeSelector: {}
 
 # TODO 921 deployments.kong.pod.annotations
 # Annotation to be added to Kong pods
