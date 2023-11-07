@@ -1,7 +1,7 @@
 {{- if .Values.deployment.kong.enabled }}
 {{- $deployConfig := dict -}}
+{{- $deployConfig = (mustMerge $deployConfig .deployment.controller) -}}
 {{- $podConfig := dict -}}
-{{- $_ := set $deployConfig "daemonset" .deployment.controller.daemonset -}}
 {{- $_ := set $deployConfig "name" (printf "%s-%s (include "kong.fullname" .) "controller") -}}
 {{- $_ := set $deployConfig "namespace" (include "kong.namespace" .) -}}
 # TODO 921 combine with .deployment.controller.labels.
@@ -11,13 +11,8 @@
 # user needs (there's been no request to provide separate per-resource labels here), but incongruous
 # with how we handle annotations
 {{- $_ := set $deployConfig "labels" (include "kong.metaLabels" .) -}}
-{{- $_ := set $deployConfig "annotations" .deployment.controller.annotations -}}
-{{- $_ := set $deployConfig "autoscaling" .deployment.controller.autoscaling -}}
-{{- $_ := set $deployConfig "replicaCount" .deployment.controller.replicaCount -}}
 # TODO 921 this needs changes to the helper template since we'll need to point to two different sets of pods.
 # in ingress chart this is relying on different fullnames. can't simply format since there multiple keys,
 # need to pass a suffix to the helper
 {{- $_ := set $deployConfig "selectorMatchLabels" (include "kong.selectorLabels" .) -}}
-{{- $_ := set $deployConfig "updateStrategy" .deployment.controller.updateStrategy -}}
-{{- $_ := set $deployConfig "minReadySeconds" .deployment.controller.updateStrategy -}}
 
