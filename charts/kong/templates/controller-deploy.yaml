@@ -19,6 +19,11 @@
 {{- $_ := set $deployPreRender "selectorMatchLabels" (include "kong.selectorLabels" .) -}}
 {{- $_ := set $deployPreRender "serviceAccountTokenName" (template "kong.serviceAccountTokenName" .) -}}
 
+# TODO 921 ditto the deploy labels todo
+{{- $_ := set $podPreRender "labels" (include "kong.metaLabels" .) -}}
+{{- $_ := set $podPreRender "name" (printf "%s-%s (include "kong.fullname" .) "controller" -}}
+{{- $_ := set $podPreRender "versionLabel" .Chart.AppVersion -}}
+
 {{- $preRender := dict -}}
 {{- $_ := set $preRender "deployment" $deployPreRender -}}
 {{- $_ := set $preRender "pod" $podPreRender -}}

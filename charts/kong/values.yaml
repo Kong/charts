@@ -79,7 +79,9 @@ deployment:
         # arbitrary plugin codeTODO 921 we arguably don't need this with a
         # split controller Deployment, since we use it to hide the token from
         # Kong and its arbitrary plugin code.
+        # TODO 921 probably ignore the above, I think we still need it for the Kuma case
         automountServiceAccountToken: false
+      hostNetwork: false
       container:
         env:
           # The controller disables TLS verification by default because Kong

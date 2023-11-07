@@ -64,22 +64,22 @@ spec:
         {{- end }}
         {{- end }}
       labels:
-        {{- include "kong.metaLabels" . | nindent 8 }} # TODO 921 passed in
+        {{- .pre.pod.labels | nindent 8 }}
         app.kubernetes.io/component: app
-        app: {{ template "kong.fullname" . }} # TODO 921 passed in, needs suffix
-        version: {{ .Chart.AppVersion | quote }} # TODO 921 passed in
+        app: {{ .pre.pod.name }}
+        version: {{ .pre.pod.versionLabel | quote }}
         {{- if .pod.labels }}
         {{ include "kong.renderTpl" (dict "value" .pod.labels "context" $) | nindent 8 }}
         {{- end }}
     spec:
-      {{- if .hostNetwork }}
+      {{- if .pod.hostNetwork }}
       hostNetwork: true
       {{- end }}
       {{- if .pod.priorityClassName }}
       priorityClassName: "{{ .pod.priorityClassName }}"
       {{- end }}
       {{- if or .serviceAccount.create .serviceAccount.name }}
-      serviceAccountName: {{ template "kong.serviceAccountName" . }} # TODO 921 passed in
+      serviceAccountName: {{ .pre.deployment.serviceAccountTokenName }}
       {{- end }}
       {{- if (and (or .serviceAccount.create .serviceAccount.name) .serviceAccount.automountServiceAccountToken) }}
       automountServiceAccountToken: true
