@@ -1,8 +1,9 @@
-{{- if .Values.deployment.kong.enabled }}
+{{- if .Values.deployment.controller.enabled }}
 {{- $deployConfig := dict -}}
 {{- $deployConfig = (mustMerge $deployConfig .deployment.controller) -}}
 {{- $deployPreRender := dict -}} {{/* collection of values rendered from includes, so that there's no risk of colliding with things from the merge */}}
-{{- $podConfig := dict -}}
+{{- $podPreRender := dict -}}
+
 {{- $_ := set $deployPreRender "name" (printf "%s-%s (include "kong.fullname" .) "controller") -}}
 {{- $_ := set $deployPreRender "namespace" (include "kong.namespace" .) -}}
 # TODO 921 combine with .deployment.controller.labels.
@@ -18,4 +19,7 @@
 {{- $_ := set $deployPreRender "selectorMatchLabels" (include "kong.selectorLabels" .) -}}
 {{- $_ := set $deployPreRender "serviceAccountTokenName" (template "kong.serviceAccountTokenName" .) -}}
 
-{{- $_ := set $deployConfig "pre" $deployPreRender -}} # TODO 921 maybe think of a better key name
+{{- $preRender := dict -}}
+{{- $_ := set $preRender "deployment" $deployPreRender -}}
+{{- $_ := set $preRender "pod" $podPreRender -}}
+{{- $_ := set $deployConfig "pre" $preRender -}} # TODO 921 maybe think of a better key name

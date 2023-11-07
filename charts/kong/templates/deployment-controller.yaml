@@ -6,10 +6,10 @@ kind: DaemonSet
 kind: Deployment
 {{- end }}
 metadata:
-  name: {{ .pre.name }}
-  namespace:  {{ .pre.namespace }}
+  name: {{ .pre.deployment.name }}
+  namespace:  {{ .pre.deployment.namespace }}
   labels:
-    {{- .pre.labels | nindent 4 }}
+    {{- .pre.deployment.labels | nindent 4 }}
     app.kubernetes.io/component: app
   {{- if .annotations }}
   annotations:
@@ -25,7 +25,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- .pre.selectorMatchLabels }}
+      {{- .pre.deployment.selectorMatchLabels }}
   {{- if .updateStrategy }}
   {{- if .daemonset }}
   updateStrategy:
@@ -42,24 +42,22 @@ spec:
     metadata:
       annotations:
         {{/* # TODO 921 some keys in the pod template end up being from the deployment dict, so probably no separate define 
-             # there's no obvious reason to separate them, since there can only be one per Deployment anyway */}}
+             # there's no obvious reason to separate them, since there can only be one per Deployment anyway
+        */}}
         {{- if (and (not .serviceAccount.automountServiceAccountToken) (or .serviceAccount.create .serviceAccount.name)) }}
         {{/* # TODO 921 needs to be passed in as-is. possibly should be made relative, since the generator will attempt to use the same
              # name, but lives in a separate service-account.yaml template, so vov
              # TODO above is complete but keeping the note around for now
         */}}
-        kuma.io/service-account-token-volume: {{ .pre.serviceAccountTokenName }}
+        kuma.io/service-account-token-volume: {{ .pre.deployment.serviceAccountTokenName }}
         {{- end }}
         {{/*  # TODO 921 special to DB-less Kong with static config. I think this can be handled with the .Values.dblessConfig.config only:
               # if you do not want to redeploy on hash change, do not provide a static config. However, this would fire in both controller
               # and proxy calls, so we probably need to have injection for additional Pod (and whatever else) annotations.
         */}}
-        {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off" )) }}
-        {{- if .Values.dblessConfig.config }}
-        checksum/dbless.config: {{ toYaml .Values.dblessConfig.config | sha256sum }}
+        {{- if .pre.deployment.dblessChecksum }}
+        checksum/dbless.config: {{ .pre.deployment.dblessChecksum }}
         {{- end }}
-        {{- end }}
-        {{/* # TODO 921 end weird config hash block */}}
         {{- if .pod.annotations }}
         {{- range $key, $value := .pod.annotations }}
         {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote }}
