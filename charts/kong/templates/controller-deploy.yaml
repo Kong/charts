@@ -4,7 +4,7 @@
 {{- $deployPreRender := dict -}} {{/* collection of values rendered from includes, so that there's no risk of colliding with things from the merge */}}
 {{- $podPreRender := dict -}}
 
-{{- $_ := set $deployPreRender "name" (printf "%s-%s (include "kong.fullname" .) "controller") -}}
+{{- $_ := set $deployPreRender "name" (printf "%s-%s" (include "kong.fullname" .) "controller") -}}
 {{- $_ := set $deployPreRender "namespace" (include "kong.namespace" .) -}}
 # TODO 921 combine with .deployment.controller.labels.
 # unsure how the types work out here--kong.metaLabels produces YAML output, and I'm not sure if we can
@@ -17,16 +17,16 @@
 # in ingress chart this is relying on different fullnames. can't simply format since there multiple keys,
 # need to pass a suffix to the helper
 {{- $_ := set $deployPreRender "selectorMatchLabels" (include "kong.selectorLabels" .) -}}
-{{- $_ := set $deployPreRender "serviceAccountTokenName" (template "kong.serviceAccountTokenName" .) -}}
+{{- $_ := set $deployPreRender "serviceAccountTokenName" (include "kong.serviceAccountTokenName" .) -}}
 # TODO 921 this helper needs to be split somehow. as-is it includes things that are only useful for one
 # pod or the other, e.g. the controller does not need the prefix dir. as a placeholder, including
 # unnecessary volumes doesn't really hurt us
-{{- $_ := set $deployPreRender "volumes" (template "kong.volumes" .) -}}
-{{- $_ := set $deployPreRender "userVolumes" (template "kong.userDefinedVolumes" .) -}}
+{{- $_ := set $deployPreRender "volumes" (include "kong.volumes" .) -}}
+{{- $_ := set $deployPreRender "userVolumes" (include "kong.userDefinedVolumes" .) -}}
 
 # TODO 921 ditto the deploy labels todo
 {{- $_ := set $podPreRender "labels" (include "kong.metaLabels" .) -}}
-{{- $_ := set $podPreRender "name" (printf "%s-%s (include "kong.fullname" .) "controller" -}}
+{{- $_ := set $podPreRender "name" (printf "%s-%s" (include "kong.fullname" .) "controller") -}}
 {{- $_ := set $podPreRender "versionLabel" .Chart.AppVersion -}}
 
 {{- $preRender := dict -}}
@@ -35,3 +35,4 @@
 {{- $_ := set $deployConfig "pre" $preRender -}} # TODO 921 maybe think of a better key name
 
 {{- template "kong.deployment" $deployConfig -}}
+{{- end -}}

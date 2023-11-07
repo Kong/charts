@@ -136,7 +136,6 @@ spec:
 {{ toYaml .pod.dnsConfig | indent 8 }}
       {{- end }}
       containers: {}
-      {{/* CONTAINERS CURRENTLY DISABLED
     {{- if .Values.affinity }}
       affinity:
 {{ toYaml .pod.affinity | indent 8 }}

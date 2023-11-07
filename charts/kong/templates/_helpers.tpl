@@ -1001,13 +1001,6 @@ valueFrom:
     key: {{ .key }}
 {{- end -}}
 
-{{- define "secretkeyref" -}}
-valueFrom:
-  secretKeyRef:
-    name: {{ .name }}
-    key: {{ .key }}
-{{- end -}}
-
 {{- define "kong.no_daemon_env" -}}
 {{- template "kong.env" . }}
 - name: KONG_NGINX_DAEMON
