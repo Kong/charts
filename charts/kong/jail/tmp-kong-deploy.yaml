@@ -1,10 +1,9 @@
-{{- if .Values.deployment.controller.enabled }}
+{{- if .Values.deployment.kong.enabled }}
 {{- $deployConfig := dict -}}
-{{- $deployConfig = (mustMerge $deployConfig .deployment.controller) -}}
+{{- $deployConfig = (mustMerge $deployConfig .deployment.kong) -}}
 {{- $deployPreRender := dict -}} {{/* collection of values rendered from includes, so that there's no risk of colliding with things from the merge */}}
-{{- $podPreRender := dict -}}
-
-{{- $_ := set $deployPreRender "name" (printf "%s-%s (include "kong.fullname" .) "controller") -}}
+{{- $podConfig := dict -}}
+{{- $_ := set $deployPreRender "name" (printf "%s-%s (include "kong.fullname" .) "proxy") -}}
 {{- $_ := set $deployPreRender "namespace" (include "kong.namespace" .) -}}
 # TODO 921 combine with .deployment.controller.labels.
 # unsure how the types work out here--kong.metaLabels produces YAML output, and I'm not sure if we can
@@ -18,20 +17,20 @@
 # need to pass a suffix to the helper
 {{- $_ := set $deployPreRender "selectorMatchLabels" (include "kong.selectorLabels" .) -}}
 {{- $_ := set $deployPreRender "serviceAccountTokenName" (template "kong.serviceAccountTokenName" .) -}}
-# TODO 921 this helper needs to be split somehow. as-is it includes things that are only useful for one
-# pod or the other, e.g. the controller does not need the prefix dir. as a placeholder, including
-# unnecessary volumes doesn't really hurt us
-{{- $_ := set $deployPreRender "volumes" (template "kong.volumes" .) -}}
-{{- $_ := set $deployPreRender "userVolumes" (template "kong.userDefinedVolumes" .) -}}
 
-# TODO 921 ditto the deploy labels todo
-{{- $_ := set $podPreRender "labels" (include "kong.metaLabels" .) -}}
-{{- $_ := set $podPreRender "name" (printf "%s-%s (include "kong.fullname" .) "controller" -}}
-{{- $_ := set $podPreRender "versionLabel" .Chart.AppVersion -}}
+{{/*
+# TODO 921 unsure if we want to keep this gate. it's probably simpler to just say "don't set .Values.dblessConfig.config
+# if you're not using a setup that makes sense for it"
+{{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off" )) }}
+*/}}
+{{- if .Values.dblessConfig.config }}
+{{- $- := set $deployPreRender "dblessChecksum" (toYaml .Values.dblessConfig.config | sha256sum) }}
+{{- end }}
+{{/* # TODO 921 end of the old gate above
+{{- end }}
+*/}}
 
 {{- $preRender := dict -}}
 {{- $_ := set $preRender "deployment" $deployPreRender -}}
 {{- $_ := set $preRender "pod" $podPreRender -}}
 {{- $_ := set $deployConfig "pre" $preRender -}} # TODO 921 maybe think of a better key name
-
-{{- template "kong.deployment" $deployConfig -}}
