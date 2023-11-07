@@ -135,7 +135,8 @@ spec:
       dnsConfig:
 {{ toYaml .pod.dnsConfig | indent 8 }}
       {{- end }}
-      containers:
+      containers: {}
+      {{/* CONTAINERS CURRENTLY DISABLED
       # TODO 921 all sorts of fun stuff in this section. .pod.container
       # contains generic configuration, but in practice this needs to be
       # combined with a bunch of app-specific config that lives elsewhere, and
@@ -306,6 +307,7 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         {{- end }} {{/* TODO 921 End of Kong container spec */}}
+CONTAINERS CURRENTLY DISABLED */}}
     {{- if .Values.affinity }}
       affinity:
 {{ toYaml .pod.affinity | indent 8 }}
