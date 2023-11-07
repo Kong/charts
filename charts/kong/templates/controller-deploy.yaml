@@ -15,4 +15,4 @@
 # in ingress chart this is relying on different fullnames. can't simply format since there multiple keys,
 # need to pass a suffix to the helper
 {{- $_ := set $deployConfig "selectorMatchLabels" (include "kong.selectorLabels" .) -}}
-
+{{- $_ := set $deployConfig "serviceAccountTokenName" (template "kong.serviceAccountTokenName" .) -}}

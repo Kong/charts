@@ -6,7 +6,7 @@ kind: DaemonSet
 kind: Deployment
 {{- end }}
 metadata:
-  name: {{ template "kong.fullname" . }} # TODO 921 needs suffix for deployment via arg. also needs to be passed in
+  name: {{ .name }} # TODO 921 needs suffix for deployment via arg. also needs to be passed in
   namespace:  {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }} # TODO 921 needs to be passed in for root
@@ -32,7 +32,7 @@ spec:
   {{- else }}
   strategy:
   {{- end }}
-{{ toYaml .Values.updateStrategy | indent 4 }}
+{{ toYaml .updateStrategy | indent 4 }}
   {{- end }}
   {{- if .minReadySeconds }}
   minReadySeconds: {{ .minReadySeconds }}
@@ -45,8 +45,10 @@ spec:
              # there's no obvious reason to separate them, since there can only be one per Deployment anyway */}}
         {{- if (and (not .serviceAccount.automountServiceAccountToken) (or .serviceAccount.create .serviceAccount.name)) }}
         {{/* # TODO 921 needs to be passed in as-is. possibly should be made relative, since the generator will attempt to use the same
-             # name, but lives in a separate service-account.yaml template, so vov */}}
-        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
+             # name, but lives in a separate service-account.yaml template, so vov
+             # TODO above is complete but keeping the note around for now
+        */}}
+        kuma.io/service-account-token-volume: {{ .serviceAccountTokenName }}
         {{- end }}
         {{/*  # TODO 921 special to DB-less Kong with static config. I think this can be handled with the .Values.dblessConfig.config only:
               # if you do not want to redeploy on hash change, do not provide a static config. However, this would fire in both controller
