@@ -304,10 +304,10 @@ spec:
         {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
-        {{- end }} {{/* End of Kong container spec */}}
+        {{- end }} {{/* TODO 921 End of Kong container spec */}}
     {{- if .Values.affinity }}
       affinity:
-{{ toYaml .Values.affinity | indent 8 }}
+{{ toYaml .pod.affinity | indent 8 }}
     {{- end }}
     {{- if .Values.topologySpreadConstraints }}
       topologySpreadConstraints:

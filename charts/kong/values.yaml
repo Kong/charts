@@ -70,6 +70,11 @@ deployment:
     # controller. that said, we may be able to use the same templates for both
     # Deployments' basic Deployment-y things and get it for free.
     daemonset: false
+    updateStrategy: {}
+      # type: RollingUpdate
+      # rollingUpdate:
+      #   maxSurge: "100%"
+      #   maxUnavailable: "0%"
     pod:
       annotations: {} # .podAnnotations, for the controller
       serviceAccount:
@@ -82,6 +87,18 @@ deployment:
         # TODO 921 probably ignore the above, I think we still need it for the Kuma case
         automountServiceAccountToken: false
       hostNetwork: false
+      # Affinity for pod assignment
+      # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+      affinity: {}
+      # Topology spread constraints for pod assignment (requires Kubernetes >= 1.19)
+      # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+      topologySpreadConstraints: []
+      # Sets the termination grace period for pods spawned by the Kubernetes Deployment.
+      # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution
+      terminationGracePeriodSeconds: 30
+      # Tolerations for pod assignment
+      # Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+      tolerations: []
       container:
         env:
           # The controller disables TLS verification by default because Kong
@@ -945,13 +962,6 @@ waitImage:
   # tag: 5
   pullPolicy: IfNotPresent
 
-# TODO 921 deployment.*.updateStrategy
-# update strategy
-updateStrategy: {}
-  # type: RollingUpdate
-  # rollingUpdate:
-  #   maxSurge: "100%"
-  #   maxUnavailable: "0%"
 
 # TODO 921 deployments.kong.pod.container.resources
 # If you want to specify resources, uncomment the following
@@ -1016,25 +1026,8 @@ lifecycle:
         - quit
         - '--wait=15'
 
-# TODO 921 deployments.kong.pod.terminationGracePeriodSeconds
-# Sets the termination grace period for pods spawned by the Kubernetes Deployment.
-# Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution
-terminationGracePeriodSeconds: 30
 
-# TODO 921 deployments.kong.pod.affinity
-# Affinity for pod assignment
-# Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-# affinity: {}
 
-# TODO 921 deployments.kong.pod.topologySpreadConstraints
-# Topology spread constraints for pod assignment (requires Kubernetes >= 1.19)
-# Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-# topologySpreadConstraints: []
-
-# TODO 921 deployments.kong.pod.tolerations
-# Tolerations for pod assignment
-# Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-tolerations: []
 
 # TODO 921 either part of the pod or deployment (or under affinity?), not sure
 # need to look up
