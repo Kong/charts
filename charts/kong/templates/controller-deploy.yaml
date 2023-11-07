@@ -18,6 +18,11 @@
 # need to pass a suffix to the helper
 {{- $_ := set $deployPreRender "selectorMatchLabels" (include "kong.selectorLabels" .) -}}
 {{- $_ := set $deployPreRender "serviceAccountTokenName" (template "kong.serviceAccountTokenName" .) -}}
+# TODO 921 this helper needs to be split somehow. as-is it includes things that are only useful for one
+# pod or the other, e.g. the controller does not need the prefix dir. as a placeholder, including
+# unnecessary volumes doesn't really hurt us
+{{- $_ := set $deployPreRender "volumes" (template "kong.volumes" .) -}}
+{{- $_ := set $deployPreRender "userVolumes" (template "kong.userDefinedVolumes" .) -}}
 
 # TODO 921 ditto the deploy labels todo
 {{- $_ := set $podPreRender "labels" (include "kong.metaLabels" .) -}}
