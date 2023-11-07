@@ -6,10 +6,10 @@ kind: DaemonSet
 kind: Deployment
 {{- end }}
 metadata:
-  name: {{ .name }} # TODO 921 needs suffix for deployment via arg. also needs to be passed in
-  namespace:  {{ template "kong.namespace" . }}
+  name: {{ .pre.name }}
+  namespace:  {{ .pre.namespace }}
   labels:
-    {{- include "kong.metaLabels" . | nindent 4 }} # TODO 921 needs to be passed in for root
+    {{- .pre.labels | nindent 4 }}
     app.kubernetes.io/component: app
   {{- if .annotations }}
   annotations:
@@ -25,7 +25,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "kong.selectorLabels" . | nindent 6 }} # TODO 921 needs to be passed in
+      {{- .pre.selectorMatchLabels }}
   {{- if .updateStrategy }}
   {{- if .daemonset }}
   updateStrategy:
@@ -48,7 +48,7 @@ spec:
              # name, but lives in a separate service-account.yaml template, so vov
              # TODO above is complete but keeping the note around for now
         */}}
-        kuma.io/service-account-token-volume: {{ .serviceAccountTokenName }}
+        kuma.io/service-account-token-volume: {{ .pre.serviceAccountTokenName }}
         {{- end }}
         {{/*  # TODO 921 special to DB-less Kong with static config. I think this can be handled with the .Values.dblessConfig.config only:
               # if you do not want to redeploy on hash change, do not provide a static config. However, this would fire in both controller
