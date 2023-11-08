@@ -80,7 +80,7 @@ spec:
       priorityClassName: "{{ .pod.priorityClassName }}"
       {{- end }}
       {{- if or .pod.serviceAccount.create .pod.serviceAccount.name }}
-      serviceAccountName: {{ .pre.deployment.serviceAccountTokenName }}
+      serviceAccountName: {{ .pre.deployment.serviceAccountName }}
       {{- end }}
       {{- if (and (or .pod.serviceAccount.create .pod.serviceAccount.name) .pod.serviceAccount.automountServiceAccountToken) }}
       automountServiceAccountToken: true
@@ -138,7 +138,7 @@ spec:
       dnsConfig:
 {{ toYaml .pod.dnsConfig | indent 8 }}
       {{- end }}
-      containers: []
+      containers: {{ .pre.pod.container | nindent 8 }}
     {{- if .pod.affinity }}
       affinity:
 {{ toYaml .pod.affinity | indent 8 }}

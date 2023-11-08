@@ -534,7 +534,7 @@ The name of the Service which will be used by the controller to update the Ingre
 */}}
 
 {{- $userEnv := dict -}}
-{{- range $key, $val := .Values.ingressController.env }}
+{{- range $key, $val := .Values.deployment.controller.pod.container.env }}
   {{- $upper := upper $key -}}
   {{- $var := printf "CONTROLLER_%s" $upper -}}
   {{- $_ := set $userEnv $var $val -}}
@@ -714,7 +714,7 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end -}}
 
 {{- define "controller.adminApiCertVolumeMount" -}}
-{{- if and .Values.ingressController.adminApi.tls.client.enabled .Values.ingressController.enabled }}
+{{- if .adminApi.tls.client.enabled }}
 - name: admin-api-cert
   mountPath: /etc/secrets/admin-api-cert
   readOnly: true
@@ -934,11 +934,9 @@ The name of the Service which will be used by the controller to update the Ingre
   {{- end }}
   {{- end }}
   ports:
-  # TODO 921 would not have global value here, need to pass something in. can
-  # pass in port or null if none--it's the only value here
-  {{- if .Values.ingressController.admissionWebhook.enabled }}
+  {{- if .pre.admissionWebhook.enabled }}
   - name: webhook
-    containerPort: {{ .Values.ingressController.admissionWebhook.port }}
+    containerPort: {{ .pre.admissionWebhook.port }}
     protocol: TCP
   {{- end }}
   {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .image)) -}}
@@ -958,8 +956,10 @@ The name of the Service which will be used by the controller to update the Ingre
         apiVersion: v1
         fieldPath: metadata.namespace
 # TODO 921 this is not currently designed to be at all relative and relies on
-# external sections
-{{- include "kong.ingressController.env" .  | indent 2 }}
+# external sections. the template invoker renders this from the root and passes
+# it in as .env
+  env:
+{{- .pre.env  | indent 4 }}
   image: {{ include "kong.getRepoTag" .image }}
   imagePullPolicy: {{ .image.pullPolicy }}
 {{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
@@ -967,7 +967,7 @@ The name of the Service which will be used by the controller to update the Ingre
      check type, and all HTTP checks freeze when a debugger pauses operation.
      Setting disableReadiness to ANY value disables the probes.
 */}}
-{{- if (not (hasKey .Values.ingressController "disableProbes")) }}
+{{- if (not (hasKey .pre "disableProbes")) }}
   readinessProbe:
 {{ toYaml .readinessProbe | indent 4 }}
   livenessProbe:
@@ -976,22 +976,19 @@ The name of the Service which will be used by the controller to update the Ingre
   resources:
 {{ toYaml .resources | indent 4 }}
   volumeMounts:
-# TODO 921 comes from external, but only needs the single boolean in the
-# initial if
-{{- if .ingressController.admissionWebhook.enabled }}
+{{- if .pre.admissionWebhook.enabled }}
   - name: webhook-cert
     mountPath: /admission-webhook
     readOnly: true
 {{- end }}
-# TODO 921 would not be in the container context
-{{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-  - name: {{ template "kong.serviceAccountTokenName" . }}
+{{- if (and (not .pre.serviceAccount.automountServiceAccountToken) (or .pre.serviceAccount.create .pre.serviceAccount.name)) }}
+  - name: {{ .pre.serviceAccountTokenName }}
     mountPath: /var/run/secrets/kubernetes.io/serviceaccount
     readOnly: true
 {{- end }}
   {{- include "kong.userDefinedVolumeMounts" . | nindent 2 }}
   # TODO 921 relies on some content under .ingressController
-  {{- include "controller.adminApiCertVolumeMount" . | nindent 2 }}
+  {{- include "controller.adminApiCertVolumeMount" .pre | nindent 2 }}
 {{- end -}}
 
 {{- define "secretkeyref" -}}
