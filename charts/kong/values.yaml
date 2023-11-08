@@ -56,6 +56,7 @@
 # controller Deployment, but `.podAnnotations` for the Kong Deployment's Pods.
 deployment:
   controller:
+    enabled: true
     labels: {}
     annotations: {} # TODO 921 add any defaults
     # TODO 921 the equivalent root setting has "default" values: https://github.com/Kong/charts/blob/kong-2.30.0/charts/kong/values.yaml#L887-L904

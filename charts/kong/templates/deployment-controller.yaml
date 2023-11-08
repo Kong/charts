@@ -1,8 +1,9 @@
 {{- define "kong.deployment" -}}
-apiVersion: apps/v1
 {{- if .daemonset }}
+apiVersion: apps/v1
 kind: DaemonSet
 {{- else }}
+apiVersion: apps/v1
 kind: Deployment
 {{- end }}
 metadata:
@@ -25,7 +26,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- .pre.deployment.selectorMatchLabels }}
+{{ .pre.deployment.selectorMatchLabels | nindent 6 -}}
   {{- if .updateStrategy }}
   {{- if .daemonset }}
   updateStrategy:
@@ -43,12 +44,12 @@ spec:
       annotations:
         {{/* # TODO 921 some keys in the pod template end up being from the deployment dict, so probably no separate define 
              # there's no obvious reason to separate them, since there can only be one per Deployment anyway
-        */}}
-        {{- if (and (not .serviceAccount.automountServiceAccountToken) (or .serviceAccount.create .serviceAccount.name)) }}
+        */ -}}
+        {{- if (and (not .pod.serviceAccount.automountServiceAccountToken) (or .pod.serviceAccount.create .pod.serviceAccount.name)) }}
         {{/* # TODO 921 needs to be passed in as-is. possibly should be made relative, since the generator will attempt to use the same
              # name, but lives in a separate service-account.yaml template, so vov
              # TODO above is complete but keeping the note around for now
-        */}}
+        */ -}}
         kuma.io/service-account-token-volume: {{ .pre.deployment.serviceAccountTokenName }}
         {{- end }}
         {{/*  # TODO 921 special to DB-less Kong with static config. I think this can be handled with the .Values.dblessConfig.config only:
@@ -78,10 +79,10 @@ spec:
       {{- if .pod.priorityClassName }}
       priorityClassName: "{{ .pod.priorityClassName }}"
       {{- end }}
-      {{- if or .serviceAccount.create .serviceAccount.name }}
+      {{- if or .pod.serviceAccount.create .pod.serviceAccount.name }}
       serviceAccountName: {{ .pre.deployment.serviceAccountTokenName }}
       {{- end }}
-      {{- if (and (or .serviceAccount.create .serviceAccount.name) .serviceAccount.automountServiceAccountToken) }}
+      {{- if (and (or .pod.serviceAccount.create .pod.serviceAccount.name) .pod.serviceAccount.automountServiceAccountToken) }}
       automountServiceAccountToken: true
       {{- else }}
       automountServiceAccountToken: false
@@ -100,6 +101,7 @@ spec:
       # does need Kong's image, security context, resources, env, so probably
       # create a dedicated helper to create the initContainer and then support
       # injecting initContainers in general. .Values stuff left as-is from here
+{{/*
       {{- if .Values.deployment.kong.enabled }}
       initContainers:
       - name: clear-stale-pid
@@ -124,6 +126,7 @@ spec:
         {{- include "kong.wait-for-db" . | nindent 6 }}
         {{- end }}
       {{- end }} # TODO 921 END initContainers clear-stale-pid
+*/}}
       {{- if .pod.hostAliases }}
       hostAliases:
         {{- toYaml .pod.hostAliases | nindent 6 }}
@@ -135,8 +138,8 @@ spec:
       dnsConfig:
 {{ toYaml .pod.dnsConfig | indent 8 }}
       {{- end }}
-      containers: {}
-    {{- if .Values.affinity }}
+      containers: []
+    {{- if .pod.affinity }}
       affinity:
 {{ toYaml .pod.affinity | indent 8 }}
     {{- end }}
@@ -145,7 +148,6 @@ spec:
 {{ toYaml .pod.topologySpreadConstraints | indent 8 }}
     {{- end }}
       securityContext:
-      # TODO 921 this previously used a helper but it only did the below and seemed kinda useless
       {{- .pod.securityContext | toYaml | nindent 8 }}
     {{- if .pod.nodeSelector }}
       nodeSelector:
@@ -157,7 +159,7 @@ spec:
 {{ toYaml .pod.tolerations | indent 8 }}
     {{- end }}
       volumes:
-      {{- .pre.pod.volumes | nindent 8 -}}
-      {{- .pre.pod.userVolumes | nindent 8 -}}
+      {{- .pre.deployment.volumes | nindent 8 -}}
+      {{- .pre.deployment.userVolumes | nindent 8 -}}
 
 {{- end -}} {{/* end kong.deployment */}}

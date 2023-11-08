@@ -1,6 +1,6 @@
 {{- if .Values.deployment.controller.enabled }}
 {{- $deployConfig := dict -}}
-{{- $deployConfig = (mustMerge $deployConfig .deployment.controller) -}}
+{{- $deployConfig = (mustMerge $deployConfig .Values.deployment.controller) -}}
 {{- $deployPreRender := dict -}} {{/* collection of values rendered from includes, so that there's no risk of colliding with things from the merge */}}
 {{- $podPreRender := dict -}}
 
