@@ -1144,6 +1144,7 @@ the template that it itself is using form the above sections.
 {{- end }}
 
 {{- $_ := set $autoEnv "KONG_PLUGINS" (include "kong.plugins" .) -}}
+{{- $_ := set $autoEnv "KONG_ROUTER_FLAVOR" (include "kong.router_flavor" .) -}}
 
 {{/*
     ====== USER-SET ENVIRONMENT VARIABLES ======
@@ -1709,4 +1710,16 @@ extensions/v1beta1
     {{- end -}}
 {{- end -}}
 {{- (toYaml $proxyReadiness) -}}
+{{- end -}}
+
+{{- define "kong.router_flavor" -}}
+{{- if .Values.env.router_flavor -}}
+.Values.env.router_flavor
+{{- else -}}
+    {{- if (and  .Values.ingressController.enabled  (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.image))) -}}
+        expressions
+    {{- else -}}
+        traditional_compatible
+    {{- end -}}
+{{- end -}}
 {{- end -}}
