@@ -8,9 +8,11 @@
   [#917](https://github.com/Kong/charts/pull/917)
 * Added services resource to admission webhook config for KIC >= 3.0.0.
   [#919](https://github.com/Kong/charts/pull/919)
-* Update default ingress controller version to v3.0
+* Update default ingress controller version to v3.0.
   [#929](https://github.com/Kong/charts/pull/929)
   [#930](https://github.com/Kong/charts/pull/930)
+* Set default router flavor to `expressions` for KIC >= 3.0.0.
+  [#935](https://github.com/Kong/charts/pull/935)
 
 ### Fixed
 
