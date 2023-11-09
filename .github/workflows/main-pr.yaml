@@ -126,8 +126,8 @@ jobs:
     strategy:
       matrix:
         kic-version:
-        - "2.10"
         - "2.11"
+        - "2.12"
         kong-version:
         - "3.3"
         - "3.2"

@@ -87,9 +87,17 @@ fi
 
 # Configure values for all tests
 # Enable Gateway API
+
+# Enable ExpressionRoutes when testing old KIC versions.
+if [[ -n "${KIC_VERSION-}" ]]; then
+ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.env.feature_gates=GatewayAlpha=true,ExpressionRoutes=true")
+else
 ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.env.feature_gates=GatewayAlpha=true")
+fi
+
 # Tests should not show up in reporting
 ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports=false")
+
 
 if [[ -n "${KONG_VERSION-}" ]]
 then
