@@ -19,6 +19,12 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
+
+    # Make Gateway deployment settings to be aligned with a given Ingress Controller version capabilities
+    # (e.g. use a most-modern router flavor supported by a given Ingress Controller version).
+    # If left empty, safe defaults will be used (if not specified explicitly in this chart).
+    alignWithControllerVersion: ""
+
   ## Minimum number of seconds for which a newly created pod should be ready without any of its container crashing,
   ## for it to be considered available.
   # minReadySeconds: 60

@@ -1714,12 +1714,17 @@ extensions/v1beta1
 
 {{- define "kong.router_flavor" -}}
 {{- if .Values.env.router_flavor -}}
+{{- /* If explicitly specified in envs, it always wins. */ -}}
 .Values.env.router_flavor
 {{- else -}}
-    {{- if (and  .Values.ingressController.enabled  (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.image))) -}}
+    {{- /* If not set explicitly in envs, try using the most modern router based on Ingress Controller version. */ -}}
+    {{- if or (and .Values.ingressController.enabled (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)))
+              (and .Values.deployment.kong.alignWithControllerVersion (semverCompare ">= 3.0.0" .Values.deployment.kong.alignWithControllerVersion))
+    -}}
         expressions
+    {{- /* If no Ingress Controller version is set, use a default router flavor. */ -}}
     {{- else -}}
-        traditional_compatible
+        traditional
     {{- end -}}
 {{- end -}}
 {{- end -}}
