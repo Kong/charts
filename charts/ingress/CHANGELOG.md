@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.10.0
+
+### Improvements
+
+- Changed the default Gateway's router flavor (`gateway.env.router_flavor` value) to performance-boosting `expressions`.
+  It can make `helm install` fail if you're using this chart with Kong Ingress Controller pinned to a version
+  older than `3.0.0`.
+  To fix it, you have the following options for given controller versions:
+  - < `2.10.0`:
+    1. Bump the controller version to >= `3.0.0`.
+    1. Set `gateway.env.router_flavor` to `traditional` to keep using the old router flavor.
+  - \>= `2.10.0` and < `3.0.0`:
+    1. Bump the controller version to >= `3.0.0`.
+    1. Set `gateway.env.router_flavor` to `traditional` to keep using the old router flavor.
+    1. Set `controller.env.feature_gates=ExpressionRoutes=true` to use the new router flavor.
+  [#939](https://github.com/Kong/charts/pull/939)
+
 ## 0.9.0
 
 ### Improvements
