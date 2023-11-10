@@ -38,7 +38,13 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 
 {{- define "kong.selectorLabels" -}}
 app.kubernetes.io/name: {{ template "kong.name" . }}
-app.kubernetes.io/component: app
+app.kubernetes.io/component: proxy
+app.kubernetes.io/instance: "{{ .Release.Name }}"
+{{- end -}}
+
+{{- define "kong.controllerSelectorLabels" -}}
+app.kubernetes.io/name: {{ template "kong.name" . }}
+app.kubernetes.io/component: controller
 app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
 
@@ -921,6 +927,169 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end }}
   {{- include "kong.userDefinedVolumeMounts" .Values.ingressController | nindent 2 }}
   {{- include "controller.adminApiCertVolumeMount" . | nindent 2 }}
+{{- end -}}
+
+{{- define "kong.proxy-container-new" -}}
+- name: "proxy"
+  image: {{ include "kong.getRepoTag" .image }}
+  imagePullPolicy: {{ .image.pullPolicy }}
+  securityContext:
+  {{ toYaml .securityContext | nindent 4 }}
+{{/*   TODO 921 this helper still pulls from the old .Values.env. We need to pass in the deployment.kong.pod.container.env
+  env:
+  {{- (include "kong.no_daemon_env" .) | nindent 2 }}
+*/}}
+  lifecycle:
+    {{- toYaml .lifecycle | nindent 4 }}
+  ports:
+  {{- if (and .pre.svc.admin.http.enabled .pre.svc.admin.enabled) }}
+  - name: admin
+    containerPort: {{ .pre.svc.admin.http.containerPort }}
+    {{- if .pre.svc.admin.http.hostPort }}
+    hostPort: {{ .pre.svc.admin.http.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.admin.tls.enabled .pre.svc.admin.enabled) }}
+  - name: admin-tls
+    containerPort: {{ .pre.svc.admin.tls.containerPort }}
+    {{- if .pre.svc.admin.tls.hostPort }}
+    hostPort: {{ .pre.svc.admin.tls.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.proxy.http.enabled .pre.svc.proxy.enabled) }}
+  - name: proxy
+    containerPort: {{ .pre.svc.proxy.http.containerPort }}
+    {{- if .pre.svc.proxy.http.hostPort }}
+    hostPort: {{ .pre.svc.proxy.http.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.proxy.tls.enabled .pre.svc.proxy.enabled)}}
+  - name: proxy-tls
+    containerPort: {{ .pre.svc.proxy.tls.containerPort }}
+    {{- if .pre.svc.proxy.tls.hostPort }}
+    hostPort: {{ .pre.svc.proxy.tls.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- range .pre.svc.proxy.stream }}
+  - name: stream{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
+    containerPort: {{ .containerPort }}
+    {{- if .hostPort }}
+    hostPort: {{ .hostPort }}
+    {{- end}}
+    protocol: {{ .protocol }}
+  {{- end }}
+  {{- range .pre.svc.udpProxy.stream }}
+  - name: streamudp-{{ .containerPort }}
+    containerPort: {{ .containerPort }}
+    {{- if .hostPort }}
+    hostPort: {{ .hostPort }}
+    {{- end}}
+    protocol: {{ .protocol }}
+  {{- end }}
+  {{- if (and .pre.svc.status.http.enabled .pre.svc.status.enabled)}}
+  - name: status
+    containerPort: {{ .pre.svc.status.http.containerPort }}
+    {{- if .pre.svc.status.http.hostPort }}
+    hostPort: {{ .pre.svc.status.http.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.status.tls.enabled .pre.svc.status.enabled) }}
+  - name: status-tls
+    containerPort: {{ .pre.svc.status.tls.containerPort }}
+    {{- if .pre.svc.status.tls.hostPort }}
+    hostPort: {{ .pre.svc.status.tls.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.cluster.tls.enabled .pre.svc.cluster.enabled) }}
+  - name: cluster-tls
+    containerPort: {{ .pre.svc.cluster.tls.containerPort }}
+    {{- if .pre.svc.cluster.tls.hostPort }}
+    hostPort: {{ .pre.svc.cluster.tls.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if .pre.enterprise.enabled }}
+  {{- if (and .pre.svc.manager.http.enabled .pre.svc.manager.enabled) }}
+  - name: manager
+    containerPort: {{ .pre.svc.manager.http.containerPort }}
+    {{- if .pre.svc.manager.http.hostPort }}
+    hostPort: {{ .pre.svc.manager.http.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.manager.tls.enabled .pre.svc.manager.enabled) }}
+  - name: manager-tls
+    containerPort: {{ .pre.svc.manager.tls.containerPort }}
+    {{- if .pre.svc.manager.tls.hostPort }}
+    hostPort: {{ .pre.svc.manager.tls.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.portal.http.enabled .pre.svc.portal.enabled) }}
+  - name: portal
+    containerPort: {{ .pre.svc.portal.http.containerPort }}
+    {{- if .pre.svc.portal.http.hostPort }}
+    hostPort: {{ .pre.svc.portal.http.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.portal.tls.enabled .pre.svc.portal.enabled) }}
+  - name: portal-tls
+    containerPort: {{ .pre.svc.portal.tls.containerPort }}
+    {{- if .pre.svc.portal.tls.hostPort }}
+    hostPort: {{ .pre.svc.portal.tls.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.portalapi.http.enabled .pre.svc.portalapi.enabled) }}
+  - name: portalapi
+    containerPort: {{ .pre.svc.portalapi.http.containerPort }}
+    {{- if .pre.svc.portalapi.http.hostPort }}
+    hostPort: {{ .pre.svc.portalapi.http.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.portalapi.tls.enabled .pre.svc.portalapi.enabled) }}
+  - name: portalapi-tls
+    containerPort: {{ .pre.svc.portalapi.tls.containerPort }}
+    {{- if .pre.svc.portalapi.tls.hostPort }}
+    hostPort: {{ .pre.svc.portalapi.tls.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- if (and .pre.svc.clustertelemetry.tls.enabled .pre.svc.clustertelemetry.enabled) }}
+  - name: clustert-tls
+    containerPort: {{ .pre.svc.clustertelemetry.tls.containerPort }}
+    {{- if .pre.svc.clustertelemetry.tls.hostPort }}
+    hostPort: {{ .pre.svc.clustertelemetry.tls.hostPort }}
+    {{- end}}
+    protocol: TCP
+  {{- end }}
+  {{- end }}
+{{/* TODO 921 whatever we're doing for volume mounts
+  volumeMounts:
+  {{- include "kong.volumeMounts" . | nindent 4 }}
+  {{- include "kong.userDefinedVolumeMounts" .Values.deployment | nindent 4 }}
+*/}}
+  readinessProbe:
+{{ toYaml .readinessProbe | indent 4 }}
+{{/* TODO 921 this requires controller-related keys we aren't passing in yet
+{{ include "kong.proxy.compatibleReadiness" . | indent 4 }}
+*/}}
+  livenessProbe:
+{{ toYaml .livenessProbe | indent 4 }}
+  {{- if .startupProbe }}
+  startupProbe:
+{{ toYaml .startupProbe | indent 4 }}
+  {{- end }}
+  resources:
+{{ toYaml .resources | indent 4 }}
 {{- end -}}
 
 {{- define "kong.controller-container-new" -}}

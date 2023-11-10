@@ -173,6 +173,127 @@ deployment:
           #  memory: 2G
 
   kong:
+    enabled: true
+    labels: {}
+    annotations: {} # TODO 921 add any defaults
+    # TODO 921 the equivalent root setting has "default" values: https://github.com/Kong/charts/blob/kong-2.30.0/charts/kong/values.yaml#L887-L904
+    # These are no-oped with an `enabled=false` key, but are somewhat
+    # misleading in that we didn't really design them for any particular
+    # purpose--they're just values to show the structure. Given how values.yaml
+    # defaults work IDK if maybe we'd consider making the _actual_ values.yaml
+    # base not set defaults in these cases, and then having a dedicated example
+    # values.yaml that just shows structure.
+    autoscaling: {}
+    # TODO 921 parity, though it really makes _no_ sense for a daemonset
+    # controller. that said, we may be able to use the same templates for both
+    # Deployments' basic Deployment-y things and get it for free.
+    daemonset: false
+    updateStrategy: {}
+      # type: RollingUpdate
+      # rollingUpdate:
+      #   maxSurge: "100%"
+      #   maxUnavailable: "0%"
+    sidecarContainers: []
+    userDefinedVolumes: []
+    initContainers: []
+    pod:
+      annotations: {} # .podAnnotations, for the controller
+      # TODO 921 this should probably go elsewhere
+      serviceAccount:
+        create: true
+        # TODO 921 we arguably don't need this with a split controller
+        # Deployment, since we use it to hide the token from Kong and its
+        # arbitrary plugin codeTODO 921 we arguably don't need this with a
+        # split controller Deployment, since we use it to hide the token from
+        # Kong and its arbitrary plugin code.
+        # TODO 921 probably ignore the above, I think we still need it for the Kuma case
+        automountServiceAccountToken: false
+      hostNetwork: false
+      # Affinity for pod assignment
+      # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+      affinity: {}
+      # Topology spread constraints for pod assignment (requires Kubernetes >= 1.19)
+      # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+      topologySpreadConstraints: []
+      # Sets the termination grace period for pods spawned by the Kubernetes Deployment.
+      # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution
+      terminationGracePeriodSeconds: 30
+      # Tolerations for pod assignment
+      # Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+      tolerations: []
+      # Node labels for pod assignment
+      # Ref: https://kubernetes.io/docs/user-guide/node-selection/
+      nodeSelector: {}
+      securityContext: {}
+      container:
+        args: []
+        env:
+          database: "off"
+          router_flavor: "traditional"
+          nginx_worker_processes: "2"
+          proxy_access_log: /dev/stdout
+          admin_access_log: /dev/stdout
+          admin_gui_access_log: /dev/stdout
+          portal_api_access_log: /dev/stdout
+          proxy_error_log: /dev/stderr
+          admin_error_log: /dev/stderr
+          admin_gui_error_log: /dev/stderr
+          portal_api_error_log: /dev/stderr
+          prefix: /kong_prefix/
+        image:
+          repository: kong
+          tag: "3.4"
+          # Kong Enterprise
+          # repository: kong/kong-gateway
+          # tag: "3.4"
+          # Optionally set a semantic version for version-gated features. This can normally
+          # be left unset. You only need to set this if your tag is not a semver string,
+          # such as when you are using a "next" tag. Set this to the effective semantic
+          # version of your tag: for example if using a "next" image for an unreleased 3.1.0
+          # version, set this to "3.1.0".
+          effectiveSemver: ""
+        readinessProbe:
+          httpGet:
+            path: "/status/ready"
+            port: status
+            scheme: HTTP
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: "/status"
+            port: status
+            scheme: HTTP
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
+        userDefinedVolumeMounts: []
+        # If you want to specify resources, uncomment the following
+        # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+        resources: {}
+          # limits:
+          #  cpu: 1
+          #  memory: 2G
+          # requests:
+          #  cpu: 1
+          #  memory: 2G
+
+  oldkong:
     # Enable or disable Kong itself
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.

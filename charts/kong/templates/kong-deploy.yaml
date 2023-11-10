@@ -1,14 +1,17 @@
-{{- if .Values.deployment.controller.enabled }}
+{{- if .Values.deployment.kong.enabled }}
 {{- $deployConfig := dict -}}
-{{- $deployConfig = (mustMerge $deployConfig .Values.deployment.controller) -}}
+{{- $deployConfig = (mustMerge $deployConfig .Values.deployment.kong) -}}
 {{- $deployPreRender := dict -}} {{/* collection of values rendered from includes, so that there's no risk of colliding with things from the merge */}}
 {{- $podPreRender := dict -}}
 
-{{- $_ := set $deployPreRender "name" (printf "%s-%s" (include "kong.fullname" .) "controller") -}}
+# TODO 921 review how these names end up in practice with a "kong" release. we've historically
+# suggested a lot of example configurations that resulted in various "kong-kong" resources which,
+# while harmless, look a bit silly
+{{- $_ := set $deployPreRender "name" (printf "%s-%s" (include "kong.fullname" .) "proxy") -}}
 {{- $_ := set $deployPreRender "namespace" (include "kong.namespace" .) -}}
-# TODO 921 combine with .deployment.controller.labels.
+# TODO 921 combine with .deployment.kong.labels.
 # unsure how the types work out here--kong.metaLabels produces YAML output, and I'm not sure if we can
-# just concat them as strings or what. can maybe ignore .deployment.controller.labels--it wasn't
+# just concat them as strings or what. can maybe ignore .deployment.kong.labels--it wasn't
 # included in the past and we instead set extraLabels on EVERYTHING. that's apparently sufficient for
 # user needs (there's been no request to provide separate per-resource labels here), but incongruous
 # with how we handle annotations
@@ -16,7 +19,7 @@
 # TODO 921 this needs changes to the helper template since we'll need to point to two different sets of pods.
 # in ingress chart this is relying on different fullnames. can't simply format since there multiple keys,
 # need to pass a suffix to the helper
-{{- $_ := set $deployPreRender "selectorMatchLabels" (include "kong.controllerSelectorLabels" .) -}}
+{{- $_ := set $deployPreRender "selectorMatchLabels" (include "kong.selectorLabels" .) -}}
 {{- $_ := set $deployPreRender "serviceAccountTokenName" (include "kong.serviceAccountTokenName" .) -}}
 {{- $_ := set $deployPreRender "serviceAccountName" (include "kong.serviceAccountName" .) -}}
 # TODO 921 this helper needs to be split somehow. as-is it includes things that are only useful for one
@@ -26,24 +29,35 @@
 {{- $_ := set $deployPreRender "userVolumes" (include "kong.userDefinedVolumes" .) -}}
 
 # TODO 921 ditto the deploy labels todo
-{{- $_ := set $podPreRender "component" "controller" -}}
+{{- $_ := set $podPreRender "component" "proxy" -}}
 {{- $_ := set $podPreRender "labels" (include "kong.metaLabels" .) -}}
-{{- $_ := set $podPreRender "name" (printf "%s-%s" (include "kong.fullname" .) "controller") -}}
-# TODO 921 copy pasta as-is, but we can probably set this to the _controller_ version
+{{- $_ := set $podPreRender "name" (printf "%s-%s" (include "kong.fullname" .) "proxy") -}}
 {{- $_ := set $podPreRender "versionLabel" .Chart.AppVersion -}}
 
-{{- $containerConfig := .Values.deployment.controller.pod.container -}}
+# TODO 921 rename once the old block is gone
+{{- $containerConfig := .Values.deployment.kong.pod.container -}}
 {{- $containerPre := dict -}}
+{{- $serviceConfig := dict -}}
 {{- $_ := set $containerPre "admissionWebhook" .Values.admissionWebhook -}}
-{{- $_ := set $containerPre "env" (include "kong.ingressController.env" .) -}}
-{{- $_ := set $containerPre "disableProbes" .Values.ingressController.disableProbes -}}
-{{- $_ := set $containerPre "adminApi" .Values.ingressController.adminApi -}}
-{{- $_ := set $containerPre "serviceAccount" .Values.deployment.controller.pod.serviceAccount -}}
+{{- $_ := set $containerPre "enterprise" .Values.enterprise -}}
+
+{{- $_ := set $serviceConfig "admin" .Values.admin -}}
+{{- $_ := set $serviceConfig "proxy" .Values.proxy -}}
+{{- $_ := set $serviceConfig "udpProxy" .Values.udpProxy -}}
+{{- $_ := set $serviceConfig "status" .Values.status -}}
+{{- $_ := set $serviceConfig "cluster" .Values.cluster -}}
+{{- $_ := set $serviceConfig "manager" .Values.manager -}}
+{{- $_ := set $serviceConfig "portal" .Values.portal -}}
+{{- $_ := set $serviceConfig "portalapi" .Values.portalapi -}}
+{{- $_ := set $serviceConfig "clustertelemetry" .Values.clustertelemetry -}}
+{{- $_ := set $containerPre "svc" $serviceConfig -}}
+
+{{- $_ := set $containerPre "serviceAccount" .Values.deployment.kong.pod.serviceAccount -}}
 {{- $_ := set $containerPre "serviceAccountTokenName" (include "kong.serviceAccountTokenName" .) -}}
 {{- $_ := set $containerPre "serviceAccountName" (include "kong.serviceAccountName" .) -}}
 {{- $_ := set $containerConfig "pre" $containerPre -}}
 
-{{- $_ := set $podPreRender "container" (include "kong.controller-container-new" $containerConfig ) -}}
+{{- $_ := set $podPreRender "container" (include "kong.proxy-container-new" $containerConfig ) -}}
 
 {{- $preRender := dict -}}
 {{- $_ := set $preRender "deployment" $deployPreRender -}}
