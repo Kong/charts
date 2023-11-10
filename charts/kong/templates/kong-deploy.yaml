@@ -3,6 +3,8 @@
 {{- $deployConfig = (mustMerge $deployConfig .Values.deployment.kong) -}}
 {{- $deployPreRender := dict -}} {{/* collection of values rendered from includes, so that there's no risk of colliding with things from the merge */}}
 {{- $podPreRender := dict -}}
+{{- $containerConfig := .Values.deployment.kong.pod.container -}}
+{{- $containerPreRender := dict -}}
 
 # TODO 921 review how these names end up in practice with a "kong" release. we've historically
 # suggested a lot of example configurations that resulted in various "kong-kong" resources which,
@@ -27,6 +29,8 @@
 # unnecessary volumes doesn't really hurt us
 {{- $_ := set $deployPreRender "volumes" (include "kong.volumes" .) -}}
 {{- $_ := set $deployPreRender "userVolumes" (include "kong.userDefinedVolumes" .) -}}
+{{- $_ := set $containerPreRender "volumeMounts" (include "kong.volumeMounts" .) -}}
+{{- $_ := set $containerPreRender "userVolumeMounts" (include "kong.userDefinedVolumeMounts" .) -}}
 
 # TODO 921 ditto the deploy labels todo
 {{- $_ := set $podPreRender "component" "proxy" -}}
@@ -34,12 +38,9 @@
 {{- $_ := set $podPreRender "name" (printf "%s-%s" (include "kong.fullname" .) "proxy") -}}
 {{- $_ := set $podPreRender "versionLabel" .Chart.AppVersion -}}
 
-# TODO 921 rename once the old block is gone
-{{- $containerConfig := .Values.deployment.kong.pod.container -}}
-{{- $containerPre := dict -}}
 {{- $serviceConfig := dict -}}
-{{- $_ := set $containerPre "admissionWebhook" .Values.admissionWebhook -}}
-{{- $_ := set $containerPre "enterprise" .Values.enterprise -}}
+{{- $_ := set $containerPreRender "admissionWebhook" .Values.admissionWebhook -}}
+{{- $_ := set $containerPreRender "enterprise" .Values.enterprise -}}
 
 {{- $_ := set $serviceConfig "admin" .Values.admin -}}
 {{- $_ := set $serviceConfig "proxy" .Values.proxy -}}
@@ -50,12 +51,71 @@
 {{- $_ := set $serviceConfig "portal" .Values.portal -}}
 {{- $_ := set $serviceConfig "portalapi" .Values.portalapi -}}
 {{- $_ := set $serviceConfig "clustertelemetry" .Values.clustertelemetry -}}
-{{- $_ := set $containerPre "svc" $serviceConfig -}}
+{{- $_ := set $containerPreRender "svc" $serviceConfig -}}
 
-{{- $_ := set $containerPre "serviceAccount" .Values.deployment.kong.pod.serviceAccount -}}
-{{- $_ := set $containerPre "serviceAccountTokenName" (include "kong.serviceAccountTokenName" .) -}}
-{{- $_ := set $containerPre "serviceAccountName" (include "kong.serviceAccountName" .) -}}
-{{- $_ := set $containerConfig "pre" $containerPre -}}
+{{- $_ := set $containerPreRender "serviceAccount" .Values.deployment.kong.pod.serviceAccount -}}
+{{- $_ := set $containerPreRender "serviceAccountTokenName" (include "kong.serviceAccountTokenName" .) -}}
+{{- $_ := set $containerPreRender "serviceAccountName" (include "kong.serviceAccountName" .) -}}
+
+# TODO 921 there's some duplication here from pre.container, but that allows everything in env
+# that was previously at the root root (.Values) to remain at the new scoped root, rather than
+# having some things in . and some things in .envPre or whatever
+{{- $envRoot := dict -}}
+{{- $_ := set $envRoot "ingressControllerEnabled" .Values.deployment.controller.enabled -}}
+{{- $_ := set $envRoot "svc" $serviceConfig -}}
+{{- $_ := set $envRoot "certificates" .Values.certificates -}}
+{{- $_ := set $envRoot "enterprise" .Values.enterprise -}}
+{{- $_ := set $containerPreRender "envRoot" $envRoot -}}
+# TODO decide which strat to use, separate env or just shove everything into container
+{{- $envRoot := dict -}}
+{{- $_ := set $containerPreRender "ingressControllerEnabled" .Values.deployment.controller.enabled -}}
+{{- $_ := set $containerPreRender "Capabilities" .Capabilities -}}
+{{- $_ := set $containerPreRender "Release" .Release -}}
+{{- $_ := set $containerPreRender "dblessConfig" .Values.dblessConfig -}}
+{{- $_ := set $containerPreRender "plugins" .Values.plugins -}}
+# TODO 921 we should probably take this opportunity to drop the postgresql subchart. keeping for
+# now to try and reduce scope (hah)
+{{- $_ := set $containerPreRender "postgresql" .Values.postgresql -}}
+
+# TODO 921 figure this initcontainer out. it needs stuff like env and volumemounts figured out
+# first, and then needs to be injected into a prerender var, since we don't know whether
+# we're rendering kong or the controller here
+{{/*
+      {{- if .Values.deployment.kong.enabled }}
+      initContainers:
+      - name: clear-stale-pid
+        image: {{ include "kong.getRepoTag" .Values.image }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        securityContext:
+        {{ toYaml .Values.containerSecurityContext | nindent 10 }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        command:
+        - "rm"
+        - "-vrf"
+        - "$KONG_PREFIX/pids"
+        env:
+        {{- include "kong.env" . | nindent 8 }}
+        volumeMounts:
+        {{- include "kong.volumeMounts" . | nindent 8 }}
+        {{- if .Values.deployment.initContainers }}
+        {{- toYaml .Values.deployment.initContainers | nindent 6 }}
+        {{- end }}
+        {{- if (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) }}
+        {{- include "kong.wait-for-db" . | nindent 6 }}
+        {{- end }}
+      {{- end }} # TODO 921 END initContainers clear-stale-pid
+*/}}
+{{- $initContainers := list -}}
+{{- range .Values.deployment.kong.pod.initContainers -}}
+  {{- $initContainers = mustAppend $initContainers . -}}
+{{- end -}}
+{{- $_ := set $podPreRender "initContainers" $initContainers -}}
+
+{{- $volumeMounts := list -}}
+{{- $volumeMounts = mustAppend $volumeMounts (dict "foo" "bar") -}}
+
+{{- $_ := set $containerConfig "pre" $containerPreRender -}}
 
 {{- $_ := set $podPreRender "container" (include "kong.proxy-container-new" $containerConfig ) -}}
 

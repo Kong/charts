@@ -49,7 +49,7 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
 
 {{- define "kong.postgresql.fullname" -}}
-{{- $name := default "postgresql" .Values.postgresql.nameOverride -}}
+{{- $name := default "postgresql" .postgresql.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
@@ -466,104 +466,6 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- (printf "%s/%s" ( include "kong.namespace" . ) ( default ( printf "%s-proxy" (include "kong.fullname" . )) $proxyOverride )) -}}
 {{- end -}}
 
-# TODO 921 everything here would need to become relative. some of it relies on
-# external values though, e.g. .Values.ingressController.ingressClass and
-# .Values.ingressController.admissionWebhook.address presumably remain where
-# they are.
-{{- define "kong.ingressController.env" -}}
-{{/*
-    ====== AUTO-GENERATED ENVIRONMENT VARIABLES ======
-*/}}
-
-
-{{- $autoEnv := dict -}}
-  {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY" true -}}
-  {{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" ( include "kong.controller-publish-service" . ) -}}
-  {{- $_ := set $autoEnv "CONTROLLER_INGRESS_CLASS" .Values.ingressController.ingressClass -}}
-  {{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
-
-  {{- if .Values.ingressController.admissionWebhook.enabled }}
-    {{- $address := (default "0.0.0.0" .Values.ingressController.admissionWebhook.address) -}}
-    {{- $_ := set $autoEnv "CONTROLLER_ADMISSION_WEBHOOK_LISTEN" (printf "%s:%d" $address (int64 .Values.ingressController.admissionWebhook.port)) -}}
-  {{- end }}
-  {{- if (not (eq (len .Values.ingressController.watchNamespaces) 0)) }}
-    {{- $_ := set $autoEnv "CONTROLLER_WATCH_NAMESPACE" (.Values.ingressController.watchNamespaces | join ",") -}}
-  {{- end }}
-
-{{/*
-    ====== ADMIN API CONFIGURATION ======
-*/}}
-
-  {{- if .Values.ingressController.gatewayDiscovery.enabled -}}
-    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_SVC" (include "kong.adminSvc" . ) -}}
-  {{- else -}}
-    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_URL" (include "kong.adminLocalURL" .) -}}
-  {{- end -}}
-
-  {{- if .Values.ingressController.adminApi.tls.client.enabled }}
-    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_CLIENT_CERT_FILE" "/etc/secrets/admin-api-cert/tls.crt" -}}
-    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_CLIENT_KEY_FILE" "/etc/secrets/admin-api-cert/tls.key" -}}
-  {{- end }}
-
-{{/*
-    ====== KONNECT ENVIRONMENT VARIABLES ======
-*/}}
-
-{{- if .Values.ingressController.konnect.enabled }}
-  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
-  {{- fail (printf "Konnect sync is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
-  {{- end }}
-
-  {{- if not .Values.ingressController.gatewayDiscovery.enabled }}
-  {{- fail "ingressController.gatewayDiscovery.enabled has to be true when ingressController.konnect.enabled"}}
-  {{- end }}
-
-  {{- $konnect := .Values.ingressController.konnect -}}
-  {{- $_ := required "ingressController.konnect.runtimeGroupID is required when ingressController.konnect.enabled" $konnect.runtimeGroupID -}}
-
-  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_SYNC_ENABLED" true -}}
-  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_RUNTIME_GROUP_ID" $konnect.runtimeGroupID -}}
-  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_ADDRESS" (printf "https://%s" .Values.ingressController.konnect.apiHostname) -}}
-
-  {{- $tlsCert := include "secretkeyref" (dict "name" $konnect.tlsClientCertSecretName "key" "tls.crt") -}}
-  {{- $tlsKey := include "secretkeyref" (dict "name" $konnect.tlsClientCertSecretName "key" "tls.key") -}}
-  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_TLS_CLIENT_CERT" $tlsCert -}}
-  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_TLS_CLIENT_KEY" $tlsKey -}}
-
-  {{- if $konnect.license.enabled }}
-  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_LICENSING_ENABLED" true -}}
-  {{- end }}
-{{- end }}
-
-{{/*
-    ====== USER-SET ENVIRONMENT VARIABLES ======
-*/}}
-
-{{- $userEnv := dict -}}
-{{- range $key, $val := .Values.deployment.controller.pod.container.env }}
-  {{- $upper := upper $key -}}
-  {{- $var := printf "CONTROLLER_%s" $upper -}}
-  {{- $_ := set $userEnv $var $val -}}
-{{- end -}}
-
-{{/*
-    ====== CUSTOM-SET INGRESS CONTROLLER ENVIRONMENT VARIABLES ======
-*/}}
-
-{{- $customIngressEnv := dict -}}
-{{- range $key, $val := .Values.ingressController.customEnv }}
-  {{- $upper := upper $key -}}
-  {{- $_ := set $customIngressEnv $upper $val -}}
-{{- end -}}
-
-{{/*
-      ====== MERGE AND RENDER ENV BLOCK ======
-*/}}
-
-{{- $completeEnv := mergeOverwrite $autoEnv $userEnv $customIngressEnv -}}
-{{- template "kong.renderEnv" $completeEnv -}}
-
-{{- end -}}
 
 {{- define "kong.userDefinedVolumes" -}}
 {{- if .Values.deployment.userDefinedVolumes }}
@@ -816,12 +718,14 @@ The name of the Service which will be used by the controller to update the Ingre
 
 {{- end -}}
 
+{{/* TODO 921 this gets used for any Kong env. the migrations and init paths here don't yet
+     build a dict, and so won't work without the removed .Values */}}
 {{- define "kong.plugins" -}}
 {{ $myList := list "bundled" }}
-{{- range .Values.plugins.configMaps -}}
+{{- range .pre.plugins.configMaps -}}
 {{- $myList = append $myList .pluginName -}}
 {{- end -}}
-{{- range .Values.plugins.secrets -}}
+{{- range .pre.plugins.secrets -}}
   {{ $myList = append $myList .pluginName -}}
 {{- end }}
 {{- $myList | uniq | join "," -}}
@@ -929,236 +833,6 @@ The name of the Service which will be used by the controller to update the Ingre
   {{- include "controller.adminApiCertVolumeMount" . | nindent 2 }}
 {{- end -}}
 
-{{- define "kong.proxy-container-new" -}}
-- name: "proxy"
-  image: {{ include "kong.getRepoTag" .image }}
-  imagePullPolicy: {{ .image.pullPolicy }}
-  securityContext:
-  {{ toYaml .securityContext | nindent 4 }}
-{{/*   TODO 921 this helper still pulls from the old .Values.env. We need to pass in the deployment.kong.pod.container.env
-  env:
-  {{- (include "kong.no_daemon_env" .) | nindent 2 }}
-*/}}
-  lifecycle:
-    {{- toYaml .lifecycle | nindent 4 }}
-  ports:
-  {{- if (and .pre.svc.admin.http.enabled .pre.svc.admin.enabled) }}
-  - name: admin
-    containerPort: {{ .pre.svc.admin.http.containerPort }}
-    {{- if .pre.svc.admin.http.hostPort }}
-    hostPort: {{ .pre.svc.admin.http.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.admin.tls.enabled .pre.svc.admin.enabled) }}
-  - name: admin-tls
-    containerPort: {{ .pre.svc.admin.tls.containerPort }}
-    {{- if .pre.svc.admin.tls.hostPort }}
-    hostPort: {{ .pre.svc.admin.tls.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.proxy.http.enabled .pre.svc.proxy.enabled) }}
-  - name: proxy
-    containerPort: {{ .pre.svc.proxy.http.containerPort }}
-    {{- if .pre.svc.proxy.http.hostPort }}
-    hostPort: {{ .pre.svc.proxy.http.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.proxy.tls.enabled .pre.svc.proxy.enabled)}}
-  - name: proxy-tls
-    containerPort: {{ .pre.svc.proxy.tls.containerPort }}
-    {{- if .pre.svc.proxy.tls.hostPort }}
-    hostPort: {{ .pre.svc.proxy.tls.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- range .pre.svc.proxy.stream }}
-  - name: stream{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
-    containerPort: {{ .containerPort }}
-    {{- if .hostPort }}
-    hostPort: {{ .hostPort }}
-    {{- end}}
-    protocol: {{ .protocol }}
-  {{- end }}
-  {{- range .pre.svc.udpProxy.stream }}
-  - name: streamudp-{{ .containerPort }}
-    containerPort: {{ .containerPort }}
-    {{- if .hostPort }}
-    hostPort: {{ .hostPort }}
-    {{- end}}
-    protocol: {{ .protocol }}
-  {{- end }}
-  {{- if (and .pre.svc.status.http.enabled .pre.svc.status.enabled)}}
-  - name: status
-    containerPort: {{ .pre.svc.status.http.containerPort }}
-    {{- if .pre.svc.status.http.hostPort }}
-    hostPort: {{ .pre.svc.status.http.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.status.tls.enabled .pre.svc.status.enabled) }}
-  - name: status-tls
-    containerPort: {{ .pre.svc.status.tls.containerPort }}
-    {{- if .pre.svc.status.tls.hostPort }}
-    hostPort: {{ .pre.svc.status.tls.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.cluster.tls.enabled .pre.svc.cluster.enabled) }}
-  - name: cluster-tls
-    containerPort: {{ .pre.svc.cluster.tls.containerPort }}
-    {{- if .pre.svc.cluster.tls.hostPort }}
-    hostPort: {{ .pre.svc.cluster.tls.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if .pre.enterprise.enabled }}
-  {{- if (and .pre.svc.manager.http.enabled .pre.svc.manager.enabled) }}
-  - name: manager
-    containerPort: {{ .pre.svc.manager.http.containerPort }}
-    {{- if .pre.svc.manager.http.hostPort }}
-    hostPort: {{ .pre.svc.manager.http.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.manager.tls.enabled .pre.svc.manager.enabled) }}
-  - name: manager-tls
-    containerPort: {{ .pre.svc.manager.tls.containerPort }}
-    {{- if .pre.svc.manager.tls.hostPort }}
-    hostPort: {{ .pre.svc.manager.tls.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.portal.http.enabled .pre.svc.portal.enabled) }}
-  - name: portal
-    containerPort: {{ .pre.svc.portal.http.containerPort }}
-    {{- if .pre.svc.portal.http.hostPort }}
-    hostPort: {{ .pre.svc.portal.http.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.portal.tls.enabled .pre.svc.portal.enabled) }}
-  - name: portal-tls
-    containerPort: {{ .pre.svc.portal.tls.containerPort }}
-    {{- if .pre.svc.portal.tls.hostPort }}
-    hostPort: {{ .pre.svc.portal.tls.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.portalapi.http.enabled .pre.svc.portalapi.enabled) }}
-  - name: portalapi
-    containerPort: {{ .pre.svc.portalapi.http.containerPort }}
-    {{- if .pre.svc.portalapi.http.hostPort }}
-    hostPort: {{ .pre.svc.portalapi.http.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.portalapi.tls.enabled .pre.svc.portalapi.enabled) }}
-  - name: portalapi-tls
-    containerPort: {{ .pre.svc.portalapi.tls.containerPort }}
-    {{- if .pre.svc.portalapi.tls.hostPort }}
-    hostPort: {{ .pre.svc.portalapi.tls.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- if (and .pre.svc.clustertelemetry.tls.enabled .pre.svc.clustertelemetry.enabled) }}
-  - name: clustert-tls
-    containerPort: {{ .pre.svc.clustertelemetry.tls.containerPort }}
-    {{- if .pre.svc.clustertelemetry.tls.hostPort }}
-    hostPort: {{ .pre.svc.clustertelemetry.tls.hostPort }}
-    {{- end}}
-    protocol: TCP
-  {{- end }}
-  {{- end }}
-{{/* TODO 921 whatever we're doing for volume mounts
-  volumeMounts:
-  {{- include "kong.volumeMounts" . | nindent 4 }}
-  {{- include "kong.userDefinedVolumeMounts" .Values.deployment | nindent 4 }}
-*/}}
-  readinessProbe:
-{{ toYaml .readinessProbe | indent 4 }}
-{{/* TODO 921 this requires controller-related keys we aren't passing in yet
-{{ include "kong.proxy.compatibleReadiness" . | indent 4 }}
-*/}}
-  livenessProbe:
-{{ toYaml .livenessProbe | indent 4 }}
-  {{- if .startupProbe }}
-  startupProbe:
-{{ toYaml .startupProbe | indent 4 }}
-  {{- end }}
-  resources:
-{{ toYaml .resources | indent 4 }}
-{{- end -}}
-
-{{- define "kong.controller-container-new" -}}
-- name: ingress-controller
-  securityContext:
-{{ toYaml .securityContext | nindent 4 }}
-  args:
-  {{ if .args}}
-  {{- range $val := .args }}
-  - {{ $val }}
-  {{- end }}
-  {{- end }}
-  ports:
-  {{- if .pre.admissionWebhook.enabled }}
-  - name: webhook
-    containerPort: {{ .pre.admissionWebhook.port }}
-    protocol: TCP
-  {{- end }}
-  {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .image)) -}}
-  - name: cmetrics
-    containerPort: 10255
-    protocol: TCP
-  {{- end }}
-  env:
-  - name: POD_NAME
-    valueFrom:
-      fieldRef:
-        apiVersion: v1
-        fieldPath: metadata.name
-  - name: POD_NAMESPACE
-    valueFrom:
-      fieldRef:
-        apiVersion: v1
-        fieldPath: metadata.namespace
-# TODO 921 this is not currently designed to be at all relative and relies on
-# external sections. the template invoker renders this from the root and passes
-# it in as .env
-  env:
-{{- .pre.env  | indent 4 }}
-  image: {{ include "kong.getRepoTag" .image }}
-  imagePullPolicy: {{ .image.pullPolicy }}
-{{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
-     Helm value interpretation doesn't let you replace the default HTTP checks with any other
-     check type, and all HTTP checks freeze when a debugger pauses operation.
-     Setting disableReadiness to ANY value disables the probes.
-*/}}
-{{- if (not (hasKey .pre "disableProbes")) }}
-  readinessProbe:
-{{ toYaml .readinessProbe | indent 4 }}
-  livenessProbe:
-{{ toYaml .livenessProbe | indent 4 }}
-{{- end }}
-  resources:
-{{ toYaml .resources | indent 4 }}
-  volumeMounts:
-{{- if .pre.admissionWebhook.enabled }}
-  - name: webhook-cert
-    mountPath: /admission-webhook
-    readOnly: true
-{{- end }}
-{{- if (and (not .pre.serviceAccount.automountServiceAccountToken) (or .pre.serviceAccount.create .pre.serviceAccount.name)) }}
-  - name: {{ .pre.serviceAccountTokenName }}
-    mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-    readOnly: true
-{{- end }}
-  {{- include "kong.userDefinedVolumeMounts" . | nindent 2 }}
-  # TODO 921 relies on some content under .ingressController
-  {{- include "controller.adminApiCertVolumeMount" .pre | nindent 2 }}
-{{- end -}}
 
 {{- define "secretkeyref" -}}
 valueFrom:
@@ -1414,35 +1088,6 @@ the template that it itself is using form the above sections.
 
 {{- end -}}
 
-{{/*
-Given a dictionary of variable=value pairs, render a container env block.
-Environment variables are sorted alphabetically
-*/}}
-{{- define "kong.renderEnv" -}}
-
-{{- $dict := . -}}
-
-{{- range keys . | sortAlpha }}
-{{- $val := pluck . $dict | first -}}
-{{- $valueType := printf "%T" $val -}}
-{{ if eq $valueType "map[string]interface {}" }}
-- name: {{ . }}
-{{ toYaml $val | indent 2 -}}
-{{- else if eq $valueType "string" }}
-{{- if regexMatch "valueFrom" $val }}
-- name: {{ . }}
-{{ $val | indent 2 }}
-{{- else }}
-- name: {{ . }}
-  value: {{ $val | quote }}
-{{- end }}
-{{- else }}
-- name: {{ . }}
-  value: {{ $val | quote }}
-{{- end }}
-{{- end -}}
-
-{{- end -}}
 
 {{- define "kong.wait-for-postgres" -}}
 - name: wait-for-postgres

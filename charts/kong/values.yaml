@@ -151,6 +151,7 @@ deployment:
           periodSeconds: 10
           successThreshold: 1
           failureThreshold: 3
+        lifecycle: {}
         securityContext:
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
@@ -193,9 +194,6 @@ deployment:
       # rollingUpdate:
       #   maxSurge: "100%"
       #   maxUnavailable: "0%"
-    sidecarContainers: []
-    userDefinedVolumes: []
-    initContainers: []
     pod:
       annotations: {} # .podAnnotations, for the controller
       # TODO 921 this should probably go elsewhere
@@ -225,6 +223,9 @@ deployment:
       # Ref: https://kubernetes.io/docs/user-guide/node-selection/
       nodeSelector: {}
       securityContext: {}
+      sidecarContainers: []
+      userDefinedVolumes: []
+      initContainers: []
       container:
         args: []
         env:
@@ -272,6 +273,15 @@ deployment:
           periodSeconds: 10
           successThreshold: 1
           failureThreshold: 3
+        lifecycle:
+          preStop:
+            exec:
+              # kong quit has a default timeout of 10 seconds, and a default wait of 0 seconds.
+              # Note: together they should be less than the terminationGracePeriodSeconds setting below.
+              command:
+                - kong
+                - quit
+                - '--wait=15'
         securityContext:
           readOnlyRootFilesystem: true
           allowPrivilegeEscalation: false
@@ -282,7 +292,9 @@ deployment:
           capabilities:
             drop:
             - ALL
-        userDefinedVolumeMounts: []
+        userDefinedVolumeMounts:
+        - name: webhook-cert
+          mountPath: /example
         # If you want to specify resources, uncomment the following
         # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
         resources: {}
@@ -882,8 +894,8 @@ ingressController:
   # kubernetes resources, so it doesn't necessarily fit under the `deployment`
   # section.
   gatewayDiscovery:
-    enabled: false
-    generateAdminApiService: false
+    enabled: true
+    generateAdminApiService: true
     adminApiService:
       namespace: ""
       name: ""

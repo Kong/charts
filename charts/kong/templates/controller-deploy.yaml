@@ -23,10 +23,12 @@
 # pod or the other, e.g. the controller does not need the prefix dir. as a placeholder, including
 # unnecessary volumes doesn't really hurt us
 {{- $_ := set $deployPreRender "volumes" (include "kong.volumes" .) -}}
+# TODO 921 this is not pulling from the new location
 {{- $_ := set $deployPreRender "userVolumes" (include "kong.userDefinedVolumes" .) -}}
 
 # TODO 921 ditto the deploy labels todo
 {{- $_ := set $podPreRender "component" "controller" -}}
+{{- $_ := set $podPreRender "app" (include "kong.fullname" .) -}}
 {{- $_ := set $podPreRender "labels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $podPreRender "name" (printf "%s-%s" (include "kong.fullname" .) "controller") -}}
 # TODO 921 copy pasta as-is, but we can probably set this to the _controller_ version
@@ -35,7 +37,8 @@
 {{- $containerConfig := .Values.deployment.controller.pod.container -}}
 {{- $containerPre := dict -}}
 {{- $_ := set $containerPre "admissionWebhook" .Values.admissionWebhook -}}
-{{- $_ := set $containerPre "env" (include "kong.ingressController.env" .) -}}
+# TODO 921 still global scoped
+{{- $_ := set $containerPre "env" (include "kong.env.controller" .) -}}
 {{- $_ := set $containerPre "disableProbes" .Values.ingressController.disableProbes -}}
 {{- $_ := set $containerPre "adminApi" .Values.ingressController.adminApi -}}
 {{- $_ := set $containerPre "serviceAccount" .Values.deployment.controller.pod.serviceAccount -}}
