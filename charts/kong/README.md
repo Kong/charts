@@ -508,9 +508,9 @@ event you need to recover from unintended CRD deletion.
 
 ### InitContainers
 
-The chart is able to deploy initcontainers along with Kong. This can be very
+The chart is able to deploy initContainers along with Kong. This can be very
 useful when there's a requirement for custom initialization. The
-`deployment.initcontainers` field in values.yaml takes an array of objects that
+`deployment.initContainers` field in values.yaml takes an array of objects that
 get appended as-is to the existing `spec.template.initContainers` array in the
 kong deployment resource.
 
