@@ -17,14 +17,20 @@
 # in ingress chart this is relying on different fullnames. can't simply format since there multiple keys,
 # need to pass a suffix to the helper
 {{- $_ := set $deployPreRender "selectorMatchLabels" (include "kong.controllerSelectorLabels" .) -}}
+{{- $_ := set $deployPreRender "serviceAccount" .Values.serviceAccount -}}
 {{- $_ := set $deployPreRender "serviceAccountTokenName" (include "kong.serviceAccountTokenName" .) -}}
 {{- $_ := set $deployPreRender "serviceAccountName" (include "kong.serviceAccountName" .) -}}
 # TODO 921 this helper needs to be split somehow. as-is it includes things that are only useful for one
 # pod or the other, e.g. the controller does not need the prefix dir. as a placeholder, including
 # unnecessary volumes doesn't really hurt us
+{{/*
 {{- $_ := set $deployPreRender "volumes" (include "kong.volumes" .) -}}
 # TODO 921 this is not pulling from the new location
 {{- $_ := set $deployPreRender "userVolumes" (include "kong.userDefinedVolumes" .) -}}
+*/}}
+{{- $_ := set $deployPreRender "volumes" "" -}}
+# TODO 921 this is not pulling from the new location
+{{- $_ := set $deployPreRender "userVolumes" "" -}}
 
 # TODO 921 ditto the deploy labels todo
 {{- $_ := set $podPreRender "component" "controller" -}}
@@ -41,7 +47,7 @@
 {{- $_ := set $containerPre "env" (include "kong.env.controller" .) -}}
 {{- $_ := set $containerPre "disableProbes" .Values.ingressController.disableProbes -}}
 {{- $_ := set $containerPre "adminApi" .Values.ingressController.adminApi -}}
-{{- $_ := set $containerPre "serviceAccount" .Values.deployment.controller.pod.serviceAccount -}}
+{{- $_ := set $containerPre "serviceAccount" .Values.serviceAccount -}}
 {{- $_ := set $containerPre "serviceAccountTokenName" (include "kong.serviceAccountTokenName" .) -}}
 {{- $_ := set $containerPre "serviceAccountName" (include "kong.serviceAccountName" .) -}}
 {{- $_ := set $containerConfig "pre" $containerPre -}}

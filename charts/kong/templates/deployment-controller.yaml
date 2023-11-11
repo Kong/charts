@@ -79,10 +79,10 @@ spec:
       {{- if .pod.priorityClassName }}
       priorityClassName: "{{ .pod.priorityClassName }}"
       {{- end }}
-      {{- if or .pod.serviceAccount.create .pod.serviceAccount.name }}
+      {{- if or .pre.deployment.serviceAccount.create .pre.deployment.serviceAccount.name }}
       serviceAccountName: {{ .pre.deployment.serviceAccountName }}
       {{- end }}
-      {{- if (and (or .pod.serviceAccount.create .pod.serviceAccount.name) .pod.serviceAccount.automountServiceAccountToken) }}
+      {{- if (and (or .pre.deployment.serviceAccount.create .pre.deployment.serviceAccount.name) .pre.deployment.serviceAccount.automountServiceAccountToken) }}
       automountServiceAccountToken: true
       {{- else }}
       automountServiceAccountToken: false

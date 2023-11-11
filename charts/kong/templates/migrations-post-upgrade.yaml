@@ -1,5 +1,5 @@
 {{- if .Values.deployment.kong.enabled }}
-{{- if (and .Values.migrations.postUpgrade (not (eq .Values.env.database "off"))) }}
+{{- if (and .Values.migrations.postUpgrade (not (eq .Values.deployment.kong.pod.container.env.database "off"))) }}
 # Why is this Job duplicated and not using only helm hooks?
 # See: https://github.com/helm/charts/pull/7362
 apiVersion: batch/v1
@@ -29,29 +29,29 @@ spec:
       {{- range $key, $value := .Values.migrations.annotations }}
         {{ $key }}: {{ $value | quote }}
       {{- end }}
-      {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
+      {{- if (and (not .Values.deployment.kong.pod.automountServiceAccountToken) (or .Values.serviceAccount.create .Values.serviceAccount.name)) }}
         kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
       {{- end }}
       {{- end }}
     spec:
-      {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
+      {{- if or .Values.serviceAccount.create .Values.serviceAccount.name }}
       serviceAccountName: {{ template "kong.serviceAccountName" . }}
       {{- end }}
-      {{- if (and (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name) .Values.deployment.serviceAccount.automountServiceAccountToken) }}
+      {{- if (and (or .Values.serviceAccount.create .Values.serviceAccount.name) .Values.serviceAccount.automountServiceAccountToken) }}
       automountServiceAccountToken: true
       {{- else }}
       automountServiceAccountToken: false
       {{ end }}
-      {{- if .Values.image.pullSecrets }}
+      {{- if .Values.deployment.kong.pod.container.image.pullSecrets }}
       imagePullSecrets:
-      {{- range .Values.image.pullSecrets }}
+      {{- range .Values.deployment.kong.pod.container.image.pullSecrets }}
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      {{- if (or (and (.Values.postgresql.enabled) .Values.waitImage.enabled) .Values.deployment.initContainers) }}
+      {{- if (or (and (.Values.postgresql.enabled) .Values.waitImage.enabled) .Values.deployment.kong.pod.initContainers) }}
       initContainers:
-      {{- if .Values.deployment.initContainers }}
-      {{- toYaml .Values.deployment.initContainers | nindent 6 }}
+      {{- if .Values.deployment.kong.pod.initContainers }}
+      {{- toYaml .Values.deployment.kong.pod.initContainers | nindent 6 }}
       {{- end }}
       {{- if (and (.Values.postgresql.enabled) .Values.waitImage.enabled) }}
       {{- include "kong.wait-for-postgres" . | nindent 6 }}
@@ -62,27 +62,33 @@ spec:
       {{- toYaml .Values.migrations.sidecarContainers | nindent 6 }}
       {{- end }}
       - name: {{ template "kong.name" . }}-post-upgrade-migrations
-        image: {{ include "kong.getRepoTag" .Values.image }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: {{ include "kong.getRepoTag" .Values.deployment.kong.pod.container.image }}
+        imagePullPolicy: {{ .Values.deployment.kong.pod.container.image.pullPolicy }}
         securityContext:
-        {{ toYaml .Values.containerSecurityContext | nindent 10 }} 
+        {{ toYaml .Values.deployment.kong.pod.container.securityContext | nindent 10 }} 
+{{/* TODO 921 needs the same inputs as the main proxy container
         env:
+*/}}
         {{- include "kong.no_daemon_env" . | nindent 8 }}
         args: [ "kong", "migrations", "finish" ]
+{{/* TODO 921 volume stuff is a mess
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 8 }}
-        {{- include "kong.userDefinedVolumeMounts" .Values.deployment | nindent 8 }}
+        {{- include "kong.userDefinedVolumeMounts" .Values.deployment.kong | nindent 8 }}
+*/}}
         resources:
         {{- toYaml .Values.migrations.resources | nindent 10 }}
+{{/* TODO 921 wat why was this not just a value dump
       securityContext:
       {{- include "kong.podsecuritycontext" . | nindent 8 }}
-      {{- if .Values.nodeSelector }}
+*/}}
+      {{- if .Values.deployment.kong.pod.nodeSelector }}
       nodeSelector:
-      {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- toYaml .Values.deployment.kong.pod.nodeSelector | nindent 8 }}
       {{- end }}
-      {{- if .Values.tolerations }}
+      {{- if .Values.deployment.kong.pod.tolerations }}
       tolerations:
-      {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- toYaml .Values.deployment.kong.pod.tolerations | nindent 8 }}
       {{- end }}
       restartPolicy: OnFailure
       volumes:

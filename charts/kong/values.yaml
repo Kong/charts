@@ -211,9 +211,10 @@ deployment:
     # minReadySeconds: 60
     pod:
       labels: {}
-      annotations:
-        kuma.io/gateway: enabled
-        traffic.sidecar.istio.io/includeInboundPorts: ""
+      annotations: {}
+      # TODO 921 whoever decided that these needed to evaluate templates is the bane of my existence
+      # kuma.io/gateway: enabled
+      # traffic.sidecar.istio.io/includeInboundPorts: ""
       automountServiceAccountToken: false
       hostNetwork: false
       # Affinity for pod assignment
