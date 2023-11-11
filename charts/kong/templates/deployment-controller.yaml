@@ -42,10 +42,10 @@ spec:
   template:
     metadata:
       annotations:
-        {{/* # TODO 921 some keys in the pod template end up being from the deployment dict, so probably no separate define 
+        {{/* # NOTE 921 some keys in the pod template end up being from the deployment dict, so probably no separate define 
              # there's no obvious reason to separate them, since there can only be one per Deployment anyway
         */ -}}
-        {{- if (and (not .pod.serviceAccount.automountServiceAccountToken) (or .pod.serviceAccount.create .pod.serviceAccount.name)) }}
+        {{- if (and (not .pod.automountServiceAccountToken) (or .pre.deployment.serviceAccount.create .pre.deployment.serviceAccount.name)) }}
         {{/* # TODO 921 needs to be passed in as-is. possibly should be made relative, since the generator will attempt to use the same
              # name, but lives in a separate service-account.yaml template, so vov
              # TODO above is complete but keeping the note around for now
@@ -88,7 +88,7 @@ spec:
       automountServiceAccountToken: false
       {{ end }}
       {{- if .pod.container.image.pullSecrets }}
-      # TODO 921 this is out of place, but the rest of .image _does_ live
+      # NOTE 921 this is out of place, but the rest of .image _does_ live
       # inside the container, so probably just keep it there, rather than
       # separating into .pod.imagePullSecrets
       imagePullSecrets:

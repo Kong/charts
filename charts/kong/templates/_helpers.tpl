@@ -62,10 +62,10 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 Create the name of the service account to use
 */}}
 {{- define "kong.serviceAccountName" -}}
-{{- if .Values.deployment.serviceAccount.create -}}
-    {{ default (include "kong.fullname" .) .Values.deployment.serviceAccount.name }}
+{{- if .Values.serviceAccount.create -}}
+    {{ default (include "kong.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.deployment.serviceAccount.name }}
+    {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
@@ -476,11 +476,11 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- define "kong.volumes" -}}
 - name: {{ template "kong.fullname" . }}-prefix-dir
   emptyDir:
-    sizeLimit: {{ .Values.deployment.prefixDir.sizeLimit }}
+    sizeLimit: {{ .Values.deployment.kong.pod.container.prefixDir.sizeLimit }}
 - name: {{ template "kong.fullname" . }}-tmp
   emptyDir:
-    sizeLimit: {{ .Values.deployment.tmpDir.sizeLimit }}
-{{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
+    sizeLimit: {{ .Values.deployment.kong.pod.container.tmpDir.sizeLimit }}
+{{- if (and (not .Values.serviceAccount.automountServiceAccountToken) (or .Values.serviceAccount.create .Values.serviceAccount.name)) }}
 - name: {{ template "kong.serviceAccountTokenName" . }}
   {{- /* Due to GKE versions (e.g. v1.23.15-gke.1900) we need to handle pre-release part of the version as well.
   See the related documentation of semver module that Helm depends on for semverCompare:
@@ -824,7 +824,7 @@ The name of the Service which will be used by the controller to update the Ingre
     mountPath: /admission-webhook
     readOnly: true
 {{- end }}
-{{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
+{{- if (and (not .Values.serviceAccount.automountServiceAccountToken) (or .Values.serviceAccount.create .Values.serviceAccount.name)) }}
   - name: {{ template "kong.serviceAccountTokenName" . }}
     mountPath: /var/run/secrets/kubernetes.io/serviceaccount
     readOnly: true

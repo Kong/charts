@@ -1,4 +1,4 @@
-{{- if  .Values.deployment.test.enabled }}
+{{- if  .Values.test.enabled }}
 ---
 apiVersion: v1
 kind: Pod
