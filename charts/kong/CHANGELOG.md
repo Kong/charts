@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+* The default interval should be 30s to support the rate of 1m of the official [Kong Grafana dashboard](https://grafana.com/grafana/dashboards/7424-kong-official/).
+  [#941](https://github.com/Kong/charts/pull/941)
+
 ## 2.31.0
 
 ### Improvements

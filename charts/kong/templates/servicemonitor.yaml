@@ -17,6 +17,8 @@ spec:
     scheme: http
     {{- if .Values.serviceMonitor.interval }}
     interval: {{ .Values.serviceMonitor.interval }}
+    {{- else }}
+    interval: 30s
     {{- end }}
     {{- if .Values.serviceMonitor.honorLabels }}
     honorLabels: true
@@ -29,6 +31,8 @@ spec:
     scheme: http
     {{- if .Values.serviceMonitor.interval }}
     interval: {{ .Values.serviceMonitor.interval }}
+    {{- else }}
+    interval: 30s
     {{- end }}
     {{- if .Values.serviceMonitor.honorLabels }}
     honorLabels: true
