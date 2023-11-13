@@ -4,7 +4,7 @@
            (semverCompare "< 2.10" (include "kong.effectiveVersion" .Values.controller.ingressController.image))
 -}}
     {{- fail (printf `
-⚠️ Warning!
+❌ Error!
 
 "kong/ingress" chart in version 0.10.0 has introduced "gateway.env.router_flavor" value defaulting to "expressions".
 "expressions" router flavor is not supported with Kong Ingress Controller %q that you're using.
@@ -27,7 +27,7 @@ gateway:
            (not (contains "ExpressionRoutes=true" (default "" .Values.controller.ingressController.env.feature_gates)))
            (semverCompare "< 3.0" (include "kong.effectiveVersion" .Values.controller.ingressController.image)) -}}
     {{- fail (printf `
-⚠️ Warning!
+❌ Error!
 
 "kong/ingress" chart in version 0.10.0 has introduced "gateway.env.router_flavor" value defaulting to "expressions".
 You're using Kong Ingress Controller version %q which supports this feature only when feature flag "ExpressionRoutes=true" is set.

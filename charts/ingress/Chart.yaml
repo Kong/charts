@@ -12,12 +12,12 @@ version: 0.10.0
 appVersion: "3.4"
 dependencies:
   - name: kong
-    version: ">=2.31.0"
-    repository: https://charts.konghq.com
+    version: ">=2.32.0"
+    repository: file://../kong/
     alias: controller
     condition: controller.enabled
   - name: kong
-    version: ">=2.31.0"
-    repository: https://charts.konghq.com
+    version: ">=2.32.0"
+    repository: file://../kong/
     alias: gateway
     condition: gateway.enabled

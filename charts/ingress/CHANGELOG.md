@@ -11,10 +11,10 @@
   - < `2.10.0`:
     1. Bump the controller version to >= `3.0.0`.
     1. Set `gateway.env.router_flavor` to `traditional` to keep using the old router flavor.
-  - \>= `2.10.0` and < `3.0.0`:
+  - < `3.0.0`:
     1. Bump the controller version to >= `3.0.0`.
     1. Set `gateway.env.router_flavor` to `traditional` to keep using the old router flavor.
-    1. Set `controller.env.feature_gates=ExpressionRoutes=true` to use the new router flavor.
+    1. Set `controller.ingressController.env.feature_gates=ExpressionRoutes=true` to use the new router flavor.
   [#939](https://github.com/Kong/charts/pull/939)
 
 ## 0.9.0

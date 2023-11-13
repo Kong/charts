@@ -11,8 +11,7 @@ dblessConfig:
       url: http://example.com
       routes:
       - name: example
-        paths:
-        - "/example"
+        expression: http.path ^= "/example"
 
 ingressController:
   enabled: false
