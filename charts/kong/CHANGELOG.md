@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-Nothing yet.
+### Improvements
+
+* Support for `affinity` configuration has been added to migration job templates.
 
 ## 2.32.0
 
