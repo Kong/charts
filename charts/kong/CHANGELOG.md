@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Add new `deployment.hostname` value to make identifying instances in controlplane/dataplane configurations easier.
+
 ## 2.31.0
 
 ### Improvements
