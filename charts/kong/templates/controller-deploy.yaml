@@ -20,17 +20,9 @@
 {{- $_ := set $deployPreRender "serviceAccount" .Values.serviceAccount -}}
 {{- $_ := set $deployPreRender "serviceAccountTokenName" (include "kong.serviceAccountTokenName" .) -}}
 {{- $_ := set $deployPreRender "serviceAccountName" (include "kong.serviceAccountName" .) -}}
-# TODO 921 this helper needs to be split somehow. as-is it includes things that are only useful for one
-# pod or the other, e.g. the controller does not need the prefix dir. as a placeholder, including
-# unnecessary volumes doesn't really hurt us
-{{/*
-{{- $_ := set $deployPreRender "volumes" (include "kong.volumes" .) -}}
-# TODO 921 this is not pulling from the new location
-{{- $_ := set $deployPreRender "userVolumes" (include "kong.userDefinedVolumes" .) -}}
-*/}}
-{{- $_ := set $deployPreRender "volumes" "" -}}
-# TODO 921 this is not pulling from the new location
-{{- $_ := set $deployPreRender "userVolumes" "" -}}
+
+{{- $_ := set $deployPreRender "volumes" (include "kong.volumes.controller" .) -}}
+{{- $_ := set $deployPreRender "userVolumes" (include "kong.userDefinedVolumes" .Values.deployment.controller ) -}}
 
 # TODO 921 ditto the deploy labels todo
 {{- $_ := set $podPreRender "component" "controller" -}}
@@ -43,7 +35,6 @@
 {{- $containerConfig := .Values.deployment.controller.pod.container -}}
 {{- $containerPre := dict -}}
 {{- $_ := set $containerPre "admissionWebhook" .Values.admissionWebhook -}}
-# TODO 921 still global scoped
 {{- $_ := set $containerPre "env" (include "kong.env.controller" .) -}}
 {{- $_ := set $containerPre "disableProbes" .Values.ingressController.disableProbes -}}
 {{- $_ := set $containerPre "adminApi" .Values.ingressController.adminApi -}}

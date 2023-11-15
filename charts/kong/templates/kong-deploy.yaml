@@ -26,19 +26,11 @@
 {{- $_ := set $deployPreRender "serviceAccount" .Values.serviceAccount -}}
 {{- $_ := set $deployPreRender "serviceAccountTokenName" (include "kong.serviceAccountTokenName" .) -}}
 {{- $_ := set $deployPreRender "serviceAccountName" (include "kong.serviceAccountName" .) -}}
-# TODO 921 this helper needs to be split somehow. as-is it includes things that are only useful for one
-# pod or the other, e.g. the controller does not need the prefix dir. as a placeholder, including
-# unnecessary volumes doesn't really hurt us
-{{/*
-{{- $_ := set $deployPreRender "volumes" (include "kong.volumes" .) -}}
-{{- $_ := set $deployPreRender "userVolumes" (include "kong.userDefinedVolumes" .) -}}
-{{- $_ := set $containerPreRender "volumeMounts" (include "kong.volumeMounts" .) -}}
-{{- $_ := set $containerPreRender "userVolumeMounts" (include "kong.userDefinedVolumeMounts" .) -}}
-*/}}
-{{- $_ := set $deployPreRender "volumes" "" -}}
-{{- $_ := set $deployPreRender "userVolumes" "" -}}
-{{- $_ := set $containerPreRender "volumeMounts" "" -}}
-{{- $_ := set $containerPreRender "userVolumeMounts" (dict) -}}
+
+{{- $_ := set $deployPreRender "volumes" (include "kong.volumes.proxy" .) -}}
+{{- $_ := set $deployPreRender "userVolumes" (include "kong.userDefinedVolumes" .Values.deployment.kong ) -}}
+{{- $_ := set $containerPreRender "volumeMounts" (include "kong.volumeMounts.proxy" .) -}}
+{{- $_ := set $containerPreRender "userVolumeMounts" (include "kong.userDefinedVolumeMounts" .Values.deployment.kong ) -}}
 
 # TODO 921 ditto the deploy labels todo
 {{- $_ := set $podPreRender "component" "proxy" -}}
@@ -66,10 +58,14 @@
 {{- $_ := set $containerPreRender "serviceAccountName" (include "kong.serviceAccountName" .) -}}
 
 {{- $_ := set $containerPreRender "ingressControllerEnabled" .Values.deployment.controller.enabled -}}
+# TODO 921 Capabilities and Release got stuck here because it was the first place I used them, but
+# it's probably not a great home for them--they are not specific to the container and also get used
+# in the deployment-level volumes
 {{- $_ := set $containerPreRender "Capabilities" .Capabilities -}}
 {{- $_ := set $containerPreRender "Release" .Release -}}
 {{- $_ := set $containerPreRender "dblessConfig" .Values.dblessConfig -}}
 {{- $_ := set $containerPreRender "plugins" .Values.plugins -}}
+{{- $_ := set $containerPreRender "certificates" .Values.certificates -}}
 # TODO 921 we should probably take this opportunity to drop the postgresql subchart. keeping for
 # now to try and reduce scope (hah)
 {{- $_ := set $containerPreRender "postgresql" .Values.postgresql -}}
@@ -112,6 +108,7 @@
 {{- $volumeMounts := list -}}
 {{- $volumeMounts = mustAppend $volumeMounts (dict "foo" "bar") -}}
 
+# TODO 921 this is inconsistent with the others
 {{- $_ := set $containerConfig "pre" $containerPreRender -}}
 
 {{- $_ := set $podPreRender "container" (include "kong.proxy-container-new" $containerConfig ) -}}

@@ -1,5 +1,5 @@
 {{- if .Values.deployment.kong.enabled }}
-{{- if (and (not .Values.ingressController.enabled) (eq .Values.deployment.kong.pod.container.env.database "off")) }}
+{{- if (and (not .Values.deployment.controller.enabled) (eq .Values.deployment.kong.pod.container.env.database "off")) }}
 {{- if not (or .Values.dblessConfig.configMap .Values.dblessConfig.secret) }}
 {{- if .Values.dblessConfig.config }}
 apiVersion: v1

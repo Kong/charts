@@ -327,9 +327,9 @@ deployment:
           capabilities:
             drop:
             - ALL
-        userDefinedVolumeMounts:
-        - name: webhook-cert
-          mountPath: /example
+        userDefinedVolumeMounts: {}
+        # - name: example
+        #   mountPath: /example
         # If you want to specify resources, uncomment the following
         # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
         resources: {}

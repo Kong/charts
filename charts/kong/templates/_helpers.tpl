@@ -390,8 +390,8 @@ Return the admin API service name for service discovery
     {{- $_ := required ".ingressController.gatewayDiscovery.adminApiService.name has to be provided when .Values.ingressController.gatewayDiscovery.enabled is set to true"  $adminApiServiceName -}}
   {{- end }}
 
-  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
-  {{- fail (printf "Gateway discovery is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.deployment.controller.pod.container.image)) }}
+  {{- fail (printf "Gateway discovery is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.deployment.controller.pod.container.image)) }}
   {{- end }}
 
   {{- if .Values.deployment.kong.enabled }}
@@ -467,257 +467,6 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end -}}
 
 
-{{- define "kong.userDefinedVolumes" -}}
-{{- if .Values.deployment.userDefinedVolumes }}
-{{- toYaml .Values.deployment.userDefinedVolumes }}
-{{- end }}
-{{- end -}}
-
-{{- define "kong.volumes" -}}
-- name: {{ template "kong.fullname" . }}-prefix-dir
-  emptyDir:
-    sizeLimit: {{ .Values.deployment.kong.pod.container.prefixDir.sizeLimit }}
-- name: {{ template "kong.fullname" . }}-tmp
-  emptyDir:
-    sizeLimit: {{ .Values.deployment.kong.pod.container.tmpDir.sizeLimit }}
-{{- if (and (not .Values.serviceAccount.automountServiceAccountToken) (or .Values.serviceAccount.create .Values.serviceAccount.name)) }}
-- name: {{ template "kong.serviceAccountTokenName" . }}
-  {{- /* Due to GKE versions (e.g. v1.23.15-gke.1900) we need to handle pre-release part of the version as well.
-  See the related documentation of semver module that Helm depends on for semverCompare:
-  https://github.com/Masterminds/semver#working-with-prerelease-versions
-  Related Helm issue: https://github.com/helm/helm/issues/3810 */}}
-  {{- if semverCompare ">=1.20.0-0" .Capabilities.KubeVersion.Version }}
-  projected:
-    sources:
-    - serviceAccountToken:
-        expirationSeconds: 3607
-        path: token
-    - configMap:
-        items:
-        - key: ca.crt
-          path: ca.crt
-        name: kube-root-ca.crt
-    - downwardAPI:
-        items:
-        - fieldRef:
-            apiVersion: v1
-            fieldPath: metadata.namespace
-          path: namespace
-  {{- else }}
-  secret:
-    secretName: {{ template "kong.serviceAccountTokenName" . }}
-    items:
-    - key: token
-      path: token
-    - key: ca.crt
-      path: ca.crt
-    - key: namespace
-      path: namespace
-  {{- end }}
-{{- end }}
-{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled -}}
-{{- if .Values.certificates.cluster.enabled }}
-- name: {{ include "kong.fullname" . }}-cluster-cert
-  secret:
-    secretName: {{ include "kong.fullname" . }}-cluster-cert
-{{- end }}
-{{- if .Values.certificates.proxy.enabled }}
-- name: {{ include "kong.fullname" . }}-proxy-cert
-  secret:
-    secretName: {{ include "kong.fullname" . }}-proxy-cert
-{{- end }}
-{{- if .Values.certificates.admin.enabled }}
-- name: {{ include "kong.fullname" . }}-admin-cert
-  secret:
-    secretName: {{ include "kong.fullname" . }}-admin-cert
-{{- end }}
-{{- if .Values.enterprise.enabled }}
-{{- if .Values.certificates.portal.enabled }}
-- name: {{ include "kong.fullname" . }}-portal-cert
-  secret:
-    secretName: {{ include "kong.fullname" . }}-portal-cert
-{{- end }}
-{{- end }}
-{{- end }}
-{{- if (and (.Values.postgresql.enabled) .Values.waitImage.enabled) }}
-- name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
-  configMap:
-    name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
-    defaultMode: 0755
-{{- end }}
-{{- range .Values.plugins.configMaps }}
-- name: kong-plugin-{{ .pluginName }}
-  configMap:
-    name: {{ .name }}
-{{- range .subdirectories }}
-- name: {{ .name }}
-  configMap:
-    name: {{ .name }}
-{{- end }}
-{{- end }}
-{{- range .Values.plugins.secrets }}
-- name: kong-plugin-{{ .pluginName }}
-  secret:
-    secretName: {{ .name }}
-{{- range .subdirectories }}
-- name: {{ .name }}
-  secret:
-    secretName: {{ .name }}
-{{- end }}
-{{- end }}
-
-{{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
-  {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
-  {{- if gt $dblessSourceCount 1 -}}
-    {{- fail "Ambiguous configuration: only one of of .Values.dblessConfig.configMap, .Values.dblessConfig.secret, and .Values.dblessConfig.config can be set." -}}
-  {{- else if eq $dblessSourceCount 1 }}
-- name: kong-custom-dbless-config-volume
-    {{- if .Values.dblessConfig.configMap }}
-  configMap:
-    name: {{ .Values.dblessConfig.configMap }}
-    {{- else if .Values.dblessConfig.secret }}
-  secret:
-    secretName: {{ .Values.dblessConfig.secret }}
-    {{- else }}
-  configMap:
-    name: {{ template "kong.dblessConfig.fullname" . }}
-    {{- end }}
-  {{- end }}
-{{- end }}
-
-{{- if and .Values.ingressController.enabled .Values.ingressController.admissionWebhook.enabled }}
-- name: webhook-cert
-  secret:
-    {{- if .Values.ingressController.admissionWebhook.certificate.provided }}
-    secretName: {{ .Values.ingressController.admissionWebhook.certificate.secretName }}
-    {{- else }}
-    secretName: {{ template "kong.fullname" . }}-validation-webhook-keypair
-    {{- end }}
-{{- end }}
-{{- if or $.Values.admin.tls.client.secretName $.Values.admin.tls.client.caBundle }}
-- name: admin-client-ca
-  configMap:
-    name: {{ template "kong.fullname" . }}-admin-client-ca
-{{- end -}}
-{{- range $secretVolume := .Values.secretVolumes }}
-- name: {{ . }}
-  secret:
-    secretName: {{ . }}
-{{- end }}
-{{- range .Values.extraConfigMaps }}
-- name: {{ .name }}
-  configMap:
-    name: {{ .name }}
-{{- end }}
-{{- range .Values.extraSecrets }}
-- name: {{ .name }}
-  secret:
-    secretName: {{ .name }}
-{{- end }}
-{{- if and .Values.ingressController.adminApi.tls.client.enabled .Values.ingressController.enabled }}
-- name: admin-api-cert
-  secret:
-    secretName: {{ template "adminApiService.certSecretName" . }}
-{{- end }}
-{{- end -}}
-
-{{- define "controller.adminApiCertVolumeMount" -}}
-{{- if .adminApi.tls.client.enabled }}
-- name: admin-api-cert
-  mountPath: /etc/secrets/admin-api-cert
-  readOnly: true
-{{- end -}}
-{{- end -}}
-
-{{- define "kong.userDefinedVolumeMounts" -}}
-{{- if .userDefinedVolumeMounts }}
-{{- toYaml .userDefinedVolumeMounts }}
-{{- end }}
-{{- end -}}
-
-{{- define "kong.volumeMounts" -}}
-- name: {{ template "kong.fullname" . }}-prefix-dir
-  mountPath: /kong_prefix/
-- name: {{ template "kong.fullname" . }}-tmp
-  mountPath: /tmp
-{{- if and ( .Capabilities.APIVersions.Has "cert-manager.io/v1" ) .Values.certificates.enabled -}}
-{{- if .Values.certificates.cluster.enabled }}
-- name: {{ include "kong.fullname" . }}-cluster-cert
-  mountPath: /etc/cert-manager/cluster/
-{{- end }}
-{{- if .Values.certificates.proxy.enabled }}
-- name: {{ include "kong.fullname" . }}-proxy-cert
-  mountPath: /etc/cert-manager/proxy/
-{{- end }}
-{{- if .Values.certificates.admin.enabled }}
-- name: {{ include "kong.fullname" . }}-admin-cert
-  mountPath: /etc/cert-manager/admin/
-{{- end }}
-{{- if .Values.enterprise.enabled }}
-{{- if .Values.certificates.portal.enabled }}
-- name: {{ include "kong.fullname" . }}-portal-cert
-  mountPath: /etc/cert-manager/portal/
-{{- end }}
-{{- end }}
-{{- end }}
-{{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
-  {{- if eq $dblessSourceCount 1 -}}
-    {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
-- name: kong-custom-dbless-config-volume
-  mountPath: /kong_dbless/
-    {{- end }}
-  {{- end }}
-{{- if or $.Values.admin.tls.client.caBundle $.Values.admin.tls.client.secretName }}
-- name: admin-client-ca
-  mountPath: /etc/admin-client-ca/
-  readOnly: true
-{{- end -}}
-{{- range .Values.secretVolumes }}
-- name:  {{ . }}
-  mountPath: /etc/secrets/{{ . }}
-{{- end }}
-{{- range .Values.plugins.configMaps }}
-{{- $mountPath := printf "/opt/kong/plugins/%s" .pluginName }}
-- name:  kong-plugin-{{ .pluginName }}
-  mountPath: {{ $mountPath }}
-  readOnly: true
-{{- range .subdirectories }}
-- name: {{ .name  }}
-  mountPath: {{ printf "%s/%s" $mountPath ( .path | default .name ) }}
-  readOnly: true
-{{- end }}
-{{- end }}
-{{- range .Values.plugins.secrets }}
-{{- $mountPath := printf "/opt/kong/plugins/%s" .pluginName }}
-- name:  kong-plugin-{{ .pluginName }}
-  mountPath: {{ $mountPath }}
-  readOnly: true
-{{- range .subdirectories }}
-- name: {{ .name }}
-  mountPath: {{ printf "%s/%s" $mountPath .path }}
-  readOnly: true
-{{- end }}
-{{- end }}
-
-{{- range .Values.extraConfigMaps }}
-- name:  {{ .name }}
-  mountPath: {{ .mountPath }}
-
-  {{- if .subPath }}
-  subPath: {{ .subPath }}
-  {{- end }}
-{{- end }}
-{{- range .Values.extraSecrets }}
-- name:  {{ .name }}
-  mountPath: {{ .mountPath }}
-
-  {{- if .subPath }}
-  subPath: {{ .subPath }}
-  {{- end }}
-{{- end }}
-
-{{- end -}}
-
 {{/* TODO 921 this gets used for any Kong env. the migrations and init paths here don't yet
      build a dict, and so won't work without the removed .Values */}}
 {{- define "kong.plugins" -}}
@@ -786,7 +535,7 @@ The name of the Service which will be used by the controller to update the Ingre
     containerPort: {{ .Values.ingressController.admissionWebhook.port }}
     protocol: TCP
   {{- end }}
-  {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) -}}
+  {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.deployment.controller.pod.container.image)) -}}
   - name: cmetrics
     containerPort: 10255
     protocol: TCP
@@ -803,7 +552,7 @@ The name of the Service which will be used by the controller to update the Ingre
         apiVersion: v1
         fieldPath: metadata.namespace
 {{- include "kong.ingressController.env" .  | indent 2 }}
-  image: {{ include "kong.getRepoTag" .Values.ingressController.image }}
+  image: {{ include "kong.getRepoTag" .Values.deployment.controller.pod.container.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
      Helm value interpretation doesn't let you replace the default HTTP checks with any other
@@ -868,7 +617,7 @@ the template that it itself is using form the above sections.
 {{- $_ := set $autoEnv "KONG_ADMIN_ERROR_LOG" "/dev/stderr" -}}
 {{- $_ := set $autoEnv "KONG_STATUS_ERROR_LOG" "/dev/stderr" -}}
 
-{{- if .Values.ingressController.enabled -}}
+{{- if .Values.deployment.controller.enabled -}}
   {{- $_ := set $autoEnv "KONG_KIC" "on" -}}
 {{- end -}}
 
@@ -1044,7 +793,7 @@ the template that it itself is using form the above sections.
   {{- $_ := set $autoEnv "KONG_PG_PORT" "5432" }}
 {{- end }}
 
-{{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
+{{- if (and (not .Values.deployment.controller.enabled) (eq .Values.env.database "off")) }}
 {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
 {{- if eq $dblessSourceCount 1 -}}
   {{- $_ := set $autoEnv "KONG_DECLARATIVE_CONFIG" "/kong_dbless/kong.yml" -}}
@@ -1140,7 +889,7 @@ role sets used in the charts. Updating these requires separating out cluster
 resource roles into their separate templates.
 */}}
 {{- define "kong.kubernetesRBACRules" -}}
-{{- if (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.deployment.controller.pod.container.image)) }}
 - apiGroups:
   - configuration.konghq.com
   resources:
@@ -1158,7 +907,7 @@ resource roles into their separate templates.
   - patch
   - update
 {{- end }}
-{{- if (semverCompare ">= 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare ">= 2.11.0" (include "kong.effectiveVersion" .Values.deployment.controller.pod.container.image)) }}
 - apiGroups:
   - configuration.konghq.com
   resources:
@@ -1176,7 +925,7 @@ resource roles into their separate templates.
   - patch
   - update
 {{- end }}
-{{- if (semverCompare "< 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare "< 2.10.0" (include "kong.effectiveVersion" .Values.deployment.controller.pod.container.image)) }}
 - apiGroups:
   - ""
   resources:
@@ -1442,24 +1191,6 @@ resource roles into their separate templates.
   - patch
   - update
 {{- end }}
-{{- if (.Capabilities.APIVersions.Has "networking.internal.knative.dev/v1alpha1") }}
-- apiGroups:
-  - networking.internal.knative.dev
-  resources:
-  - ingresses
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - networking.internal.knative.dev
-  resources:
-  - ingresses/status
-  verbs:
-  - get
-  - patch
-  - update
-{{- end }}
 - apiGroups:
   - networking.k8s.io
   resources:
@@ -1508,7 +1239,7 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
-{{- if (semverCompare ">= 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare ">= 2.10.0" (include "kong.effectiveVersion" .Values.deployment.controller.pod.container.image)) }}
 - apiGroups:
   - apiextensions.k8s.io
   resources:
@@ -1582,7 +1313,7 @@ extensions/v1beta1
 
 {{- define "kong.proxy.compatibleReadiness" -}}
 {{- $proxyReadiness := .Values.readinessProbe -}}
-{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (and .Values.ingressController.enabled (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image)))) -}}
+{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (and .Values.deployment.controller.enabled (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.deployment.controller.pod.container.image)))) -}}
     {{- if (eq $proxyReadiness.httpGet.path "/status/ready") -}}
         {{- $_ := set $proxyReadiness.httpGet "path" "/status" -}}
     {{- end -}}

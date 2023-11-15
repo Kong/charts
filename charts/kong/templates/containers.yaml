@@ -141,7 +141,9 @@
   {{- end }}
   volumeMounts:
   {{- .pre.volumeMounts | nindent 4 }}
-  {{- .userDefinedVolumeMounts | toYaml | nindent 4 }}
+  {{- if .userDefinedVolumeMounts  -}}
+  {{ .userDefinedVolumeMounts | toYaml | nindent 4 }}
+  {{- end }}
   readinessProbe:
 {{ toYaml .readinessProbe | indent 4 }}
 {{/* TODO 921 this requires controller-related keys we aren't passing in yet
@@ -221,7 +223,6 @@
     readOnly: true
 {{- end }}
   {{- include "kong.userDefinedVolumeMounts" . | nindent 2 }}
-  # TODO 921 relies on some content under .ingressController
-  {{- include "controller.adminApiCertVolumeMount" .pre | nindent 2 }}
+  {{- include "kong.volumeMounts.controller.adminApiCertVolumeMount" . | nindent 2 }}
 {{- end -}}
 
