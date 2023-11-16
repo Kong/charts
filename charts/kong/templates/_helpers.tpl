@@ -862,6 +862,7 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end -}}
 {{- end -}}
 
+# TODO ALT 921 directly inside the template, should be removed
 {{- define "kong.controller-container" -}}
 - name: ingress-controller
   securityContext:

@@ -6,10 +6,10 @@ metadata:
   namespace:  {{ template "kong.namespace" . }}
   # TODO ALT 921 same thing with selector labels
   labels:
-    {{- include "kong.metaLabels" . | nindent 4 }}
+      {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: controller
     {{- range $key, $value := .Values.ingressController.deployment.labels }}
-    {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote | nindent 4 }}
+      {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote | nindent 4 }}
     {{- end }}
   {{- if .annotations }}
   annotations:
@@ -21,7 +21,7 @@ spec:
   replicas: {{ .Values.ingressController.deployment.replicaCount }}
   selector:
     matchLabels:
-{{ (include "kong.controllerSelectorLabels" .) | nindent 6 -}}
+      {{ (include "kong.controllerSelectorLabels" .) | nindent 6 -}}
   {{- if .Values.ingressController.deployment.updateStrategy }}
   strategy:
 {{ toYaml .Values.ingressController.deployment.updateStrategy | indent 4 }}
@@ -67,7 +67,6 @@ spec:
       {{- else }}
       automountServiceAccountToken: false
       {{ end }}
-      {{- if .Values.image.pullSecrets }}
       {{- if .Values.ingressController.deployment.pod.container.image.pullSecrets }}
       # NOTE 921 this is out of place, but the rest of .image _does_ live
       # inside the container, so probably just keep it there, rather than
@@ -79,20 +78,83 @@ spec:
       {{- end }}
       {{- if .Values.ingressController.deployment.pod.hostAliases }}
       hostAliases:
-        {{- toYaml .Values.ingressController.deployment.pod.hostAliases | nindent 6 }}
+        {{- toYaml .Values.ingressController.deployment.pod.hostAliases | nindent 8 }}
       {{- end}}
       {{- if .Values.ingressController.deployment.dnsPolicy }}
       dnsPolicy: {{ .Values.ingressController.deployment.pod.dnsPolicy | quote }}
       {{- end }}
       {{- if .Values.ingressController.deployment.pod.dnsConfig }}
       dnsConfig:
-{{ toYaml .Values.ingressController.deployment.pod.dnsConfig | indent 8 }}
+        {{ toYaml .Values.ingressController.deployment.pod.dnsConfig | nindent 8 }}
       {{- end }}
       containers:
-{{ .pre.pod.container | nindent 8 }}
+      - name: ingress-controller
+        securityContext:
+          {{ toYaml .Values.ingressController.deployment.pod.container.securityContext | nindent 10 }}
+        args:
+        {{ if .Values.ingressController.deployment.pod.container.args }}
+        {{- range $val := .Values.ingressController.deployment.pod.container.args }}
+        - {{ $val }}
+        {{- end }}
+        {{- end }}
+        ports:
+        {{- if .Values.ingressController.admissionWebhook.enabled }}
+        - name: webhook
+          containerPort: {{ .Values.ingressController.admissionWebhook.port }}
+          protocol: TCP
+        {{- end }}
+        {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image )) -}}
+        - name: cmetrics
+          containerPort: 10255
+          protocol: TCP
+        {{- end }}
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+      {{- include "kong.ingressController.env" .  | indent 2 }}
+        image: {{ include "kong.getRepoTag" .Values.ingressController.deployment.pod.container.image }}
+        imagePullPolicy: {{ .Values.ingressController.deployment.pod.container.image.pullPolicy }}
+      {{/* disableProbes is a hidden setting to drop this block entirely for use with a debugger
+           Helm value interpretation doesn't let you replace the default HTTP checks with any other
+           check type, and all HTTP checks freeze when a debugger pauses operation.
+           Setting disableReadiness to ANY value disables the probes.
+      */}}
+      {{- if (not (hasKey .Values.ingressController "disableProbes")) }}
+        readinessProbe:
+          {{ toYaml .Values.ingressController.deployment.pod.container.readinessProbe | indent 10 }}
+        livenessProbe:
+          {{ toYaml .Values.ingressController.deployment.pod.container.livenessProbe | indent 10 }}
+      {{- end }}
+        resources:
+          {{ toYaml .Values.ingressController.deployment.pod.container.resources | indent 10 }}
+        volumeMounts:
+        {{- if .Values.ingressController.admissionWebhook.enabled }}
+        - name: webhook-cert
+          mountPath: /admission-webhook
+          readOnly: true
+        {{- end }}
+        # TODO ALT 921 ditto SA stuff
+        {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
+        - name: {{ template "kong.serviceAccountTokenName" . }}
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          readOnly: true
+        {{- end }}
+        {{- include "kong.userDefinedVolumeMounts" .Values.ingressController.deployment.pod.container | nindent 10 }}
+        {{- include "controller.adminApiCertVolumeMount" . | nindent 10 }}
+
 {{- if .Values.ingressController.deployment.pod.sidecarContainers }}
 {{- toYaml .Values.ingressController.deployment.pod.sidecarContainers | nindent 8 }}
 {{- end }}
+
+
     {{- if .Values.ingressController.deployment.pod.affinity }}
       affinity:
 {{ toYaml .Values.ingressController.deployment.pod.affinity | indent 8 }}

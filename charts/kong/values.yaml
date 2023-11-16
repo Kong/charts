@@ -604,6 +604,7 @@ ingressController:
           # version of your tag: for example if using a "next" image for an unreleased 3.1.0
           # version, set this to "3.1.0".
           effectiveSemver: ""
+          pullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
             path: "/healthz"
