@@ -60,8 +60,7 @@ deployment:
   # Use a DaemonSet controller instead of a Deployment controller
   daemonset: false
   hostNetwork: false
-  # Set a custom hostname. This is very useful when running a 
-  # controlplane/dataplane setup with multiple dataplanes.
+  # Set the Deployment's spec.template.hostname field.
   hostname: ""
   # kong_prefix empty dir size
   prefixDir:
