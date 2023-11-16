@@ -21,7 +21,7 @@ spec:
   replicas: {{ .Values.ingressController.deployment.replicaCount }}
   selector:
     matchLabels:
-{{ .pre.deployment.controllerSelectorMatchLabels | nindent 6 -}}
+{{ (include "kong.controllerSelectorLabels" .) | nindent 6 -}}
   {{- if .Values.ingressController.deployment.updateStrategy }}
   strategy:
 {{ toYaml .Values.ingressController.deployment.updateStrategy | indent 4 }}
@@ -35,7 +35,7 @@ spec:
       annotations:
         # TODO ALT 921 complicated. we generate a single SA from .deployment.kong.serviceAccount configuration. we could, but probably
         # shouldn't share it
-        {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .pre.deployment.serviceAccount.create .pre.deployment.serviceAccount.name)) }}
+        {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
         kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
         {{- end }}
         {{- if .Values.ingressController.deployment.pod.annotations }}
@@ -44,10 +44,10 @@ spec:
         {{- end }}
         {{- end }}
       labels:
-        {{- .pre.pod.labels | nindent 8 }}
-        app.kubernetes.io/component: {{ .pre.pod.component }}
-        app: {{ .pre.pod.app }}
-        version: {{ .pre.pod.versionLabel | quote }}
+        {{- include "kong.metaLabels" . | nindent 8 }}
+        app.kubernetes.io/component: controller
+        app: {{ template "kong.fullname" . }}
+        version: {{ .Chart.AppVersion | quote }}
         {{- if .Values.ingressController.deployment.pod.labels }}
         {{ include "kong.renderTpl" (dict "value" .Values.ingressController.deployment.pod.labels "context" $) | nindent 8 }}
         {{- end }}
@@ -58,14 +58,16 @@ spec:
       {{- if .Values.ingressController.deployment.pod.priorityClassName }}
       priorityClassName: "{{ .Values.ingressController.deployment.pod.priorityClassName }}"
       {{- end }}
-      {{- if or .pre.deployment.serviceAccount.create .pre.deployment.serviceAccount.name }}
-      serviceAccountName: {{ .pre.deployment.serviceAccountName }}
+      # TODO ALT 921 ditto earlier SA stuff
+      {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
+      serviceAccountName: {{ template "kong.serviceAccountName" . }}
       {{- end }}
-      {{- if (and (or .pre.deployment.serviceAccount.create .pre.deployment.serviceAccount.name) .pre.deployment.serviceAccount.automountServiceAccountToken) }}
+      {{- if (and (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name) .Values.ingressController.deployment.pod.automountServiceAccountToken) }}
       automountServiceAccountToken: true
       {{- else }}
       automountServiceAccountToken: false
       {{ end }}
+      {{- if .Values.image.pullSecrets }}
       {{- if .Values.ingressController.deployment.pod.container.image.pullSecrets }}
       # NOTE 921 this is out of place, but the rest of .image _does_ live
       # inside the container, so probably just keep it there, rather than
