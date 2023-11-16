@@ -653,7 +653,7 @@ ingressController:
           sizeLimit: 1Gi
 
   gatewayDiscovery:
-    enabled: false
+    enabled: true
     generateAdminApiService: false
     adminApiService:
       namespace: ""
