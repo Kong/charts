@@ -6,8 +6,11 @@ metadata:
   namespace:  {{ template "kong.namespace" . }}
   # TODO ALT 921 same thing with selector labels
   labels:
-    {{- .pre.deployment.labels | nindent 4 }}
-    app.kubernetes.io/component: app
+    {{- include "kong.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: controller
+    {{- range $key, $value := .Values.ingressController.deployment.labels }}
+    {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote | nindent 4 }}
+    {{- end }}
   {{- if .annotations }}
   annotations:
   {{- range $key, $value := .Values.ingressController.deployment.annotations }}
@@ -18,7 +21,7 @@ spec:
   replicas: {{ .Values.ingressController.deployment.replicaCount }}
   selector:
     matchLabels:
-{{ .pre.deployment.selectorMatchLabels | nindent 6 -}}
+{{ .pre.deployment.controllerSelectorMatchLabels | nindent 6 -}}
   {{- if .Values.ingressController.deployment.updateStrategy }}
   strategy:
 {{ toYaml .Values.ingressController.deployment.updateStrategy | indent 4 }}
@@ -46,7 +49,7 @@ spec:
         app: {{ .pre.pod.app }}
         version: {{ .pre.pod.versionLabel | quote }}
         {{- if .Values.ingressController.deployment.pod.labels }}
-        {{ include "kong.renderTpl" (dict "value" .pod.labels "context" $) | nindent 8 }}
+        {{ include "kong.renderTpl" (dict "value" .Values.ingressController.deployment.pod.labels "context" $) | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.ingressController.deployment.pod.hostNetwork }}
@@ -72,71 +75,40 @@ spec:
         - name: {{ . }}
       {{- end }}
       {{- end }}
-      # TODO 921 this is Kong-specific and does not rely on any settings in the
-      # deployment config, it's just a static-ish initcontainer we inject. it
-      # does need Kong's image, security context, resources, env, so probably
-      # create a dedicated helper to create the initContainer and then support
-      # injecting initContainers in general. .Values stuff left as-is from here
-{{/*
-      {{- if .Values.deployment.kong.enabled }}
-      initContainers:
-      - name: clear-stale-pid
-        image: {{ include "kong.getRepoTag" .Values.image }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
-        securityContext:
-        {{ toYaml .Values.containerSecurityContext | nindent 10 }}
-        resources:
-{{ toYaml .Values.resources | indent 10 }}
-        command:
-        - "rm"
-        - "-vrf"
-        - "$KONG_PREFIX/pids"
-        env:
-        {{- include "kong.env" . | nindent 8 }}
-        volumeMounts:
-        {{- include "kong.volumeMounts" . | nindent 8 }}
-        {{- if .Values.deployment.initContainers }}
-        {{- toYaml .Values.deployment.initContainers | nindent 6 }}
-        {{- end }}
-        {{- if (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) }}
-        {{- include "kong.wait-for-db" . | nindent 6 }}
-        {{- end }}
-      {{- end }} # TODO 921 END initContainers clear-stale-pid
-*/}}
-      {{- if .pod.hostAliases }}
+      {{- if .Values.ingressController.deployment.pod.hostAliases }}
       hostAliases:
-        {{- toYaml .pod.hostAliases | nindent 6 }}
+        {{- toYaml .Values.ingressController.deployment.pod.hostAliases | nindent 6 }}
       {{- end}}
-      {{- if .dnsPolicy }}
-      dnsPolicy: {{ .pod.dnsPolicy | quote }}
+      {{- if .Values.ingressController.deployment.dnsPolicy }}
+      dnsPolicy: {{ .Values.ingressController.deployment.pod.dnsPolicy | quote }}
       {{- end }}
-      {{- if .pod.dnsConfig }}
+      {{- if .Values.ingressController.deployment.pod.dnsConfig }}
       dnsConfig:
-{{ toYaml .pod.dnsConfig | indent 8 }}
+{{ toYaml .Values.ingressController.deployment.pod.dnsConfig | indent 8 }}
       {{- end }}
       containers:
 {{ .pre.pod.container | nindent 8 }}
-{{- if .pod.sidecarContainers }}
-{{- toYaml .pod.sidecarContainers | nindent 8 }}
+{{- if .Values.ingressController.deployment.pod.sidecarContainers }}
+{{- toYaml .Values.ingressController.deployment.pod.sidecarContainers | nindent 8 }}
 {{- end }}
-    {{- if .pod.affinity }}
+    {{- if .Values.ingressController.deployment.pod.affinity }}
       affinity:
-{{ toYaml .pod.affinity | indent 8 }}
+{{ toYaml .Values.ingressController.deployment.pod.affinity | indent 8 }}
     {{- end }}
-    {{- if .pod.topologySpreadConstraints }}
+    {{- if .Values.ingressController.deployment.pod.topologySpreadConstraints }}
       topologySpreadConstraints:
-{{ toYaml .pod.topologySpreadConstraints | indent 8 }}
+{{ toYaml .Values.ingressController.deployment.pod.topologySpreadConstraints | indent 8 }}
     {{- end }}
       securityContext:
-      {{- .pod.securityContext | toYaml | nindent 8 }}
-    {{- if .pod.nodeSelector }}
+      {{- .Values.ingressController.deployment.pod.securityContext | toYaml | nindent 8 }}
+    {{- if .Values.ingressController.deployment.pod.nodeSelector }}
       nodeSelector:
-{{ toYaml .pod.nodeSelector | indent 8 }}
+{{ toYaml .Values.ingressController.deployment.pod.nodeSelector | indent 8 }}
     {{- end }}
-      terminationGracePeriodSeconds: {{ .pod.terminationGracePeriodSeconds }}
-    {{- if .pod.tolerations }}
+      terminationGracePeriodSeconds: {{ .Values.ingressController.deployment.pod.terminationGracePeriodSeconds }}
+    {{- if .Values.ingressController.deployment.pod.tolerations }}
       tolerations:
-{{ toYaml .pod.tolerations | indent 8 }}
+{{ toYaml .Values.ingressController.deployment.pod.tolerations | indent 8 }}
     {{- end }}
       volumes:
       {{- .pre.deployment.volumes | nindent 8 -}}

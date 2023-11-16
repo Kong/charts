@@ -42,6 +42,12 @@ app.kubernetes.io/component: app
 app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
 
+{{- define "kong.controllerSelectorLabels" -}}
+app.kubernetes.io/name: {{ template "kong.name" . }}
+app.kubernetes.io/component: controller
+app.kubernetes.io/instance: "{{ .Release.Name }}"
+{{- end -}}
+
 {{- define "kong.postgresql.fullname" -}}
 {{- $name := default "postgresql" .Values.postgresql.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
