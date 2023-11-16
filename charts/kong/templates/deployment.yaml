@@ -1,4 +1,4 @@
-{{- if or .Values.deployment.kong.enabled .Values.ingressController.enabled }}
+{{- if or .Values.deployment.kong.enabled }}
 apiVersion: apps/v1
 {{- if .Values.deployment.daemonset }}
 kind: DaemonSet
@@ -44,10 +44,8 @@ spec:
         {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
         kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
         {{- end }}
-        {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off" )) }}
-        {{- if .Values.dblessConfig.config }}
+        {{- if (and (eq .Values.env.database "off" ) .Values.dblessConfig.config) }}
         checksum/dbless.config: {{ toYaml .Values.dblessConfig.config | sha256sum }}
-        {{- end }}
         {{- end }}
         {{- if .Values.podAnnotations }}
         {{- range $key, $value := .Values.podAnnotations }}
@@ -122,9 +120,6 @@ spec:
 {{ toYaml .Values.dnsConfig | indent 8 }}
       {{- end }}
       containers:
-      {{- if .Values.ingressController.enabled }}
-      {{- include "kong.controller-container" . | nindent 6 }}
-      {{ end }}
       {{- if .Values.deployment.sidecarContainers }}
       {{- toYaml .Values.deployment.sidecarContainers | nindent 6 }}
       {{- end }}
