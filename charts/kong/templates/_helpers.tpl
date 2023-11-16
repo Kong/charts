@@ -536,7 +536,7 @@ The name of the Service which will be used by the controller to update the Ingre
 */}}
 
 {{- $userEnv := dict -}}
-{{- range $key, $val := .Values.ingressController.env }}
+{{- range $key, $val := .Values.ingressController.deployment.pod.container.env }}
   {{- $upper := upper $key -}}
   {{- $var := printf "CONTROLLER_%s" $upper -}}
   {{- $_ := set $userEnv $var $val -}}
@@ -547,7 +547,7 @@ The name of the Service which will be used by the controller to update the Ingre
 */}}
 
 {{- $customIngressEnv := dict -}}
-{{- range $key, $val := .Values.ingressController.customEnv }}
+{{- range $key, $val := .Values.ingressController.deployment.pod.container.customEnv }}
   {{- $upper := upper $key -}}
   {{- $_ := set $customIngressEnv $upper $val -}}
 {{- end -}}
@@ -868,8 +868,8 @@ The name of the Service which will be used by the controller to update the Ingre
   securityContext:
 {{ toYaml .Values.containerSecurityContext | nindent 4 }}
   args:
-  {{ if .Values.ingressController.args}}
-  {{- range $val := .Values.ingressController.args }}
+  {{ if .Values.ingressController.deployment.pod.container.args}}
+  {{- range $val := .Values.ingressController.deployment.pod.container.args }}
   - {{ $val }}
   {{- end }}
   {{- end }}
