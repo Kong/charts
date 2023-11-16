@@ -523,6 +523,8 @@ ingressController:
   # Its leader/standby model means spawning additional controller instances won't
   # distribute load, and you want a static set of replicas to meet your cross-zone
   # availability needs.
+  # NOTE ALT 921 daemonset is also not supported. Again, non-leaders do nothing other
+  # than try to take control of leadership if needed.
   deployment:
     enabled: true
     labels: {}

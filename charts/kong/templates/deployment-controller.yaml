@@ -1,0 +1,145 @@
+{{- define "kong.deployment" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "kong.fullname" . }}-controller
+  namespace:  {{ template "kong.namespace" . }}
+  # TODO ALT 921 same thing with selector labels
+  labels:
+    {{- .pre.deployment.labels | nindent 4 }}
+    app.kubernetes.io/component: app
+  {{- if .annotations }}
+  annotations:
+  {{- range $key, $value := .Values.ingressController.deployment.annotations }}
+    {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote }}
+  {{- end }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.ingressController.deployment.replicaCount }}
+  selector:
+    matchLabels:
+{{ .pre.deployment.selectorMatchLabels | nindent 6 -}}
+  {{- if .Values.ingressController.deployment.updateStrategy }}
+  strategy:
+{{ toYaml .Values.ingressController.deployment.updateStrategy | indent 4 }}
+  {{- end }}
+  {{- if .Values.ingressController.deployment.minReadySeconds }}
+  minReadySeconds: {{ .Values.ingressController.deployment.minReadySeconds }}
+  {{- end }}
+
+  template:
+    metadata:
+      annotations:
+        # TODO ALT 921 complicated. we generate a single SA from .deployment.kong.serviceAccount configuration. we could, but probably
+        # shouldn't share it
+        {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .pre.deployment.serviceAccount.create .pre.deployment.serviceAccount.name)) }}
+        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
+        {{- end }}
+        {{- if .Values.ingressController.deployment.pod.annotations }}
+        {{- range $key, $value := .Values.ingressController.deployment.pod.annotations }}
+        {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote }}
+        {{- end }}
+        {{- end }}
+      labels:
+        {{- .pre.pod.labels | nindent 8 }}
+        app.kubernetes.io/component: {{ .pre.pod.component }}
+        app: {{ .pre.pod.app }}
+        version: {{ .pre.pod.versionLabel | quote }}
+        {{- if .Values.ingressController.deployment.pod.labels }}
+        {{ include "kong.renderTpl" (dict "value" .pod.labels "context" $) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.ingressController.deployment.pod.hostNetwork }}
+      hostNetwork: true
+      {{- end }}
+      {{- if .Values.ingressController.deployment.pod.priorityClassName }}
+      priorityClassName: "{{ .Values.ingressController.deployment.pod.priorityClassName }}"
+      {{- end }}
+      {{- if or .pre.deployment.serviceAccount.create .pre.deployment.serviceAccount.name }}
+      serviceAccountName: {{ .pre.deployment.serviceAccountName }}
+      {{- end }}
+      {{- if (and (or .pre.deployment.serviceAccount.create .pre.deployment.serviceAccount.name) .pre.deployment.serviceAccount.automountServiceAccountToken) }}
+      automountServiceAccountToken: true
+      {{- else }}
+      automountServiceAccountToken: false
+      {{ end }}
+      {{- if .Values.ingressController.deployment.pod.container.image.pullSecrets }}
+      # NOTE 921 this is out of place, but the rest of .image _does_ live
+      # inside the container, so probably just keep it there, rather than
+      # separating into .pod.imagePullSecrets
+      imagePullSecrets:
+      {{- range .Values.ingressController.deployment.pod.container.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      # TODO 921 this is Kong-specific and does not rely on any settings in the
+      # deployment config, it's just a static-ish initcontainer we inject. it
+      # does need Kong's image, security context, resources, env, so probably
+      # create a dedicated helper to create the initContainer and then support
+      # injecting initContainers in general. .Values stuff left as-is from here
+{{/*
+      {{- if .Values.deployment.kong.enabled }}
+      initContainers:
+      - name: clear-stale-pid
+        image: {{ include "kong.getRepoTag" .Values.image }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        securityContext:
+        {{ toYaml .Values.containerSecurityContext | nindent 10 }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        command:
+        - "rm"
+        - "-vrf"
+        - "$KONG_PREFIX/pids"
+        env:
+        {{- include "kong.env" . | nindent 8 }}
+        volumeMounts:
+        {{- include "kong.volumeMounts" . | nindent 8 }}
+        {{- if .Values.deployment.initContainers }}
+        {{- toYaml .Values.deployment.initContainers | nindent 6 }}
+        {{- end }}
+        {{- if (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) }}
+        {{- include "kong.wait-for-db" . | nindent 6 }}
+        {{- end }}
+      {{- end }} # TODO 921 END initContainers clear-stale-pid
+*/}}
+      {{- if .pod.hostAliases }}
+      hostAliases:
+        {{- toYaml .pod.hostAliases | nindent 6 }}
+      {{- end}}
+      {{- if .dnsPolicy }}
+      dnsPolicy: {{ .pod.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .pod.dnsConfig }}
+      dnsConfig:
+{{ toYaml .pod.dnsConfig | indent 8 }}
+      {{- end }}
+      containers:
+{{ .pre.pod.container | nindent 8 }}
+{{- if .pod.sidecarContainers }}
+{{- toYaml .pod.sidecarContainers | nindent 8 }}
+{{- end }}
+    {{- if .pod.affinity }}
+      affinity:
+{{ toYaml .pod.affinity | indent 8 }}
+    {{- end }}
+    {{- if .pod.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .pod.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+      securityContext:
+      {{- .pod.securityContext | toYaml | nindent 8 }}
+    {{- if .pod.nodeSelector }}
+      nodeSelector:
+{{ toYaml .pod.nodeSelector | indent 8 }}
+    {{- end }}
+      terminationGracePeriodSeconds: {{ .pod.terminationGracePeriodSeconds }}
+    {{- if .pod.tolerations }}
+      tolerations:
+{{ toYaml .pod.tolerations | indent 8 }}
+    {{- end }}
+      volumes:
+      {{- .pre.deployment.volumes | nindent 8 -}}
+      {{- .pre.deployment.userVolumes | nindent 8 -}}
+
+{{- end -}} {{/* end kong.deployment */}}
