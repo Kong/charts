@@ -660,7 +660,7 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end }}
 {{- end }}
 
-{{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
+{{- if (and (not .Values.ingressController.deployment.enabled) (eq .Values.env.database "off")) }}
   {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
   {{- if gt $dblessSourceCount 1 -}}
     {{- fail "Ambiguous configuration: only one of of .Values.dblessConfig.configMap, .Values.dblessConfig.secret, and .Values.dblessConfig.config can be set." -}}
@@ -679,7 +679,7 @@ The name of the Service which will be used by the controller to update the Ingre
   {{- end }}
 {{- end }}
 
-{{- if and .Values.ingressController.enabled .Values.ingressController.admissionWebhook.enabled }}
+{{- if and .Values.ingressController.deployment.enabled .Values.ingressController.admissionWebhook.enabled }}
 - name: webhook-cert
   secret:
     {{- if .Values.ingressController.admissionWebhook.certificate.provided }}
@@ -708,7 +708,7 @@ The name of the Service which will be used by the controller to update the Ingre
   secret:
     secretName: {{ .name }}
 {{- end }}
-{{- if and .Values.ingressController.adminApi.tls.client.enabled .Values.ingressController.enabled }}
+{{- if and .Values.ingressController.adminApi.tls.client.enabled .Values.ingressController.deployment.enabled }}
 - name: admin-api-cert
   secret:
     secretName: {{ template "adminApiService.certSecretName" . }}
@@ -716,7 +716,7 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end -}}
 
 {{- define "controller.adminApiCertVolumeMount" -}}
-{{- if and .Values.ingressController.adminApi.tls.client.enabled .Values.ingressController.enabled }}
+{{- if and .Values.ingressController.adminApi.tls.client.enabled .Values.ingressController.deployment.enabled }}
 - name: admin-api-cert
   mountPath: /etc/secrets/admin-api-cert
   readOnly: true
@@ -756,7 +756,7 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end }}
 {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
   {{- if eq $dblessSourceCount 1 -}}
-    {{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
+    {{- if (and (not .Values.ingressController.deployment.enabled) (eq .Values.env.database "off")) }}
 - name: kong-custom-dbless-config-volume
   mountPath: /kong_dbless/
     {{- end }}
@@ -967,7 +967,7 @@ the template that it itself is using form the above sections.
 {{- $_ := set $autoEnv "KONG_ADMIN_ERROR_LOG" "/dev/stderr" -}}
 {{- $_ := set $autoEnv "KONG_STATUS_ERROR_LOG" "/dev/stderr" -}}
 
-{{- if .Values.ingressController.enabled -}}
+{{- if .Values.ingressController.deployment.enabled -}}
   {{- $_ := set $autoEnv "KONG_KIC" "on" -}}
 {{- end -}}
 
@@ -1143,7 +1143,7 @@ the template that it itself is using form the above sections.
   {{- $_ := set $autoEnv "KONG_PG_PORT" "5432" }}
 {{- end }}
 
-{{- if (and (not .Values.ingressController.enabled) (eq .Values.env.database "off")) }}
+{{- if (and (not .Values.ingressController.deployment.enabled) (eq .Values.env.database "off")) }}
 {{- $dblessSourceCount := (add (.Values.dblessConfig.configMap | len | min 1) (.Values.dblessConfig.secret | len | min 1) (.Values.dblessConfig.config | len | min 1)) -}}
 {{- if eq $dblessSourceCount 1 -}}
   {{- $_ := set $autoEnv "KONG_DECLARATIVE_CONFIG" "/kong_dbless/kong.yml" -}}
@@ -1710,7 +1710,7 @@ extensions/v1beta1
 
 {{- define "kong.proxy.compatibleReadiness" -}}
 {{- $proxyReadiness := .Values.readinessProbe -}}
-{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (and .Values.ingressController.enabled (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image)))) -}}
+{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (and .Values.ingressController.deployment.enabled (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image)))) -}}
     {{- if (eq $proxyReadiness.httpGet.path "/status/ready") -}}
         {{- $_ := set $proxyReadiness.httpGet "path" "/status" -}}
     {{- end -}}
