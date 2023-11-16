@@ -390,8 +390,8 @@ Return the admin API service name for service discovery
     {{- $_ := required ".ingressController.gatewayDiscovery.adminApiService.name has to be provided when .Values.ingressController.gatewayDiscovery.enabled is set to true"  $adminApiServiceName -}}
   {{- end }}
 
-  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
-  {{- fail (printf "Gateway discovery is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
+  {{- fail (printf "Gateway discovery is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
   {{- end }}
 
   {{- if .Values.deployment.kong.enabled }}
@@ -506,8 +506,8 @@ The name of the Service which will be used by the controller to update the Ingre
 */}}
 
 {{- if .Values.ingressController.konnect.enabled }}
-  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
-  {{- fail (printf "Konnect sync is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
+  {{- fail (printf "Konnect sync is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
   {{- end }}
 
   {{- if not .Values.ingressController.gatewayDiscovery.enabled }}
@@ -879,7 +879,7 @@ The name of the Service which will be used by the controller to update the Ingre
     containerPort: {{ .Values.ingressController.admissionWebhook.port }}
     protocol: TCP
   {{- end }}
-  {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) -}}
+  {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) -}}
   - name: cmetrics
     containerPort: 10255
     protocol: TCP
@@ -896,7 +896,7 @@ The name of the Service which will be used by the controller to update the Ingre
         apiVersion: v1
         fieldPath: metadata.namespace
 {{- include "kong.ingressController.env" .  | indent 2 }}
-  image: {{ include "kong.getRepoTag" .Values.ingressController.image }}
+  image: {{ include "kong.getRepoTag" .Values.ingressController.deployment.pod.container.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
      Helm value interpretation doesn't let you replace the default HTTP checks with any other
@@ -1268,7 +1268,7 @@ role sets used in the charts. Updating these requires separating out cluster
 resource roles into their separate templates.
 */}}
 {{- define "kong.kubernetesRBACRules" -}}
-{{- if (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
 - apiGroups:
   - configuration.konghq.com
   resources:
@@ -1286,7 +1286,7 @@ resource roles into their separate templates.
   - patch
   - update
 {{- end }}
-{{- if (semverCompare ">= 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare ">= 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
 - apiGroups:
   - configuration.konghq.com
   resources:
@@ -1304,7 +1304,7 @@ resource roles into their separate templates.
   - patch
   - update
 {{- end }}
-{{- if (semverCompare "< 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare "< 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
 - apiGroups:
   - ""
   resources:
@@ -1636,7 +1636,7 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
-{{- if (semverCompare ">= 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare ">= 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
 - apiGroups:
   - apiextensions.k8s.io
   resources:
@@ -1710,7 +1710,7 @@ extensions/v1beta1
 
 {{- define "kong.proxy.compatibleReadiness" -}}
 {{- $proxyReadiness := .Values.readinessProbe -}}
-{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (and .Values.ingressController.deployment.enabled (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image)))) -}}
+{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (and .Values.ingressController.deployment.enabled (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)))) -}}
     {{- if (eq $proxyReadiness.httpGet.path "/status/ready") -}}
         {{- $_ := set $proxyReadiness.httpGet "path" "/status" -}}
     {{- end -}}

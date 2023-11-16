@@ -35,7 +35,7 @@ rules:
       - configmaps
     verbs:
       - create
-{{- if (semverCompare "< 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare "< 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
   - apiGroups:
       - ""
     resources:
