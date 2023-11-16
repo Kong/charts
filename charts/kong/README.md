@@ -853,6 +853,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | deployment.minReadySeconds         | Minimum number of seconds for which newly created pods should be ready without any of its container crashing, for it to be considered available. |                     |
 | deployment.initContainers          | Create initContainers. Please go to Kubernetes doc for the spec of the initContainers |                     |
 | deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
+| deployment.hostname                | Set the Deployment's `.spec.template.hostname`        |                     |
 | deployment.hostNetwork             | Enable hostNetwork, which binds to the ports to the host                              | `false`             |
 | deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
 | deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |

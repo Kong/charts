@@ -60,6 +60,8 @@ deployment:
   # Use a DaemonSet controller instead of a Deployment controller
   daemonset: false
   hostNetwork: false
+  # Set the Deployment's spec.template.hostname field.
+  hostname: ""
   # kong_prefix empty dir size
   prefixDir:
     sizeLimit: 256Mi
