@@ -2,7 +2,15 @@
 
 ## Unreleased
 
-* Add new `deployment.hostname` value to make identifying instances in controlplane/dataplane configurations easier.
+Nothing yet.
+
+## 2.32.0
+
+### Improvements
+
+* Add new `deployment.hostname` value to make identifying instances in
+  controlplane/dataplane configurations easier.
+  [#943](https://github.com/Kong/charts/pull/943)
 
 ## 2.31.0
 

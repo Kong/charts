@@ -61,6 +61,9 @@ deployment:
   daemonset: false
   hostNetwork: false
   # Set the Deployment's spec.template.hostname field.
+  # This propagates to Kong API endpoints that report
+  # the hostname, such as the admin API root and hybrid mode
+  # /clustering/data-planes endpoint
   hostname: ""
   # kong_prefix empty dir size
   prefixDir:
