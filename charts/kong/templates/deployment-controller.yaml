@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: {{ template "kong.fullname" . }}-controller
   namespace:  {{ template "kong.namespace" . }}
-  # TODO ALT 921 same thing with selector labels
   labels:
       {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: controller
