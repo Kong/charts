@@ -528,7 +528,8 @@ ingressController:
   deployment:
     enabled: true
     labels: {}
-    annotations: {} # TODO 921 add any defaults
+    # TODO 921 add any defaults
+    annotations: {}
     # NOTE ALT 921 like autoscaling, this is a bit unusual with a leader/standby model
     updateStrategy: {}
       # type: RollingUpdate
