@@ -541,7 +541,11 @@ ingressController:
     # minReadySeconds: 60
     pod:
       labels: {}
-      annotations: {}
+      annotations:
+        kuma.io/gateway: "enabled"
+        traffic.kuma.io/exclude-outbound-ports: "8444"
+        traffic.sidecar.istio.io/excludeOutboundPorts: "8444"
+        traffic.sidecar.istio.io/includeInboundPorts: ""
       automountServiceAccountToken: false
       hostNetwork: false
       # Affinity for pod assignment
