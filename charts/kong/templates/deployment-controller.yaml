@@ -118,7 +118,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: metadata.namespace
-      {{- include "kong.ingressController.env" .  | indent 2 }}
+        {{- include "kong.ingressController.env" .  | nindent 8 }}
         image: {{ include "kong.getRepoTag" .Values.ingressController.deployment.pod.container.image }}
         imagePullPolicy: {{ .Values.ingressController.deployment.pod.container.image.pullPolicy }}
       {{/* disableProbes is a hidden setting to drop this block entirely for use with a debugger
@@ -128,12 +128,12 @@ spec:
       */}}
       {{- if (not (hasKey .Values.ingressController "disableProbes")) }}
         readinessProbe:
-          {{ toYaml .Values.ingressController.deployment.pod.container.readinessProbe | indent 10 }}
+          {{ toYaml .Values.ingressController.deployment.pod.container.readinessProbe | nindent 10 }}
         livenessProbe:
-          {{ toYaml .Values.ingressController.deployment.pod.container.livenessProbe | indent 10 }}
+          {{ toYaml .Values.ingressController.deployment.pod.container.livenessProbe | nindent 10 }}
       {{- end }}
         resources:
-          {{ toYaml .Values.ingressController.deployment.pod.container.resources | indent 10 }}
+          {{ toYaml .Values.ingressController.deployment.pod.container.resources | nindent 10 }}
         volumeMounts:
         {{- if .Values.ingressController.admissionWebhook.enabled }}
         - name: webhook-cert
