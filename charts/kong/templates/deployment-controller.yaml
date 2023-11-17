@@ -134,6 +134,8 @@ spec:
         resources:
           {{ toYaml .Values.ingressController.deployment.pod.container.resources | nindent 10 }}
         volumeMounts:
+        - name: {{ template "kong.fullname" . }}-tmp
+          mountPath: /tmp
         {{- if .Values.ingressController.admissionWebhook.enabled }}
         - name: webhook-cert
           mountPath: /admission-webhook
@@ -173,6 +175,9 @@ spec:
 {{ toYaml .Values.ingressController.deployment.pod.tolerations | indent 8 }}
     {{- end }}
       volumes:
+      - name: {{ template "kong.fullname" . }}-tmp
+        emptyDir:
+          sizeLimit: {{ .Values.ingressController.deployment.pod.container.tmpDir.sizeLimit }}
       {{- if .Values.ingressController.admissionWebhook.enabled }}
       - name: webhook-cert
         secret:
