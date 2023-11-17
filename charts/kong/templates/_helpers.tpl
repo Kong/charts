@@ -371,41 +371,6 @@ Create a single listen (IP+port+parameter combo)
 {{- end -}}
 
 {{/*
-Return the admin API service name for service discovery
-*/}}
-{{- define "kong.adminSvc" -}}
-{{- $gatewayDiscovery := .Values.ingressController.gatewayDiscovery -}}
-{{- if $gatewayDiscovery.enabled -}}
-  {{- $adminApiService := $gatewayDiscovery.adminApiService -}}
-  {{- $adminApiServiceName := $gatewayDiscovery.adminApiService.name -}}
-  {{- $generateAdminApiService := $gatewayDiscovery.generateAdminApiService -}}
-
-  {{- if and $generateAdminApiService $adminApiService.name -}}
-    {{- fail (printf ".Values.ingressController.gatewayDiscovery.adminApiService and .Values.ingressController.gatewayDiscovery.generateAdminApiService must not be provided at the same time")  -}}
-  {{- end -}}
-
-  {{- if $generateAdminApiService -}}
-    {{- $adminApiServiceName = (printf "%s-%s" .Release.Name "gateway-admin") -}}
-  {{- else }}
-    {{- $_ := required ".ingressController.gatewayDiscovery.adminApiService.name has to be provided when .Values.ingressController.gatewayDiscovery.enabled is set to true"  $adminApiServiceName -}}
-  {{- end }}
-
-  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
-  {{- fail (printf "Gateway discovery is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
-  {{- end }}
-
-  {{- if .Values.deployment.kong.enabled }}
-  {{- fail "deployment.kong.enabled and ingressController.gatewayDiscovery.enabled are mutually exclusive and cannot be enabled at once. Gateway discovery requires a split release installation of Gateways and Ingress Controller." }}
-  {{- end }}
-
-  {{- $namespace := $adminApiService.namespace | default ( include "kong.namespace" . ) -}}
-  {{- printf "%s/%s" $namespace $adminApiServiceName -}}
-{{- else -}}
-  {{- fail "Can't use gateway discovery when .Values.ingressController.gatewayDiscovery.enabled is set to false." -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Return the local admin API URL, preferring HTTPS if available
 */}}
 {{- define "kong.adminLocalURL" -}}
@@ -491,7 +456,7 @@ The name of the Service which will be used by the controller to update the Ingre
 */}}
 
   {{- if .Values.ingressController.gatewayDiscovery.enabled -}}
-    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_SVC" (include "kong.adminSvc" . ) -}}
+    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_SVC" (printf "%s/%s-%s" (include "kong.namespace" .) (include "kong.fullname" .) "admin") -}}
   {{- else -}}
     {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_URL" (include "kong.adminLocalURL" .) -}}
   {{- end -}}

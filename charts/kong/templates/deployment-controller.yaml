@@ -174,11 +174,11 @@ spec:
 {{ toYaml .Values.ingressController.deployment.pod.tolerations | indent 8 }}
     {{- end }}
       volumes:
-      {{- if .Values.admissionWebhook.enabled }}
+      {{- if .Values.ingressController.admissionWebhook.enabled }}
       - name: webhook-cert
         secret:
-          {{- if .Values.admissionWebhook.certificate.provided }}
-          secretName: {{ .Values.admissionWebhook.certificate.secretName }}
+          {{- if .Values.ingressController.admissionWebhook.certificate.provided }}
+          secretName: {{ .Values.ingressController.admissionWebhook.certificate.secretName }}
           {{- else }}
           secretName: {{ template "kong.fullname" . }}-validation-webhook-keypair
           {{- end }}

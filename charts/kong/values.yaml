@@ -654,10 +654,6 @@ ingressController:
 
   gatewayDiscovery:
     enabled: true
-    generateAdminApiService: false
-    adminApiService:
-      namespace: ""
-      name: ""
 
   # Specify individual namespaces to watch for ingress configuration. By default,
   # when no namespaces are set, the controller watches all namespaces and uses a
