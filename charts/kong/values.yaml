@@ -29,9 +29,9 @@ deployment:
     # container. Some sidecars require enabling this. Note that enabling this exposes Kubernetes credentials to Kong
     # Lua code, increasing potential attack surface.
     automountServiceAccountToken: false
-  ## Optionally specify the name of the service account to create and the annotations to add.
-  #  name:
-  #  annotations: {}
+    # Optionally specify the name of the service account to create and the annotations to add.
+    name: ""
+    annotations: {}
 
   ## Optionally specify any extra sidecar containers to be included in the deployment
   ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
@@ -656,6 +656,18 @@ ingressController:
         # tmp empty dir size
         tmpDir:
           sizeLimit: 1Gi
+
+  serviceAccount:
+    create: true
+    # TODO ALT 921 this should possibly just be true for the controller deployment, though that
+    # will make it available to sidecar containers. we already have the volume template to mount
+    # it, so defaulting true and removing that volume would mean you'd have to do some gymnastics
+    # to grant it to the controller but not sidecars if that's what you want. Kubernetes explain
+    # why this can't have a container-level override also :(
+    automountServiceAccountToken: false
+    ## Optionally specify the name of the service account to create and the annotations to add.
+    name: ""
+    annotations: {}
 
   gatewayDiscovery:
     enabled: true

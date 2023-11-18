@@ -42,7 +42,7 @@ spec:
     metadata:
       annotations:
         {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
+        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName.proxy" . }}
         {{- end }}
         {{- if (and (eq .Values.env.database "off" ) .Values.dblessConfig.config) }}
         checksum/dbless.config: {{ toYaml .Values.dblessConfig.config | sha256sum }}
@@ -71,7 +71,7 @@ spec:
       priorityClassName: "{{ .Values.priorityClassName }}"
       {{- end }}
       {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
-      serviceAccountName: {{ template "kong.serviceAccountName" . }}
+      serviceAccountName: {{ template "kong.serviceAccountName.proxy" . }}
       {{- end }}
       {{- if (and (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name) .Values.deployment.serviceAccount.automountServiceAccountToken) }}
       automountServiceAccountToken: true

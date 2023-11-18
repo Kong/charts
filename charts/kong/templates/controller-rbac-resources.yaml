@@ -85,7 +85,7 @@ roleRef:
   name: {{ template "kong.fullname" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "kong.serviceAccountName" . }}
+    name: {{ template "kong.serviceAccountName.controller" . }}
     namespace: {{ template "kong.namespace" . }}
 {{- if eq (len .Values.ingressController.watchNamespaces) 0 }}
 ---
@@ -111,7 +111,7 @@ roleRef:
   name: {{ template "kong.fullname" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "kong.serviceAccountName" . }}
+    name: {{ template "kong.serviceAccountName.controller" . }}
     namespace: {{ template "kong.namespace" . }}
 {{- else }}
 {{- range .Values.ingressController.watchNamespaces }}
@@ -139,7 +139,7 @@ roleRef:
   name: {{ template "kong.fullname" $ }}-{{ . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "kong.serviceAccountName" $ }}
+    name: {{ template "kong.serviceAccountName.controller" $ }}
     namespace: {{ template "kong.namespace" $ }}
 {{- end }}
 ---
@@ -164,7 +164,7 @@ roleRef:
   name: {{ template "kong.fullname" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "kong.serviceAccountName" . }}
+    name: {{ template "kong.serviceAccountName.controller" . }}
     namespace: {{ template "kong.namespace" . }}
 {{- end -}}
 {{- end -}}

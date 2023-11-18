@@ -59,24 +59,6 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "kong.serviceAccountName" -}}
-{{- if .Values.deployment.serviceAccount.create -}}
-    {{ default (include "kong.fullname" .) .Values.deployment.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.deployment.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the secret for service account token to use
-*/}}
-{{- define "kong.serviceAccountTokenName" -}}
-{{ include "kong.serviceAccountName" . }}-token
-{{- end -}}
-
-{{/*
 Create Ingress resource for a Kong service
 */}}
 {{- define "kong.ingress" -}}
@@ -540,7 +522,7 @@ The name of the Service which will be used by the controller to update the Ingre
   emptyDir:
     sizeLimit: {{ .Values.deployment.tmpDir.sizeLimit }}
 {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-- name: {{ template "kong.serviceAccountTokenName" . }}
+- name: {{ template "kong.serviceAccountTokenName.proxy" . }}
   {{- /* Due to GKE versions (e.g. v1.23.15-gke.1900) we need to handle pre-release part of the version as well.
   See the related documentation of semver module that Helm depends on for semverCompare:
   https://github.com/Masterminds/semver#working-with-prerelease-versions
@@ -564,7 +546,7 @@ The name of the Service which will be used by the controller to update the Ingre
           path: namespace
   {{- else }}
   secret:
-    secretName: {{ template "kong.serviceAccountTokenName" . }}
+    secretName: {{ template "kong.serviceAccountTokenName.proxy" . }}
     items:
     - key: token
       path: token
@@ -883,7 +865,7 @@ The name of the Service which will be used by the controller to update the Ingre
     readOnly: true
 {{- end }}
 {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-  - name: {{ template "kong.serviceAccountTokenName" . }}
+  - name: {{ template "kong.serviceAccountTokenName.proxy" . }}
     mountPath: /var/run/secrets/kubernetes.io/serviceaccount
     readOnly: true
 {{- end }}

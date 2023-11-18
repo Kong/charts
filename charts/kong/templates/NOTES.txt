@@ -12,10 +12,8 @@ Once installed, please follow along the getting started guide to start using
 Kong: https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/getting-started/
 
 {{ $warnings := list -}}
-{{- if (hasKey .Values.ingressController "serviceAccount") -}}
-{{- if (or (hasKey .Values.ingressController.serviceAccount "name") (hasKey .Values.ingressController.serviceAccount "annotations")) -}}
-{{- $warnings = append $warnings "you have set either .ingressController.serviceAccount.name or .ingressController.serviceAccount.annotations. These settings have moved to .deployment.serviceAccount.name and .deployment.serviceAccount.annotations. You must move your configuration to the new location in values.yaml" -}}
-{{- end -}}
+{{- if false -}}
+{{- $warnings = append $warnings "this is an example warning to demonstrate usage. it never actually shows up" -}}
 {{- end -}}
 
 {{- include "kong.deprecation-warnings" $warnings -}}

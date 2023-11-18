@@ -34,7 +34,7 @@ spec:
         # TODO ALT 921 complicated. we generate a single SA from .deployment.kong.serviceAccount configuration. we could, but probably
         # shouldn't share it
         {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
+        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName.controller" . }}
         {{- end }}
         {{- if .Values.ingressController.deployment.pod.annotations }}
         {{- range $key, $value := .Values.ingressController.deployment.pod.annotations }}
@@ -58,7 +58,7 @@ spec:
       {{- end }}
       # TODO ALT 921 ditto earlier SA stuff
       {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
-      serviceAccountName: {{ template "kong.serviceAccountName" . }}
+      serviceAccountName: {{ template "kong.serviceAccountName.controller" . }}
       {{- end }}
       {{- if (and (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name) .Values.ingressController.deployment.pod.automountServiceAccountToken) }}
       automountServiceAccountToken: true
@@ -143,7 +143,7 @@ spec:
         {{- end }}
         # TODO ALT 921 ditto SA stuff
         {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-        - name: {{ template "kong.serviceAccountTokenName" . }}
+        - name: {{ template "kong.serviceAccountTokenName.controller" . }}
           mountPath: /var/run/secrets/kubernetes.io/serviceaccount
           readOnly: true
         {{- end }}
@@ -195,7 +195,7 @@ spec:
       {{- end }}
 
       {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-      - name: {{ template "kong.serviceAccountTokenName" . }}
+      - name: {{ template "kong.serviceAccountTokenName.controller" . }}
         {{/* Due to GKE versions (e.g. v1.23.15-gke.1900) we need to handle pre-release part of the version as well.
                See the related documentation of semver module that Helm depends on for semverCompare:
                https://github.com/Masterminds/semver#working-with-prerelease-versions
@@ -220,7 +220,7 @@ spec:
                 path: namespace
         {{- else }}
         secret:
-          secretName: {{ template "kong.serviceAccountTokenName" . }}
+          secretName: {{ template "kong.serviceAccountTokenName.controller" . }}
           items:
           - key: token
             path: token
