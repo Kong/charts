@@ -518,19 +518,10 @@ dblessConfig:
 # created in k8s. It uses CRDs for more fine grained control over routing and
 # for Kong specific configuration.
 ingressController:
-  # NOTE ALT 921 this does _not_ add an HPA (similar to the current .Values.autoscaling
-  # to the controller configuration. I don't think the controller would benefit from one.
-  # Its leader/standby model means spawning additional controller instances won't
-  # distribute load, and you want a static set of replicas to meet your cross-zone
-  # availability needs.
-  # NOTE ALT 921 daemonset is also not supported. Again, non-leaders do nothing other
-  # than try to take control of leadership if needed.
   deployment:
     enabled: true
     labels: {}
-    # TODO 921 add any defaults
     annotations: {}
-    # NOTE ALT 921 like autoscaling, this is a bit unusual with a leader/standby model
     updateStrategy: {}
       # type: RollingUpdate
       # rollingUpdate:
@@ -651,19 +642,11 @@ ingressController:
           # requests:
           #  cpu: 1
           #  memory: 2G
-        # TODO 921 since kong.volumes isn't properly split yet, this
-        # is not honored (it uses the setting under deployment.kong)
-        # tmp empty dir size
         tmpDir:
           sizeLimit: 1Gi
 
   serviceAccount:
     create: true
-    # TODO ALT 921 this should possibly just be true for the controller deployment, though that
-    # will make it available to sidecar containers. we already have the volume template to mount
-    # it, so defaulting true and removing that volume would mean you'd have to do some gymnastics
-    # to grant it to the controller but not sidecars if that's what you want. Kubernetes explain
-    # why this can't have a container-level override also :(
     automountServiceAccountToken: false
     ## Optionally specify the name of the service account to create and the annotations to add.
     name: ""

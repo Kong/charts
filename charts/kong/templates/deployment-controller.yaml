@@ -64,7 +64,7 @@ spec:
       automountServiceAccountToken: false
       {{ end }}
       {{- if .Values.ingressController.deployment.pod.container.image.pullSecrets }}
-      # NOTE 921 this is out of place, but the rest of .image _does_ live
+      # NOTE this is out of place in values.yaml, but the rest of .image _does_ live
       # inside the container, so probably just keep it there, rather than
       # separating into .pod.imagePullSecrets
       imagePullSecrets:
