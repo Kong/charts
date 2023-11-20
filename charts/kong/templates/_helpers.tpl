@@ -809,69 +809,6 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end -}}
 {{- end -}}
 
-# TODO ALT 921 directly inside the template, should be removed
-{{- define "kong.controller-container" -}}
-- name: ingress-controller
-  securityContext:
-{{ toYaml .Values.containerSecurityContext | nindent 4 }}
-  args:
-  {{ if .Values.ingressController.deployment.pod.container.args}}
-  {{- range $val := .Values.ingressController.deployment.pod.container.args }}
-  - {{ $val }}
-  {{- end }}
-  {{- end }}
-  ports:
-  {{- if .Values.ingressController.admissionWebhook.enabled }}
-  - name: webhook
-    containerPort: {{ .Values.ingressController.admissionWebhook.port }}
-    protocol: TCP
-  {{- end }}
-  {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) -}}
-  - name: cmetrics
-    containerPort: 10255
-    protocol: TCP
-  {{- end }}
-  env:
-  - name: POD_NAME
-    valueFrom:
-      fieldRef:
-        apiVersion: v1
-        fieldPath: metadata.name
-  - name: POD_NAMESPACE
-    valueFrom:
-      fieldRef:
-        apiVersion: v1
-        fieldPath: metadata.namespace
-{{- include "kong.ingressController.env" .  | indent 2 }}
-  image: {{ include "kong.getRepoTag" .Values.ingressController.deployment.pod.container.image }}
-  imagePullPolicy: {{ .Values.image.pullPolicy }}
-{{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
-     Helm value interpretation doesn't let you replace the default HTTP checks with any other
-     check type, and all HTTP checks freeze when a debugger pauses operation.
-     Setting disableReadiness to ANY value disables the probes.
-*/}}
-{{- if (not (hasKey .Values.ingressController "disableProbes")) }}
-  readinessProbe:
-{{ toYaml .Values.ingressController.readinessProbe | indent 4 }}
-  livenessProbe:
-{{ toYaml .Values.ingressController.livenessProbe | indent 4 }}
-{{- end }}
-  resources:
-{{ toYaml .Values.ingressController.resources | indent 4 }}
-  volumeMounts:
-{{- if .Values.ingressController.admissionWebhook.enabled }}
-  - name: webhook-cert
-    mountPath: /admission-webhook
-    readOnly: true
-{{- end }}
-{{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-  - name: {{ template "kong.serviceAccountTokenName.proxy" . }}
-    mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-    readOnly: true
-{{- end }}
-  {{- include "kong.userDefinedVolumeMounts" .Values.ingressController | nindent 2 }}
-  {{- include "controller.adminApiCertVolumeMount" . | nindent 2 }}
-{{- end -}}
 
 {{- define "secretkeyref" -}}
 valueFrom:
