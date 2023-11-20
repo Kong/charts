@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - kong-2.x
 
 jobs:
   lint-test:

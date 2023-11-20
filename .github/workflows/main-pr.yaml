@@ -10,6 +10,7 @@ on:
   pull_request:
     branches:
       - main
+      - kong-2.x
 
 jobs:
   lint:
