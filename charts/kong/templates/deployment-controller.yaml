@@ -1,3 +1,4 @@
+{{- if .Values.ingressController.deployment.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -164,6 +165,7 @@ spec:
         {{- end }}
       {{- end }}
       {{- include "kong.userDefinedVolumes" . | nindent 6 -}}
+{{- end }}
 
 {{- define "kong.controllerContainer" -}}
 - name: ingress-controller

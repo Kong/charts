@@ -1,4 +1,4 @@
-{{- if or .Values.deployment.kong.enabled }}
+{{- if .Values.deployment.kong.enabled }}
 apiVersion: apps/v1
 {{- if .Values.deployment.daemonset }}
 kind: DaemonSet
