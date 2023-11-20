@@ -1,5 +1,6 @@
 ingressController:
-  enabled: false
+  deployment:
+    enabled: false
 
 image:
   repository: kong/kong-gateway

@@ -7,9 +7,12 @@
 #   does not interfere with startup when there is no file to remove.
 
 ingressController:
-  enabled: true
-  env:
-    anonymous_reports: "false"
+  deployment:
+    enabled: true
+    pod:
+      container:
+        env:
+          anonymous_reports: "false"
 postgresql:
   enabled: true
   auth:

@@ -1,9 +1,8 @@
 # CI test for testing dbless deployment without ingress controllers using legacy admin listen and stream listens
 # - disable ingress controller
 ingressController:
-  enabled: false
-  env:
-    anonymous_reports: "false"
+  deployment:
+    enabled: false
 
 # - disable DB for kong
 env:

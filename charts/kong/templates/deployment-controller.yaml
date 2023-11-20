@@ -31,8 +31,6 @@ spec:
   template:
     metadata:
       annotations:
-        # TODO ALT 921 complicated. we generate a single SA from .deployment.kong.serviceAccount configuration. we could, but probably
-        # shouldn't share it
         {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
         kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName.controller" . }}
         {{- end }}
@@ -56,7 +54,6 @@ spec:
       {{- if .Values.ingressController.deployment.pod.priorityClassName }}
       priorityClassName: "{{ .Values.ingressController.deployment.pod.priorityClassName }}"
       {{- end }}
-      # TODO ALT 921 ditto earlier SA stuff
       {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
       serviceAccountName: {{ template "kong.serviceAccountName.controller" . }}
       {{- end }}
@@ -224,7 +221,6 @@ spec:
     mountPath: /admission-webhook
     readOnly: true
   {{- end }}
-  # TODO ALT 921 ditto SA stuff
   {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
   - name: {{ template "kong.serviceAccountTokenName.controller" . }}
     mountPath: /var/run/secrets/kubernetes.io/serviceaccount
