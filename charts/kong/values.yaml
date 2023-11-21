@@ -144,8 +144,6 @@ image:
 # Specify Kong admin API service and listener configuration
 admin:
   # Enable creating a Kubernetes service for the admin API
-  # Disabling this is recommended for most ingress controller configurations
-  # Enterprise users that wish to use Kong Manager with the controller should enable this
   enabled: true
   type: ClusterIP
   loadBalancerClass:
