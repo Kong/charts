@@ -7,8 +7,8 @@
 #   does not interfere with startup when there is no file to remove.
 
 ingressController:
+  enabled: true
   deployment:
-    enabled: true
     pod:
       container:
         env:

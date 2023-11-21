@@ -1,8 +1,7 @@
 # CI test for testing dbless deployment without ingress controllers
 # - disable ingress controller
 ingressController:
-  deployment:
-    enabled: false
+  enabled: false
 # - disable DB for kong
 env:
   anonymous_reports: "off"

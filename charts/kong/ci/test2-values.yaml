@@ -5,8 +5,8 @@
 # - watchNamespaces is set
 # - the admission webhook is enabled; has the timeout explicitly set
 ingressController:
+  enabled: true
   deployment:
-    enabled: true
     pod:
       container:
         env:

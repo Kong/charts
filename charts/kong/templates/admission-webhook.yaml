@@ -1,4 +1,4 @@
-{{- if (and .Values.ingressController.admissionWebhook.enabled .Values.ingressController.deployment.enabled) }}
+{{- if (and .Values.ingressController.admissionWebhook.enabled .Values.ingressController.enabled) }}
 {{- $certCert := "" -}}
 {{- $certKey := "" -}}
 {{- $caCert := "" -}}

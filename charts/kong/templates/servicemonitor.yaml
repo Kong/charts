@@ -24,7 +24,7 @@ spec:
     {{- if .Values.serviceMonitor.metricRelabelings }}
     metricRelabelings: {{ toYaml .Values.serviceMonitor.metricRelabelings | nindent 6 }}
     {{- end }}
-  {{- if and .Values.ingressController.deployment.enabled (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
+  {{- if and .Values.ingressController.enabled (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
   - targetPort: cmetrics
     scheme: http
     {{- if .Values.serviceMonitor.interval }}

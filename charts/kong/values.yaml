@@ -518,8 +518,8 @@ dblessConfig:
 # created in k8s. It uses CRDs for more fine grained control over routing and
 # for Kong specific configuration.
 ingressController:
+  enabled: true
   deployment:
-    enabled: true
     labels: {}
     annotations: {}
     updateStrategy: {}

@@ -15,5 +15,4 @@ dblessConfig:
         - "/example"
 
 ingressController:
-  deployment:
-    enabled: false
+  enabled: false

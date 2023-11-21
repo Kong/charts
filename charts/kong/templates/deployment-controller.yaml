@@ -1,4 +1,4 @@
-{{- if .Values.ingressController.deployment.enabled }}
+{{- if .Values.ingressController.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
