@@ -5,6 +5,7 @@
 ### Improvements
 
 * Support for `affinity` configuration has been added to migration job templates.
+* Display a warning message when Kong Manager is enabled and the Admin API is disabled.
 
 ## 2.32.0
 
