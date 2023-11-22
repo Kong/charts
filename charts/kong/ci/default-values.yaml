@@ -2,5 +2,8 @@
 env:
   anonymous_reports: "off"
 ingressController:
-  env:
-    anonymous_reports: "false"
+  deployment:
+    pod:
+      container:
+        env:
+          anonymous_reports: "false"

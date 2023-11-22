@@ -42,6 +42,12 @@ app.kubernetes.io/component: app
 app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
 
+{{- define "kong.controllerSelectorLabels" -}}
+app.kubernetes.io/name: {{ template "kong.name" . }}
+app.kubernetes.io/component: controller
+app.kubernetes.io/instance: "{{ .Release.Name }}"
+{{- end -}}
+
 {{- define "kong.postgresql.fullname" -}}
 {{- $name := default "postgresql" .Values.postgresql.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
@@ -50,24 +56,6 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- define "kong.dblessConfig.fullname" -}}
 {{- $name := default "kong-custom-dbless-config" .Values.dblessConfig.nameOverride -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "kong.serviceAccountName" -}}
-{{- if .Values.deployment.serviceAccount.create -}}
-    {{ default (include "kong.fullname" .) .Values.deployment.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.deployment.serviceAccount.name }}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the secret for service account token to use
-*/}}
-{{- define "kong.serviceAccountTokenName" -}}
-{{ include "kong.serviceAccountName" . }}-token
 {{- end -}}
 
 {{/*
@@ -365,41 +353,6 @@ Create a single listen (IP+port+parameter combo)
 {{- end -}}
 
 {{/*
-Return the admin API service name for service discovery
-*/}}
-{{- define "kong.adminSvc" -}}
-{{- $gatewayDiscovery := .Values.ingressController.gatewayDiscovery -}}
-{{- if $gatewayDiscovery.enabled -}}
-  {{- $adminApiService := $gatewayDiscovery.adminApiService -}}
-  {{- $adminApiServiceName := $gatewayDiscovery.adminApiService.name -}}
-  {{- $generateAdminApiService := $gatewayDiscovery.generateAdminApiService -}}
-
-  {{- if and $generateAdminApiService $adminApiService.name -}}
-    {{- fail (printf ".Values.ingressController.gatewayDiscovery.adminApiService and .Values.ingressController.gatewayDiscovery.generateAdminApiService must not be provided at the same time")  -}}
-  {{- end -}}
-
-  {{- if $generateAdminApiService -}}
-    {{- $adminApiServiceName = (printf "%s-%s" .Release.Name "gateway-admin") -}}
-  {{- else }}
-    {{- $_ := required ".ingressController.gatewayDiscovery.adminApiService.name has to be provided when .Values.ingressController.gatewayDiscovery.enabled is set to true"  $adminApiServiceName -}}
-  {{- end }}
-
-  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
-  {{- fail (printf "Gateway discovery is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
-  {{- end }}
-
-  {{- if .Values.deployment.kong.enabled }}
-  {{- fail "deployment.kong.enabled and ingressController.gatewayDiscovery.enabled are mutually exclusive and cannot be enabled at once. Gateway discovery requires a split release installation of Gateways and Ingress Controller." }}
-  {{- end }}
-
-  {{- $namespace := $adminApiService.namespace | default ( include "kong.namespace" . ) -}}
-  {{- printf "%s/%s" $namespace $adminApiServiceName -}}
-{{- else -}}
-  {{- fail "Can't use gateway discovery when .Values.ingressController.gatewayDiscovery.enabled is set to false." -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Return the local admin API URL, preferring HTTPS if available
 */}}
 {{- define "kong.adminLocalURL" -}}
@@ -485,7 +438,7 @@ The name of the Service which will be used by the controller to update the Ingre
 */}}
 
   {{- if .Values.ingressController.gatewayDiscovery.enabled -}}
-    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_SVC" (include "kong.adminSvc" . ) -}}
+    {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_SVC" (printf "%s/%s-%s" (include "kong.namespace" .) (include "kong.fullname" .) "admin") -}}
   {{- else -}}
     {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_URL" (include "kong.adminLocalURL" .) -}}
   {{- end -}}
@@ -500,8 +453,8 @@ The name of the Service which will be used by the controller to update the Ingre
 */}}
 
 {{- if .Values.ingressController.konnect.enabled }}
-  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
-  {{- fail (printf "Konnect sync is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  {{- if (semverCompare "< 2.9.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
+  {{- fail (printf "Konnect sync is available in controller versions 2.9 and up. Detected %s" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
   {{- end }}
 
   {{- if not .Values.ingressController.gatewayDiscovery.enabled }}
@@ -530,7 +483,7 @@ The name of the Service which will be used by the controller to update the Ingre
 */}}
 
 {{- $userEnv := dict -}}
-{{- range $key, $val := .Values.ingressController.env }}
+{{- range $key, $val := .Values.ingressController.deployment.pod.container.env }}
   {{- $upper := upper $key -}}
   {{- $var := printf "CONTROLLER_%s" $upper -}}
   {{- $_ := set $userEnv $var $val -}}
@@ -541,7 +494,7 @@ The name of the Service which will be used by the controller to update the Ingre
 */}}
 
 {{- $customIngressEnv := dict -}}
-{{- range $key, $val := .Values.ingressController.customEnv }}
+{{- range $key, $val := .Values.ingressController.deployment.pod.container.customEnv }}
   {{- $upper := upper $key -}}
   {{- $_ := set $customIngressEnv $upper $val -}}
 {{- end -}}
@@ -569,7 +522,7 @@ The name of the Service which will be used by the controller to update the Ingre
   emptyDir:
     sizeLimit: {{ .Values.deployment.tmpDir.sizeLimit }}
 {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-- name: {{ template "kong.serviceAccountTokenName" . }}
+- name: {{ template "kong.serviceAccountTokenName.proxy" . }}
   {{- /* Due to GKE versions (e.g. v1.23.15-gke.1900) we need to handle pre-release part of the version as well.
   See the related documentation of semver module that Helm depends on for semverCompare:
   https://github.com/Masterminds/semver#working-with-prerelease-versions
@@ -593,7 +546,7 @@ The name of the Service which will be used by the controller to update the Ingre
           path: namespace
   {{- else }}
   secret:
-    secretName: {{ template "kong.serviceAccountTokenName" . }}
+    secretName: {{ template "kong.serviceAccountTokenName.proxy" . }}
     items:
     - key: token
       path: token
@@ -856,68 +809,6 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end -}}
 {{- end -}}
 
-{{- define "kong.controller-container" -}}
-- name: ingress-controller
-  securityContext:
-{{ toYaml .Values.containerSecurityContext | nindent 4 }}
-  args:
-  {{ if .Values.ingressController.args}}
-  {{- range $val := .Values.ingressController.args }}
-  - {{ $val }}
-  {{- end }}
-  {{- end }}
-  ports:
-  {{- if .Values.ingressController.admissionWebhook.enabled }}
-  - name: webhook
-    containerPort: {{ .Values.ingressController.admissionWebhook.port }}
-    protocol: TCP
-  {{- end }}
-  {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) -}}
-  - name: cmetrics
-    containerPort: 10255
-    protocol: TCP
-  {{- end }}
-  env:
-  - name: POD_NAME
-    valueFrom:
-      fieldRef:
-        apiVersion: v1
-        fieldPath: metadata.name
-  - name: POD_NAMESPACE
-    valueFrom:
-      fieldRef:
-        apiVersion: v1
-        fieldPath: metadata.namespace
-{{- include "kong.ingressController.env" .  | indent 2 }}
-  image: {{ include "kong.getRepoTag" .Values.ingressController.image }}
-  imagePullPolicy: {{ .Values.image.pullPolicy }}
-{{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
-     Helm value interpretation doesn't let you replace the default HTTP checks with any other
-     check type, and all HTTP checks freeze when a debugger pauses operation.
-     Setting disableReadiness to ANY value disables the probes.
-*/}}
-{{- if (not (hasKey .Values.ingressController "disableProbes")) }}
-  readinessProbe:
-{{ toYaml .Values.ingressController.readinessProbe | indent 4 }}
-  livenessProbe:
-{{ toYaml .Values.ingressController.livenessProbe | indent 4 }}
-{{- end }}
-  resources:
-{{ toYaml .Values.ingressController.resources | indent 4 }}
-  volumeMounts:
-{{- if .Values.ingressController.admissionWebhook.enabled }}
-  - name: webhook-cert
-    mountPath: /admission-webhook
-    readOnly: true
-{{- end }}
-{{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-  - name: {{ template "kong.serviceAccountTokenName" . }}
-    mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-    readOnly: true
-{{- end }}
-  {{- include "kong.userDefinedVolumeMounts" .Values.ingressController | nindent 2 }}
-  {{- include "controller.adminApiCertVolumeMount" . | nindent 2 }}
-{{- end -}}
 
 {{- define "secretkeyref" -}}
 valueFrom:
@@ -1261,7 +1152,7 @@ role sets used in the charts. Updating these requires separating out cluster
 resource roles into their separate templates.
 */}}
 {{- define "kong.kubernetesRBACRules" -}}
-{{- if (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
 - apiGroups:
   - configuration.konghq.com
   resources:
@@ -1279,7 +1170,7 @@ resource roles into their separate templates.
   - patch
   - update
 {{- end }}
-{{- if (semverCompare ">= 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare ">= 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
 - apiGroups:
   - configuration.konghq.com
   resources:
@@ -1297,7 +1188,7 @@ resource roles into their separate templates.
   - patch
   - update
 {{- end }}
-{{- if (semverCompare "< 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare "< 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
 - apiGroups:
   - ""
   resources:
@@ -1629,7 +1520,7 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   - get
   - patch
   - update
-{{- if (semverCompare ">= 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare ">= 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
 - apiGroups:
   - apiextensions.k8s.io
   resources:
@@ -1703,7 +1594,7 @@ extensions/v1beta1
 
 {{- define "kong.proxy.compatibleReadiness" -}}
 {{- $proxyReadiness := .Values.readinessProbe -}}
-{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (and .Values.ingressController.enabled (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.image)))) -}}
+{{- if (or (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) (and .Values.ingressController.enabled (semverCompare "< 2.11.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)))) -}}
     {{- if (eq $proxyReadiness.httpGet.path "/status/ready") -}}
         {{- $_ := set $proxyReadiness.httpGet "path" "/status" -}}
     {{- end -}}

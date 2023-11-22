@@ -30,12 +30,12 @@ spec:
         {{ $key }}: {{ $value | quote }}
       {{- end }}
       {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
-        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
+        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName.proxy" . }}
       {{- end }}
       {{- end }}
     spec:
       {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
-      serviceAccountName: {{ template "kong.serviceAccountName" . }}
+      serviceAccountName: {{ template "kong.serviceAccountName.proxy" . }}
       {{- end }}
       {{- if (and (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name) .Values.deployment.serviceAccount.automountServiceAccountToken) }}
       automountServiceAccountToken: true

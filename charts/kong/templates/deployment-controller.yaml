@@ -1,0 +1,233 @@
+{{- if .Values.ingressController.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "kong.fullname" . }}-controller
+  namespace:  {{ template "kong.namespace" . }}
+  labels:
+      {{- include "kong.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: controller
+    {{- range $key, $value := .Values.ingressController.deployment.labels }}
+      {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote | nindent 4 }}
+    {{- end }}
+  {{- if .annotations }}
+  annotations:
+  {{- range $key, $value := .Values.ingressController.deployment.annotations }}
+    {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote }}
+  {{- end }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.ingressController.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      {{ (include "kong.controllerSelectorLabels" .) | nindent 6 -}}
+  {{- if .Values.ingressController.deployment.updateStrategy }}
+  strategy:
+{{ toYaml .Values.ingressController.deployment.updateStrategy | indent 4 }}
+  {{- end }}
+  {{- if .Values.ingressController.deployment.minReadySeconds }}
+  minReadySeconds: {{ .Values.ingressController.deployment.minReadySeconds }}
+  {{- end }}
+
+  template:
+    metadata:
+      annotations:
+        {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
+        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName.controller" . }}
+        {{- end }}
+        {{- if .Values.ingressController.deployment.pod.annotations }}
+        {{- range $key, $value := .Values.ingressController.deployment.pod.annotations }}
+        {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote }}
+        {{- end }}
+        {{- end }}
+      labels:
+        {{- include "kong.metaLabels" . | nindent 8 }}
+        app.kubernetes.io/component: controller
+        app: {{ template "kong.fullname" . }}
+        version: {{ .Chart.AppVersion | quote }}
+        {{- if .Values.ingressController.deployment.pod.labels }}
+        {{ include "kong.renderTpl" (dict "value" .Values.ingressController.deployment.pod.labels "context" $) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.ingressController.deployment.pod.hostNetwork }}
+      hostNetwork: true
+      {{- end }}
+      {{- if .Values.ingressController.deployment.pod.priorityClassName }}
+      priorityClassName: "{{ .Values.ingressController.deployment.pod.priorityClassName }}"
+      {{- end }}
+      {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
+      serviceAccountName: {{ template "kong.serviceAccountName.controller" . }}
+      {{- end }}
+      {{- if (and (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name) .Values.ingressController.deployment.pod.automountServiceAccountToken) }}
+      automountServiceAccountToken: true
+      {{- else }}
+      automountServiceAccountToken: false
+      {{ end }}
+      {{- if .Values.ingressController.deployment.pod.container.image.pullSecrets }}
+      # NOTE this is out of place in values.yaml, but the rest of .image _does_ live
+      # inside the container, so probably just keep it there, rather than
+      # separating into .pod.imagePullSecrets
+      imagePullSecrets:
+      {{- range .Values.ingressController.deployment.pod.container.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      {{- if .Values.ingressController.deployment.pod.hostAliases }}
+      hostAliases:
+        {{- toYaml .Values.ingressController.deployment.pod.hostAliases | nindent 8 }}
+      {{- end}}
+      {{- if .Values.ingressController.deployment.dnsPolicy }}
+      dnsPolicy: {{ .Values.ingressController.deployment.pod.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.ingressController.deployment.pod.dnsConfig }}
+      dnsConfig:
+        {{ toYaml .Values.ingressController.deployment.pod.dnsConfig | nindent 8 }}
+      {{- end }}
+      containers:
+      {{- include "kong.controllerContainer" . | nindent 8 }}
+      {{- if .Values.ingressController.deployment.pod.sidecarContainers }}
+      {{- toYaml .Values.ingressController.deployment.pod.sidecarContainers | nindent 8 }}
+      {{- end }}
+
+    {{- if .Values.ingressController.deployment.pod.affinity }}
+      affinity:
+{{ toYaml .Values.ingressController.deployment.pod.affinity | indent 8 }}
+    {{- end }}
+    {{- if .Values.ingressController.deployment.pod.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.ingressController.deployment.pod.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+      securityContext:
+      {{- .Values.ingressController.deployment.pod.securityContext | toYaml | nindent 8 }}
+    {{- if .Values.ingressController.deployment.pod.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.ingressController.deployment.pod.nodeSelector | indent 8 }}
+    {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.ingressController.deployment.pod.terminationGracePeriodSeconds }}
+    {{- if .Values.ingressController.deployment.pod.tolerations }}
+      tolerations:
+{{ toYaml .Values.ingressController.deployment.pod.tolerations | indent 8 }}
+    {{- end }}
+      volumes:
+      - name: {{ template "kong.fullname" . }}-tmp
+        emptyDir:
+          sizeLimit: {{ .Values.ingressController.deployment.pod.container.tmpDir.sizeLimit }}
+      {{- if .Values.ingressController.admissionWebhook.enabled }}
+      - name: webhook-cert
+        secret:
+          {{- if .Values.ingressController.admissionWebhook.certificate.provided }}
+          secretName: {{ .Values.ingressController.admissionWebhook.certificate.secretName }}
+          {{- else }}
+          secretName: {{ template "kong.fullname" . }}-validation-webhook-keypair
+          {{- end }}
+      {{- end }}
+
+      {{- if .Values.ingressController.adminApi.tls.client.enabled }}
+      - name: admin-api-cert
+        secret:
+          secretName: {{ template "adminApiService.certSecretName" . }}
+      {{- end }}
+
+      {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
+      - name: {{ template "kong.serviceAccountTokenName.controller" . }}
+        {{/* Due to GKE versions (e.g. v1.23.15-gke.1900) we need to handle pre-release part of the version as well.
+               See the related documentation of semver module that Helm depends on for semverCompare:
+               https://github.com/Masterminds/semver#working-with-prerelease-versions
+               Related Helm issue: https://github.com/helm/helm/issues/3810
+        */}}
+        {{- if semverCompare ">=1.20.0-0" .Capabilities.KubeVersion.Version }}
+        projected:
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+              - key: ca.crt
+                path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+                path: namespace
+        {{- else }}
+        secret:
+          secretName: {{ template "kong.serviceAccountTokenName.controller" . }}
+          items:
+          - key: token
+            path: token
+          - key: ca.crt
+            path: ca.crt
+          - key: namespace
+            path: namespace
+        {{- end }}
+      {{- end }}
+      {{- include "kong.userDefinedVolumes" . | nindent 6 -}}
+{{- end }}
+
+{{- define "kong.controllerContainer" -}}
+- name: ingress-controller
+  securityContext:
+    {{- toYaml .Values.ingressController.deployment.pod.container.securityContext | nindent 4 }}
+  args:
+  {{ if .Values.ingressController.deployment.pod.container.args }}
+  {{- range $val := .Values.ingressController.deployment.pod.container.args }}
+  - {{ $val }}
+  {{- end }}
+  {{- end }}
+  ports:
+  {{- if .Values.ingressController.admissionWebhook.enabled }}
+  - name: webhook
+    containerPort: {{ .Values.ingressController.admissionWebhook.port }}
+    protocol: TCP
+  {{- end }}
+  {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image )) -}}
+  - name: cmetrics
+    containerPort: 10255
+    protocol: TCP
+  {{- end }}
+  env:
+  - name: POD_NAME
+    valueFrom:
+      fieldRef:
+        apiVersion: v1
+        fieldPath: metadata.name
+  - name: POD_NAMESPACE
+    valueFrom:
+      fieldRef:
+        apiVersion: v1
+        fieldPath: metadata.namespace
+  {{- include "kong.ingressController.env" .  | nindent 2 }}
+  image: {{ include "kong.getRepoTag" .Values.ingressController.deployment.pod.container.image }}
+  imagePullPolicy: {{ .Values.ingressController.deployment.pod.container.image.pullPolicy }}
+{{/* disableProbes is a hidden setting to drop this block entirely for use with a debugger
+     Helm value interpretation doesn't let you replace the default HTTP checks with any other
+     check type, and all HTTP checks freeze when a debugger pauses operation.
+     Setting disableReadiness to ANY value disables the probes.
+*/}}
+{{- if (not (hasKey .Values.ingressController "disableProbes")) }}
+  readinessProbe:
+    {{ toYaml .Values.ingressController.deployment.pod.container.readinessProbe | nindent 4 }}
+  livenessProbe:
+    {{ toYaml .Values.ingressController.deployment.pod.container.livenessProbe | nindent 4 }}
+{{- end }}
+  resources:
+    {{ toYaml .Values.ingressController.deployment.pod.container.resources | nindent 4 }}
+  volumeMounts:
+  - name: {{ template "kong.fullname" . }}-tmp
+    mountPath: /tmp
+  {{- if .Values.ingressController.admissionWebhook.enabled }}
+  - name: webhook-cert
+    mountPath: /admission-webhook
+    readOnly: true
+  {{- end }}
+  {{- if (and (not .Values.ingressController.deployment.pod.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
+  - name: {{ template "kong.serviceAccountTokenName.controller" . }}
+    mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+    readOnly: true
+  {{- end }}
+  {{- include "kong.userDefinedVolumeMounts" .Values.ingressController.deployment.pod.container | nindent 2 }}
+  {{- include "controller.adminApiCertVolumeMount" . | nindent 2 }}
+{{- end -}}

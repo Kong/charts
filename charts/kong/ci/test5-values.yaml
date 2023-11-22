@@ -8,8 +8,11 @@
 
 ingressController:
   enabled: true
-  env:
-    anonymous_reports: "false"
+  deployment:
+    pod:
+      container:
+        env:
+          anonymous_reports: "false"
 postgresql:
   enabled: true
   auth:

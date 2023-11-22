@@ -2,8 +2,6 @@
 # - disable ingress controller
 ingressController:
   enabled: false
-  env:
-    anonymous_reports: "false"
 
 # - disable DB for kong
 env:

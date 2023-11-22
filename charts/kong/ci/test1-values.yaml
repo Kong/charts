@@ -6,27 +6,38 @@ autoscaling:
     - --alsologtostderr
 # - ingressController deploys without a database (default)
 ingressController:
-  enabled: true
+  deployment:
+    pod:
+      container:
+      # - environment variables can be injected into ingress controller container
+        env:
+          anonymous_reports: "false"
+          kong_admin_header: "foo:bar"
+        userDefinedVolumeMounts:
+        - name: "tmpdir"
+          mountPath: "/tmp/foo"
+          readOnly: true
+        - name: "controllerdir"
+          mountPath: "/tmp/controller"
+        sidecarContainers:
+        - name: tcpdump
+          securityContext:
+            runAsUser: 0
+          image: corfr/tcpdump
+          command:
+            - /bin/sleep
+            - infinity
+
 # - webhook is enabled and deploys
   admissionWebhook:
     enabled: true
-# - environment variables can be injected into ingress controller container
-  env:
-    anonymous_reports: "false"
-    kong_admin_header: "foo:bar"
 # - annotations can be injected for service account
   serviceAccount:
     annotations:
       eks.amazonaws.com/role-arn: arn:aws:iam::AWS_ACCOUNT_ID:role/IAM_ROLE_NAME
-  userDefinedVolumeMounts:
-  - name: "tmpdir"
-    mountPath: "/tmp/foo"
-    readOnly: true
-  - name: "controllerdir"
-    mountPath: "/tmp/controller"
+
 # - pod labels can be added to the deployment template
 podLabels:
-  app: kong
   environment: test
 # - ingress resources are created with hosts
 admin:

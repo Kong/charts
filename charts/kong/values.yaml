@@ -29,9 +29,9 @@ deployment:
     # container. Some sidecars require enabling this. Note that enabling this exposes Kubernetes credentials to Kong
     # Lua code, increasing potential attack surface.
     automountServiceAccountToken: false
-  ## Optionally specify the name of the service account to create and the annotations to add.
-  #  name:
-  #  annotations: {}
+    # Optionally specify the name of the service account to create and the annotations to add.
+    name: ""
+    annotations: {}
 
   ## Optionally specify any extra sidecar containers to be included in the deployment
   ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
@@ -144,10 +144,8 @@ image:
 # Specify Kong admin API service and listener configuration
 admin:
   # Enable creating a Kubernetes service for the admin API
-  # Disabling this is recommended for most ingress controller configurations
-  # Enterprise users that wish to use Kong Manager with the controller should enable this
-  enabled: false
-  type: NodePort
+  enabled: true
+  type: ClusterIP
   loadBalancerClass:
   # To specify annotations or labels for the admin service, add them to the respective
   # "annotations" or "labels" dictionaries below.
@@ -519,23 +517,141 @@ dblessConfig:
 # for Kong specific configuration.
 ingressController:
   enabled: true
-  image:
-    repository: kong/kubernetes-ingress-controller
-    tag: "3.0"
-    # Optionally set a semantic version for version-gated features. This can normally
-    # be left unset. You only need to set this if your tag is not a semver string,
-    # such as when you are using a "next" tag. Set this to the effective semantic
-    # version of your tag: for example if using a "next" image for an unreleased 3.1.0
-    # version, set this to "3.1.0".
-    effectiveSemver:
-  args: []
+  deployment:
+    labels: {}
+    annotations: {}
+    updateStrategy: {}
+      # type: RollingUpdate
+      # rollingUpdate:
+      #   maxSurge: "100%"
+      #   maxUnavailable: "0%"
+    replicaCount: 1
+    ## Minimum number of seconds for which a newly created pod should be ready without any of its container crashing,
+    ## for it to be considered available.
+    # minReadySeconds: 60
+    pod:
+      labels: {}
+      annotations:
+        kuma.io/gateway: "enabled"
+        traffic.kuma.io/exclude-outbound-ports: "8444"
+        traffic.sidecar.istio.io/excludeOutboundPorts: "8444"
+        traffic.sidecar.istio.io/includeInboundPorts: ""
+      automountServiceAccountToken: false
+      hostNetwork: false
+      # Affinity for pod assignment
+      # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+      affinity: {}
+      # Topology spread constraints for pod assignment (requires Kubernetes >= 1.19)
+      # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+      topologySpreadConstraints: []
+      # Sets the termination grace period for pods spawned by the Kubernetes Deployment.
+      # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution
+      terminationGracePeriodSeconds: 30
+      # Tolerations for pod assignment
+      # Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+      tolerations: []
+      # Node labels for pod assignment
+      # Ref: https://kubernetes.io/docs/user-guide/node-selection/
+      nodeSelector: {}
+      priorityClassName: ""
+      securityContext: {}
+      userDefinedVolumes: []
+      hostAliases: []
+      initContainers: []
+      sidecarContainers: []
+      ## Optional DNS configuration for pods
+      # dnsPolicy: ClusterFirst
+      # dnsConfig:
+      #   nameservers:
+      #   - "10.100.0.10"
+      #   options:
+      #   - name: ndots
+      #     value: "5"
+      #   searches:
+      #   - default.svc.cluster.local
+      #   - svc.cluster.local
+      #   - cluster.local
+      #   - us-east-1.compute.internal
+      container:
+        args: []
+        env:
+          # The controller disables TLS verification by default because Kong
+          # generates self-signed certificates by default. Set this to false once you
+          # have installed CA-signed certificates.
+          kong_admin_tls_skip_verify: true
+          # If using Kong Enterprise with RBAC enabled, uncomment the section below
+          # and specify the secret/key containing your admin token.
+          # kong_admin_token:
+          #   valueFrom:
+          #     secretKeyRef:
+          #        name: CHANGEME-admin-token-secret
+          #        key: CHANGEME-admin-token-key
+        # Additional non-Kong environment variables. Keys here will be set in
+        # the container environment _without_ prepending a "CONTROLLER_" prefix.
+        # customEnv: {}
+        image:
+          repository: kong/kubernetes-ingress-controller
+          tag: "3.0"
+          # Optionally set a semantic version for version-gated features. This can normally
+          # be left unset. You only need to set this if your tag is not a semver string,
+          # such as when you are using a "next" tag. Set this to the effective semantic
+          # version of your tag: for example if using a "next" image for an unreleased 3.1.0
+          # version, set this to "3.1.0".
+          effectiveSemver: ""
+          pullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: "/healthz"
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: "/readyz"
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        lifecycle: {}
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          runAsUser: 1000
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
+        userDefinedVolumeMounts: []
+        # If you want to specify resources, uncomment the following
+        # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+        resources: {}
+          # limits:
+          #  cpu: 1
+          #  memory: 2G
+          # requests:
+          #  cpu: 1
+          #  memory: 2G
+        tmpDir:
+          sizeLimit: 1Gi
+
+  serviceAccount:
+    create: true
+    automountServiceAccountToken: false
+    ## Optionally specify the name of the service account to create and the annotations to add.
+    name: ""
+    annotations: {}
 
   gatewayDiscovery:
-    enabled: false
-    generateAdminApiService: false
-    adminApiService:
-      namespace: ""
-      name: ""
+    enabled: true
 
   # Specify individual namespaces to watch for ingress configuration. By default,
   # when no namespaces are set, the controller watches all namespaces and uses a
@@ -545,25 +661,6 @@ ingressController:
   # ClusterRole for cluster-scoped resources.
   # Requires controller 2.0.0 or newer.
   watchNamespaces: []
-
-  # Specify Kong Ingress Controller configuration via environment variables
-  env:
-    # The controller disables TLS verification by default because Kong
-    # generates self-signed certificates by default. Set this to false once you
-    # have installed CA-signed certificates.
-    kong_admin_tls_skip_verify: true
-    # If using Kong Enterprise with RBAC enabled, uncomment the section below
-    # and specify the secret/key containing your admin token.
-    # kong_admin_token:
-    #   valueFrom:
-    #     secretKeyRef:
-    #        name: CHANGEME-admin-token-secret
-    #        key: CHANGEME-admin-token-key
-
-  # This section is any customer specific environments variables that doesn't require CONTROLLER_ prefix.
-  # Example as below, uncomment if required and add additional attributes as required.
-  # customEnv:
-  #   TZ: "Europe/Berlin"
 
   admissionWebhook:
     enabled: true
@@ -597,37 +694,6 @@ ingressController:
   rbac:
     # Specifies whether RBAC resources should be created
     create: true
-
-  # general properties
-  livenessProbe:
-    httpGet:
-      path: "/healthz"
-      port: 10254
-      scheme: HTTP
-    initialDelaySeconds: 5
-    timeoutSeconds: 5
-    periodSeconds: 10
-    successThreshold: 1
-    failureThreshold: 3
-  readinessProbe:
-    httpGet:
-      path: "/readyz"
-      port: 10254
-      scheme: HTTP
-    initialDelaySeconds: 5
-    timeoutSeconds: 5
-    periodSeconds: 10
-    successThreshold: 1
-    failureThreshold: 3
-  resources: {}
-  # Example reasonable setting for "resources":
-  # resources:
-  #   limits:
-  #     cpu: 100m
-  #     memory: 256Mi
-  #   requests:
-  #     cpu: 50m
-  #     memory: 128Mi
 
   konnect:
     enabled: false
@@ -890,8 +956,7 @@ replicaCount: 1
 deploymentAnnotations: {}
 
 # Enable autoscaling using HorizontalPodAutoscaler
-# When configuring an HPA, you must set resource requests on all containers via
-# "resources" and, if using the controller, "ingressController.resources" in values.yaml
+# When configuring an HPA, you must set resource requests on all containers via "resources"
 autoscaling:
   enabled: false
   minReplicas: 2
@@ -914,36 +979,6 @@ podDisruptionBudget:
   # Uncomment only one of the following when enabled is set to true
   # maxUnavailable: "50%"
   # minAvailable: "50%"
-
-podSecurityPolicy:
-  enabled: false
-  labels: {}
-  annotations: {}
-  spec:
-    privileged: false
-    fsGroup:
-      rule: RunAsAny
-    runAsUser:
-      rule: RunAsAny
-    runAsGroup:
-      rule: RunAsAny
-    seLinux:
-      rule: RunAsAny
-    supplementalGroups:
-      rule: RunAsAny
-    volumes:
-      - 'configMap'
-      - 'secret'
-      - 'emptyDir'
-      - 'projected'
-    allowPrivilegeEscalation: false
-    hostNetwork: false
-    hostIPC: false
-    hostPID: false
-    # Make the root filesystem read-only. This is not compatible with Kong Enterprise <1.5.
-    # If you use Kong Enterprise <1.5, this must be set to false.
-    readOnlyRootFilesystem: true
-
 
 priorityClassName: ""
 

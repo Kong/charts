@@ -6,15 +6,19 @@
 # - the admission webhook is enabled; has the timeout explicitly set
 ingressController:
   enabled: true
+  deployment:
+    pod:
+      container:
+        env:
+          anonymous_reports: "false"
+        customEnv:
+          TZ: "Europe/Berlin"
   admissionWebhook:
     enabled: true
     timeoutSeconds: 5
-  env:
-    anonymous_reports: "false"
-  customEnv:
-    TZ: "Europe/Berlin"
   watchNamespaces:
   - default
+
 postgresql:
   enabled: true
   auth:

@@ -35,7 +35,7 @@ rules:
       - configmaps
     verbs:
       - create
-{{- if (semverCompare "< 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+{{- if (semverCompare "< 2.10.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
   - apiGroups:
       - ""
     resources:
@@ -71,6 +71,15 @@ rules:
       - services
     verbs:
       - get
+  # Allow gateway discovery without ClusterRole-level endpointslice access
+  - apiGroups:
+    - discovery.k8s.io
+    resources:
+    - endpointslices
+    verbs:
+    - get
+    - list
+    - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -85,7 +94,7 @@ roleRef:
   name: {{ template "kong.fullname" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "kong.serviceAccountName" . }}
+    name: {{ template "kong.serviceAccountName.controller" . }}
     namespace: {{ template "kong.namespace" . }}
 {{- if eq (len .Values.ingressController.watchNamespaces) 0 }}
 ---
@@ -111,7 +120,7 @@ roleRef:
   name: {{ template "kong.fullname" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "kong.serviceAccountName" . }}
+    name: {{ template "kong.serviceAccountName.controller" . }}
     namespace: {{ template "kong.namespace" . }}
 {{- else }}
 {{- range .Values.ingressController.watchNamespaces }}
@@ -139,7 +148,7 @@ roleRef:
   name: {{ template "kong.fullname" $ }}-{{ . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "kong.serviceAccountName" $ }}
+    name: {{ template "kong.serviceAccountName.controller" $ }}
     namespace: {{ template "kong.namespace" $ }}
 {{- end }}
 ---
@@ -164,7 +173,7 @@ roleRef:
   name: {{ template "kong.fullname" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "kong.serviceAccountName" . }}
+    name: {{ template "kong.serviceAccountName.controller" . }}
     namespace: {{ template "kong.namespace" . }}
 {{- end -}}
 {{- end -}}
