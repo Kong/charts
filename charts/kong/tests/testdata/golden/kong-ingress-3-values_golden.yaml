@@ -1,0 +1,922 @@
+---
+# Source: kong/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kong-kong
+  namespace: test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+---
+# Source: kong/templates/admission-webhook.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kong-kong-validation-webhook-ca-keypair
+  namespace:  test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+type: kubernetes.io/tls
+data:
+    tls.crt: redacted
+    tls.key: redacted
+---
+# Source: kong/templates/admission-webhook.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kong-kong-validation-webhook-keypair
+  namespace:  test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+type: kubernetes.io/tls
+data:
+  tls.crt: redacted
+  tls.key: redacted
+---
+# Source: kong/templates/controller-rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+  name: kong-kong
+rules:
+
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongupstreampolicies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongupstreampolicies/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumergroups
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumergroups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - ingressclassparameterses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongplugins
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongplugins/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - tcpingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - tcpingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - udpingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - udpingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingressclasses
+  verbs:
+  - get
+  - list
+  - watch
+---
+# Source: kong/templates/controller-rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kong-kong
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kong-kong
+subjects:
+  - kind: ServiceAccount
+    name: kong-kong
+    namespace: test-namespace
+---
+# Source: kong/templates/controller-rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kong-kong
+  namespace: test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - pods
+      - secrets
+      - namespaces
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    resourceNames:
+      # Defaults to "<election-id>-<ingress-class>"
+      # Here: "<kong-ingress-controller-leader-nginx>-<nginx>"
+      # This has to be adapted if you change either parameter
+      # when launching the nginx-ingress-controller.
+      - "kong-ingress-controller-leader-kong-kong"
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - create
+  # Begin KIC 2.x leader permissions
+  - apiGroups:
+      - ""
+      - coordination.k8s.io
+    resources:
+      - configmaps
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+---
+# Source: kong/templates/controller-rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kong-kong
+  namespace: test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: kong-kong
+subjects:
+  - kind: ServiceAccount
+    name: kong-kong
+    namespace: test-namespace
+---
+# Source: kong/templates/admission-webhook.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-kong-validation-webhook
+  namespace: test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+spec:
+  ports:
+  - name: webhook
+    port: 443
+    protocol: TCP
+    targetPort: webhook
+  selector:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/component: app
+---
+# Source: kong/templates/service-kong-manager.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-kong-manager
+  namespace: test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+spec:
+  type: NodePort
+  ports:
+  - name: kong-manager
+    port: 8002
+    targetPort: 8002
+    protocol: TCP
+  - name: kong-manager-tls
+    port: 8445
+    targetPort: 8445
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: "kong"
+---
+# Source: kong/templates/service-kong-proxy.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kong-kong-proxy
+  namespace: test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+    enable-metrics: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: kong-proxy
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  - name: kong-proxy-tls
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: "kong"
+---
+# Source: kong/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kong-kong
+  namespace:  test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/component: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kong
+      app.kubernetes.io/component: app
+      app.kubernetes.io/instance: "kong"
+
+  template:
+    metadata:
+      annotations:
+        kuma.io/service-account-token-volume: kong-kong-token
+        kuma.io/gateway: "enabled"
+        traffic.sidecar.istio.io/includeInboundPorts: ""
+      labels:
+        app.kubernetes.io/name: kong
+        app.kubernetes.io/instance: "kong"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/version: "3.4"
+        app.kubernetes.io/component: app
+        app: kong-kong
+        version: "3.4"
+    spec:
+      serviceAccountName: kong-kong
+      automountServiceAccountToken: false
+      
+      initContainers:
+      - name: clear-stale-pid
+        image: kong:3.4
+        imagePullPolicy: IfNotPresent
+        securityContext:
+        
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        resources:
+          {}
+        command:
+        - "rm"
+        - "-vrf"
+        - "$KONG_PREFIX/pids"
+        env:
+         
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "off"
+        - name: KONG_KIC
+          value: "on"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PLUGINS
+          value: "bundled"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, 0.0.0.0:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        volumeMounts:
+        - name: kong-kong-prefix-dir
+          mountPath: /kong_prefix/
+        - name: kong-kong-tmp
+          mountPath: /tmp
+      containers:
+      - name: ingress-controller
+        securityContext:
+      
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        args:
+        
+        ports:
+        - name: webhook
+          containerPort: 8080
+          protocol: TCP
+        - name: cmetrics
+          containerPort: 10255
+          protocol: TCP
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace  
+        
+        
+        
+        
+        
+        
+        - name: CONTROLLER_ADMISSION_WEBHOOK_LISTEN
+          value: "0.0.0.0:8080"
+        - name: CONTROLLER_ELECTION_ID
+          value: "kong-ingress-controller-leader-kong"
+        - name: CONTROLLER_INGRESS_CLASS
+          value: "kong"
+        - name: CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY
+          value: "true"
+        - name: CONTROLLER_KONG_ADMIN_URL
+          value: "https://localhost:8444"
+        - name: CONTROLLER_PUBLISH_SERVICE
+          value: "test-namespace/kong-kong-proxy"
+        image: kong/kubernetes-ingress-controller:3.0
+        imagePullPolicy: IfNotPresent
+      
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /readyz
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          {}
+        volumeMounts:
+        - name: webhook-cert
+          mountPath: /admission-webhook
+          readOnly: true
+        - name: kong-kong-token
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          readOnly: true
+        
+        
+      
+      - name: "proxy"
+        image: kong:3.4
+        imagePullPolicy: IfNotPresent
+        securityContext:
+        
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        env:
+         
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "off"
+        - name: KONG_KIC
+          value: "on"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PLUGINS
+          value: "bundled"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, 0.0.0.0:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_NGINX_DAEMON
+          value: "off"
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - kong
+              - quit
+              - --wait=15
+        ports:
+        - name: proxy
+          containerPort: 8000
+          protocol: TCP
+        - name: proxy-tls
+          containerPort: 8443
+          protocol: TCP
+        - name: status
+          containerPort: 8100
+          protocol: TCP
+        volumeMounts:
+          - name: kong-kong-prefix-dir
+            mountPath: /kong_prefix/
+          - name: kong-kong-tmp
+            mountPath: /tmp
+          
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /status/ready
+            port: status
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /status
+            port: status
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          {} 
+      securityContext:
+        {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: kong-kong-prefix-dir
+          emptyDir:
+            sizeLimit: 256Mi
+        - name: kong-kong-tmp
+          emptyDir:
+            sizeLimit: 1Gi
+        - name: kong-kong-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                expirationSeconds: 3607
+                path: token
+            - configMap:
+                items:
+                - key: ca.crt
+                  path: ca.crt
+                name: kube-root-ca.crt
+            - downwardAPI:
+                items:
+                - fieldRef:
+                    apiVersion: v1
+                    fieldPath: metadata.namespace
+                  path: namespace
+        - name: webhook-cert
+          secret:
+            secretName: kong-kong-validation-webhook-keypair
+---
+# Source: kong/templates/service-kong-proxy.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kong-kong-proxy
+  namespace: test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+spec:
+  rules:
+  - host: "proxy.kong.example"
+    http:
+      paths:
+        - backend:
+            service:
+              name: kong-kong-proxy
+              port:
+                number: 443
+          path: /
+          pathType: ImplementationSpecific
+---
+# Source: kong/templates/admission-webhook.yaml
+kind: ValidatingWebhookConfiguration
+apiVersion: admissionregistration.k8s.io/v1
+metadata:
+  name: kong-kong-validations
+  namespace: test-namespace
+  labels:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/instance: "kong"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.4"
+webhooks:
+- name: validations.kong.konghq.com
+  objectSelector:
+    matchExpressions:
+    - key: owner
+      operator: NotIn
+      values:
+      - helm
+  failurePolicy: Ignore
+  sideEffects: None
+  admissionReviewVersions: ["v1beta1"]
+  rules:
+  - apiGroups:
+    - configuration.konghq.com
+    apiVersions:
+    - '*'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - kongconsumers
+    - kongplugins
+    - kongclusterplugins
+    - kongingresses
+  - apiGroups:
+    - ''
+    apiVersions:
+    - 'v1'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - secrets
+    - services
+  - apiGroups:
+    - networking.k8s.io
+    apiVersions:
+      - 'v1'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - ingresses
+  - apiGroups:
+    - gateway.networking.k8s.io
+    apiVersions:
+    - 'v1alpha2'
+    - 'v1beta1'
+    - 'v1'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - gateways
+    - httproutes
+  clientConfig:
+    caBundle: redacted
+    service:
+      name: kong-kong-validation-webhook
+      namespace: test-namespace
