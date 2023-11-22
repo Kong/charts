@@ -6,6 +6,9 @@
 
 * Support for `affinity` configuration has been added to migration job templates.
 * Display a warning message when Kong Manager is enabled and the Admin API is disabled.
+* Validate Gateway API's `Gateway` and `HTTPRoute` resources in the controller's
+  admission webhook only when KIC version is 3.0 or higher.
+  [#954](https://github.com/Kong/charts/pull/954)
 
 ## 2.32.0
 
