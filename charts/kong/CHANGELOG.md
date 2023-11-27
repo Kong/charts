@@ -4,8 +4,16 @@
 
 ### Improvements
 
-* Support for `affinity` configuration has been added to migration job templates.
-* Display a warning message when Kong Manager is enabled and the Admin API is disabled.
+* Support for `affinity` configuration has been added to migration job
+  templates.
+  [#946](https://github.com/Kong/charts/pull/946)
+* Display a warning message when Kong Manager is enabled and the Admin API is
+  disabled.
+  [#951](https://github.com/Kong/charts/pull/951)
+* Removed GWAPI types from the admission webhook. These checks are not
+  necessary (they are either handled by resource-level validation or status
+  information) and are slated for removal in the controller.
+  [#956](https://github.com/Kong/charts/pull/956)
 
 ## 2.32.0
 
