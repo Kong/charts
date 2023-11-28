@@ -4,6 +4,8 @@
 
 ### Improvements
 
+* Bumped Kong version to 3.5.
+  [#957](https://github.com/Kong/charts/pull/957)
 * Support for `affinity` configuration has been added to migration job templates.
 * Display a warning message when Kong Manager is enabled and the Admin API is disabled.
 
