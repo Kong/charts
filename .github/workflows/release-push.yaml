@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - release/kong-2.x
+      - release/*
 
 jobs:
   lint-test:

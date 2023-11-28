@@ -10,7 +10,7 @@ on:
   pull_request:
     branches:
       - main
-      - release/kong-2.x
+      - release/*
 
 jobs:
   lint:
