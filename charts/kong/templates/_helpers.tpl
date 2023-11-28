@@ -439,6 +439,7 @@ The name of the Service which will be used by the controller to update the Ingre
 
   {{- if .Values.ingressController.gatewayDiscovery.enabled -}}
     {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_SVC" (printf "%s/%s-%s" (include "kong.namespace" .) (include "kong.fullname" .) "admin") -}}
+    {{- $_ := set $autoEnv "CONTROLLER_GATEWAY_DISCOVERY_DNS_STRATEGY" "pod" -}}
   {{- else -}}
     {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_URL" (include "kong.adminLocalURL" .) -}}
   {{- end -}}
@@ -639,6 +640,13 @@ The name of the Service which will be used by the controller to update the Ingre
 - name: admin-client-ca
   configMap:
     name: {{ template "kong.fullname" . }}-admin-client-ca
+{{- else if (and $.Values.ingressController.adminApi.tls.client.enabled (not $.Values.ingressController.adminApi.tls.client.certProvided)) }}
+- name: admin-client-ca
+  secret:
+    secretName: {{ template "adminApiService.caSecretName" . }}
+    items:
+    - key: tls.crt
+      path: tls.crt
 {{- end -}}
 {{- range $secretVolume := .Values.secretVolumes }}
 - name: {{ . }}
@@ -708,7 +716,7 @@ The name of the Service which will be used by the controller to update the Ingre
   mountPath: /kong_dbless/
     {{- end }}
   {{- end }}
-{{- if or $.Values.admin.tls.client.caBundle $.Values.admin.tls.client.secretName }}
+{{- if or $.Values.admin.tls.client.caBundle $.Values.admin.tls.client.secretName (and $.Values.ingressController.adminApi.tls.client.enabled (not $.Values.ingressController.adminApi.tls.client.certProvided)) }}
 - name: admin-client-ca
   mountPath: /etc/admin-client-ca/
   readOnly: true
@@ -865,7 +873,7 @@ the template that it itself is using form the above sections.
   {{- $_ := set $listenConfig "address" (default $address .address) -}}
   {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (include "kong.listen" $listenConfig) -}}
 
-  {{- if or .tls.client.secretName .tls.client.caBundle -}}
+  {{- if or .tls.client.secretName .tls.client.caBundle (and $.Values.ingressController.adminApi.tls.client.enabled (not $.Values.ingressController.adminApi.tls.client.certProvided)) -}}
     {{- $_ := set $autoEnv "KONG_NGINX_ADMIN_SSL_VERIFY_CLIENT" "on" -}}
     {{- $_ := set $autoEnv "KONG_NGINX_ADMIN_SSL_CLIENT_CERTIFICATE" "/etc/admin-client-ca/tls.crt" -}}
   {{- end -}}

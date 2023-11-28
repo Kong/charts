@@ -182,6 +182,9 @@ admin:
     # - secretName - the secret must contain a key named "tls.crt" with the PEM-encoded certificate.
     # - caBundle (PEM-encoded certificate string).
     # If both are set, caBundle takes precedence.
+    # If neither are set, and the controller uses generated client certificates
+    # ($.Values.ingressController.adminApi.tls.client.enabled=true and $.Values.ingressController.adminApi.tls.client.certProvided=false),
+    # the chart will use the generated certificate's CA for the Kong admin API
     client:
       caBundle: ""
       secretName: ""
@@ -718,7 +721,7 @@ ingressController:
     tls:
       client:
         # Enable TLS client authentication for the Admin API.
-        enabled: false
+        enabled: true
 
         # If set to false, Helm will generate certificates for you.
         # If set to true, you are expected to provide your own secret (see secretName, caSecretName).
