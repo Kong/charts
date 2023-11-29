@@ -183,7 +183,7 @@ admin:
     # - caBundle (PEM-encoded certificate string).
     # If both are set, caBundle takes precedence.
     # If neither are set, and the controller uses generated client certificates
-    # ($.Values.ingressController.adminApi.tls.client.enabled=true and $.Values.ingressController.adminApi.tls.client.certProvided=false),
+    # (ingressController.adminApi.tls.client.enabled=true and ingressController.adminApi.tls.client.certProvided=false),
     # the chart will use the generated certificate's CA for the Kong admin API
     client:
       caBundle: ""
