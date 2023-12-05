@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.33.0
 
 ### Improvements
 
@@ -11,6 +11,9 @@
 * Validate Gateway API's `Gateway` and `HTTPRoute` resources in the controller's
   admission webhook only when KIC version is 3.0 or higher.
   [#954](https://github.com/Kong/charts/pull/954)
+* Added controller's RBAC rules for `KongServiceFacade` CRD (installed only when
+  KongServiceFacade feature gate turned on and KIC version >= 3.1.0).
+  [#963](https://github.com/Kong/charts/pull/963)
 
 ## 2.32.0
 
