@@ -4,7 +4,9 @@
 
 ### Improvements
 
-* Only set `Service` `clusterIP` when `type` is `ClusterIP`
+* Only allow `None` ClusterIPs on ClusterIP-type Services.
+  [#961](https://github.com/Kong/charts/pull/961)
+  [#962](https://github.com/Kong/charts/pull/962)
 * Bumped Kong version to 3.5.
   [#957](https://github.com/Kong/charts/pull/957)
 * Support for `affinity` configuration has been added to migration job templates.

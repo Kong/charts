@@ -251,8 +251,10 @@ spec:
   {{- if .externalTrafficPolicy }}
   externalTrafficPolicy: {{ .externalTrafficPolicy }}
   {{- end }}
-  {{- if (and (eq .type "ClusterIP") .clusterIP )}}
+  {{- if .clusterIP }}
+  {{- if (or (not (eq .clusterIP "None")) (and (eq .type "ClusterIP") (eq .clusterIP "None"))) }}
   clusterIP: {{ .clusterIP }}
+  {{- end }}
   {{- end }}
   selector:
     {{- .selectorLabels | nindent 4 }}
