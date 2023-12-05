@@ -251,7 +251,7 @@ spec:
   {{- if .externalTrafficPolicy }}
   externalTrafficPolicy: {{ .externalTrafficPolicy }}
   {{- end }}
-  {{- if .clusterIP }}
+  {{- if (and (eq .type "ClusterIP") .clusterIP )}}
   clusterIP: {{ .clusterIP }}
   {{- end }}
   selector:
