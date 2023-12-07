@@ -1266,7 +1266,7 @@ resource roles into their separate templates.
 {{- if and (semverCompare ">= 3.1.0" (include "kong.effectiveVersion" .Values.ingressController.image))
            (contains (print .Values.ingressController.env.feature_gates) "KongServiceFacade=true") }}
 - apiGroups:
-  - incubator.konghq.com
+  - incubator.ingress-controller.konghq.com
   resources:
   - kongservicefacades
   verbs:
@@ -1274,7 +1274,7 @@ resource roles into their separate templates.
   - list
   - watch
 - apiGroups:
-  - incubator.konghq.com
+  - incubator.ingress-controller.konghq.com
   resources:
   - kongservicefacades/status
   verbs:
