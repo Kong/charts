@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.33.1
+
+### Fixed
+
+* Use changed `incubator.ingress-controller.konghq.com` API group name in `KongServiceFacade`
+  RBAC rules. Refer to [KIC#5302](https://github.com/Kong/kubernetes-ingress-controller/pull/5302)
+  for rename reasoning.
+  [#968](https://github.com/Kong/charts/pull/968)
+
 ## 2.33.0
 
 ### Improvements
