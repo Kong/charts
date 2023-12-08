@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.1
+
+### Fixed
+
+- Bumped dependencies on `kong/kong` chart to `>=2.33.1`. This fixes an API group
+  name of `KongServiceFacade` in the controller RBAC rules after a rename.
+  [#969](https://github.com/Kong/charts/pull/969)
+
 ## 0.10.0
 
 ### Improvements
