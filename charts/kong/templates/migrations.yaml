@@ -88,7 +88,7 @@ spec:
       {{- include "kong.podsecuritycontext" . | nindent 8 }}
       {{- if .Values.affinity }}
       affinity:
-      {{- toYaml .Values.affinity | indent 8 }}
+      {{- toYaml .Values.affinity | nindent 8 }}
       {{- end }}
       {{- if .Values.nodeSelector }}
       nodeSelector:
