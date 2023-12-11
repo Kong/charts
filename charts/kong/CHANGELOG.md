@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.33.2
+
+* Fix a template bug related to the `affinity` field for migrations Pods.
+  [#972](https://github.com/Kong/charts/pull/972)
+
 ## 2.33.1
 
 ### Fixed
