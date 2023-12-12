@@ -28,21 +28,11 @@ TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
 KUBECTL="kubectl --context kind-${TEST_ENV_NAME}"
 KUBERNETES_VERSION="$($KUBECTL version -o json | jq -r '.serverVersion.gitVersion')"
 
-CONTROLLER_PREFIX=""
-GATEWAY_PREFIX=""
 ADDITIONAL_FLAGS=()
 
 # ------------------------------------------------------------------------------
-# Configure per-chart settings
+# Deploy Kuma configuration and test namespace
 # ------------------------------------------------------------------------------
-if [[ "${CHART_NAME}" == "ingress" ]]; then
-  CONTROLLER_PREFIX="controller."
-  GATEWAY_PREFIX="gateway."
-  # this is intentionally a no-op at present. this originally had a set that was
-  # made obsolete by a values default change. it's now a placeholder showing an
-  # example modification
-  # ADDITIONAL_FLAGS+=("<replace with a --set command>")
-fi
 
 
 if [[ "${CHART_NAME}" == "gateway-operator" ]]
@@ -135,6 +125,38 @@ metadata:
   set +x
 
 fi
+
+TAG_MESSAGE=""
+if [[ "${TAG}" != "default" ]]
+then
+  TAG_MESSAGE="with controller tag ${TAG} "
+  ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.image.tag=${TAG} ");
+fi
+
+# Configure values for all tests
+# Enable Gateway API
+ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.env.feature_gates=GatewayAlpha=true")
+# Tests should not show up in reporting
+ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.env.anonymous_reports=false")
+
+if [[ -n "${KONG_VERSION-}" ]]
+then
+ADDITIONAL_FLAGS+=("--set image.tag=${KONG_VERSION}")
+fi
+
+if [[ -n "${KIC_VERSION-}" ]]
+then
+ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.image.tag=${KIC_VERSION}")
+fi
+
+echo "INFO: installing chart as release ${RELEASE_NAME} ${TAG_MESSAGE}to namespace ${RELEASE_NAMESPACE}"
+set -x
+# shellcheck disable=SC2048,SC2086
+helm install --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
+    --set deployment.test.enabled=true \
+    ${ADDITIONAL_FLAGS[*]} \
+    "charts/${CHART_NAME}"
+set +x
 
 # ------------------------------------------------------------------------------
 # Test Chart 
