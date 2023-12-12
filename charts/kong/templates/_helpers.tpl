@@ -1255,7 +1255,6 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
 
 Collectively, these are built from:
 kubectl kustomize github.com/kong/kubernetes-ingress-controller/config/rbac?ref=main
-kubectl kustomize github.com/kong/kubernetes-ingress-controller/config/rbac/knative?ref=main
 kubectl kustomize github.com/kong/kubernetes-ingress-controller/config/rbac/gateway?ref=main
 
 However, there is no way to generate the split between cluster and namespaced
@@ -1675,6 +1674,13 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   verbs:
   - get
   - update
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
 {{- end }}
 - apiGroups:
   - networking.k8s.io
