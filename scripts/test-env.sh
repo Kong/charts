@@ -92,5 +92,9 @@ kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd/experimenta
 
 echo "INFO: Updating helm dependencies"
 for i in charts/*; do
+  if [ "$i" = "charts/kong" ]
+  then
+    continue
+  fi
   helm dependency update "$i"
 done
