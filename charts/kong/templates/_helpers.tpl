@@ -1681,6 +1681,7 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   verbs:
   - get
   - list
+  - watch
 {{- end }}
 - apiGroups:
   - networking.k8s.io
