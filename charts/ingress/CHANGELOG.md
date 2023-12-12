@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.0.0
+
+This major release consolidates the `kong` and `ingress` chart that behaves
+like the `ingress` chart (a KIC-managed Kong installation with separate
+Deployments for the controller and proxy) by default. Existing users of 2.x
+`kong` chart and the 0.x `ingress` chart should both upgrade to `ingress` 1.x
+following the [upgrade guide](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#100).
+
+## Breaking changes
+
+- A number of values.yaml keys have moved to accomodate the revised controller
+  Deployment configuration. The [migration tool](https://github.com/Kong/chart-migrate)
+  can automate most of the required changes.
+- The controller sidecar container previously used by default in the `kong`
+  chart is no longer supported. The controller must reside in its own
+  Deployment. Although the transition between sidecar and standalone Deployment
+  is not expected to cause issues, you may need to add Deployment-level and
+  Pod-level configuration to the new Deployment under
+  `ingressController.deployment` in values.yaml.
+- The controller uses gateway discovery mode by default. This mode uses a
+  single leader controller instance to update all proxy instances in either
+  DB-less or DB-backed mode. It is a requirement for deploying the controller
+  in a separate Deployment for DB-less mode.
+- The controller and proxy admin API now use mutual TLS to secure their
+  communications by default. Defaults use chart-generated certificates. You can
+  configure alternate certificates under `ingressController.adminApi` and
+  `admin.tls.client`.
+
 ## 0.10.0
 
 ### Improvements

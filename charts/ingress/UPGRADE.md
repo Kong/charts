@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [1.0.0](#100)
 - [2.26.0](#2260)
 - [2.19.0](#2190)
 - [2.13.0](#2130)
@@ -83,6 +84,10 @@ https://raw.githubusercontent.com/Kong/charts/ingress-<version>/charts/ingress/c
 
 For example, if your release is 2.6.4, you would apply
 `https://raw.githubusercontent.com/Kong/charts/ingress-2.6.4/charts/ingress/crds/custom-resource-definitions.yaml`.
+
+## 1.0.0
+
+It's a major release and it's complicated! This section will be added later.
 
 ## 2.26.0
 
