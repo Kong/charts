@@ -2,23 +2,29 @@ deployment:
   kong:
     enabled: false
 
-proxy:
-  ## This must match the gateway release's proxy Service name.
-  ## The Service name uses the pattern "<release name>-kong-proxy".
-  ## In this example, the companion gateway release is named "gw"
-  nameOverride: gw-kong-proxy
-
 ingressController:
   enabled: true
-
-  gatewayDiscovery:
+  konnect:
     enabled: true
-    adminApiService:
-      ## This must match the gateway release's admin Service name.
-      ## The Service name uses the pattern "<release name>-kong-admin".
-      ## In this example, the companion gateway release is named "gw"
-      name: gw-kong-admin
+    runtimeGroupID: "00000000-0000-0000-0000-000000000000" # CHANGEME
+    tlsClientSecretName: konnect-client-tls
+    apiHostname: "us.kic.api.konghq.com"
 
   konnect:
     enabled: true
     runtimeGroupID: "00000000-0000-0000-0000-000000000000" # CHANGEME
+
+image:
+  name: kong/kong-gateway
+env:
+  konnect_mode: "on"
+  vitals: "off"
+  cluster_mtls: pki
+  cluster_telemetry_endpoint: "8c9700866b.us.tp0.konghq.com:443" # CHANGEME
+  cluster_telemetry_server_name: "8c9700866b.us.tp0.konghq.com" # CHANGEME
+  cluster_cert: /etc/secrets/konnect-client-tls/tls.crt
+  cluster_cert_key: /etc/secrets/konnect-client-tls/tls.key
+  lua_ssl_trusted_certificate: system
+
+secretVolumes:
+  - konnect-client-tls
