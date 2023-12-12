@@ -42,7 +42,6 @@ jobs:
       matrix:
         chart-name:
           - kong
-          - ingress
           - gateway-operator
     steps:
       - name: Checkout
@@ -93,7 +92,6 @@ jobs:
           - "1.30.0"
         chart-name:
           - kong
-          - ingress
           - gateway-operator
     steps:
       - name: Checkout
@@ -135,7 +133,6 @@ jobs:
           - "3.2"
         chart-name:
           - kong
-          - ingress
     steps:
       - name: Checkout
         uses: actions/checkout@v4
