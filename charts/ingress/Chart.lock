@@ -1,9 +1,6 @@
 dependencies:
-- name: kong
-  repository: https://charts.konghq.com
-  version: 2.33.0
-- name: kong
-  repository: https://charts.konghq.com
-  version: 2.33.0
-digest: sha256:b43f09a826e481bc227e39cc5a3f0da56f26e1444371d8bb96d94082ee35e2c2
-generated: "2023-12-06T14:55:20.682668+01:00"
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 11.9.13
+digest: sha256:051285066cef2799e39e2953c4abd405c36510a09e9e1bd1833a29224daffddb
+generated: "2023-12-12T14:31:52.62804708-08:00"
