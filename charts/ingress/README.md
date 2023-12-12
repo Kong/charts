@@ -14,7 +14,7 @@ This chart bootstraps all the components needed to run Kong on a
 helm repo add kong https://charts.konghq.com
 helm repo update
 
-helm install kong/kong --generate-name
+helm install kong/ingress --generate-name
 ```
 
 ## Table of contents
@@ -72,15 +72,15 @@ helm install kong/kong --generate-name
   - [Email/SMTP](#emailsmtp)
 - [Prometheus Operator integration](#prometheus-operator-integration)
 - [Argo CD considerations](#argo-cd-considerations)
-- [Changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
-- [Upgrading](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
+- [Changelog](https://github.com/Kong/charts/blob/main/charts/ingress/CHANGELOG.md)
+- [Upgrading](https://github.com/Kong/charts/blob/main/charts/ingress/UPGRADE.md)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
 
 - Kubernetes 1.17+. Older chart releases support older Kubernetes versions.
   Refer to the [supported version matrix](https://docs.konghq.com/kubernetes-ingress-controller/latest/references/version-compatibility/#kubernetes)
-  and the [chart changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
+  and the [chart changelog](https://github.com/Kong/charts/blob/main/charts/ingress/CHANGELOG.md)
   for information about the default chart controller versions and Kubernetes
   versions supported by controller releases.
 - PV provisioner support in the underlying infrastructure if persistence
@@ -94,7 +94,7 @@ To install Kong:
 helm repo add kong https://charts.konghq.com
 helm repo update
 
-helm install kong/kong --generate-name
+helm install kong/ingress --generate-name
 ```
 
 ## Uninstall
@@ -113,7 +113,7 @@ chart and deletes the release.
 ## FAQs
 
 Please read the
-[FAQs](https://github.com/Kong/charts/blob/main/charts/kong/FAQs.md)
+[FAQs](https://github.com/Kong/charts/blob/main/charts/ingress/FAQs.md)
 document.
 
 ## Kong Enterprise
@@ -287,8 +287,8 @@ instance-specific values.yamls that contain service configuration only. You can
 then create releases with:
 
 ```bash
-helm install proxy-only -f shared-values.yaml -f only-proxy.yaml kong/kong
-helm install admin-only -f shared-values.yaml -f only-admin.yaml kong/kong
+helm install proxy-only -f shared-values.yaml -f only-proxy.yaml kong/ingress
+helm install admin-only -f shared-values.yaml -f only-admin.yaml kong/ingress
 ```
 
 ### Standalone controller nodes
@@ -338,7 +338,7 @@ first and then upgrade the data plane release](https://docs.konghq.com/gateway/l
 #### Certificates
 
 > This example shows how to use Kong Hybrid mode with `cluster_mtls: shared`.
-> For an example of `cluster_mtls: pki` see the [hybrid-cert-manager example](https://github.com/Kong/charts/blob/main/charts/kong/example-values/hybrid-cert-manager/)
+> For an example of `cluster_mtls: pki` see the [hybrid-cert-manager example](https://github.com/Kong/charts/blob/main/charts/ingress/example-values/hybrid-cert-manager/)
 
 Hybrid mode uses TLS to secure the CP/DP node communication channel, and
 requires certificates for it. You can generate these either using `kong hybrid
@@ -599,7 +599,7 @@ The chart able to inject custom DNS configuration into containers. This can be u
 ### Example configurations
 
 Several example values.yaml are available in the
-[example-values](https://github.com/Kong/charts/blob/main/charts/kong/example-values/)
+[example-values](https://github.com/Kong/charts/blob/main/charts/ingress/example-values/)
 directory.
 
 ## Configuration

@@ -33,7 +33,7 @@
 ## 0.7.0
 
 - Bumped dependency `kong/kong` minimum to `2.28.1`. Review the [kong chart
-  changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md#2281)
+  changelog](https://github.com/Kong/charts/blob/kong-2.33.2/charts/kong/CHANGELOG.md#2281)
   for details.
 
 ## 0.6.0
@@ -49,7 +49,7 @@
 
 The new `kong/kong` chart requires manual changes to values.yaml if using this
 chart with controller versions <=2.10 and Kong versions >=3.3. See the 
-[the kong/kong 2.26 upgrade instructions](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#2260)
+[the kong/kong 2.26 upgrade instructions](https://github.com/Kong/charts/blob/kong-2.33.2/charts/kong/UPGRADE.md#2260)
 for details.
 
 ### Improvements

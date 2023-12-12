@@ -45,7 +45,7 @@ Job attempts to use this ServiceAccount before it is created. It is [not
 possible to easily handle this case automatically](https://github.com/Kong/charts/pull/31).
 
 Users encountering this issue should temporarily modify their
-[pre-upgrade-migrations template](https://github.com/Kong/charts/blob/main/charts/kong/templates/migrations-pre-upgrade.yaml),
+[pre-upgrade-migrations template](https://github.com/Kong/charts/blob/main/charts/ingress/templates/migrations-pre-upgrade.yaml),
 adding the following at the bottom:
 
 ```
