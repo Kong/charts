@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+* Add RBAC rules for get, list and watch operations on namespaces so that Gateway API
+  controllers in KIC can access using a cached controller-runtime client.
+  [#974](https://github.com/Kong/charts/pull/974)
+
 ## 2.33.2
 
 * Fix a template bug related to the `affinity` field for migrations Pods.
