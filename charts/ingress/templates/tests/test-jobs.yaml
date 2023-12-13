@@ -13,7 +13,7 @@ spec:
       image: curlimages/curl
       command:
         - curl
-        - "http://{{ .Release.Name }}-kong-proxy.{{ .Release.Namespace }}.svc.cluster.local/httpbin"
+        - "http://{{ .Release.Name }}-ingress-proxy.{{ .Release.Namespace }}.svc.cluster.local/httpbin"
 ---
 apiVersion: v1
 kind: Pod
@@ -28,5 +28,5 @@ spec:
       image: curlimages/curl
       command:
         - curl
-        - "http://{{ .Release.Name }}-kong-proxy.{{ .Release.Namespace }}.svc.cluster.local/httproute"
+        - "http://{{ .Release.Name }}-ingress-proxy.{{ .Release.Namespace }}.svc.cluster.local/httproute"
 {{- end }}
