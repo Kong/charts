@@ -23,7 +23,11 @@ var update = flag.Bool("update-golden", false, "update golden test output files"
 // When a difference in the output is expected, you can regenerate golden files by passing `-update-golden` flag while
 // invoking this test (or using `make test.golden.update`).
 func TestGolden(t *testing.T) {
+	// Add the bitnami repo so that the dependencies can be resolved.
 	helm.AddRepo(t, &helm.Options{}, "bitnami", "https://charts.bitnami.com/bitnami")
+
+	// Build the dependencies using Chart.lock. It has to be done because we do not keep /charts directory
+	// containing the dependencies in the repository.
 	_, err := helm.RunHelmCommandAndGetOutputE(t, &helm.Options{}, "dependencies", "build", "../", "--skip-refresh")
 	require.NoError(t, err)
 
@@ -39,7 +43,7 @@ func TestGolden(t *testing.T) {
 			}
 
 			expected, err := os.ReadFile(goldenFile)
-			require.NoError(t, err, "could not read the golden file")
+			require.NoErrorf(t, err, "could not read the golden file: %s", goldenFile)
 			require.Equal(t, string(expected), string(rendered),
 				"golden differs from the rendered manifest, if that's expected, run `make test.golden.update`")
 		})

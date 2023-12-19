@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 ---
 # Source: kong/templates/admission-webhook.yaml
 apiVersion: v1
@@ -21,7 +21,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 type: kubernetes.io/tls
 data:
     tls.crt: redacted
@@ -37,7 +37,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 type: kubernetes.io/tls
 data:
   tls.crt: redacted
@@ -71,7 +71,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
   name: kong-kong
 rules:
 
@@ -321,7 +321,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -341,7 +341,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 rules:
   - apiGroups:
       - ""
@@ -410,7 +410,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -430,7 +430,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 spec:
   ports:
   - name: webhook
@@ -441,7 +441,7 @@ spec:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
     app.kubernetes.io/component: app
 ---
 # Source: kong/templates/service-kong-manager.yaml
@@ -454,7 +454,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 spec:
   type: NodePort
   ports:
@@ -481,7 +481,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
     enable-metrics: "true"
 spec:
   type: LoadBalancer
@@ -509,7 +509,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
     app.kubernetes.io/component: app
 spec:
   replicas: 1
@@ -529,17 +529,17 @@ spec:
         app.kubernetes.io/name: kong
         app.kubernetes.io/instance: "kong"
         app.kubernetes.io/managed-by: "Helm"
-        app.kubernetes.io/version: "3.4"
+        app.kubernetes.io/version: "3.5"
         app.kubernetes.io/component: app
         app: kong-kong
-        version: "3.4"
+        version: "3.5"
     spec:
       serviceAccountName: kong-kong
       automountServiceAccountToken: false
       
       initContainers:
       - name: clear-stale-pid
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         securityContext:
         
@@ -702,7 +702,7 @@ spec:
         
       
       - name: "proxy"
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         securityContext:
         
@@ -855,7 +855,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 spec:
   rules:
   - host: "proxy.kong.example"
@@ -914,7 +914,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 webhooks:
 - name: validations.kong.konghq.com
   objectSelector:

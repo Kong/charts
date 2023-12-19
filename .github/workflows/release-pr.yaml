@@ -99,7 +99,7 @@ jobs:
       - name: setup helm
         uses: azure/setup-helm@v3
         with:
-          version: v3.11.0
+          version: v3.13.3
 
       - name: setup testing environment (kind-cluster)
         env:
@@ -145,7 +145,7 @@ jobs:
       - name: setup helm
         uses: azure/setup-helm@v3
         with:
-          version: v3.11.0
+          version: v3.13.3
 
       - name: setup testing environment (kind-cluster)
         run: ./scripts/test-env.sh
@@ -170,7 +170,7 @@ jobs:
       - name: setup helm
         uses: azure/setup-helm@v3
         with:
-          version: v3.11.0
+          version: v3.13.3
 
       - name: setup golang
         uses: actions/setup-go@v4

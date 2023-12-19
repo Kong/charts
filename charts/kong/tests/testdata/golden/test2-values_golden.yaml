@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 ---
 # Source: kong/charts/postgresql/templates/secrets.yaml
 apiVersion: v1
@@ -37,7 +37,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 type: kubernetes.io/tls
 data:
     tls.crt: redacted
@@ -53,7 +53,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 type: kubernetes.io/tls
 data:
   tls.crt: redacted
@@ -69,7 +69,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 data:
   wait.sh: |
     until timeout 2 bash -c "9<>/dev/tcp/${KONG_PG_HOST}/${KONG_PG_PORT}"
@@ -85,7 +85,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
   name: kong-kong
 rules:
 - apiGroups:
@@ -129,7 +129,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -149,7 +149,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 rules:
   - apiGroups:
       - ""
@@ -216,7 +216,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
   name: kong-kong-default
   namespace: default
 rules:
@@ -437,7 +437,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -456,7 +456,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
   namespace: default
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -534,7 +534,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 spec:
   ports:
   - name: webhook
@@ -545,7 +545,7 @@ spec:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
     app.kubernetes.io/component: app
 ---
 # Source: kong/templates/service-kong-manager.yaml
@@ -558,7 +558,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 spec:
   type: NodePort
   ports:
@@ -585,7 +585,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
     enable-metrics: "true"
 spec:
   type: LoadBalancer
@@ -621,7 +621,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
     app.kubernetes.io/component: app
 spec:
   replicas: 1
@@ -646,17 +646,17 @@ spec:
         app.kubernetes.io/name: kong
         app.kubernetes.io/instance: "kong"
         app.kubernetes.io/managed-by: "Helm"
-        app.kubernetes.io/version: "3.4"
+        app.kubernetes.io/version: "3.5"
         app.kubernetes.io/component: app
         app: kong-kong
-        version: "3.4"
+        version: "3.5"
     spec:
       serviceAccountName: kong-kong
       automountServiceAccountToken: false
       
       initContainers:
       - name: clear-stale-pid
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         securityContext:
         
@@ -761,7 +761,7 @@ spec:
             cpu: 100m
             memory: 64Mi
       - name: wait-for-db
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         securityContext:
         
@@ -944,7 +944,7 @@ spec:
         
       
       - name: "proxy"
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         securityContext:
         
@@ -1285,7 +1285,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
     app.kubernetes.io/component: init-migrations
   annotations:
     argocd.argoproj.io/hook: Sync
@@ -1299,7 +1299,7 @@ spec:
         app.kubernetes.io/name: kong
         app.kubernetes.io/instance: "kong"
         app.kubernetes.io/managed-by: "Helm"
-        app.kubernetes.io/version: "3.4"
+        app.kubernetes.io/version: "3.5"
         app.kubernetes.io/component: init-migrations
       annotations:
         sidecar.istio.io/inject: "false"
@@ -1323,7 +1323,7 @@ spec:
             cpu: 100m
             memory: 64Mi
       - name: wait-for-postgres 
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         env:
          
@@ -1402,7 +1402,7 @@ spec:
           {}
       containers:
       - name: kong-migrations
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         securityContext:
         
@@ -1538,7 +1538,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 spec:
   rules:
   - host: "proxy.kong.example"
@@ -1562,7 +1562,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
 webhooks:
 - name: validations.kong.konghq.com
   timeoutSeconds: 5
@@ -1637,7 +1637,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
     app.kubernetes.io/component: post-upgrade-migrations
   annotations:
     helm.sh/hook: "post-upgrade"
@@ -1651,7 +1651,7 @@ spec:
         app.kubernetes.io/name: kong
         app.kubernetes.io/instance: "kong"
         app.kubernetes.io/managed-by: "Helm"
-        app.kubernetes.io/version: "3.4"
+        app.kubernetes.io/version: "3.5"
         app.kubernetes.io/component: post-upgrade-migrations
       annotations:
         sidecar.istio.io/inject: "false"
@@ -1675,7 +1675,7 @@ spec:
             cpu: 100m
             memory: 64Mi
       - name: wait-for-postgres 
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         env:
          
@@ -1754,7 +1754,7 @@ spec:
           {}
       containers:
       - name: kong-post-upgrade-migrations
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         securityContext:
         
@@ -1892,7 +1892,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/instance: "kong"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.4"
+    app.kubernetes.io/version: "3.5"
     app.kubernetes.io/component: pre-upgrade-migrations
   annotations:
     helm.sh/hook: "pre-upgrade"
@@ -1908,7 +1908,7 @@ spec:
         app.kubernetes.io/name: kong
         app.kubernetes.io/instance: "kong"
         app.kubernetes.io/managed-by: "Helm"
-        app.kubernetes.io/version: "3.4"
+        app.kubernetes.io/version: "3.5"
         app.kubernetes.io/component: pre-upgrade-migrations
       annotations:
         sidecar.istio.io/inject: "false"
@@ -1932,7 +1932,7 @@ spec:
             cpu: 100m
             memory: 64Mi
       - name: wait-for-postgres 
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         env:
          
@@ -2011,7 +2011,7 @@ spec:
           {}
       containers:
       - name: kong-upgrade-migrations
-        image: kong:3.4
+        image: kong:3.5
         imagePullPolicy: IfNotPresent
         securityContext:
         
