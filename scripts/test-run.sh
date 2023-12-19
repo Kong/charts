@@ -27,21 +27,7 @@ TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
 KUBECTL="kubectl --context kind-${TEST_ENV_NAME}"
 KUBERNETES_VERSION="$($KUBECTL version -o json | jq -r '.serverVersion.gitVersion')"
 
-CONTROLLER_PREFIX=""
-GATEWAY_PREFIX=""
 ADDITIONAL_FLAGS=()
-
-# ------------------------------------------------------------------------------
-# Configure per-chart settings
-# ------------------------------------------------------------------------------
-if [[ "${CHART_NAME}" == "ingress" ]]; then
-  CONTROLLER_PREFIX="controller."
-  GATEWAY_PREFIX="gateway."
-  # this is intentionally a no-op at present. this originally had a set that was
-  # made obsolete by a values default change. it's now a placeholder showing an
-  # example modification
-  # ADDITIONAL_FLAGS+=("<replace with a --set command>")
-fi
 
 # ------------------------------------------------------------------------------
 # Deploy Kuma configuration and test namespace
@@ -82,23 +68,23 @@ TAG_MESSAGE=""
 if [[ "${TAG}" != "default" ]]
 then
   TAG_MESSAGE="with controller tag ${TAG} "
-  ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.image.tag=${TAG} ");
+  ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.image.tag=${TAG} ");
 fi
 
 # Configure values for all tests
 # Enable Gateway API
-ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.env.feature_gates=GatewayAlpha=true")
+ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.env.feature_gates=GatewayAlpha=true")
 # Tests should not show up in reporting
-ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports=false")
+ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.env.anonymous_reports=false")
 
 if [[ -n "${KONG_VERSION-}" ]]
 then
-ADDITIONAL_FLAGS+=("--set ${GATEWAY_PREFIX}image.tag=${KONG_VERSION}")
+ADDITIONAL_FLAGS+=("--set image.tag=${KONG_VERSION}")
 fi
 
 if [[ -n "${KIC_VERSION-}" ]]
 then
-ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.image.tag=${KIC_VERSION}")
+ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.image.tag=${KIC_VERSION}")
 fi
 
 echo "INFO: installing chart as release ${RELEASE_NAME} ${TAG_MESSAGE}to namespace ${RELEASE_NAMESPACE}"

@@ -17,6 +17,7 @@ upgrading from a previous version.
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
+- [3.0.0](#300)
 - [2.26.0](#2260)
 - [2.19.0](#2190)
 - [2.13.0](#2130)
@@ -83,6 +84,11 @@ https://raw.githubusercontent.com/Kong/charts/kong-<version>/charts/kong/crds/cu
 
 For example, if your release is 2.6.4, you would apply
 `https://raw.githubusercontent.com/Kong/charts/kong-2.6.4/charts/kong/crds/custom-resource-definitions.yaml`.
+
+## 3.0.0
+
+This is a major release that requires several upgrade steps. This guide is a
+work in progress and will be updated with further information later.
 
 ## 2.26.0
 
