@@ -159,6 +159,26 @@ jobs:
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
 
+  golden-tests:
+    runs-on: ubuntu-latest
+    name: golden-tests
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.11.0
+
+      - name: build helm chart dependency
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm dependency build charts/kong
+
+      - name: run golden tests
+        run: make test.golden
+
   # Workaround to allow checking the matrix tests as required tests without adding the individual cases
   # Ref: https://github.com/orgs/community/discussions/26822#discussioncomment-3305794
   passed:
@@ -168,6 +188,7 @@ jobs:
       - lint-test
       - integration-test
       - oldversion-integration-test
+      - golden-tests
     if: always()
     steps:
       - if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
