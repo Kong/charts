@@ -32,10 +32,17 @@ GOLDEN_TEST_CHART ?= kong
 GOLDEN_TEST_CHART_VALUES_DIR ?= ./charts/kong/ci/
 CHARTSNAP_COMMAND = helm chartsnap -c ./charts/$(GOLDEN_TEST_CHART) -f $(GOLDEN_TEST_CHART_VALUES_DIR)
 
+# Defining multi-line strings to echo: https://stackoverflow.com/a/649462/7958339
+define GOLDEN_TEST_FAILURE_MSG
+>> Golden tests have failed.
+>> Please run 'make test.golden.update' to update golden files and commit the changes if they're expected.
+endef
+export GOLDEN_TEST_FAILURE_MSG
+
 .PHONY: test.golden
 test.golden: chartsnap
-	$(CHARTSNAP_COMMAND) || \
-	(echo ">> Golden tests have failed.\n>> Please run 'make test.golden.update' to update golden files and commit the changes if they're expected." && \
+	@ $(CHARTSNAP_COMMAND) || \
+	(echo "$$GOLDEN_TEST_FAILURE_MSG" && \
 	exit 1)
 
 .PHONY: test.golden.update
