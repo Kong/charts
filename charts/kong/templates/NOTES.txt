@@ -27,7 +27,7 @@ Kong: https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/gettin
 
 {{- include "kong.deprecation-warnings" $warnings -}}
 
-{{- if contains "LoadBalancer" .Values.proxy.type -}}
+{{- if .Values.demo -}}
 
 #############################################################################################
 ##### WARNING: DEMO VALUES USED
