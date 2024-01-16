@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.2
+
+### Fixed
+
+- Bumped dependencies on `kong/kong` chart to `>=2.33.3`. Includes fixes for RBAC
+  rules for namespaces and `affinity` field template for migration Pods.
+  [#984](https://github.com/Kong/charts/pull/984)
+
 ## 0.10.1
 
 ### Fixed
