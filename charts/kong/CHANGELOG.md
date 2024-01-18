@@ -9,6 +9,8 @@
   ConfigMap or Secret resource keys in bulk:
   https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables
   [#987](https://github.com/Kong/charts/pull/987)
+* Kong listens now use both IPv4 and IPv6 addresses.
+  [#986](https://github.com/Kong/charts/pull/986)
 
 ## 2.33.3
 
