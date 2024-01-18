@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Nothing yet.
+
+## 2.34.0
+
 ### Added
 
 * The `envFrom` and `ingressController.envFrom` values.yaml keys now populate
