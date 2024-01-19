@@ -9,7 +9,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong-validations
         namespace: default
     webhooks:
@@ -83,7 +83,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong
         namespace: default
     spec:
@@ -106,7 +106,7 @@ SnapShot = """
                     app.kubernetes.io/managed-by: Helm
                     app.kubernetes.io/name: kong
                     app.kubernetes.io/version: \"3.5\"
-                    helm.sh/chart: kong-2.33.3
+                    helm.sh/chart: kong-2.34.0
                     version: \"3.5\"
             spec:
                 automountServiceAccountToken: false
@@ -193,7 +193,7 @@ SnapShot = """
                         - name: KONG_ADMIN_GUI_ERROR_LOG
                           value: /dev/stderr
                         - name: KONG_ADMIN_LISTEN
-                          value: 127.0.0.1:8444 http2 ssl
+                          value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
                         - name: KONG_CLUSTER_LISTEN
                           value: \"off\"
                         - name: KONG_DATABASE
@@ -219,7 +219,7 @@ SnapShot = """
                         - name: KONG_PROXY_ERROR_LOG
                           value: /dev/stderr
                         - name: KONG_PROXY_LISTEN
-                          value: 0.0.0.0:8000, 0.0.0.0:8443 http2 ssl
+                          value: 0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl
                         - name: KONG_PROXY_STREAM_ACCESS_LOG
                           value: /dev/stdout basic
                         - name: KONG_PROXY_STREAM_ERROR_LOG
@@ -231,7 +231,7 @@ SnapShot = """
                         - name: KONG_STATUS_ERROR_LOG
                           value: /dev/stderr
                         - name: KONG_STATUS_LISTEN
-                          value: 0.0.0.0:8100
+                          value: 0.0.0.0:8100, [::]:8100
                         - name: KONG_STREAM_LISTEN
                           value: \"off\"
                         - name: KONG_NGINX_DAEMON
@@ -307,7 +307,7 @@ SnapShot = """
                         - name: KONG_ADMIN_GUI_ERROR_LOG
                           value: /dev/stderr
                         - name: KONG_ADMIN_LISTEN
-                          value: 127.0.0.1:8444 http2 ssl
+                          value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
                         - name: KONG_CLUSTER_LISTEN
                           value: \"off\"
                         - name: KONG_DATABASE
@@ -333,7 +333,7 @@ SnapShot = """
                         - name: KONG_PROXY_ERROR_LOG
                           value: /dev/stderr
                         - name: KONG_PROXY_LISTEN
-                          value: 0.0.0.0:8000, 0.0.0.0:8443 http2 ssl
+                          value: 0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl
                         - name: KONG_PROXY_STREAM_ACCESS_LOG
                           value: /dev/stdout basic
                         - name: KONG_PROXY_STREAM_ERROR_LOG
@@ -345,7 +345,7 @@ SnapShot = """
                         - name: KONG_STATUS_ERROR_LOG
                           value: /dev/stderr
                         - name: KONG_STATUS_LISTEN
-                          value: 0.0.0.0:8100
+                          value: 0.0.0.0:8100, [::]:8100
                         - name: KONG_STREAM_LISTEN
                           value: \"off\"
                       image: kong:3.5
@@ -406,7 +406,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong-proxy
         namespace: default
     spec:
@@ -465,7 +465,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong
     rules:
         - apiGroups:
@@ -713,7 +713,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong
     roleRef:
         apiGroup: rbac.authorization.k8s.io
@@ -732,7 +732,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong
         namespace: default
     rules:
@@ -796,7 +796,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong
         namespace: default
     roleRef:
@@ -819,7 +819,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong-validation-webhook-ca-keypair
         namespace: default
     type: kubernetes.io/tls
@@ -835,7 +835,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong-validation-webhook-keypair
         namespace: default
     type: kubernetes.io/tls
@@ -866,7 +866,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong-manager
         namespace: default
     spec:
@@ -894,7 +894,7 @@ SnapShot = """
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
             enable-metrics: \"true\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong-proxy
         namespace: default
     spec:
@@ -921,7 +921,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong-validation-webhook
         namespace: default
     spec:
@@ -936,7 +936,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
 - object:
     apiVersion: v1
     kind: ServiceAccount
@@ -946,7 +946,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.33.3
+            helm.sh/chart: kong-2.34.0
         name: chartsnap-kong
         namespace: default
 """
