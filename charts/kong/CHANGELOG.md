@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+* The `envFrom` and `ingressController.envFrom` values.yaml keys now populate
+  the container field of the same name. This loads environment variables from
+  ConfigMap or Secret resource keys in bulk:
+  https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables
+  [#987](https://github.com/Kong/charts/pull/987)
+
 ## 2.33.3
 
 ### Fixed

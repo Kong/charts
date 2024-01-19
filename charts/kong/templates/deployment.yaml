@@ -101,6 +101,7 @@ spec:
         - "$KONG_PREFIX/pids"
         env:
         {{- include "kong.env" . | nindent 8 }}
+        {{- include "kong.envFrom" .Values.envFrom | nindent 8 }}
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 8 }}
         {{- if .Values.deployment.initContainers }}

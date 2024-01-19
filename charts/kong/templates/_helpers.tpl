@@ -827,6 +827,7 @@ The name of the Service which will be used by the controller to update the Ingre
   {{ toYaml .Values.containerSecurityContext | nindent 4 }}
   env:
   {{- include "kong.env" . | nindent 2 }}
+  {{- include "kong.envFrom" .Values.envFrom | nindent 2 }}
 {{/* TODO the prefix override is to work around https://github.com/Kong/charts/issues/295
      Note that we use args instead of command here to /not/ override the standard image entrypoint. */}}
   args: [ "/bin/bash", "-c", "export KONG_NGINX_DAEMON=on KONG_PREFIX=`mktemp -d` KONG_KEYRING_ENABLED=off; until kong start; do echo 'waiting for db'; sleep 1; done; kong stop"]
@@ -891,6 +892,7 @@ The name of the Service which will be used by the controller to update the Ingre
         apiVersion: v1
         fieldPath: metadata.namespace
 {{- include "kong.ingressController.env" .  | indent 2 }}
+{{ include "kong.envFrom" .Values.ingressController.envFrom | indent 2 }}
   image: {{ include "kong.getRepoTag" .Values.ingressController.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
@@ -1222,6 +1224,7 @@ Environment variables are sorted alphabetically
   imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
   env:
   {{- include "kong.no_daemon_env" . | nindent 2 }}
+  {{- include "kong.envFrom" .Values.envFrom | nindent 2 }}
   command: [ "bash", "/wait_postgres/wait.sh" ]
   volumeMounts:
   - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
@@ -1737,4 +1740,12 @@ extensions/v1beta1
     {{- end -}}
 {{- end -}}
 {{- (toYaml $proxyReadiness) -}}
+{{- end -}}
+
+{{- define "kong.envFrom" -}}
+  {{- if (gt (len .) 0) -}}
+envFrom:
+{{- toYaml . | nindent 2 -}}
+  {{- else -}}
+  {{- end -}}
 {{- end -}}
