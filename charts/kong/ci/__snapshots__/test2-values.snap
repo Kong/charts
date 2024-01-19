@@ -147,6 +147,9 @@ SnapShot = """
                           value: default
                         - name: TZ
                           value: Europe/Berlin
+                      envFrom:
+                        - configMapRef:
+                            name: env-config
                       image: kong/kubernetes-ingress-controller:3.0
                       imagePullPolicy: IfNotPresent
                       livenessProbe:
@@ -396,6 +399,9 @@ SnapShot = """
                           value: 0.0.0.0:8100
                         - name: KONG_STREAM_LISTEN
                           value: 0.0.0.0:9000, 0.0.0.0:9001 ssl
+                      envFrom:
+                        - configMapRef:
+                            name: env-config
                       image: kong:3.5
                       imagePullPolicy: IfNotPresent
                       name: clear-stale-pid
@@ -498,6 +504,9 @@ SnapShot = """
                           value: 0.0.0.0:8100
                         - name: KONG_STREAM_LISTEN
                           value: 0.0.0.0:9000, 0.0.0.0:9001 ssl
+                      envFrom:
+                        - configMapRef:
+                            name: env-config
                       image: kong:3.5
                       imagePullPolicy: IfNotPresent
                       name: wait-for-db
@@ -809,6 +818,9 @@ SnapShot = """
                           value: 0.0.0.0:9000, 0.0.0.0:9001 ssl
                         - name: KONG_NGINX_DAEMON
                           value: \"off\"
+                      envFrom:
+                        - configMapRef:
+                            name: env-config
                       image: kong:3.5
                       imagePullPolicy: IfNotPresent
                       name: kong-migrations
@@ -913,6 +925,9 @@ SnapShot = """
                           value: 0.0.0.0:9000, 0.0.0.0:9001 ssl
                         - name: KONG_NGINX_DAEMON
                           value: \"off\"
+                      envFrom:
+                        - configMapRef:
+                            name: env-config
                       image: kong:3.5
                       imagePullPolicy: IfNotPresent
                       name: wait-for-postgres
@@ -1060,6 +1075,9 @@ SnapShot = """
                           value: 0.0.0.0:9000, 0.0.0.0:9001 ssl
                         - name: KONG_NGINX_DAEMON
                           value: \"off\"
+                      envFrom:
+                        - configMapRef:
+                            name: env-config
                       image: kong:3.5
                       imagePullPolicy: IfNotPresent
                       name: kong-post-upgrade-migrations
@@ -1164,6 +1182,9 @@ SnapShot = """
                           value: 0.0.0.0:9000, 0.0.0.0:9001 ssl
                         - name: KONG_NGINX_DAEMON
                           value: \"off\"
+                      envFrom:
+                        - configMapRef:
+                            name: env-config
                       image: kong:3.5
                       imagePullPolicy: IfNotPresent
                       name: wait-for-postgres
@@ -1313,6 +1334,9 @@ SnapShot = """
                           value: 0.0.0.0:9000, 0.0.0.0:9001 ssl
                         - name: KONG_NGINX_DAEMON
                           value: \"off\"
+                      envFrom:
+                        - configMapRef:
+                            name: env-config
                       image: kong:3.5
                       imagePullPolicy: IfNotPresent
                       name: kong-upgrade-migrations
@@ -1417,6 +1441,9 @@ SnapShot = """
                           value: 0.0.0.0:9000, 0.0.0.0:9001 ssl
                         - name: KONG_NGINX_DAEMON
                           value: \"off\"
+                      envFrom:
+                        - configMapRef:
+                            name: env-config
                       image: kong:3.5
                       imagePullPolicy: IfNotPresent
                       name: wait-for-postgres
@@ -1884,6 +1911,13 @@ SnapShot = """
             helm.sh/chart: kong-2.33.3
         name: chartsnap-kong-bash-wait-for-postgres
         namespace: default
+- object:
+    apiVersion: v1
+    data:
+        test-env: test
+    kind: ConfigMap
+    metadata:
+        name: env-config
 - object:
     apiVersion: v1
     data:
