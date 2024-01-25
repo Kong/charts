@@ -890,6 +890,9 @@ The name of the Service which will be used by the controller to update the Ingre
     containerPort: 10255
     protocol: TCP
   {{- end }}
+  - name: status
+    containerPort: 10254
+    protocol: TCP
   env:
   - name: POD_NAME
     valueFrom:
