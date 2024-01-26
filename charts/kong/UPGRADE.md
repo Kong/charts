@@ -14,6 +14,9 @@ Note that not all versions contain breaking changes. If a version is not
 present in the table of contents, it requires no version-specific changes when
 upgrading from a previous version.
 
+For more information about supported versions of the helm chart, operator and Kong, see the
+discussion [here](https://github.com/Kong/charts/issues/985#issuecomment-1909017184).
+
 ## Table of contents
 
 - [Upgrade considerations for all versions](#upgrade-considerations-for-all-versions)
