@@ -2,7 +2,11 @@
 
 ## Unreleased
 
-Nothing yet.
+### Added 
+
+* Added controller's RBAC rules for `KongVault` CRD (installed only when KIC
+  version >= 3.1.0).
+  [#992](https://github.com/Kong/charts/pull/992)
 
 ## 2.34.0
 
