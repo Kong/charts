@@ -1656,6 +1656,14 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   - get
   - list
   - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongvaults/status
+  verbs:
+  - get
+  - patch
+  - update
 {{- end }}
 - apiGroups:
   - configuration.konghq.com
