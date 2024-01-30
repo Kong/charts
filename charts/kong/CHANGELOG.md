@@ -2,11 +2,20 @@
 
 ## Unreleased
 
+Nothing yet.
+
+## 2.35.0
+
 ### Added 
 
 * Added controller's RBAC rules for `KongVault` CRD (installed only when KIC
   version >= 3.1.0).
   [#992](https://github.com/Kong/charts/pull/992)
+
+### Fixed
+
+* Added a missing `envFrom` render in the main Kong proxy container.
+  [#994](https://github.com/Kong/charts/pull/994)
 
 ## 2.34.0
 
