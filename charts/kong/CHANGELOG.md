@@ -4,6 +4,13 @@
 
 Nothing yet.
 
+## 2.35.1
+
+### Fixed
+
+* The plugin helper no longer sets the plugin list when not in use.
+  [#1002](https://github.com/Kong/charts/pull/1002)
+
 ## 2.35.0
 
 ### Added 
