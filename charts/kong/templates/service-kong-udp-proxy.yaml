@@ -10,6 +10,7 @@
 {{- $_ := set $serviceConfig "serviceName" "udp-proxy" -}}
 {{- $_ := set $serviceConfig "tls" (dict "enabled" false) -}}
 {{- $_ := set $serviceConfig "http" (dict "enabled" false) -}}
+{{- $_ := set $serviceConfig "rootContext" $ -}}
 {{- include "kong.service" $serviceConfig }}
 {{- end -}}
 {{- end -}}

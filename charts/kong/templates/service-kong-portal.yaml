@@ -9,6 +9,7 @@
 {{- $_ := set $serviceConfig "metaLabels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $serviceConfig "selectorLabels" (include "kong.selectorLabels" .) -}}
 {{- $_ := set $serviceConfig "serviceName" "portal" -}}
+{{- $_ := set $serviceConfig "rootContext" $ -}}
 {{- include "kong.service" $serviceConfig }}
 {{ if .Values.portal.ingress.enabled }}
 ---

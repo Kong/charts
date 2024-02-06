@@ -86,12 +86,12 @@ metadata:
   labels:
   {{- .metaLabels | nindent 4 }}
   {{- range $key, $value := .ingress.labels }}
-    {{- $key | nindent 4 }}: {{ $value | quote }}
+    {{- $key | nindent 4 }}: {{ include "kong.renderTpl" (dict "value" $value "context" $.rootContext) | quote }}
   {{- end }}
   {{- if .ingress.annotations }}
   annotations:
     {{- range $key, $value := .ingress.annotations }}
-    {{ $key }}: {{ $value | quote }}
+    {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $.rootContext) | quote }}
     {{- end }}
   {{- end }}
 spec:
@@ -177,13 +177,13 @@ metadata:
   {{- if .annotations }}
   annotations:
   {{- range $key, $value := .annotations }}
-    {{ $key }}: {{ $value | quote }}
+    {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $.rootContext) | quote }}
   {{- end }}
   {{- end }}
   labels:
     {{- .metaLabels | nindent 4 }}
   {{- range $key, $value := .labels }}
-    {{ $key }}: {{ $value | quote }}
+    {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $.rootContext) | quote }}
   {{- end }}
 spec:
   type: {{ .type }}

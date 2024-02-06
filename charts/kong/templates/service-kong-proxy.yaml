@@ -7,6 +7,7 @@
 {{- $_ := set $serviceConfig "metaLabels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $serviceConfig "selectorLabels" (include "kong.selectorLabels" .) -}}
 {{- $_ := set $serviceConfig "serviceName" "proxy" -}}
+{{- $_ := set $serviceConfig "rootContext" $ -}}
 {{- include "kong.service" $serviceConfig }}
 {{ if .Values.proxy.ingress.enabled }}
 ---

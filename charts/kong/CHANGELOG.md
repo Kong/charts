@@ -2,8 +2,24 @@
 
 ## Unreleased
 
-Nothing yet.
-
+### Improvements
+* Running `tpl` against user-supplied annotations and labels used in Service and Ingress
+  #### example:
+  ```yaml
+  proxyNodePort: 35123
+  proxy:
+    annotations:
+     "service.beta.kubernetes.io/aws-load-balancer-healthcheck-port": "{{ .Values.proxyNodePort }}"  # Will render dynamically when overridden downstream
+    labels:
+     "service.beta.kubernetes.io/aws-load-balancer-healthcheck-port": "{{ .Values.proxyNodePort }}"  # Will render dynamically when overridden downstream
+    ingress:
+      enabled: true
+      annotations:
+        "service.beta.kubernetes.io/aws-load-balancer-healthcheck-port": "{{ .Values.proxyNodePort }}"  # Will render dynamically when overridden downstream
+      labels:
+        "service.beta.kubernetes.io/aws-load-balancer-healthcheck-port": "{{ .Values.proxyNodePort }}"  # Will render dynamically when overridden downstream
+  ```
+  <!-- [#814](https://github.com/Kong/charts/pull/999) -->
 ## 2.35.0
 
 ### Added 
