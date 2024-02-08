@@ -9,7 +9,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-validations
         namespace: default
     webhooks:
@@ -84,7 +84,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong
         namespace: default
     spec:
@@ -112,7 +112,7 @@ SnapShot = """
                     app.kubernetes.io/managed-by: Helm
                     app.kubernetes.io/name: kong
                     app.kubernetes.io/version: \"3.5\"
-                    helm.sh/chart: kong-2.35.0
+                    helm.sh/chart: kong-2.35.1
                     version: \"3.5\"
             spec:
                 automountServiceAccountToken: false
@@ -237,8 +237,6 @@ SnapShot = """
                                 name: chartsnap-postgresql
                         - name: KONG_PG_PORT
                           value: \"5432\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -375,8 +373,6 @@ SnapShot = """
                                 name: chartsnap-postgresql
                         - name: KONG_PG_PORT
                           value: \"5432\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -480,8 +476,6 @@ SnapShot = """
                                 name: chartsnap-postgresql
                         - name: KONG_PG_PORT
                           value: \"5432\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -731,7 +725,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-init-migrations
         namespace: default
     spec:
@@ -747,7 +741,7 @@ SnapShot = """
                     app.kubernetes.io/managed-by: Helm
                     app.kubernetes.io/name: kong
                     app.kubernetes.io/version: \"3.5\"
-                    helm.sh/chart: kong-2.35.0
+                    helm.sh/chart: kong-2.35.1
                 name: kong-init-migrations
             spec:
                 automountServiceAccountToken: false
@@ -792,8 +786,6 @@ SnapShot = """
                                 name: chartsnap-postgresql
                         - name: KONG_PG_PORT
                           value: \"5432\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -899,8 +891,6 @@ SnapShot = """
                                 name: chartsnap-postgresql
                         - name: KONG_PG_PORT
                           value: \"5432\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -988,7 +978,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-post-upgrade-migrations
         namespace: default
     spec:
@@ -1004,7 +994,7 @@ SnapShot = """
                     app.kubernetes.io/managed-by: Helm
                     app.kubernetes.io/name: kong
                     app.kubernetes.io/version: \"3.5\"
-                    helm.sh/chart: kong-2.35.0
+                    helm.sh/chart: kong-2.35.1
                 name: kong-post-upgrade-migrations
             spec:
                 automountServiceAccountToken: false
@@ -1049,8 +1039,6 @@ SnapShot = """
                                 name: chartsnap-postgresql
                         - name: KONG_PG_PORT
                           value: \"5432\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -1156,8 +1144,6 @@ SnapShot = """
                                 name: chartsnap-postgresql
                         - name: KONG_PG_PORT
                           value: \"5432\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -1247,7 +1233,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-pre-upgrade-migrations
         namespace: default
     spec:
@@ -1263,7 +1249,7 @@ SnapShot = """
                     app.kubernetes.io/managed-by: Helm
                     app.kubernetes.io/name: kong
                     app.kubernetes.io/version: \"3.5\"
-                    helm.sh/chart: kong-2.35.0
+                    helm.sh/chart: kong-2.35.1
                 name: kong-pre-upgrade-migrations
             spec:
                 automountServiceAccountToken: false
@@ -1308,8 +1294,6 @@ SnapShot = """
                                 name: chartsnap-postgresql
                         - name: KONG_PG_PORT
                           value: \"5432\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -1415,8 +1399,6 @@ SnapShot = """
                                 name: chartsnap-postgresql
                         - name: KONG_PG_PORT
                           value: \"5432\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -1500,7 +1482,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-proxy
         namespace: default
     spec:
@@ -1524,7 +1506,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong
     rules:
         - apiGroups:
@@ -1567,7 +1549,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong
     roleRef:
         apiGroup: rbac.authorization.k8s.io
@@ -1586,7 +1568,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong
         namespace: default
     rules:
@@ -1650,7 +1632,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-default
         namespace: default
     rules:
@@ -1868,7 +1850,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong
         namespace: default
     roleRef:
@@ -1888,7 +1870,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-default
         namespace: default
     roleRef:
@@ -1914,7 +1896,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-bash-wait-for-postgres
         namespace: default
 - object:
@@ -1936,7 +1918,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-validation-webhook-ca-keypair
         namespace: default
     type: kubernetes.io/tls
@@ -1952,7 +1934,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-validation-webhook-keypair
         namespace: default
     type: kubernetes.io/tls
@@ -1980,7 +1962,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-manager
         namespace: default
     spec:
@@ -2008,7 +1990,7 @@ SnapShot = """
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
             enable-metrics: \"true\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-proxy
         namespace: default
     spec:
@@ -2043,7 +2025,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-validation-webhook
         namespace: default
     spec:
@@ -2058,7 +2040,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
 - object:
     apiVersion: v1
     kind: Service
@@ -2118,7 +2100,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong
         namespace: default
 """

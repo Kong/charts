@@ -10,7 +10,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong
         namespace: default
     spec:
@@ -34,7 +34,7 @@ SnapShot = """
                     app.kubernetes.io/managed-by: Helm
                     app.kubernetes.io/name: kong
                     app.kubernetes.io/version: \"3.5\"
-                    helm.sh/chart: kong-2.35.0
+                    helm.sh/chart: kong-2.35.1
                     version: \"3.5\"
             spec:
                 automountServiceAccountToken: false
@@ -60,8 +60,6 @@ SnapShot = """
                           value: /opt/?.lua;/opt/?/init.lua;;
                         - name: KONG_NGINX_WORKER_PROCESSES
                           value: \"2\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -179,8 +177,6 @@ SnapShot = """
                           value: /opt/?.lua;/opt/?/init.lua;;
                         - name: KONG_NGINX_WORKER_PROCESSES
                           value: \"2\"
-                        - name: KONG_PLUGINS
-                          value: bundled
                         - name: KONG_PORTAL_API_ACCESS_LOG
                           value: /dev/stdout
                         - name: KONG_PORTAL_API_ERROR_LOG
@@ -279,7 +275,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-custom-dbless-config
         namespace: default
 - object:
@@ -291,7 +287,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-admin
         namespace: default
     spec:
@@ -314,7 +310,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-manager
         namespace: default
     spec:
@@ -342,7 +338,7 @@ SnapShot = """
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
             enable-metrics: \"true\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong-proxy
         namespace: default
     spec:
@@ -369,7 +365,7 @@ SnapShot = """
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
             app.kubernetes.io/version: \"3.5\"
-            helm.sh/chart: kong-2.35.0
+            helm.sh/chart: kong-2.35.1
         name: chartsnap-kong
         namespace: default
 """

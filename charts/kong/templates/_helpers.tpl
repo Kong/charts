@@ -1158,7 +1158,9 @@ the template that it itself is using form the above sections.
 {{- end }}
 {{- end }}
 
+{{- if (.Values.plugins) }}
 {{- $_ := set $autoEnv "KONG_PLUGINS" (include "kong.plugins" .) -}}
+{{- end }}
 
 {{/*
     ====== USER-SET ENVIRONMENT VARIABLES ======
