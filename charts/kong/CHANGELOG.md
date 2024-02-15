@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Escape ingress-controller status port from being scraped by Prometheus and its ServiceMonitor
+
 ## 2.36.0
 
 ### Fixed
