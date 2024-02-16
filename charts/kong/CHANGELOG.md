@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Upgrade PostgreSQL chart version to prevent from showing OutOfSync in ArgoCD
+
 ## 2.36.0
 
 ### Fixed
