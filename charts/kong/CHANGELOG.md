@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.37.0
+
+### Changes
+
+* Bumped default `kong/kubernetes-ingress-controller` image tag and updated CRDs to 3.1.
+  [#1011](https://github.com/Kong/charts/pull/1011)
+* Bumped default `kong` image tag to 3.6.
+  [#1011](https://github.com/Kong/charts/pull/1011)
+
 ## 2.36.0
 
 ### Fixed
