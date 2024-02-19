@@ -130,7 +130,7 @@ extraLabels: {}
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "3.5"
+  tag: "3.6"
   # Kong Enterprise
   # repository: kong/kong-gateway
   # tag: "3.5"
@@ -525,7 +525,7 @@ ingressController:
   enabled: true
   image:
     repository: kong/kubernetes-ingress-controller
-    tag: "3.0"
+    tag: "3.1"
     # Optionally set a semantic version for version-gated features. This can normally
     # be left unset. You only need to set this if your tag is not a semver string,
     # such as when you are using a "next" tag. Set this to the effective semantic
