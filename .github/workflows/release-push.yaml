@@ -8,6 +8,7 @@ on:
 
 jobs:
   lint-test:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -55,6 +56,7 @@ jobs:
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
   release:
+    timeout-minutes: 30
     needs: lint-test
     runs-on: ubuntu-latest
     steps:
