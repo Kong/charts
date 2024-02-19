@@ -9,7 +9,7 @@ SnapShot = """
             app.kubernetes.io/instance: chartsnap
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
-            app.kubernetes.io/version: \"3.5\"
+            app.kubernetes.io/version: \"3.6\"
             helm.sh/chart: kong-2.37.0
         name: chartsnap-kong
         namespace: default
@@ -32,9 +32,9 @@ SnapShot = """
                     app.kubernetes.io/instance: chartsnap
                     app.kubernetes.io/managed-by: Helm
                     app.kubernetes.io/name: kong
-                    app.kubernetes.io/version: \"3.5\"
+                    app.kubernetes.io/version: \"3.6\"
                     helm.sh/chart: kong-2.37.0
-                    version: \"3.5\"
+                    version: \"3.6\"
             spec:
                 automountServiceAccountToken: false
                 containers:
@@ -249,7 +249,7 @@ SnapShot = """
             app.kubernetes.io/instance: chartsnap
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
-            app.kubernetes.io/version: \"3.5\"
+            app.kubernetes.io/version: \"3.6\"
             helm.sh/chart: kong-2.37.0
         name: chartsnap-kong-manager
         namespace: default
@@ -276,7 +276,7 @@ SnapShot = """
             app.kubernetes.io/instance: chartsnap
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
-            app.kubernetes.io/version: \"3.5\"
+            app.kubernetes.io/version: \"3.6\"
             enable-metrics: \"true\"
             helm.sh/chart: kong-2.37.0
         name: chartsnap-kong-proxy
@@ -304,7 +304,7 @@ SnapShot = """
             app.kubernetes.io/instance: chartsnap
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: kong
-            app.kubernetes.io/version: \"3.5\"
+            app.kubernetes.io/version: \"3.6\"
             helm.sh/chart: kong-2.37.0
         name: chartsnap-kong
         namespace: default
