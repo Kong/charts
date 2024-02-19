@@ -7,7 +7,7 @@ on:
 
 jobs:
   push-master:
-    timeout-minutes: ${{ fromJSON(vars.GHA_DEFAULT_TIMEOUT) }}
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
