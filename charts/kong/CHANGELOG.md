@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-* Upgrade PostgreSQL chart version to prevent from showing OutOfSync in ArgoCD
+* Upgrade PostgreSQL chart version to prevent from showing OutOfSync in ArgoCD.
+  Please review the [upstream upgrade instructions](https://github.com/bitnami/charts/tree/main/bitnami/postgresql#to-1200) for the subchart.
 
 ## 2.36.0
 
