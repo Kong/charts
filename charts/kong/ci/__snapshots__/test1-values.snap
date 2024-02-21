@@ -160,7 +160,7 @@ SnapShot = """
                           name: cmetrics
                           protocol: TCP
                         - containerPort: 10254
-                          name: status
+                          name: cstatus
                           protocol: TCP
                       readinessProbe:
                         failureThreshold: 3
