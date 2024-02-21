@@ -5,6 +5,20 @@
 * Upgrade PostgreSQL chart version to prevent from showing OutOfSync in ArgoCD.
   Please review the [upstream upgrade instructions](https://github.com/bitnami/charts/tree/main/bitnami/postgresql#to-1200) for the subchart.
 
+## 2.37.1
+
+* Rename the controller status port. This fixes a collision with the proxy status port in the Prometheus ServiceMonitor.
+  [#1008](https://github.com/Kong/charts/pull/1008)
+
+## 2.37.0
+
+### Changes
+
+* Bumped default `kong/kubernetes-ingress-controller` image tag and updated CRDs to 3.1.
+  [#1011](https://github.com/Kong/charts/pull/1011)
+* Bumped default `kong` image tag to 3.6.
+  [#1011](https://github.com/Kong/charts/pull/1011)
+
 ## 2.36.0
 
 ### Fixed
