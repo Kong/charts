@@ -1,9 +1,9 @@
 dependencies:
 - name: kong
   repository: https://charts.konghq.com
-  version: 2.37.0
+  version: 2.37.1
 - name: kong
   repository: https://charts.konghq.com
-  version: 2.37.0
-digest: sha256:a5f3ec207495551c68808b3449a6c911db4dcbdca8d0c4810fecf36b429346f4
-generated: "2024-02-19T14:20:29.764917+01:00"
+  version: 2.37.1
+digest: sha256:c5db342a0485e0775d4971d7f72496dffba7c37d95d18024022267df1af659ee
+generated: "2024-02-21T10:38:16.722926+01:00"

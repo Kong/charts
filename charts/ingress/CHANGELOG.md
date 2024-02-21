@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.11.1
+
+### Improvements
+
+- Bumped dependencies on `kong/kong` chart to `>=2.37.1`. This includes a fix for
+  controller's status port being scraped by Prometheus unnecessarily.
+  [#1013](
+
 ## 0.11.0
 
 ### Improvements
