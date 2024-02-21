@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.37.1
+
+* Rename the controller status port. This fixes a collision with the proxy status port in the Prometheus ServiceMonitor.
+  [#1008](https://github.com/Kong/charts/pull/1008)
+
 ## 2.37.0
 
 ### Changes
