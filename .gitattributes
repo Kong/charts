@@ -1,1 +1,2 @@
 charts/kong/ci/__snapshots__/*.snap linguist-generated=true
+charts/ingress/ci/__snapshots__/*.snap linguist-generated=true

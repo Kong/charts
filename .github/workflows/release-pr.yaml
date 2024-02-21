@@ -171,7 +171,9 @@ jobs:
       - name: build helm chart dependency
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add kong https://charts.konghq.com
           helm dependency build charts/kong
+          helm dependency build charts/ingress
 
       - name: run golden tests
         run: make test.golden
