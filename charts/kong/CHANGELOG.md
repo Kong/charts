@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-* Escape ingress-controller status port from being scraped by Prometheus and its ServiceMonitor
+* Rename the controller status port. This fixes a collision with the proxy status port in the Prometheus ServiceMonitor.
 
 ## 2.36.0
 
