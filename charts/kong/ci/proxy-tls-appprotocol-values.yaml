@@ -1,0 +1,5 @@
+# This values test that the `SVC.tls.appProtocol` can be set to a custom value.
+
+proxy:
+  tls:
+    appProtocol: "https"
