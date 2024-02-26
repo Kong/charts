@@ -317,6 +317,10 @@ proxy:
     parameters:
     - http2
 
+    # Specify the Service's TLS port's appProtocol. This can be useful when integrating with
+    # external load balancers that require the `appProtocol` field to be set (e.g. GCP).
+    appProtocol: ""
+
   # Define stream (TCP) listen
   # To enable, remove "[]", uncomment the section below, and select your desired
   # ports and parameters. Listens are dynamically named after their containerPort,

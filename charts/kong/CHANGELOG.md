@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.38.0
+
+### Changes
+
+* Added support for setting `SVC.tls.appProtocol` and `SVC.http.appProtocol` values to configure the appProtocol fields
+  for Kubernetes Service HTTP and TLS ports. It might be useful for integration with external load balancers like GCP.
+  [#1018](https://github.com/Kong/charts/pull/1018)
+
 ## 2.37.1
 
 * Rename the controller status port. This fixes a collision with the proxy status port in the Prometheus ServiceMonitor.
