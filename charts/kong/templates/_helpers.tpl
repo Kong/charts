@@ -222,7 +222,7 @@ spec:
   {{- if .tls.enabled }}
   - name: kong-{{ .serviceName }}-tls
     port: {{ .tls.servicePort }}
-    targetPort: {{ .tls.overrideServiceTargetPort | default .tls.containerPort 
+    targetPort: {{ .tls.overrideServiceTargetPort | default .tls.containerPort }}
   {{- if .tls.appProtocol }}
     appProtocol: {{ .tls.appProtocol }}
   {{- end }}
