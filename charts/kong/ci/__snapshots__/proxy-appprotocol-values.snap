@@ -1,4 +1,4 @@
-[proxy-tls-appprotocol-values]
+[proxy-appprotocol-values]
 SnapShot = """
 - object:
     apiVersion: admissionregistration.k8s.io/v1
@@ -853,7 +853,8 @@ SnapShot = """
         namespace: default
     spec:
         ports:
-            - name: kong-proxy
+            - appProtocol: http
+              name: kong-proxy
               port: 80
               protocol: TCP
               targetPort: 8000

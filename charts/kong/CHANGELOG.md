@@ -4,9 +4,8 @@
 
 ### Changes
 
-* Allowed setting `SVC.tls.appProtocol` that will set the Kubernetes Service's TLS port
-  `appProtocol` field to a configured value. This can be useful when integrating with
-  external load balancers that require the `appProtocol` field to be set (e.g. GCP).
+* Added support for setting `SVC.tls.appProtocol` and `SVC.http.appProtocol` values to configure the appProtocol fields
+  for Kubernetes Service HTTP and TLS ports. It might be useful for integration with external load balancers like GCP.
   [#1018](https://github.com/Kong/charts/pull/1018)
 
 ## 2.37.1
