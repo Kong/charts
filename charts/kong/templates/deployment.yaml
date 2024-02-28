@@ -158,6 +158,7 @@ spec:
           protocol: TCP
         {{- end }}
         {{- if (and .Values.proxy.http.enabled .Values.proxy.enabled) }}
+        {{- if .Values.proxy.http.containerEnabled | default true }}
         - name: proxy
           containerPort: {{ .Values.proxy.http.containerPort }}
           {{- if .Values.proxy.http.hostPort }}
@@ -165,13 +166,16 @@ spec:
           {{- end}}
           protocol: TCP
         {{- end }}
+        {{- end }}
         {{- if (and .Values.proxy.tls.enabled .Values.proxy.enabled)}}
+        {{- if .Values.proxy.tls.containerEnabled | default true}}
         - name: proxy-tls
           containerPort: {{ .Values.proxy.tls.containerPort }}
           {{- if .Values.proxy.tls.hostPort }}
           hostPort: {{ .Values.proxy.tls.hostPort }}
           {{- end}}
           protocol: TCP
+        {{- end }}
         {{- end }}
         {{- range .Values.proxy.stream }}
         - name: stream{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}

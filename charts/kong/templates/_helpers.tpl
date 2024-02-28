@@ -210,6 +210,7 @@ spec:
   ports:
   {{- if .http }}
   {{- if .http.enabled }}
+  {{- if .http.serviceEnabled | default true }}
   - name: kong-{{ .serviceName }}
     port: {{ .http.servicePort }}
     targetPort: {{ .http.containerPort }}
@@ -222,7 +223,9 @@ spec:
     protocol: TCP
   {{- end }}
   {{- end }}
+  {{- end }}
   {{- if .tls.enabled }}
+  {{- if .tls.serviceEnabled | default true }}
   - name: kong-{{ .serviceName }}-tls
     port: {{ .tls.servicePort }}
     targetPort: {{ .tls.overrideServiceTargetPort | default .tls.containerPort }}
@@ -233,6 +236,7 @@ spec:
     nodePort: {{ .tls.nodePort }}
   {{- end }}
     protocol: TCP
+  {{- end }}
   {{- end }}
   {{- if (hasKey . "stream") }}
     {{- $defaultProtocol := "TCP" }}

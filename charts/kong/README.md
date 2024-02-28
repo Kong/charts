@@ -670,6 +670,8 @@ or `ingress` sections, as it is used only for stream listens.
 |-----------------------------------|-------------------------------------------------------------------------------------------|--------------------------|
 | SVC.enabled                       | Create Service resource for SVC (admin, proxy, manager, etc.)                             |                          |
 | SVC.http.enabled                  | Enables http on the service                                                               |                          |
+| SVC.http.serviceEnabled           | Enables http on the proxy service (to ensure backward compatibility its gets overridden by SVC.http.enabled if unset)                                                               |                          |
+| SVC.http.containerEnabled         | Expose http port on container (to ensure backward compatibility its overridden by SVC.http.enabled if unset)                                                            |                          |
 | SVC.http.servicePort              | Service port to use for http                                                              |                          |
 | SVC.http.containerPort            | Container port to use for http                                                            |                          |
 | SVC.http.nodePort                 | Node port to use for http                                                                 |                          |
