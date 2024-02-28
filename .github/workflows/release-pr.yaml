@@ -11,6 +11,7 @@ on:
     branches:
       - main
       - release/kong-2.x
+      - prepare-kgo-chart
 
 jobs:
   lint:
@@ -41,6 +42,7 @@ jobs:
         chart-name:
           - kong
           - ingress
+          - gateway-operator
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -68,6 +70,7 @@ jobs:
       - name: setup testing environment (kind-cluster)
         env:
           KUBERNETES_VERSION: ${{ matrix.kubernetes-version }}
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-env.sh
 
       - name: Run chart-testing (install)
@@ -83,14 +86,15 @@ jobs:
     strategy:
       matrix:
         kubernetes-version:
-        - "1.23.13"
-        - "1.24.7"
-        - "1.25.9"
-        - "1.26.4"
-        - "1.27.1"
+          - "1.23.13"
+          - "1.24.7"
+          - "1.25.9"
+          - "1.26.4"
+          - "1.27.1"
         chart-name:
           - kong
           - ingress
+          - gateway-operator
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -103,6 +107,7 @@ jobs:
       - name: setup testing environment (kind-cluster)
         env:
           KUBERNETES_VERSION: ${{ matrix.kubernetes-version }}
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-env.sh
 
       - name: run integration tests (integration)
@@ -127,11 +132,11 @@ jobs:
     strategy:
       matrix:
         kic-version:
-        - "2.10"
-        - "2.11"
+          - "2.10"
+          - "2.11"
         kong-version:
-        - "3.3"
-        - "3.2"
+          - "3.3"
+          - "3.2"
         chart-name:
           - kong
           - ingress
@@ -145,6 +150,8 @@ jobs:
         uses: azure/setup-helm@v4.0.0
 
       - name: setup testing environment (kind-cluster)
+        env:
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-env.sh
 
       - name: run integration tests (integration)

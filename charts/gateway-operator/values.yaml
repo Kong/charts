@@ -1,0 +1,18 @@
+image:
+  repository: docker.io/kong/gateway-operator-oss
+  tag: sha-c140250
+
+# Override namepsace for gateway-operator chart resources. By default, the chart creates resources in the release namespace.
+# namespace: kong-system
+
+replicaCount: 1
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: controller-manager
+
+test:
+  enabled: false
