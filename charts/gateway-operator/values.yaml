@@ -16,3 +16,15 @@ serviceAccount:
 
 test:
   enabled: false
+
+# Install KIC's CRDs
+kic-crds:
+  enabled: true
+
+# Install Gateway API standard CRDs
+gwapi-standard-crds:
+  enabled: true
+
+# Install Gateway API experimental CRDs
+gwapi-experimental-crds:
+  enabled: false

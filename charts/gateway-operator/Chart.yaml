@@ -10,3 +10,14 @@ sources:
   - https://github.com/Kong/charts/tree/main/charts/gateway-operator
 version: 0.0.1
 appVersion: "1.2.0"
+
+dependencies:
+  - name: kic-crds
+    version: 0.0.0
+    condition: kic-crds.enabled
+  - name: gwapi-standard-crds
+    version: 1.0.0
+    condition: gwapi-standard-crds.enabled
+  - name: gwapi-experimental-crds
+    version: 1.0.0
+    condition: gwapi-experimental-crds.enabled

@@ -1,0 +1,3 @@
+{{ template "kong.fullname" . }} has been installed. Check its status by running:
+
+  kubectl --namespace {{ template "kong.namespace" . }}  get pods
