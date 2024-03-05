@@ -1,0 +1,4 @@
+image:
+  repository: docker.io/kong/gateway-operator-oss
+  tag: sha-f913121-amd64
+
