@@ -15,6 +15,7 @@ jobs:
         chart-name:
           - kong
           - ingress
+          - gateway-operator
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,6 +42,8 @@ jobs:
         working-directory: charts
 
       - name: setup testing environment (kind-cluster)
+        env:
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-env.sh
 
       - name: run chart-testing (install)
