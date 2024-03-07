@@ -58,6 +58,13 @@ spec:
             memory: 128Mi
         securityContext:
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
         volumeMounts:
         - mountPath: /tmp/k8s-webhook-server/serving-certs
           name: webhook-certificates
