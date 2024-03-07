@@ -22,6 +22,7 @@ cd "${SCRIPT_DIR}/.."
 TAG="${TAG:-next-railgun}"
 EFFECTIVE_TAG="99.0.0"
 RELEASE_NAME="${RELEASE_NAME:-chart-tests-upgrade-compat}"
+CHART_NAME="${CHART_NAME:-ingress}"
 RELEASE_NAMESPACE="${RELEASE_NAMESPACE:-$(uuidgen)}"
 TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
 KUBECTL="kubectl --context kind-${TEST_ENV_NAME}"
@@ -42,19 +43,29 @@ if [[ "${CHART_NAME}" == "ingress" ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# Deploy Chart - Kubernetes Ingress Controller
+# Deploy Chart
 # ------------------------------------------------------------------------------
-
 echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
-set -x
-# shellcheck disable=SC2048,SC2086
-helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-    --set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports="false" \
-    --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
-    "charts/${CHART_NAME}"
-set +x
+if [[ "${CHART_NAME}" == "gateway-operator" ]]
+then
+  set -x
+  # shellcheck disable=SC2048,SC2086
+  helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
+      --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
+      "charts/${CHART_NAME}"
+  set +x
+else
+  set -x
+  # shellcheck disable=SC2048,SC2086
+  helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
+      --set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports="false" \
+      --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
+      "charts/${CHART_NAME}"
+  set +x
+fi
+
 # ------------------------------------------------------------------------------
-# Test Chart - Kubernetes Ingress Controller
+# Test Chart
 # ------------------------------------------------------------------------------
 
 echo "INFO: running helm tests for all charts on Kubernetes ${KUBERNETES_VERSION}"
@@ -64,16 +75,27 @@ helm test --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}"
 # Upgrade Chart Image
 # ------------------------------------------------------------------------------
 
-echo "INFO: upgrading the helm chart to image tag ${TAG}"
-set -x
-# shellcheck disable=SC2048,SC2086
-helm upgrade --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-    --set ${CONTROLLER_PREFIX}ingressController.image.tag="${TAG}" \
-    --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
-    --set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports="false" \
-    --set ${CONTROLLER_PREFIX}ingressController.image.effectiveSemver="${EFFECTIVE_TAG}" \
-    "charts/${CHART_NAME}"
-set +x
+if [[ "${CHART_NAME}" == "gateway-operator" ]]
+then
+  # TODO: add the upgrade test for gateway-operator
+  set -x
+  # shellcheck disable=SC2048,SC2086
+  helm upgrade --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
+      --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
+      "charts/${CHART_NAME}"
+  set +x
+else
+  echo "INFO: upgrading the helm chart to image tag ${TAG}"
+  set -x
+  # shellcheck disable=SC2048,SC2086
+  helm upgrade --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
+      --set ${CONTROLLER_PREFIX}ingressController.image.tag="${TAG}" \
+      --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
+      --set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports="false" \
+      --set ${CONTROLLER_PREFIX}ingressController.image.effectiveSemver="${EFFECTIVE_TAG}" \
+      "charts/${CHART_NAME}"
+  set +x
+fi
 # ------------------------------------------------------------------------------
 # Test Upgraded Chart
 # ------------------------------------------------------------------------------

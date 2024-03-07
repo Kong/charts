@@ -33,6 +33,7 @@ cd "${SCRIPT_DIR}/.."
 KIND_VERSION="${KIND_VERSION:-v0.19.0}"
 KUBERNETES_VERSION="${KUBERNETES_VERSION:-1.27.1}"
 GATEWAY_API_VERSION="${GATEWAY_API_VERSION:-v0.8.1}"
+CHART_NAME="${CHART_NAME:-ingress}"
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')"
 KTF_URL=https://github.com/Kong/kubernetes-testing-framework/releases/latest/download/ktf.${OS}.${ARCH}
@@ -85,8 +86,15 @@ ktf 1>/dev/null
 # ------------------------------------------------------------------------------
 # Create Testing Environment
 # ------------------------------------------------------------------------------
-
-ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma --kubernetes-version "${KUBERNETES_VERSION}"
+if [[ "${CHART_NAME}" == "gateway-operator" ]]
+then
+  ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --kubernetes-version "${KUBERNETES_VERSION}"
+  GATEWAY_API_VERSION="v1.0.0"
+  # Install Kong specific CRDs
+  kubectl apply -k https://github.com/Kong/kubernetes-ingress-controller/config/crd
+else
+  ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma --kubernetes-version "${KUBERNETES_VERSION}"
+fi
 
 kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd/experimental?ref=${GATEWAY_API_VERSION}" | kubectl apply -f -
 

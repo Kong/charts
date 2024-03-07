@@ -1,0 +1,14 @@
+apiVersion: v2
+description: Deploy Kong Gateway Operator
+home: https://konghq.com/
+icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
+maintainers:
+  - name: team-k8s-bot
+    email: team-k8s@konghq.com
+name: gateway-operator
+sources:
+  - https://github.com/Kong/charts/tree/main/charts/gateway-operator
+version: 0.0.1
+appVersion: "1.2.0"
+annotations:
+  artifacthub.io/prerelease: "true"
