@@ -17,9 +17,20 @@ serviceAccount:
 test:
   enabled: false
 
-
 # This section can be used to configure some extra labels that will be added to each Kubernetes object generated.
 extraLabels: {}
 
 # Labels to be added to KGO pods
 podLabels: {}
+
+# Install KIC's CRDs
+kic-crds:
+  enabled: true
+
+# Install Gateway API standard CRDs
+gwapi-standard-crds:
+  enabled: true
+
+# Install Gateway API experimental CRDs
+gwapi-experimental-crds:
+  enabled: false
