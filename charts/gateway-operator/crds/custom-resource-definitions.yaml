@@ -178,6 +178,22 @@ spec:
                         (LLM) hosted by a known and supported AI cloud provider (e.g. OpenAI, Cohere,
                         Azure, e.t.c.).
                       properties:
+                        aiCloudProvider:
+                          description: |-
+                            AICloudProvider defines the cloud provider that will fulfill the LLM
+                            requests for this CloudHostedLargeLanguageModel
+                          properties:
+                            name:
+                              description: Name is the unique name of an LLM provider.
+                              enum:
+                              - openai
+                              - azure
+                              - cohere
+                              - mistral
+                              type: string
+                          required:
+                          - name
+                          type: object
                         defaultPromptParams:
                           description: |-
                             DefaultPromptParams configures the parameters which will be sent with
@@ -252,14 +268,6 @@ spec:
                               content:
                                 description: Content is the prompt text sent for inference.
                                 type: string
-                              maxTokens:
-                                description: |-
-                                  Max Tokens specifies the maximum length of the model's output in terms
-                                  of the number of tokens (words or pieces of words). This parameter
-                                  limits the output's size, ensuring the model generates content within a
-                                  manageable scope. A token can be a word or part of a word, depending on
-                                  the model's tokenizer.
-                                type: integer
                               role:
                                 default: user
                                 description: |-
@@ -273,44 +281,19 @@ spec:
                                 - user
                                 - system
                                 type: string
-                              temperature:
-                                description: |-
-                                  Temperature controls the randomness of predictions by scaling the logits
-                                  before applying softmax. A lower temperature (e.g., 0.0 to 0.7) makes
-                                  the model more confident in its predictions, leading to more repetitive
-                                  and deterministic outputs. A higher temperature (e.g., 0.8 to 1.0)
-                                  increases randomness, generating more diverse and creative outputs. At
-                                  very high temperatures, the outputs may become nonsensical or highly
-                                  unpredictable.
-                                type: string
-                              topK:
-                                description: |-
-                                  TopK sampling is a technique where the model's prediction is limited to
-                                  the K most likely next tokens at each step of the generation process.
-                                  The probability distribution is truncated to these top K tokens, and the
-                                  next token is randomly sampled from this subset. This method helps in
-                                  reducing the chance of selecting highly improbable tokens, making the
-                                  text more coherent. A smaller K leads to more predictable text, while a
-                                  larger K allows for more diversity but with an increased risk of
-                                  incoherence.
-                                type: integer
-                              topP:
-                                description: |-
-                                  TopP (also known as nucleus sampling) is an alternative to top K
-                                  sampling. Instead of selecting the top K tokens, top P sampling chooses
-                                  from the smallest set of tokens whose cumulative probability exceeds the
-                                  threshold P. This method dynamically adjusts the number of tokens
-                                  considered at each step, depending on their probability distribution. It
-                                  helps in maintaining diversity while also avoiding very unlikely tokens.
-                                  A higher P value increases diversity but can lead to less coherence,
-                                  whereas a lower P value makes the model's outputs more focused and
-                                  coherent.
-                                type: string
                             required:
                             - content
                             type: object
                           maxItems: 64
                           type: array
+                        identifier:
+                          description: |-
+                            Identifier is the unique name which identifies the LLM. This will be used
+                            as part of the requests made to an AIGateway endpoint. For instance: if
+                            you provided the identifier "devteam-gpt-access", then you would access
+                            this model via "https://${endpoint}/devteam-gpt-access" and supply it
+                            with your consumer credentials to authenticate requests.
+                          type: string
                         model:
                           description: |-
                             Model is the model name of the LLM (e.g. gpt-3.5-turbo, phi-2, e.t.c.).
@@ -318,14 +301,6 @@ spec:
 
                             If not specified, whatever the cloud provider specifies as the default
                             model will be used.
-                          type: string
-                        name:
-                          description: |-
-                            Identifier is the unique name which identifies the LLM. This will be used
-                            as part of the requests made to an AIGateway endpoint. For instance: if
-                            you provided the identifier "devteam-gpt-access", then you would access
-                            this model via "https://${endpoint}/devteam-gpt-access" and supply it
-                            with your consumer credentials to authenticate requests.
                           type: string
                         promptType:
                           default: completions
@@ -351,7 +326,8 @@ spec:
                           - completions
                           type: string
                       required:
-                      - name
+                      - aiCloudProvider
+                      - identifier
                       type: object
                     maxItems: 64
                     minItems: 1
@@ -623,7 +599,7 @@ spec:
     listKind: ControlPlaneList
     plural: controlplanes
     shortNames:
-    - kcp
+    - kocp
     singular: controlplane
   scope: Namespaced
   versions:
@@ -8594,7 +8570,7 @@ spec:
     listKind: DataPlaneList
     plural: dataplanes
     shortNames:
-    - kdp
+    - kodp
     singular: dataplane
   scope: Namespaced
   versions:
@@ -16929,6 +16905,27 @@ spec:
                 description: DataPlaneNetworkOptions defines network related options
                   for a DataPlane.
                 properties:
+                  konnectCertificate:
+                    description: |-
+                      KonnectCA is the certificate authority that the operator uses to provision client certificates the DataPlane
+                      will use to authenticate itself to the Konnect API. Requires Enterprise.
+                    properties:
+                      issuer:
+                        description: |-
+                          Issuer is the cert-manager Issuer or ClusterIssuer the operator will use to request certificates. When Namespace
+                          is set, the operator will retrieve the Issuer with that Name in that Namespace. When Namespace is omitted, the
+                          operator will retrieve the ClusterIssuer with that name.
+                        properties:
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                    required:
+                    - issuer
+                    type: object
                   services:
                     description: |-
                       Services indicates the configuration of Kubernetes Services needed for
@@ -17370,7 +17367,7 @@ spec:
     listKind: GatewayConfigurationList
     plural: gatewayconfigurations
     shortNames:
-    - kgc
+    - kogc
     singular: gatewayconfiguration
   scope: Namespaced
   versions:
