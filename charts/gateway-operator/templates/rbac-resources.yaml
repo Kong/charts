@@ -202,8 +202,12 @@ rules:
   resources:
   - kongplugins
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
   - watch
 - apiGroups:
   - configuration.konghq.com
@@ -439,6 +443,14 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - gateway-operator.konghq.com
+  resources:
+  - dataplanemetricsextensions
+  verbs:
+  - get
+  - list
+  - watch
 - apiGroups:
   - gateway-operator.konghq.com
   resources:
