@@ -1,4 +1,4 @@
 # GWAPI experimental CRDs subchart
 
-This sub-chart contains Gateway API experimental CRDs, allowing users to control whether or not to install them themselves.
+This sub-chart contains Gateway API experimental CRDs, allowing users to control whether to install the CRDs.
 
