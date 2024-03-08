@@ -47,3 +47,15 @@ app.kubernetes.io/name: {{ template "kong.name" . }}
 app.kubernetes.io/component: kgo
 app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
+
+{{- define "kong.env" -}}
+{{- $userEnv := dict -}}
+{{- range $key, $val := .Values.env }}
+  {{- $upper := upper $key -}}
+  {{- $_ := set $userEnv $upper $val -}}
+{{- end -}}
+{{- range $key, $val := $userEnv }}
+- name: {{ $key }}
+  value: {{ $val | quote }}
+{{- end -}}
+{{- end -}}
