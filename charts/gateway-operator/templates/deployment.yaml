@@ -30,21 +30,21 @@ spec:
       - args:
         - --health-probe-bind-address=:8081
         - --metrics-bind-address=127.0.0.1:8080
-        {{- if .Values.featureFlags }}
-        {{- if eq .Values.featureFlags.controlPlaneControllerEnabled false }}
-        - --enable-controller-controlplane=false
+        {{- if .Values.controllers }}
+        {{- if .Values.controllers.controlplaneController }}
+        - --enable-controller-controlplane={{ .Values.controllers.controlplaneController.enabled }}
         {{- end }}
-        {{- if eq .Values.featureFlags.gatewayControllerEnabled false }}
-        - --enable-controller-gateway=false
+        {{- if .Values.controllers.gatewayController }}
+        - --enable-controller-gateway={{ .Values.controllers.gatewayController.enabled }}
         {{- end }}
-        {{- if eq .Values.featureFlags.dataPlaneControllerEnabled false }}
-        - --enable-controller-dataplane=false
+        {{- if .Values.controllers.dataplaneController }}
+        - --enable-controller-dataplane={{ .Values.controllers.dataplaneController.enabled }}
         {{- end }}
-        {{- if eq .Values.featureFlags.dataPlaneBlueGreenControllerEnabled false }}
-        - --enable-controller-dataplane-bluegreen=false
+        {{- if .Values.controllers.dataplaneBlueGreenController }}
+        - --enable-controller-dataplane-bluegreen={{ .Values.controllers.dataplaneBlueGreenController.enabled }}
         {{- end }}
-        {{- if .Values.featureFlags.aiGatewayControllerEnabled }}
-        - --enable-controller-aigateway=true
+        {{- if .Values.controllers.aiGatewayController }}
+        - --enable-controller-aigateway={{ .Values.controllers.aiGatewayController.enabled }}
         {{- end }}
         {{- end }}
         env:

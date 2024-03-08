@@ -44,18 +44,23 @@ resources:
     cpu: 10m
     memory: 128Mi
 
-# Use this section to change the startup parameters of gateway-operator
-featureFlags:
-  # Enable the ControlPlane controller
-  controlPlaneControllerEnabled: true
-  # Enable the Gateway controller
-  gatewayControllerEnabled: true
-  # Enable the DataPlane controller. Mutually exclusive with DataPlane BlueGreen controller
-  dataPlaneControllerEnabled: false
-  # Enable the DataPlane BlueGreen controller. Mutually exclusive with DataPlane controller
-  dataPlaneBlueGreenControllerEnabled: true
-  # Enable the AIGateway controller. (Experimental)
-  aiGatewayControllerEnabled: false
+# use this section to enable or disable the controllers
+controllers:
+  # controlPlane controller
+  controlplaneController:
+    enabled: true
+  # gateway controller
+  gatewayController:
+    enabled: true
+  # dataplane controller. mutually exclusive with dataplane bluegreen controller
+  dataplaneController:
+    enabled: false
+  # dataplane bluegreen controller. mutually exclusive with dataplane controller
+  dataplaneBlueGreenController:
+    enabled: true
+  # aigateway controller. (experimental)
+  aiGatewayController:
+    enabled: false
 
 # Use this section to add environment variables to operator's container
 env: {}
