@@ -30,6 +30,23 @@ spec:
       - args:
         - --health-probe-bind-address=:8081
         - --metrics-bind-address=127.0.0.1:8080
+        {{- if .Values.featureFlags }}
+        {{- if eq .Values.featureFlags.controlPlaneControllerEnabled false }}
+        - --enable-controller-controlplane=false
+        {{- end }}
+        {{- if eq .Values.featureFlags.gatewayControllerEnabled false }}
+        - --enable-controller-gateway=false
+        {{- end }}
+        {{- if eq .Values.featureFlags.dataPlaneControllerEnabled false }}
+        - --enable-controller-dataplane=false
+        {{- end }}
+        {{- if eq .Values.featureFlags.dataPlaneBlueGreenControllerEnabled false }}
+        - --enable-controller-dataplane-bluegreen=false
+        {{- end }}
+        {{- if .Values.featureFlags.aiGatewayControllerEnabled }}
+        - --enable-controller-aigateway=true
+        {{- end }}
+        {{- end }}
         env:
         - name: POD_NAMESPACE
           valueFrom:

@@ -43,3 +43,16 @@ resources:
   requests:
     cpu: 10m
     memory: 128Mi
+
+# Use this section to change the startup parameters of gateway-operator
+featureFlags:
+  # Enable the ControlPlane controller
+  controlPlaneControllerEnabled: true
+  # Enable the Gateway controller
+  gatewayControllerEnabled: true
+  # Enable the DataPlane controller
+  dataPlaneControllerEnabled: true
+  # Enable the DataPlane BlueGreen controller. Mutually exclusive with DataPlane controller
+  dataPlaneBlueGreenControllerEnabled: true
+  # Enable the AIGateway controller. (Experimental)
+  aiGatewayControllerEnabled: false
