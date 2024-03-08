@@ -48,6 +48,7 @@ spec:
         {{- end }}
         {{- end }}
         env:
+        {{- include "kong.env" . | nindent 8 }}
         - name: POD_NAMESPACE
           valueFrom:
             fieldRef:

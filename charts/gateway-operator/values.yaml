@@ -56,3 +56,6 @@ featureFlags:
   dataPlaneBlueGreenControllerEnabled: true
   # Enable the AIGateway controller. (Experimental)
   aiGatewayControllerEnabled: false
+
+# Use this section to change the environment viriables
+env: {}
