@@ -18,6 +18,7 @@ spec:
       annotations:
         kubectl.kubernetes.io/default-container: manager
       labels:
+        control-plane: controller-manager
         {{- include "kong.metaLabels" . | nindent 8 }}
         app.kubernetes.io/component: kgo
         app: {{ template "kong.fullname" . }}
