@@ -80,8 +80,7 @@ spec:
             drop:
             - ALL
         volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs
-          name: webhook-certificates
+        {{- include "kong.volumeMounts" . | nindent 8 }}
       - args:
         - --secure-listen-address=0.0.0.0:8443
         - --upstream=http://127.0.0.1:8080/
@@ -105,5 +104,4 @@ spec:
       serviceAccountName: {{ template "kong.serviceAccountName" . }}
       terminationGracePeriodSeconds: 10
       volumes:
-      - emptyDir: {}
-        name: webhook-certificates
+      {{- include "kong.volumes" . | nindent 6 -}}
