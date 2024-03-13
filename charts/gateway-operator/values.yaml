@@ -64,3 +64,7 @@ controllers:
 
 # Use this section to add environment variables to operator's container
 env: {}
+
+# Use this section to change the certs-dir emptyDir size
+certsDir:
+  sizeLimit: 256Mi

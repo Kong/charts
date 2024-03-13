@@ -59,3 +59,14 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
   value: {{ $val | quote }}
 {{- end -}}
 {{- end -}}
+
+{{- define "kong.volumes" -}}
+- name: {{ template "kong.fullname" . }}-certs-dir
+  emptyDir:
+    sizeLimit: {{ .Values.certsDir.sizeLimit }}
+{{- end }}
+
+{{- define "kong.volumeMounts" -}}
+- name: {{ template "kong.fullname" . }}-certs-dir
+  mountPath: /tmp/k8s-webhook-server/serving-certs
+{{- end }}
