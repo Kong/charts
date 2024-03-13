@@ -7,7 +7,11 @@
 {{- $_ := set $serviceConfig "namespace" (include "kong.namespace" .) -}}
 {{- $_ := set $serviceConfig "metaLabels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $serviceConfig "selectorLabels" (include "kong.selectorLabels" .) -}}
+{{- if .Values.udpProxy.serviceName }}
+{{- $_ := set $serviceConfig "serviceName" .Values.udpProxy.serviceName -}}
+{{- else }}
 {{- $_ := set $serviceConfig "serviceName" "udp-proxy" -}}
+{{- end -}}
 {{- $_ := set $serviceConfig "tls" (dict "enabled" false) -}}
 {{- $_ := set $serviceConfig "http" (dict "enabled" false) -}}
 {{- include "kong.service" $serviceConfig }}

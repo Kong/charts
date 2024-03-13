@@ -7,7 +7,11 @@
 {{- $_ := set $serviceConfig "namespace" (include "kong.namespace" .) -}}
 {{- $_ := set $serviceConfig "metaLabels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $serviceConfig "selectorLabels" (include "kong.selectorLabels" .) -}}
+{{- if .Values.admin.serviceName }}
+{{- $_ := set $serviceConfig "serviceName" .Values.admin.serviceName -}}
+{{- else }}
 {{- $_ := set $serviceConfig "serviceName" "admin" -}}
+{{- end -}}
 {{- include "kong.service" $serviceConfig }}
 {{ if .Values.admin.ingress.enabled }}
 ---

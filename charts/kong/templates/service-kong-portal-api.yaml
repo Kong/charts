@@ -8,7 +8,11 @@
 {{- $_ := set $serviceConfig "namespace" (include "kong.namespace" .) -}}
 {{- $_ := set $serviceConfig "metaLabels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $serviceConfig "selectorLabels" (include "kong.selectorLabels" .) -}}
+{{- if .Values.portalapi.serviceName }}
+{{- $_ := set $serviceConfig "serviceName" .Values.portalapi.serviceName -}}
+{{- else }}
 {{- $_ := set $serviceConfig "serviceName" "portalapi" -}}
+{{- end -}}
 {{- include "kong.service" $serviceConfig }}
 {{ if .Values.portalapi.ingress.enabled }}
 ---

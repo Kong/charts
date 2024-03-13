@@ -7,7 +7,11 @@
 {{- $_ := set $serviceConfig "namespace" (include "kong.namespace" .) -}}
 {{- $_ := set $serviceConfig "metaLabels" (include "kong.metaLabels" .) -}}
 {{- $_ := set $serviceConfig "selectorLabels" (include "kong.selectorLabels" .) -}}
+{{- if .Values.cluster.serviceName }}
+{{- $_ := set $serviceConfig "serviceName" .Values.cluster.serviceName -}}
+{{- else }}
 {{- $_ := set $serviceConfig "serviceName" "cluster" -}}
+{{- end -}}
 {{- include "kong.service" $serviceConfig }}
 {{ if .Values.cluster.ingress.enabled }}
 ---
