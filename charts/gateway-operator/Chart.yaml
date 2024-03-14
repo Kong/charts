@@ -8,7 +8,7 @@ maintainers:
 name: gateway-operator
 sources:
   - https://github.com/Kong/charts/tree/main/charts/gateway-operator
-version: 0.0.1-alpha.1
+version: 0.0.1-alpha.2
 appVersion: "1.2.0"
 annotations:
   artifacthub.io/prerelease: "true"
