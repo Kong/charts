@@ -8413,6 +8413,9 @@ metadata:
 spec:
   group: gateway-operator.konghq.com
   names:
+    categories:
+    - kong
+    - all
     kind: DataPlaneMetricsExtension
     listKind: DataPlaneMetricsExtensionList
     plural: dataplanemetricsextensions

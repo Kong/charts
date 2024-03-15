@@ -1,12 +1,12 @@
 dependencies:
 - name: kic-crds
   repository: ""
-  version: 3.1.1
+  version: 3.1.2
 - name: gwapi-standard-crds
   repository: ""
   version: 1.0.0
 - name: gwapi-experimental-crds
   repository: ""
   version: 1.0.0
-digest: sha256:4e473789e45e892dc6f136e6f22928250c20ae790442e4b588adb847394e3f54
-generated: "2024-03-08T07:52:46.825908393Z"
+digest: sha256:c72ffe17253b0cd11caf5e1b03c2458b2c280528461a1621f6f90832d2979889
+generated: "2024-03-16T07:20:29.547504039+08:00"
