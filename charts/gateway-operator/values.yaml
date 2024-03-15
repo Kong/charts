@@ -1,8 +1,8 @@
 image:
   repository: docker.io/kong/gateway-operator
-  tag: sha-79a6453
+  tag: 1.2.0
 
-# Override namepsace for gateway-operator chart resources. By default, the chart creates resources in the release namespace.
+ # Override namespace for gateway-operator chart resources. By default, the chart creates resources in the release namespace.
 # namespace: kong-system
 
 replicaCount: 1
