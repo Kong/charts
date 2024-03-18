@@ -49,15 +49,28 @@ app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
 
 {{- define "kong.env" -}}
+
 {{- $userEnv := dict -}}
 {{- range $key, $val := .Values.env }}
   {{- $upper := upper $key -}}
-  {{- $_ := set $userEnv $upper $val -}}
+  {{- $var := printf "GATEWAY_OPERATOR_%s" $upper -}}
+  {{- $_ := set $userEnv $var $val -}}
 {{- end -}}
 {{- range $key, $val := $userEnv }}
 - name: {{ $key }}
   value: {{ $val | quote }}
 {{- end -}}
+
+{{- $customEnv := dict -}}
+{{- range $key, $val := .Values.customEnv }}
+  {{- $upper := upper $key -}}
+  {{- $_ := set $customEnv $upper $val -}}
+{{- end -}}
+{{- range $key, $val := $customEnv }}
+- name: {{ $key }}
+  value: {{ $val | quote }}
+{{- end -}}
+
 {{- end -}}
 
 {{- define "kong.volumes" -}}
