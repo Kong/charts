@@ -44,26 +44,23 @@ resources:
     cpu: 10m
     memory: 128Mi
 
-# use this section to enable or disable the controllers
-controllers:
-  # controlPlane controller
-  controlplaneController:
-    enabled: true
-  # gateway controller
-  gatewayController:
-    enabled: true
-  # dataplane controller. mutually exclusive with dataplane bluegreen controller
-  dataplaneController:
-    enabled: false
-  # dataplane bluegreen controller. mutually exclusive with dataplane controller
-  dataplaneBlueGreenController:
-    enabled: true
-  # aigateway controller. (experimental)
-  aiGatewayController:
-    enabled: false
-
 # Use this section to add environment variables to operator's container
 env: {}
+  # # gateway controller
+  # enable_gateway_controller: true
+  # # controlPlane controller
+  # enable_controlplane_controller: true
+  # # dataplane controller. mutually exclusive with dataplane bluegreen controller
+  # enable_dataplane_controller: true
+  # # dataplane bluegreen controller. mutually exclusive with dataplane controller
+  # enable_dataplanebluegreen_controller: true
+  # # aigateway controller. (experimental)
+  # enable_aigateway_controller: true
+
+# This section is any customer specific environments variables that doesn't require CONTROLLER_ prefix.
+# Example as below, uncomment if required and add additional attributes as required.
+# customEnv:
+#   TZ: "Europe/Berlin"
 
 # Use this section to change the certs-dir emptyDir size
 certsDir:

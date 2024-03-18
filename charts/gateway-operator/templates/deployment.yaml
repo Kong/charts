@@ -31,23 +31,6 @@ spec:
       - args:
         - --health-probe-bind-address=:8081
         - --metrics-bind-address=127.0.0.1:8080
-        {{- if .Values.controllers }}
-        {{- if .Values.controllers.controlplaneController }}
-        - --enable-controller-controlplane={{ .Values.controllers.controlplaneController.enabled }}
-        {{- end }}
-        {{- if .Values.controllers.gatewayController }}
-        - --enable-controller-gateway={{ .Values.controllers.gatewayController.enabled }}
-        {{- end }}
-        {{- if .Values.controllers.dataplaneController }}
-        - --enable-controller-dataplane={{ .Values.controllers.dataplaneController.enabled }}
-        {{- end }}
-        {{- if .Values.controllers.dataplaneBlueGreenController }}
-        - --enable-controller-dataplane-bluegreen={{ .Values.controllers.dataplaneBlueGreenController.enabled }}
-        {{- end }}
-        {{- if .Values.controllers.aiGatewayController }}
-        - --enable-controller-aigateway={{ .Values.controllers.aiGatewayController.enabled }}
-        {{- end }}
-        {{- end }}
         env:
         {{- include "kong.env" . | nindent 8 }}
         - name: POD_NAMESPACE
