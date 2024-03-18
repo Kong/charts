@@ -8,14 +8,14 @@ maintainers:
 name: gateway-operator
 sources:
   - https://github.com/Kong/charts/tree/main/charts/gateway-operator
-version: 0.1.0
+version: 0.1.1
 appVersion: "1.2.0"
 annotations:
-  artifacthub.io/prerelease: "true"
+  artifacthub.io/prerelease: "false"
 
 dependencies:
   - name: kic-crds
-    version: 3.1.1
+    version: 3.1.2
     condition: kic-crds.enabled
   - name: gwapi-standard-crds
     version: 1.0.0
