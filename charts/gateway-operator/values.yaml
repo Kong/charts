@@ -47,15 +47,19 @@ resources:
 # Use this section to add environment variables to operator's container
 env: {}
   # # gateway controller
-  # enable_gateway_controller: true
+  # enable_controller_gateway: true
   # # controlPlane controller
-  # enable_controlplane_controller: true
+  # enable_controller_controlplane: true
   # # dataplane controller. mutually exclusive with dataplane bluegreen controller
-  # enable_dataplane_controller: true
+  # enable_controller_dataplane: true
   # # dataplane bluegreen controller. mutually exclusive with dataplane controller
-  # enable_dataplanebluegreen_controller: true
+  # enable_controller_dataplane_bluegreen: true
   # # aigateway controller. (experimental)
-  # enable_aigateway_controller: true
+  # enable_controller_aigateway: false
+  # # konglicense controller. (EE only)
+  # enable_controller_konglicense: true
+  # # controlplane extensions controller. (EE only)
+  # enable_controller_controlplaneextensions: true
 
 # This section is any customer specific environments variables that doesn't require CONTROLLER_ prefix.
 # Example as below, uncomment if required and add additional attributes as required.
