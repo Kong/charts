@@ -120,6 +120,7 @@ rules:
   - list
   - patch
   - update
+  - watch
 - apiGroups:
   - configuration.konghq.com
   resources:
