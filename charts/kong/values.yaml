@@ -1028,7 +1028,9 @@ enterprise:
     # If RBAC is enabled, this Secret must contain an admin_gui_session_conf key
     # The key value must be a secret configuration, following the example at
     # https://docs.konghq.com/enterprise/latest/kong-manager/authentication/sessions
-    session_conf_secret: kong-session-config
+    # If using 3.6+ and OIDC, session configuration is instead handled in the auth configuration,
+    # and this field can be left empty.
+    session_conf_secret: ""  # CHANGEME
     # If admin_gui_auth is not set to basic-auth, provide a secret name which
     # has an admin_gui_auth_conf key containing the plugin config JSON
     admin_gui_auth_conf_secret: CHANGEME-admin-gui-auth-conf-secret
