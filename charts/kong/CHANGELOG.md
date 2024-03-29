@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+
+* Updated handling of `session_conf_secret` to accommodate Kong 3.6.
+  It can now be omitted [when using OIDC](https://docs.konghq.com/gateway/3.6.x/kong-manager/auth/oidc/migrate/).
+
 ## 2.38.0
 
 ### Changes
