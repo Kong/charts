@@ -69,19 +69,14 @@ spec:
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=0
-        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
+        image: {{ .Values.kubeRBACProxy.image }}:{{ .Values.kubeRBACProxy.tag }}
         name: kube-rbac-proxy
         ports:
         - containerPort: 8443
           name: https
           protocol: TCP
         resources:
-          limits:
-            cpu: 500m
-            memory: 128Mi
-          requests:
-            cpu: 5m
-            memory: 64Mi
+{{ toYaml .Values.kubeRBACProxy.resources | indent 10 }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: {{ template "kong.serviceAccountName" . }}

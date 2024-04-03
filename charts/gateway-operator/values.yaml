@@ -2,6 +2,19 @@ image:
   repository: docker.io/kong/gateway-operator
   tag: 1.2
 
+kubeRBACProxy:
+  # Additional pod containers in the controller.
+  image: gcr.io/kubebuilder/kube-rbac-proxy
+  tag: v0.8.0
+  # Use this section to customize the requests and limits of kube-rbac-proxy
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 5m
+      memory: 64Mi
+
  # Override namespace for gateway-operator chart resources. By default, the chart creates resources in the release namespace.
 # namespace: kong-system
 
