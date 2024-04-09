@@ -6,6 +6,11 @@
 
 * Updated handling of `session_conf_secret` to accommodate Kong 3.6.
   It can now be omitted [when using OIDC](https://docs.konghq.com/gateway/3.6.x/kong-manager/auth/oidc/migrate/).
+  [#1033](https://github.com/Kong/charts/pull/1033)
+* Setting a Service's `servicePort` to 0 now disables that port on the Service,
+  for use when the external Service and container listens should differ, such
+  as when terminating TLS at a LoadBalancer.
+  [#1021](https://github.com/Kong/charts/pull/1021)
 
 ## 2.38.0
 
