@@ -210,6 +210,7 @@ spec:
   ports:
   {{- if .http }}
   {{- if .http.enabled }}
+  {{- if ne ( .http.servicePort | toString ) "0" }}
   - name: kong-{{ .serviceName }}
     port: {{ .http.servicePort }}
     targetPort: {{ .http.containerPort }}
@@ -220,6 +221,7 @@ spec:
     nodePort: {{ .http.nodePort }}
   {{- end }}
     protocol: TCP
+  {{- end }}
   {{- end }}
   {{- end }}
   {{- if .tls.enabled }}
@@ -329,7 +331,9 @@ Parameters: takes a service (e.g. .Values.proxy) as its argument and returns KON
   {{- $portMaps := list -}}
 
   {{- if .http.enabled -}}
+  {{- if ne (.http.servicePort | toString ) "0" -}}
         {{- $portMaps = append $portMaps (printf "%d:%d" (int64 .http.servicePort) (int64 .http.containerPort)) -}}
+  {{- end -}}
   {{- end -}}
 
   {{- if .tls.enabled -}}
