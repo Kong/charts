@@ -40,6 +40,7 @@ gateway:
 
   ingressController:
     enabled: false
+    installCRDs: false
 
   env:
     role: traditional

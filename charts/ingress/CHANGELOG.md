@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixes
+
+- fix(ingress) remove duplicate CRD installation [#1052](https://github.com/Kong/charts/pull/1052)
+
 ## 0.12.0
 
 ### Improvements
@@ -87,7 +93,7 @@
 ### Breaking changes
 
 The new `kong/kong` chart requires manual changes to values.yaml if using this
-chart with controller versions <=2.10 and Kong versions >=3.3. See the 
+chart with controller versions <=2.10 and Kong versions >=3.3. See the
 [the kong/kong 2.26 upgrade instructions](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#2260)
 for details.
 
