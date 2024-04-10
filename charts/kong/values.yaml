@@ -297,6 +297,9 @@ proxy:
   http:
     # Enable plaintext HTTP listen for the proxy
     enabled: true
+    # Set the servicePort: 0 to skip exposing in the service but still
+    # let the port open in container to allow https to http mapping for
+    # tls terminated at LB.
     servicePort: 80
     containerPort: 8000
     # Set a nodePort which is available if service type is NodePort
