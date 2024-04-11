@@ -1,4 +1,5 @@
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
+CHARTSNAP_VERSION ?= v0.3.1
 
 .PHONY: _download_tool
 _download_tool:
@@ -16,7 +17,7 @@ kube-linter:
 .PHONY: chartsnap
 chartsnap:
 	@helm plugin list | grep chartsnap > /dev/null || \
-	helm plugin install https://github.com/jlandowner/helm-chartsnap
+	helm plugin install https://github.com/jlandowner/helm-chartsnap --version $(CHARTSNAP_VERSION)
 
 .PHONY: lint
 lint: tools lint.charts.kong lint.shellcheck
