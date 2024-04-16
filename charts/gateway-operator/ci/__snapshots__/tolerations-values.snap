@@ -792,6 +792,8 @@ spec:
         - containerPort: 8443
           name: https
           protocol: TCP
+        securityContext:
+          readOnlyRootFilesystem: true
         resources:
           limits:
             cpu: 500m

@@ -90,6 +90,8 @@ spec:
         - containerPort: 8443
           name: https
           protocol: TCP
+        securityContext:
+          readOnlyRootFilesystem: true
         resources:
 {{ toYaml .Values.kubeRBACProxy.resources | indent 10 }}
 {{- end }}
