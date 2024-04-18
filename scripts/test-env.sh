@@ -30,9 +30,9 @@ set -euo pipefail
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
-KIND_VERSION="${KIND_VERSION:-v0.19.0}"
-KUBERNETES_VERSION="${KUBERNETES_VERSION:-1.27.1}"
-GATEWAY_API_VERSION="${GATEWAY_API_VERSION:-v0.8.1}"
+KIND_VERSION="${KIND_VERSION:-v0.22.0}"
+KUBERNETES_VERSION="${KUBERNETES_VERSION:-1.29.2}"
+GATEWAY_API_VERSION="${GATEWAY_API_VERSION:-v1.0.0}"
 CHART_NAME="${CHART_NAME:-ingress}"
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')"

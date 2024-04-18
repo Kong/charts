@@ -38,7 +38,7 @@ jobs:
           helm repo add kong https://charts.konghq.com
 
       - name: Run chart-testing (lint)
-        run: ct lint --charts ${{ matrix.chart-name }}
+        run: ct lint --target-branch main --charts ${{ matrix.chart-name }}
         working-directory: charts
 
       - name: setup testing environment (kind-cluster)
@@ -47,7 +47,7 @@ jobs:
         run: ./scripts/test-env.sh
 
       - name: run chart-testing (install)
-        run: ct install --charts ${{ matrix.chart-name }}
+        run: ct install --target-branch main --charts ${{ matrix.chart-name }}
         working-directory: charts
         if: matrix.chart-name == 'kong'
 
@@ -65,9 +65,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Fetch history
-        run: git fetch --prune --unshallow
+        with:
+          fetch-depth: 0
 
       - name: Configure Git
         run: |
