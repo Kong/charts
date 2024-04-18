@@ -58,6 +58,8 @@ resources:
     memory: 128Mi
 
 # Use this section to add environment variables to operator's container
+# NOTE: This is mutually exclusive with the args sections.
+# When both an env and a corresponding arg are provided, the arg will take precedence.
 env: {}
   # # gateway controller
   # enable_controller_gateway: true
@@ -78,6 +80,12 @@ env: {}
 # Example as below, uncomment if required and add additional attributes as required.
 # customEnv:
 #   TZ: "Europe/Berlin"
+
+# Use this section to add extra args to the operator's container.
+# NOTE: This is a list of strings, so each arg should be a separate item in the list.
+# NOTE: This is mutually exclusive with the env and customEnv sections.
+# When both an env and a corresponding arg are provided, the arg will take precedence.
+args: []
 
 # Use this section to change the certs-dir emptyDir size
 certsDir:
