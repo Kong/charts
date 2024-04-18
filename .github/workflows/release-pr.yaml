@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Specify this here because these tests rely on ktf to run kind for cluster creation.
-      KIND_VERSION: v0.20.0
+      KIND_VERSION: v0.22.0
     strategy:
       matrix:
         chart-name:
@@ -65,7 +65,7 @@ jobs:
         uses: helm/chart-testing-action@v2.6.1
 
       - name: Run chart-testing (lint)
-        run: ct lint --check-version-increment=false
+        run: ct lint --target-branch main --check-version-increment=false
 
       - name: setup testing environment (kind-cluster)
         env:
@@ -74,23 +74,25 @@ jobs:
         run: ./scripts/test-env.sh
 
       - name: Run chart-testing (install)
-        run: ct install --charts charts/${{ matrix.chart-name}}
+        run: ct install --target-branch main --charts charts/${{ matrix.chart-name}}
 
   integration-test:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     env:
       # Specify this here because these tests rely on ktf to run kind for cluster creation.
-      KIND_VERSION: v0.20.0
-      GATEWAY_API_VERSION: v0.8.1
+      KIND_VERSION: v0.22.0
+      GATEWAY_API_VERSION: v1.0.0
     strategy:
       matrix:
         kubernetes-version:
-          - "1.23.13"
-          - "1.24.7"
-          - "1.25.9"
-          - "1.26.4"
-          - "1.27.1"
+          - "1.23.17"
+          - "1.24.17"
+          - "1.25.16"
+          - "1.26.13"
+          - "1.27.11"
+          - "1.28.7"
+          - "1.29.2"
         chart-name:
           - kong
           - ingress
@@ -98,8 +100,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: setup helm
         uses: azure/setup-helm@v4.2.0
@@ -143,8 +143,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: setup helm
         uses: azure/setup-helm@v4.2.0
