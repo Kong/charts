@@ -48,25 +48,34 @@ app.kubernetes.io/component: kgo
 app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
 
+{{/*
+Create a list of env vars based on the values of the `env` and `customEnv` maps.
+*/}}
 {{- define "kong.env" -}}
 
-{{- $userEnv := dict -}}
-{{- range $key, $val := .Values.env }}
-  {{- $upper := upper $key -}}
-  {{- $var := printf "GATEWAY_OPERATOR_%s" $upper -}}
-  {{- $_ := set $userEnv $var $val -}}
-{{- end -}}
-{{- range $key, $val := $userEnv }}
-- name: {{ $key }}
+{{- $defaultEnv := dict -}}
+{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_HEALTH_PROBE_BIND_ADDRESS" ":8081" -}}
+{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_METRICS_BIND_ADDRESS" "127.0.0.1:8080" -}}
+
+{{- range $key, $val := .Values.env -}}
+  {{- $var := printf "GATEWAY_OPERATOR_%s" ( upper $key ) -}}
+  {{- if hasKey $defaultEnv $var -}}
+  {{- $defaultEnv = unset $defaultEnv $var -}}
+  {{- end }}
+- name: {{ $var }}
   value: {{ $val | quote }}
 {{- end -}}
 
-{{- $customEnv := dict -}}
-{{- range $key, $val := .Values.customEnv }}
-  {{- $upper := upper $key -}}
-  {{- $_ := set $customEnv $upper $val -}}
+{{ range $key, $val := .Values.customEnv }}
+  {{- $var := upper $key -}}
+  {{- if hasKey $defaultEnv $var -}}
+  {{- $defaultEnv = unset $defaultEnv $var -}}
+  {{- end }}
+- name: {{ $var }}
+  value: {{ $val | quote }}
 {{- end -}}
-{{- range $key, $val := $customEnv }}
+
+{{ range $key, $val := $defaultEnv }}
 - name: {{ $key }}
   value: {{ $val | quote }}
 {{- end -}}

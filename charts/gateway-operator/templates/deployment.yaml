@@ -28,11 +28,15 @@ spec:
         {{- end }}
     spec:
       containers:
-      - args:
-        - --health-probe-bind-address=:8081
-        - --metrics-bind-address=127.0.0.1:8080
+      - name: manager
+        {{ with .Values.args -}}
+        args:
+        {{ range $val := . -}}
+        - {{ $val }}
+        {{ end }}
+        {{- end -}}
         env:
-        {{- include "kong.env" . | nindent 8 }}
+        {{- include "kong.env" . | indent 8 }}
         - name: POD_NAMESPACE
           valueFrom:
             fieldRef:
@@ -44,7 +48,6 @@ spec:
             port: 8081
           initialDelaySeconds: 15
           periodSeconds: 20
-        name: manager
         readinessProbe:
           httpGet:
             path: /readyz
