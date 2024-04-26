@@ -41,6 +41,79 @@ metadata:
   {{- end }}
   {{- end }}
 webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /
+  failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
+  matchPolicy: Equivalent
+  name: secrets.credentials.validation.ingress-controller.konghq.com
+  {{- with .Values.ingressController.admissionWebhook.namespaceSelector }}
+  namespaceSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.ingressController.admissionWebhook.timeoutSeconds }}
+  timeoutSeconds: {{ . }}
+  {{- end }}
+  objectSelector:
+    matchExpressions:
+    - key: "konghq.com/credential"
+      operator: "Exists"
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - secrets
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /
+  failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
+  matchPolicy: Equivalent
+  name: secrets.plugins.validation.ingress-controller.konghq.com
+  {{- with .Values.ingressController.admissionWebhook.namespaceSelector }}
+  namespaceSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.ingressController.admissionWebhook.timeoutSeconds }}
+  timeoutSeconds: {{ . }}
+  {{- end }}
+  {{- if .Values.ingressController.admissionWebhook.filterSecrets }}
+  objectSelector:
+    matchExpressions:
+    - key: "konghq.com/validate"
+      operator: "Exists"
+  {{- else }}
+  objectSelector:
+    matchExpressions:
+    - key: owner
+      operator: NotIn
+      values:
+      - helm
+  {{- end }}
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - secrets
+  sideEffects: None
 - name: validations.kong.konghq.com
   {{- with .Values.ingressController.admissionWebhook.namespaceSelector }}
   namespaceSelector:
@@ -85,7 +158,6 @@ webhooks:
 {{- end }}
     - UPDATE
     resources:
-    - secrets
 {{- if (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
     - services
 {{- end }}

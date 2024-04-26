@@ -9,6 +9,7 @@ ingressController:
   admissionWebhook:
     enabled: true
     timeoutSeconds: 5
+    filterSecrets: true
   env:
     anonymous_reports: "false"
   envFrom:

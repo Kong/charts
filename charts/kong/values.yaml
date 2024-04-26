@@ -582,6 +582,7 @@ ingressController:
 
   admissionWebhook:
     enabled: true
+    filterSecrets: false
     failurePolicy: Ignore
     port: 8080
     certificate:
