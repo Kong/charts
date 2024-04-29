@@ -43,19 +43,11 @@ spec:
               fieldPath: metadata.namespace
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 8081
-          initialDelaySeconds: 15
-          periodSeconds: 20
+          {{- toYaml .Values.livenessProbe | nindent 10 }}
         readinessProbe:
-          httpGet:
-            path: /readyz
-            port: 8081
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          {{- toYaml .Values.readinessProbe | nindent 10 }}
         resources:
-{{ toYaml .Values.resources | indent 10 }}
+          {{- toYaml .Values.resources | nindent 10 }}
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
