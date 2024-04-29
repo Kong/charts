@@ -44,10 +44,16 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
+    {{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
+    caBundle: {{ b64enc $caCert }}
+    {{- else }}
+    {{- if .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    caBundle: {{ b64enc .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    {{- end }}
+    {{- end }}
     service:
-      name: webhook-service
-      namespace: system
-      path: /
+      name: {{ template "kong.service.validationWebhook" . }}
+      namespace: {{ template "kong.namespace" . }}
   failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
   matchPolicy: Equivalent
   name: secrets.credentials.validation.ingress-controller.konghq.com
@@ -76,10 +82,16 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
+    {{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
+    caBundle: {{ b64enc $caCert }}
+    {{- else }}
+    {{- if .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    caBundle: {{ b64enc .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    {{- end }}
+    {{- end }}
     service:
-      name: webhook-service
-      namespace: system
-      path: /
+      name: {{ template "kong.service.validationWebhook" . }}
+      namespace: {{ template "kong.namespace" . }}
   failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
   matchPolicy: Equivalent
   name: secrets.plugins.validation.ingress-controller.konghq.com
