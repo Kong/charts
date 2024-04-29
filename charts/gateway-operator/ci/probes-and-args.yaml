@@ -1,0 +1,13 @@
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8081
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+args:
+  - --zap-log-level=debug

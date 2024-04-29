@@ -48,6 +48,21 @@ gwapi-standard-crds:
 gwapi-experimental-crds:
   enabled: false
 
+# Customize gateway-operator livenessProbe.
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8081
+  initialDelaySeconds: 15
+  periodSeconds: 20
+# Customize gateway-operator readinessProbe.
+readinessProbe:
+  httpGet:
+    path: /readyz
+    port: 8081
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
 # Use this section to customize the requests and limits of gateway-operator
 resources:
   limits:
