@@ -16,8 +16,7 @@ kube-linter:
 
 .PHONY: chartsnap
 chartsnap:
-	@helm plugin list | grep chartsnap > /dev/null || \
-	helm plugin install https://github.com/jlandowner/helm-chartsnap --version $(CHARTSNAP_VERSION)
+	./scripts/install-chartsnap.sh
 
 .PHONY: lint
 lint: tools lint.charts.kong lint.shellcheck
