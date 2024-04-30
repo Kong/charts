@@ -898,11 +898,11 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | podDisruptionBudget.minAvailable   | Represents the number of Pods that must be available (integer or percentage)          |                     |
 | podSecurityPolicy.enabled          | Enable podSecurityPolicy for Kong                                                     | `false`             |
 | podSecurityPolicy.labels           | Labels to add to podSecurityPolicy for Kong                                           | `{}`             |
-| podSecurityPolicy.annotations      | Annotations to add to podSecurityPolicy for Kong                                      | `{}`             |
+| podSecurityPolicy.annotations      | Annotations to add to podSecurityPolicy for Kong                                      | `{ "seccomp.security.alpha.kubernetes.io/allowedProfileNames": "runtime/default" }`             |
 | podSecurityPolicy.spec             | Collection of [PodSecurityPolicy settings](https://kubernetes.io/docs/concepts/policy/pod-security-policy/#what-is-a-pod-security-policy) | |
 | priorityClassName                  | Set pod scheduling priority class for Kong pods                                       | `""`                |
 | secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |
-| securityContext                    | Set the securityContext for Kong Pods                                                 | `{}`                |
+| securityContext                    | Set the securityContext for Kong Pods                                                 | See values.yaml     |
 | containerSecurityContext           | Set the securityContext for Containers                                                | See values.yaml     |
 | serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | `false`             |
 | serviceMonitor.interval            | Scraping interval                                                                     | `30s`               |

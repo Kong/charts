@@ -166,6 +166,18 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql
+    helm.sh/chart: postgresql-11.9.13
+  name: chartsnap-postgresql
+  namespace: default
+rules: null
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.38.0
@@ -464,6 +476,25 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql
+    helm.sh/chart: postgresql-11.9.13
+  name: chartsnap-postgresql
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: chartsnap-postgresql
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.38.0
@@ -751,6 +782,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
@@ -884,6 +916,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
@@ -975,6 +1008,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
@@ -1078,6 +1112,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
@@ -1087,7 +1122,9 @@ spec:
               name: chartsnap-kong-prefix-dir
             - mountPath: /tmp
               name: chartsnap-kong-tmp
-      securityContext: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: chartsnap-kong
       terminationGracePeriodSeconds: 30
       volumes:
@@ -1125,7 +1162,8 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  annotations: null
+  annotations:
+    ignore-check.kube-linter.io/no-read-only-root-fs: writable fs is required
   labels:
     app.kubernetes.io/component: primary
     app.kubernetes.io/instance: chartsnap
@@ -1245,7 +1283,14 @@ spec:
               cpu: 250m
               memory: 256Mi
           securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
             runAsUser: 1001
+            seccompProfile:
+              type: RuntimeDefault
           volumeMounts:
             - mountPath: /dev/shm
               name: dshm
@@ -1256,6 +1301,9 @@ spec:
       initContainers: null
       securityContext:
         fsGroup: 1001
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: default
       volumes:
         - emptyDir:
@@ -1390,6 +1438,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
@@ -1493,7 +1542,9 @@ spec:
             - mountPath: /wait_postgres
               name: chartsnap-kong-bash-wait-for-postgres
       restartPolicy: OnFailure
-      securityContext: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: chartsnap-kong
       volumes:
         - emptyDir:
@@ -1741,6 +1792,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
@@ -1844,7 +1896,9 @@ spec:
             - mountPath: /wait_postgres
               name: chartsnap-kong-bash-wait-for-postgres
       restartPolicy: OnFailure
-      securityContext: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: chartsnap-kong
       volumes:
         - emptyDir:
@@ -1996,6 +2050,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
@@ -2099,7 +2154,9 @@ spec:
             - mountPath: /wait_postgres
               name: chartsnap-kong-bash-wait-for-postgres
       restartPolicy: OnFailure
-      securityContext: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: chartsnap-kong
       volumes:
         - emptyDir:

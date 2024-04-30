@@ -720,6 +720,23 @@ postgresql:
   service:
     ports:
       postgresql: "5432"
+  primary:
+    annotations:
+      "ignore-check.kube-linter.io/no-read-only-root-fs": "writable fs is required"
+    podSecurityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+    containerSecurityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+  rbac:
+    create: true
 
 # -----------------------------------------------------------------------------
 # Configure cert-manager integration
@@ -933,19 +950,29 @@ podDisruptionBudget:
 podSecurityPolicy:
   enabled: false
   labels: {}
-  annotations: {}
+  annotations:
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'runtime/default'
   spec:
     privileged: false
     fsGroup:
-      rule: RunAsAny
+      rule: MustRunAs
+      ranges:
+        - min: 1
+          max: 65533
     runAsUser:
-      rule: RunAsAny
+      rule: MustRunAsNonRoot
     runAsGroup:
-      rule: RunAsAny
+      rule: MustRunAs
+      ranges:
+        - min: 1
+          max: 65535
     seLinux:
       rule: RunAsAny
     supplementalGroups:
-      rule: RunAsAny
+      rule: MustRunAs
+      ranges:
+        - min: 1
+          max: 65535
     volumes:
       - 'configMap'
       - 'secret'
@@ -963,13 +990,16 @@ podSecurityPolicy:
 priorityClassName: ""
 
 # securityContext for Kong pods.
-securityContext: {}
+securityContext:
+  seccompProfile:
+    type: RuntimeDefault
 
 # securityContext for containers.
 containerSecurityContext:
   readOnlyRootFilesystem: true
   allowPrivilegeEscalation: false
   runAsUser: 1000
+  runAsGroup: 1000
   runAsNonRoot: true
   seccompProfile:
     type: RuntimeDefault

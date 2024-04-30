@@ -11,6 +11,8 @@
   for use when the external Service and container listens should differ, such
   as when terminating TLS at a LoadBalancer.
   [#1021](https://github.com/Kong/charts/pull/1021)
+* Run containers with read-only file system and non-root user to increase container and pod security.
+  [#1057](https://github.com/Kong/charts/pull/1057)
 
 ## 2.38.0
 
