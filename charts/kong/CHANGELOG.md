@@ -11,6 +11,16 @@
   for use when the external Service and container listens should differ, such
   as when terminating TLS at a LoadBalancer.
   [#1021](https://github.com/Kong/charts/pull/1021)
+* Added an `ingressController.admissionWebhook.filterSecrets` option. When
+  enabled, the webhook will only validate Secrets that have one of the
+  recognized KIC labels:
+
+  * `konghq.com/credential: <"key-auth", "jwt", etc. credential types>`
+  * `konghq.com/validate: <"plugin", "custom">`
+
+  Earlier versions checked all Secrets and did not require labels, interfering
+  with non-KIC labels. Requires KIC 3.0+.
+  [#1061](https://github.com/Kong/charts/pull/1061)
 
 ## 2.38.0
 

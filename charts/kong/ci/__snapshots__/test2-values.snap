@@ -1564,6 +1564,58 @@ metadata:
   namespace: default
 webhooks:
   - admissionReviewVersions:
+      - v1
+    clientConfig:
+      caBundle: '###DYNAMIC_FIELD###'
+      service:
+        name: chartsnap-kong-validation-webhook
+        namespace: default
+    failurePolicy: Ignore
+    matchPolicy: Equivalent
+    name: secrets.credentials.validation.ingress-controller.konghq.com
+    objectSelector:
+      matchExpressions:
+        - key: konghq.com/credential
+          operator: Exists
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - secrets
+    sideEffects: None
+    timeoutSeconds: 5
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      caBundle: '###DYNAMIC_FIELD###'
+      service:
+        name: chartsnap-kong-validation-webhook
+        namespace: default
+    failurePolicy: Ignore
+    matchPolicy: Equivalent
+    name: secrets.plugins.validation.ingress-controller.konghq.com
+    objectSelector:
+      matchExpressions:
+        - key: konghq.com/validate
+          operator: Exists
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - secrets
+    sideEffects: None
+    timeoutSeconds: 5
+  - admissionReviewVersions:
       - v1beta1
     clientConfig:
       caBundle: '###DYNAMIC_FIELD###'
@@ -1599,7 +1651,6 @@ webhooks:
           - CREATE
           - UPDATE
         resources:
-          - secrets
           - services
       - apiGroups:
           - networking.k8s.io
