@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Allows overriding the liveness/readiness probes to use a command, default behavior is not changed
+
 ### Changes
 
 * Updated handling of `session_conf_secret` to accommodate Kong 3.6.
@@ -209,7 +211,7 @@
 
 ## 2.26.5
 
-### Fixed 
+### Fixed
 
 * Kuma ServiceAccount Token hints and volumes are also available in migrations
   Pods.
@@ -217,19 +219,19 @@
 
 ## 2.26.4
 
-### Fixed 
+### Fixed
 
-* updated `admin_api_uri` to `admin_gui_api_url` as per [kong documentation](https://docs.konghq.com/gateway/3.4.x/reference/configuration/#admin_api_uri). 
+* updated `admin_api_uri` to `admin_gui_api_url` as per [kong documentation](https://docs.konghq.com/gateway/3.4.x/reference/configuration/#admin_api_uri).
 
 ## 2.26.3
 
-### Fixed 
+### Fixed
 
 * Enabled Service and Ingress in Kong Manager for non enterprise users.
 
 ## 2.26.2
 
-### Fixed 
+### Fixed
 
 * Add missing CRD KongConsumerGroup and extend status subresource for CRDs
 
