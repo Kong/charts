@@ -2,8 +2,6 @@
 
 ## Unreleased
 
-* Allows overriding the liveness/readiness probes to use a command, default behavior is not changed
-
 ### Changes
 
 * Updated handling of `session_conf_secret` to accommodate Kong 3.6.
