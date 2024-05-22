@@ -24,6 +24,10 @@
   with non-KIC labels. Requires KIC 3.0+.
   [#1061](https://github.com/Kong/charts/pull/1061)
 
+* Allows overriding the liveness/readiness probes to use a command, default behavior is not changed
+  [#1070](https://github.com/Kong/charts/pull/1070)
+
+
 ## 2.38.0
 
 ### Changes
