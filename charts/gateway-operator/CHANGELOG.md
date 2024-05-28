@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.8
+
+### Features
+
+- Fix missing `renderTpl` which is used when specifying `.Values.extraLabels`
+  [#1075](https://github.com/Kong/charts/pull/1075)
+
 ## 0.1.7
 
 ### Features
