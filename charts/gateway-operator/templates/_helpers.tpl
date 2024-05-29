@@ -32,6 +32,14 @@ Create the name of the service account to use
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "kong.renderTpl" -}}
+    {{- if typeIs "string" .value }}
+{{- tpl .value .context }}
+    {{- else }}
+{{- tpl (.value | toYaml) .context }}
+    {{- end }}
+{{- end -}}
+
 {{- define "kong.metaLabels" -}}
 app.kubernetes.io/name: {{ template "kong.name" . }}
 helm.sh/chart: {{ template "kong.chart" . }}
