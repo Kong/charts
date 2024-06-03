@@ -2,7 +2,7 @@
 # - enable the probes with execGet
 
 livenessProbe:
-  execGet:
+  exec:
     command:
       - python3.10
       - /home/kong/scripts/liveness_probe.py
@@ -13,7 +13,7 @@ livenessProbe:
   failureThreshold: 3
 
 readinessProbe:
-  execGet:
+  exec:
     command:
       - python3.10
       - /home/kong/scripts/readiness_probe.py
