@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Added serviceMonitor.trustCRDsExist for render based deployments
 
 ### Changes
 
