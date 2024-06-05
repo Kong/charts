@@ -22,6 +22,9 @@
   with non-KIC labels. Requires KIC 3.0+.
   [#1061](https://github.com/Kong/charts/pull/1061)
 
+* Added an optional property `allowAnyOrigin` under `manager.ingress` to enable users to allow access to Kong Manager from any origin.
+  [#1078](https://github.com/Kong/charts/pull/1078)
+
 ## 2.38.0
 
 ### Changes

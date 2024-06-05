@@ -57,6 +57,8 @@ helm install kong/kong --generate-name
   - [Ingress Controller Parameters](#ingress-controller-parameters)
     - [The `env` section](#the-env-section)
     - [The `customEnv` section](#the-customenv-section)
+    - [The `gatewayDiscovery` section](#the-gatewaydiscovery-section)
+      - [Configuration](#configuration-1)
   - [General Parameters](#general-parameters)
     - [The `env` section](#the-env-section-1)
     - [The `customEnv` section](#the-customenv-section-1)
@@ -67,11 +69,12 @@ helm install kong/kong --generate-name
     - [Kong Enterprise License](#kong-enterprise-license)
     - [Kong Enterprise Docker registry access](#kong-enterprise-docker-registry-access)
   - [Service location hints](#service-location-hints)
+  - [Accessing Kong Manager from multiple URLs](#accessing-kong-manager-from-multiple-urls)
   - [RBAC](#rbac)
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
 - [Prometheus Operator integration](#prometheus-operator-integration)
-- [Argo CD considerations](#argo-cd-considerations)
+- [Argo CD Considerations](#argo-cd-considerations)
 - [Changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
 - [Upgrading](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
 - [Seeking help](#seeking-help)
@@ -1081,6 +1084,17 @@ each of their respective services can be accessed to ensure that Kong services
 can locate one another and properly set CORS headers. See the
 [Property Reference documentation](https://docs.konghq.com/enterprise/latest/property-reference/)
 for more details on these settings.
+
+### Accessing Kong Manager from multiple URLs
+
+By default, Kong Gateway will be configured with `KONG_ADMIN_GUI_URL` set to the URL (from `hostname` and `path`) provided under `manager.ingress` in `values.yaml`. This enforces the CORS headers in the Admin API responses to match the URL of the Kong Manager.
+
+If you are configuring Kong Manager to be accessed from multiple URLs, to allow accessing the Admin API from different origins, you will need to set `manager.ingress.allowAnyOrigin` to `true`. This will skip injecting `KONG_ADMIN_GUI_URL` in the final rendered configuration, and allow access to the Admin API from any origin.
+
+Learn more:
+
+* Configuration reference for `admin_gui_url`: https://docs.konghq.com/gateway/latest/reference/configuration/#admin_gui_url
+* CORS in the context of Kong Gateway: https://docs.konghq.com/gateway/latest/production/networking/dns-considerations/#cors-in-the-context-of-kong-gateway
 
 ### RBAC
 
