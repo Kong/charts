@@ -1096,6 +1096,12 @@ manager:
   ingress:
     # Enable/disable exposure using ingress.
     enabled: false
+    # Control to allow any origin to access the Kong Manager.
+    # When enabled, ADMIN_GUI_URL in the rendered configuration will be skipped.
+    # Learn more about ADMIN_GUI_URL: https://docs.konghq.com/gateway/latest/reference/configuration/#admin_gui_url
+    # Learn more about CORS in Kong Gateway: https://docs.konghq.com/gateway/latest/production/networking/dns-considerations/#cors-in-the-context-of-kong-gateway
+    # Default: false
+    allowAnyOrigin: false
     ingressClassName:
     # TLS secret name.
     # tls: kong-manager.example.com-tls
