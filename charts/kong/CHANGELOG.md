@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.39.0
 
 ### Changes
 
@@ -21,6 +21,8 @@
   Earlier versions checked all Secrets and did not require labels, interfering
   with non-KIC labels. Requires KIC 3.0+.
   [#1061](https://github.com/Kong/charts/pull/1061)
+* Add RBAC policy rules for Custom Entities
+  [#1081](https://github.com/Kong/charts/pull/1081)
 
 ## 2.38.0
 
