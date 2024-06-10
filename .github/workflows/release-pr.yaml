@@ -13,6 +13,10 @@ on:
       - release/kong-2.x
       - prepare-kgo-chart
 
+env:
+  # Specify this here because these tests rely on ktf to run kind for cluster creation.
+  KIND_VERSION: v0.23.0
+
 jobs:
   lint:
     timeout-minutes: 30
@@ -34,9 +38,6 @@ jobs:
   lint-test:
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    env:
-      # Specify this here because these tests rely on ktf to run kind for cluster creation.
-      KIND_VERSION: v0.22.0
     strategy:
       matrix:
         chart-name:
@@ -80,19 +81,16 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     env:
-      # Specify this here because these tests rely on ktf to run kind for cluster creation.
-      KIND_VERSION: v0.22.0
       GATEWAY_API_VERSION: v1.0.0
     strategy:
       matrix:
         kubernetes-version:
-          - "1.23.17"
-          - "1.24.17"
           - "1.25.16"
-          - "1.26.13"
-          - "1.27.11"
-          - "1.28.7"
-          - "1.29.2"
+          - "1.26.15"
+          - "1.27.13"
+          - "1.28.9"
+          - "1.29.4"
+          - "1.30.0"
         chart-name:
           - kong
           - ingress
@@ -126,8 +124,6 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     env:
-      # Specify this here because these tests rely on ktf to run kind for cluster creation.
-      KIND_VERSION: v0.20.0
       GATEWAY_API_VERSION: v0.8.1
     strategy:
       matrix:
