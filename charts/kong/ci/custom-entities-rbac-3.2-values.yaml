@@ -1,0 +1,19 @@
+env:
+  anonymous_reports: "off"
+
+ingressController:
+  env:
+    anonymous_reports: "false"
+  image:
+    repository: kong/nightly-ingress-controller
+    tag: "2024-06-09"
+    # Unreleased yet so use the nightly and the effective semver
+    effectiveSemver: "3.2"
+
+readinessProbe:
+  httpGet:
+    path: "/status"
+    port: status
+    scheme: HTTP
+  initialDelaySeconds: 1
+  periodSeconds: 1
