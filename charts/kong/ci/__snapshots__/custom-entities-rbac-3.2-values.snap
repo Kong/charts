@@ -2,7 +2,6 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
@@ -18,7 +17,6 @@ data:
 kind: Secret
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
@@ -35,7 +33,6 @@ data:
 kind: Secret
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
@@ -49,7 +46,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
@@ -57,6 +53,22 @@ metadata:
     helm.sh/chart: kong-2.38.0
   name: chartsnap-kong
 rules:
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - kongcustomentities
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - kongcustomentities/status
+    verbs:
+      - get
+      - patch
+      - update
   - apiGroups:
       - configuration.konghq.com
     resources:
@@ -330,7 +342,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
@@ -350,7 +361,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
@@ -415,7 +425,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
@@ -436,7 +445,6 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
@@ -451,7 +459,6 @@ spec:
       protocol: TCP
       targetPort: webhook
   selector:
-    acme.com/some-key: some-value
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
@@ -463,7 +470,6 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
@@ -491,7 +497,6 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
@@ -520,7 +525,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
@@ -543,7 +547,6 @@ spec:
         kuma.io/service-account-token-volume: chartsnap-kong-token
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
-        acme.com/some-key: some-value
         app: chartsnap-kong
         app.kubernetes.io/component: app
         app.kubernetes.io/instance: chartsnap
@@ -569,6 +572,8 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_ADMISSION_WEBHOOK_LISTEN
               value: 0.0.0.0:8080
+            - name: CONTROLLER_ANONYMOUS_REPORTS
+              value: "false"
             - name: CONTROLLER_ELECTION_ID
               value: kong-ingress-controller-leader-kong
             - name: CONTROLLER_INGRESS_CLASS
@@ -579,7 +584,7 @@ spec:
               value: https://localhost:8444
             - name: CONTROLLER_PUBLISH_SERVICE
               value: default/chartsnap-kong-proxy
-          image: kong/kubernetes-ingress-controller:3.1
+          image: kong/nightly-ingress-controller:2024-06-09
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -641,6 +646,8 @@ spec:
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
               value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
+            - name: KONG_ANONYMOUS_REPORTS
+              value: "off"
             - name: KONG_CLUSTER_LISTEN
               value: "off"
             - name: KONG_DATABASE
@@ -714,11 +721,11 @@ spec:
           readinessProbe:
             failureThreshold: 3
             httpGet:
-              path: /status/ready
+              path: /status
               port: status
               scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 1
+            periodSeconds: 1
             successThreshold: 1
             timeoutSeconds: 5
           resources: {}
@@ -753,6 +760,8 @@ spec:
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
               value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
+            - name: KONG_ANONYMOUS_REPORTS
+              value: "off"
             - name: KONG_CLUSTER_LISTEN
               value: "off"
             - name: KONG_DATABASE
@@ -845,7 +854,6 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   labels:
-    acme.com/some-key: some-value
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
