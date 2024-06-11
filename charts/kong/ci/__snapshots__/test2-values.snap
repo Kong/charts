@@ -96,6 +96,22 @@ rules:
   - apiGroups:
       - configuration.konghq.com
     resources:
+      - konglicenses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - konglicenses/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
       - kongvaults
     verbs:
       - get
@@ -457,22 +473,6 @@ rules:
       - get
       - list
       - watch
-  - apiGroups:
-      - configuration.konghq.com
-    resources:
-      - konglicenses
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - configuration.konghq.com
-    resources:
-      - konglicenses/status
-    verbs:
-      - get
-      - patch
-      - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding

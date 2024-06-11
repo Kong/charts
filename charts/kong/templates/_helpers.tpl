@@ -1671,6 +1671,14 @@ resource roles into their separate templates.
   - get
   - list
   - watch
+{{- end -}}
+
+{{/*
+kong.kubernetesRBACClusterRoles outputs a static list of RBAC rules (the "rules" block
+of a Role or ClusterRole) that provide the ingress controller access to the
+Kubernetes Cluster-scoped resources it uses to build Kong configuration.
+*/}}
+{{- define "kong.kubernetesRBACClusterRules" -}}
 {{- if (semverCompare ">= 3.1.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
 - apiGroups:
   - configuration.konghq.com
@@ -1689,14 +1697,6 @@ resource roles into their separate templates.
   - patch
   - update
 {{- end -}}
-{{- end -}}
-
-{{/*
-kong.kubernetesRBACClusterRoles outputs a static list of RBAC rules (the "rules" block
-of a Role or ClusterRole) that provide the ingress controller access to the
-Kubernetes Cluster-scoped resources it uses to build Kong configuration.
-*/}}
-{{- define "kong.kubernetesRBACClusterRules" -}}
 {{- if (semverCompare ">= 3.1.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
 - apiGroups:
   - configuration.konghq.com
