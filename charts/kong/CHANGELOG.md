@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.39.0
 
 ### Changes
 
@@ -23,6 +23,8 @@
   [#1061](https://github.com/Kong/charts/pull/1061)
 * Add RBAC policy rules for Custom Entities
   [#1081](https://github.com/Kong/charts/pull/1081)
+* Bumped default `kong/kubernetes-ingress-controller` image tag to 3.2.
+  [#1085](https://github.com/Kong/charts/pull/1085)
 
 ## 2.38.0
 
