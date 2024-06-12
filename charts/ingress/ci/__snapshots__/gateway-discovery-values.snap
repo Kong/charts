@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller
   namespace: default
 ---
@@ -18,7 +18,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gateway
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: gateway-2.38.0
+    helm.sh/chart: gateway-2.39.0
   name: chartsnap-gateway
   namespace: default
 ---
@@ -33,7 +33,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller-validation-webhook-ca-keypair
   namespace: default
 type: kubernetes.io/tls
@@ -49,7 +49,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller-validation-webhook-keypair
   namespace: default
 type: kubernetes.io/tls
@@ -65,7 +65,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller-admin-api-keypair
   namespace: default
 type: kubernetes.io/tls
@@ -81,7 +81,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller-admin-api-ca-keypair
   namespace: default
 type: kubernetes.io/tls
@@ -94,9 +94,25 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller
 rules:
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - kongcustomentities
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - kongcustomentities/status
+    verbs:
+      - get
+      - patch
+      - update
   - apiGroups:
       - configuration.konghq.com
     resources:
@@ -374,7 +390,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -393,7 +409,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller
   namespace: default
 rules:
@@ -457,7 +473,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller
   namespace: default
 roleRef:
@@ -477,7 +493,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller-validation-webhook
   namespace: default
 spec:
@@ -492,7 +508,7 @@ spec:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
 ---
 apiVersion: v1
 kind: Service
@@ -502,7 +518,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gateway
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: gateway-2.38.0
+    helm.sh/chart: gateway-2.39.0
   name: chartsnap-gateway-admin
   namespace: default
 spec:
@@ -526,7 +542,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gateway
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: gateway-2.38.0
+    helm.sh/chart: gateway-2.39.0
   name: chartsnap-gateway-manager
   namespace: default
 spec:
@@ -554,7 +570,7 @@ metadata:
     app.kubernetes.io/name: gateway
     app.kubernetes.io/version: "3.6"
     enable-metrics: "true"
-    helm.sh/chart: gateway-2.38.0
+    helm.sh/chart: gateway-2.39.0
   name: chartsnap-gateway-proxy
   namespace: default
 spec:
@@ -582,7 +598,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller
   namespace: default
 spec:
@@ -607,7 +623,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: controller
         app.kubernetes.io/version: "3.6"
-        helm.sh/chart: controller-2.38.0
+        helm.sh/chart: controller-2.39.0
         version: "3.6"
     spec:
       automountServiceAccountToken: false
@@ -642,7 +658,7 @@ spec:
               value: "true"
             - name: CONTROLLER_PUBLISH_SERVICE
               value: default/chartsnap-gateway-proxy
-          image: kong/kubernetes-ingress-controller:3.1
+          image: kong/kubernetes-ingress-controller:3.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -739,7 +755,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: gateway
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: gateway-2.38.0
+    helm.sh/chart: gateway-2.39.0
   name: chartsnap-gateway
   namespace: default
 spec:
@@ -762,7 +778,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: gateway
         app.kubernetes.io/version: "3.6"
-        helm.sh/chart: gateway-2.38.0
+        helm.sh/chart: gateway-2.39.0
         version: "3.6"
     spec:
       automountServiceAccountToken: false
@@ -990,10 +1006,62 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: controller-2.38.0
+    helm.sh/chart: controller-2.39.0
   name: chartsnap-controller-validations
   namespace: default
 webhooks:
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      caBundle: '###DYNAMIC_FIELD###'
+      service:
+        name: chartsnap-controller-validation-webhook
+        namespace: default
+    failurePolicy: Ignore
+    matchPolicy: Equivalent
+    name: secrets.credentials.validation.ingress-controller.konghq.com
+    objectSelector:
+      matchExpressions:
+        - key: konghq.com/credential
+          operator: Exists
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - secrets
+    sideEffects: None
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      caBundle: '###DYNAMIC_FIELD###'
+      service:
+        name: chartsnap-controller-validation-webhook
+        namespace: default
+    failurePolicy: Ignore
+    matchPolicy: Equivalent
+    name: secrets.plugins.validation.ingress-controller.konghq.com
+    objectSelector:
+      matchExpressions:
+        - key: owner
+          operator: NotIn
+          values:
+            - helm
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - secrets
+    sideEffects: None
   - admissionReviewVersions:
       - v1beta1
     clientConfig:
@@ -1030,7 +1098,6 @@ webhooks:
           - CREATE
           - UPDATE
         resources:
-          - secrets
           - services
       - apiGroups:
           - networking.k8s.io

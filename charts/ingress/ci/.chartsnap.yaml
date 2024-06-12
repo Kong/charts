@@ -36,3 +36,5 @@ dynamicFields:
     name: chartsnap-controller-validations
     jsonPath:
       - /webhooks/0/clientConfig/caBundle
+      - /webhooks/1/clientConfig/caBundle
+      - /webhooks/2/clientConfig/caBundle
