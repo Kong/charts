@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.39.1
+
+### Fixed
+
+* Added missing `KongCustomEntity` CRD for KIC 3.2.
+
 ## 2.39.0
 
 ### Changes
