@@ -4,41 +4,85 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller
+  namespace: default
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: gateway
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: gateway-2.39.0
+  name: chartsnap-gateway
   namespace: default
 ---
 apiVersion: v1
 data:
-  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKRENDQWd5Z0F3SUJBZ0lSQVBQYTBSOTd4d0xqMHI5d3R0L3REU2N3RFFZSktvWklodmNOQVFFTEJRQXcKSERFYU1CZ0dBMVVFQXhNUmEyOXVaeTFoWkcxcGMzTnBiMjR0WTJFd0hoY05NalF3TmpFek1UZzFOalUzV2hjTgpNelF3TmpFeE1UZzFOalUzV2pBY01Sb3dHQVlEVlFRREV4RnJiMjVuTFdGa2JXbHpjMmx2YmkxallUQ0NBU0l3CkRRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFMbi9vQ0JxdWpIN1Z6d1FnelJ1Z2xoWWhYSkQKWmpZUGd4Tm1IK0c2QzZFYmRBU0VtMkV4MktBdFVMeFJvSkwybzlrK1BVZnhzQ2JQZG80bGtvemtwNXBZRGQwSgprcHhGRFBjRlJoUUw4NTk5bkpjZEpBRkJKTUw1UkM2cEUvci9ZR1MyeFIydnJzTURlM1QzZ2V3QkkrVUovc1RTCk5Rd2VtSUNjWWhOZnRKUVRCeFBGcW41a3drMGV0ZDhOVDBXaDBBWjFwRUZwNEVVekgrdUEyMmZmb1RHR3ZWYjcKRzl2NUx4MzlFMUNhTHZZUnRZQkg1S1cvbGxVeXdFeHRmRlNFNnl0L2lpRUxxbE0yQlc2anlXU2lTdmtpajRXWApUeVRhQkNwUnNzL2M5a0t4OUQxU3J1bnhuTUtxcHBQK25ZNzlnWHJaaURkekFocE9MQzRLQkd0U25BOENBd0VBCkFhTmhNRjh3RGdZRFZSMFBBUUgvQkFRREFnS2tNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUYKQlFjREFqQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCU2ZPR1B4U2hjTE90bEtnalp5UGZibgo5ajlXTXpBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQUFTczBZb2Nmc1VQRjM4alBOSmxyMjJibnNIZHJQTGFCCkpaUG9UY1NMd0pHYWI1ZDIvTFJUQlJCWHltWXJWdEIrazhia1ZVdWkxWmMyMzRkaFVYNDYvQW1GT0NHN3duKzAKUTZhdmRUcFppRlY3V3dSRkM2c21aTjkrMG14WUx0aXUrY01yUE9WeHdNeVZpV09JOXNFeEpoVm9EVm5NY1ZzNQpGZmw1SURDaDZaRVpGRk1NQXpsa3haSUNIVTA1enJSNDErcFRua2dTZDh2Z21SODNxdTc0T2RqeGtOb25DdUdRCk5vSTdsTDM0RUNMT2kwLzBPajR6aHQxNTRFMTloMUJiL3krSUh1cWgwQzNMdHpzNDJoei9uYjlCbXlQMEc0d0sKaWlQQWFSNHZycWVzTWd6YWQzYWNIYmdIVDNTQkJmVzFrMWVwWWZqaUFmS2NMWU8xWjdhSG5BPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
-  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBdWYrZ0lHcTZNZnRYUEJDRE5HNkNXRmlGY2tObU5nK0RFMllmNGJvTG9SdDBCSVNiCllUSFlvQzFRdkZHZ2t2YWoyVDQ5Ui9Hd0pzOTJqaVdTak9Tbm1sZ04zUW1TbkVVTTl3VkdGQXZ6bjMyY2x4MGsKQVVFa3d2bEVMcWtUK3Y5Z1pMYkZIYSt1d3dON2RQZUI3QUVqNVFuK3hOSTFEQjZZZ0p4aUUxKzBsQk1IRThXcQpmbVRDVFI2MTN3MVBSYUhRQm5Xa1FXbmdSVE1mNjREYlo5K2hNWWE5VnZzYjIva3ZIZjBUVUpvdTloRzFnRWZrCnBiK1dWVExBVEcxOFZJVHJLMytLSVF1cVV6WUZicVBKWktKSytTS1BoWmRQSk5vRUtsR3l6OXoyUXJIMFBWS3UKNmZHY3dxcW1rLzZkanYyQmV0bUlOM01DR2s0c0xnb0VhMUtjRHdJREFRQUJBb0lCQUN1eDVjZzN5bTRiZ2E3VwpvandiQ2Z2L0w3cGNJeExvS2Y3UXF3UzRWQ3NRNi94enVwem12T0ZFUkFjNWxlTndsYVZmZmIzOUJVall6QjB3CnJuRHk5bnpIMnRubWVjN0VXZnRkL2N5UDBqZlJwb3ZKaUwvU3NmUXI0dHlqVTlKUFZESFV6aEhmUjhzQWNteFUKQ08yTWh3WXpodXB1QjVCRlQ4Wkc5ck5lZEdta2Q2cGlHcVlvZG1GbmxrKyt2T09YcmVVeVlsT2syUXliM1hpTwo1ejdONjJrV2xWUVRPSzRvQjlHL0wyWk9MVjcrYlRrTStRK1JYRTRBcnl3cHM2QldYZ2VxcUhWSkEwSGVsb0hWCnpOUGJURmtNc3RpRGVxazJRQjNaNUc5dHdUZzNrZTY2b1BtTVQrQzVjTlhTbldLekRYeGdzSklNNVc4cVVjek4KdXk4UnIwRUNnWUVBeGE2ZGdrM2R1NVhaNjkrN1FXQkZranR1b3RuU1ZEWTRUendLYWFZSGZUL3BHS2VIYmZJWApLbnQraWJWNko5WTdtMFhxeEtKRERNV1pUKzFwOUM1SGlZR0hLelhVclA2b3R0a3Ixd0dwN3NSeHVYUHV4YjBnCitJdXRmdlZiTUpVWm45cWlrSkxZbVdSTjhJOGtsdnZCbTIwbUc0dEVSbDdQVTBCYkE1WWlqSWNDZ1lFQThONmsKZzlaSmZxdVl1dm9kZ0E1alZWTEZid3dXUFJZRHduSHZHU0x1UUcxSzdpSzB0dDZoZUVSMjc2emJkZWx2RXRxZQpSVUFycVpBdWVGYWVjRjhCdjV3ZjRFaUJSZW1CWlRERUg3Z3JHc0RneXM3NTA1NmxSUVJOa1VkN1QxS1lYRU1XCkJKajlEZzlDUjhHZVQrb29Ba040MEErR2VEa1Nhek5DL1cxcW5qa0NnWUI3dGxtUVVKYXhiSWhpMnpOZktKYWgKZTF3endrbWt0Z0hyWkZISDZFWExscEdVQWxQNDlJYVc2WTQ1TkQ5c2F1QUd2bXk3L2lnaitBMklQYllQUUY4NApxTDBreDUxL1hpZkx0b0YvSHVWd0xiUldNVDErdG12SjMvQUdBaHE5ZnJING5tVWFRU3dZWXZONzFyazVXL2pBCkFrRFZBQVVNWFEwMnRwRyszdGhrUlFLQmdRQ3hNZGlzOC9OVk1EOUhMY0NOK0Flek9SVHRRR01MeFNvMjNVSWIKcDhyRnNxRXcxbTlES0R4NUVVUzl4Tmdkd2dCb1NsT3NkaXlvck56Q3dsWUVMS0JJcVQzNTdOek01WjYvSmtUaApZTWExQTdkYSt6Qm1NWXM3WHBNQmtTaHhqajF2Z2hxc2Z5K0tMRWVDS2ptZ2FJM09QSHlmOHd2bFhYYmpUZTYyCktNd0tZUUtCZ0VjRlpKaUxWTmN6cVpCRG5ZQnRNNFZjdGcyVUk5TUc1d0kyamNYVW8vejFRd1IzN0Z2Mk1WUUwKeUh5aHZpcWtCOWVzNTNDTjVEb0Fqc2lJRGdZb21qdHVQVkRKV2dydEJYS2IzblFVY2NpTWRGazRMaE5FWE13bApXM0l0VkZYNm41QjZicTlHNTNpOGNLYzROVGt0azZkYktWc3VTaXhSY1JsOGRLcmRwSnZyCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0tCg==
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
 kind: Secret
 metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong-validation-webhook-ca-keypair
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller-validation-webhook-ca-keypair
   namespace: default
 type: kubernetes.io/tls
 ---
 apiVersion: v1
 data:
-  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURlekNDQW1PZ0F3SUJBZ0lSQUtiQitpVTdHM21XUnVuOENoY0NBME13RFFZSktvWklodmNOQVFFTEJRQXcKSERFYU1CZ0dBMVVFQXhNUmEyOXVaeTFoWkcxcGMzTnBiMjR0WTJFd0hoY05NalF3TmpFek1UZzFOalU0V2hjTgpNelF3TmpFeE1UZzFOalU0V2pBNE1UWXdOQVlEVlFRREV5MWphR0Z5ZEhOdVlYQXRhMjl1WnkxMllXeHBaR0YwCmFXOXVMWGRsWW1odmIyc3VaR1ZtWVhWc2RDNXpkbU13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXcKZ2dFS0FvSUJBUURUVUpxNEh6bmoyT0dIbEQxdUhTN3NEUlF2aGdyM2lWZk1xSGN5M0JNbE02YUU4K2RnMkF1dAp5cHlmMWQxNUN1MHJEYTkxN2h6cmtMeWhEYkhwSDE5ZmZodk8rTXBlNEhnUWhPRkFXaWp0NElDZW9YcWRpWFo5CkpiVHdnbyt4c1hKT0QvWnVSQ2tZUndIdldXYUtkdXUxMS9JcklUQVY2VXlMaXZXZWVGS3hLQ21qSmxFMmQ4T3UKN2dVWFdmRUFNUUNNbWExS1ArTTh2K0piTGQxekNWaWEydjFIMjZFUWJZK20zNTBLQ29oa1ViLzRlb0NFNnIzbgpnTGRlQ250VlhXYVUyODRhRzZYWW5tYVdqNml6THBTTTNhMUFDTmlFcjN3UURDeWZYdzNYMVpua1dPWGRsMEVSCm9sK2hpY3hOOW52Y1ovQlRpcXkwajZ2UEtuZGtxNXREQWdNQkFBR2pnWnN3Z1pnd0RnWURWUjBQQVFIL0JBUUQKQWdXZ01CMEdBMVVkSlFRV01CUUdDQ3NHQVFVRkJ3TUJCZ2dyQmdFRkJRY0RBakFNQmdOVkhSTUJBZjhFQWpBQQpNQjhHQTFVZEl3UVlNQmFBRko4NFkvRktGd3M2MlVxQ05uSTk5dWYyUDFZek1EZ0dBMVVkRVFReE1DK0NMV05vCllYSjBjMjVoY0MxcmIyNW5MWFpoYkdsa1lYUnBiMjR0ZDJWaWFHOXZheTVrWldaaGRXeDBMbk4yWXpBTkJna3EKaGtpRzl3MEJBUXNGQUFPQ0FRRUFOdHgyMGxyL2dKRzNCeFNFTXNjR0xYa1d3R0VacHk5MVNPZFdIK05yeTVTcApHdUhBZHB1bnFENmtLVTJTTGRJNkhJTmhPZ2tpcVY1Vlh1SHFneFZJYWNNNUxFT0RPMVF3S2lncXNydHVFYXlZCncrbTl1N0J4RXRNRXl0K2NpNE5DSFYrTnA3NlNYRUFvNmVmbEo3aWV4SGNEeEJJeGtyMVB5eXhzalF2M3dFd0QKVCtPU0lIM09LVUdNTEJqNWRzbzVqM3ZnUXVqcHZDSGQzN3kveU84UXcvSFdEQjNSK3NRa3JsK25pWTM0TFN4dgpNRHR0N1ZqRjg3dFIybXhZOXIxcjBidnRkZG96TGxXVzM4OEFIeURwdEg4eWZVdllwdStWNytUQ0NNV3o1THl4CnNpamZ1TWp6RVBRVlNiQ2ZwczJHbXhSZHRxN1JNcUQzMVl1SnprUnB2QT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
-  tls.key: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb2dJQkFBS0NBUUVBMDFDYXVCODU0OWpoaDVROWJoMHU3QTBVTDRZSzk0bFh6S2gzTXR3VEpUT21oUFBuCllOZ0xyY3FjbjlYZGVRcnRLdzJ2ZGU0YzY1QzhvUTJ4NlI5ZlgzNGJ6dmpLWHVCNEVJVGhRRm9vN2VDQW5xRjYKbllsMmZTVzA4SUtQc2JGeVRnLzJia1FwR0VjQjcxbG1pbmJydGRmeUt5RXdGZWxNaTRyMW5uaFNzU2dwb3laUgpObmZEcnU0RkYxbnhBREVBakptdFNqL2pQTC9pV3kzZGN3bFltdHI5Ujl1aEVHMlBwdCtkQ2dxSVpGRy8rSHFBCmhPcTk1NEMzWGdwN1ZWMW1sTnZPR2h1bDJKNW1sbytvc3k2VWpOMnRRQWpZaEs5OEVBd3NuMThOMTlXWjVGamwKM1pkQkVhSmZvWW5NVGZaNzNHZndVNHFzdEkrcnp5cDNaS3ViUXdJREFRQUJBb0lCQUhOZndQbmlZck1hU1JqRApRVDhMeEFDeHEyRy9KK0c3SlNyaW1DSTJzbVZQYkEyUE5iZFVmaHZuVWRpYTVnOGVmaHRSbjRrZDlzQlBDQTVPCjhlSThkTkFvaEhwZXIrOVpVM1NCZUpLd0owU3BuTS8vam5qUkF0YVZiZE1iRmVXSTRzWG9SVDR6RE5UcWdBMzAKbTkzaHpCUSswVVBuSE4vNXZ3YzVXWjJxU0V2Y2ljVy9oY0MxMlNOU3k4YkIzTjl6MmFSZEdrd293Wjl6UGgybQo1NWlHa3hwTWxFKzJmMktqdTg4bEZFNUlRcTJ0YkhEeXE3RVJYeGN5UEU2YVdIOXZWdDI4OFRGSmNiMTljalRlCjB2K0ZLRmNOY0owZnRjZTRRNlYyeGJXUXcvRmhIVWJFcnJhblVOMjAyMUFGamIydkMyVG4vZlJYYW5JM05YTG4KU1hYOXJ5RUNnWUVBNDdXL2lYcHVrNDBFa2VYdE9GVnE2RHpWWEhMck1UVFJKUEhMcHJodHVOV0h6Q0g0OEVZcApPYXpCc0dZWjIxSnUzVXRSbzFqSXRZdWdRZXJBWmlRVEZYV2VEYzdyZnlUQTAyOTRTa2Zpa01BRzZBZTA5UzFZCk5hUUxMWFUrUmhKbHVIeXRscnVhL2NWRXdEWGhtNCtBTTZiTTQ1aVlKRTlLd3J2M3FNcjNuL2tDZ1lFQTdaRnEKTUhXZjhvWS9CZ0ZaZHRubTdRM3BmL09EQThwWFRFUFlIQ1dxYUdkTnZHWmJBWXFPUzVGMG1OM1ViR2lWUHFNSgpDVlRaTDJBSCs4TC8ydFFHdURsYk5Ob2t1YkRoZTdvUWkyQUk1SmRMOW1HYlFSVXBmY0dZdURnQkZ2aEUxYS9VClFDQ2o0V1BEUUZpYkRuck4yRHFBOGJaMWUyQ011cVJUL0pnaW5Cc0NnWUFaQTFyeDRCZ0xiejhrUTZ5R05xUFMKdFBQKy9zU2xHQmN0UnI1SEp4VXVhNDVLTnlVZ1I2UzVxQ2R5bUJTWkNmb1JwdmRseVJmckVWWmVSMG94TGg5RwppUy8rZGs5YUhSQnRhVjQrVXAwcHAxNWEySlhoSk1UK3gzRk80Z1VnTDE4ckg4NzFzcy80dGxXeUEza3YzRmlKCjAvWEh2bmhmN0xIYXFFa3hLbkovQ1FLQmdGUmRCRkdySTU2elQ2UXBUSVRwUXBsQ0RINTBrajBCV05qcmFzNHMKRGdTL1VwcXAybjJFbjUxMFRPeVFNZ1JCYTJadjdTQ1VNZ0FoNFJQbG5vZ3VMU2kwclkvcU80cDVwc2tTUFJmUgpoYmJ2aDNrNkZqRVplNzk5eFdiOTlGMGMwd3p6UUxONUk5bEJYUy8zaHpDd0tYTTA2MTlxeFBPSVNORnEwNnhxCnRqZXJBb0dBSmZPMzN2Tk9Ca1RQQnZoaDYyZlE1WmF2VUpvMDhUQ29ZSjdqNnFqT3dSSXI2SVUxbVFUNUhUTUIKZ2RpQlZmVUlVZGhGVTBxZGVraDhua25KWjRWQ2svL0tKRVRLRHpSaXZQd0dvQldpbElIWjAzRytPOHRDeWRLeApkSzNmaDVjTGk3SHFTSXRvazloZnZURVRsUDZ1N1VMOFpNOVRGTnlMK1k1M3UrSmt0Um89Ci0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0tCg==
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
 kind: Secret
 metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong-validation-webhook-keypair
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller-validation-webhook-keypair
+  namespace: default
+type: kubernetes.io/tls
+---
+apiVersion: v1
+data:
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: controller
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller-admin-api-keypair
+  namespace: default
+type: kubernetes.io/tls
+---
+apiVersion: v1
+data:
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: controller
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller-admin-api-ca-keypair
   namespace: default
 type: kubernetes.io/tls
 ---
@@ -48,11 +92,27 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller
 rules:
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - kongcustomentities
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - kongcustomentities/status
+    verbs:
+      - get
+      - patch
+      - update
   - apiGroups:
       - configuration.konghq.com
     resources:
@@ -328,17 +388,17 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: chartsnap-kong
+  name: chartsnap-controller
 subjects:
   - kind: ServiceAccount
-    name: chartsnap-kong
+    name: chartsnap-controller
     namespace: default
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -347,10 +407,10 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller
   namespace: default
 rules:
   - apiGroups:
@@ -411,18 +471,18 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller
   namespace: default
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: chartsnap-kong
+  name: chartsnap-controller
 subjects:
   - kind: ServiceAccount
-    name: chartsnap-kong
+    name: chartsnap-controller
     namespace: default
 ---
 apiVersion: v1
@@ -431,10 +491,10 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong-validation-webhook
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller-validation-webhook
   namespace: default
 spec:
   ports:
@@ -446,9 +506,9 @@ spec:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
+    helm.sh/chart: controller-2.39.0
 ---
 apiVersion: v1
 kind: Service
@@ -456,10 +516,34 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: gateway
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong-manager
+    helm.sh/chart: gateway-2.39.0
+  name: chartsnap-gateway-admin
+  namespace: default
+spec:
+  clusterIP: None
+  ports:
+    - name: kong-admin-tls
+      port: 8444
+      protocol: TCP
+      targetPort: 8444
+  selector:
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/name: gateway
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: gateway
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: gateway-2.39.0
+  name: chartsnap-gateway-manager
   namespace: default
 spec:
   ports:
@@ -474,7 +558,7 @@ spec:
   selector:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: chartsnap
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: gateway
   type: NodePort
 ---
 apiVersion: v1
@@ -483,11 +567,11 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: gateway
     app.kubernetes.io/version: "3.6"
     enable-metrics: "true"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong-proxy
+    helm.sh/chart: gateway-2.39.0
+  name: chartsnap-gateway-proxy
   namespace: default
 spec:
   ports:
@@ -502,7 +586,7 @@ spec:
   selector:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: chartsnap
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: gateway
   type: LoadBalancer
 ---
 apiVersion: apps/v1
@@ -512,10 +596,10 @@ metadata:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller
   namespace: default
 spec:
   replicas: 1
@@ -523,21 +607,23 @@ spec:
     matchLabels:
       app.kubernetes.io/component: app
       app.kubernetes.io/instance: chartsnap
-      app.kubernetes.io/name: kong
+      app.kubernetes.io/name: controller
   template:
     metadata:
       annotations:
         kuma.io/gateway: enabled
-        kuma.io/service-account-token-volume: chartsnap-kong-token
+        kuma.io/service-account-token-volume: chartsnap-controller-token
+        traffic.kuma.io/exclude-outbound-ports: "8444"
+        traffic.sidecar.istio.io/excludeOutboundPorts: "8444"
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
-        app: chartsnap-kong
+        app: chartsnap-controller
         app.kubernetes.io/component: app
         app.kubernetes.io/instance: chartsnap
         app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: kong
+        app.kubernetes.io/name: controller
         app.kubernetes.io/version: "3.6"
-        helm.sh/chart: kong-2.38.0
+        helm.sh/chart: controller-2.39.0
         version: "3.6"
     spec:
       automountServiceAccountToken: false
@@ -556,17 +642,23 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_ADMISSION_WEBHOOK_LISTEN
               value: 0.0.0.0:8080
+            - name: CONTROLLER_ANONYMOUS_REPORTS
+              value: "false"
             - name: CONTROLLER_ELECTION_ID
               value: kong-ingress-controller-leader-kong
             - name: CONTROLLER_INGRESS_CLASS
               value: kong
+            - name: CONTROLLER_KONG_ADMIN_SVC
+              value: default/chartsnap-gateway-admin
+            - name: CONTROLLER_KONG_ADMIN_TLS_CLIENT_CERT_FILE
+              value: /etc/secrets/admin-api-cert/tls.crt
+            - name: CONTROLLER_KONG_ADMIN_TLS_CLIENT_KEY_FILE
+              value: /etc/secrets/admin-api-cert/tls.key
             - name: CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY
               value: "true"
-            - name: CONTROLLER_KONG_ADMIN_URL
-              value: https://localhost:8444
             - name: CONTROLLER_PUBLISH_SERVICE
-              value: default/chartsnap-kong-proxy
-          image: kong/kubernetes-ingress-controller:3.1
+              value: default/chartsnap-gateway-proxy
+          image: kong/kubernetes-ingress-controller:3.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -615,8 +707,82 @@ spec:
               name: webhook-cert
               readOnly: true
             - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-              name: chartsnap-kong-token
+              name: chartsnap-controller-token
               readOnly: true
+            - mountPath: /etc/secrets/admin-api-cert
+              name: admin-api-cert
+              readOnly: true
+      securityContext: {}
+      serviceAccountName: chartsnap-controller
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - emptyDir:
+            sizeLimit: 256Mi
+          name: chartsnap-controller-prefix-dir
+        - emptyDir:
+            sizeLimit: 1Gi
+          name: chartsnap-controller-tmp
+        - name: chartsnap-controller-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  expirationSeconds: 3607
+                  path: token
+              - configMap:
+                  items:
+                    - key: ca.crt
+                      path: ca.crt
+                  name: kube-root-ca.crt
+              - downwardAPI:
+                  items:
+                    - fieldRef:
+                        apiVersion: v1
+                        fieldPath: metadata.namespace
+                      path: namespace
+        - name: webhook-cert
+          secret:
+            secretName: chartsnap-controller-validation-webhook-keypair
+        - name: admin-api-cert
+          secret:
+            secretName: chartsnap-controller-admin-api-keypair
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: gateway
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: gateway-2.39.0
+  name: chartsnap-gateway
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: app
+      app.kubernetes.io/instance: chartsnap
+      app.kubernetes.io/name: gateway
+  template:
+    metadata:
+      annotations:
+        kuma.io/gateway: enabled
+        kuma.io/service-account-token-volume: chartsnap-gateway-token
+        traffic.sidecar.istio.io/includeInboundPorts: ""
+      labels:
+        app: chartsnap-gateway
+        app.kubernetes.io/component: app
+        app.kubernetes.io/instance: chartsnap
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: gateway
+        app.kubernetes.io/version: "3.6"
+        helm.sh/chart: gateway-2.39.0
+        version: "3.6"
+    spec:
+      automountServiceAccountToken: false
+      containers:
         - env:
             - name: KONG_ADMIN_ACCESS_LOG
               value: /dev/stdout
@@ -627,13 +793,13 @@ spec:
             - name: KONG_ADMIN_GUI_ERROR_LOG
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
-              value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
+              value: 0.0.0.0:8444 http2 ssl, [::]:8444 http2 ssl
+            - name: KONG_ANONYMOUS_REPORTS
+              value: "off"
             - name: KONG_CLUSTER_LISTEN
               value: "off"
             - name: KONG_DATABASE
               value: "off"
-            - name: KONG_KIC
-              value: "on"
             - name: KONG_LUA_PACKAGE_PATH
               value: /opt/?.lua;/opt/?/init.lua;;
             - name: KONG_NGINX_WORKER_PROCESSES
@@ -656,6 +822,8 @@ spec:
               value: /dev/stdout basic
             - name: KONG_PROXY_STREAM_ERROR_LOG
               value: /dev/stderr
+            - name: KONG_ROLE
+              value: traditional
             - name: KONG_ROUTER_FLAVOR
               value: traditional
             - name: KONG_STATUS_ACCESS_LOG
@@ -689,6 +857,9 @@ spec:
             timeoutSeconds: 5
           name: proxy
           ports:
+            - containerPort: 8444
+              name: admin-tls
+              protocol: TCP
             - containerPort: 8000
               name: proxy
               protocol: TCP
@@ -721,9 +892,9 @@ spec:
               type: RuntimeDefault
           volumeMounts:
             - mountPath: /kong_prefix/
-              name: chartsnap-kong-prefix-dir
+              name: chartsnap-gateway-prefix-dir
             - mountPath: /tmp
-              name: chartsnap-kong-tmp
+              name: chartsnap-gateway-tmp
       initContainers:
         - command:
             - rm
@@ -739,13 +910,13 @@ spec:
             - name: KONG_ADMIN_GUI_ERROR_LOG
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
-              value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
+              value: 0.0.0.0:8444 http2 ssl, [::]:8444 http2 ssl
+            - name: KONG_ANONYMOUS_REPORTS
+              value: "off"
             - name: KONG_CLUSTER_LISTEN
               value: "off"
             - name: KONG_DATABASE
               value: "off"
-            - name: KONG_KIC
-              value: "on"
             - name: KONG_LUA_PACKAGE_PATH
               value: /opt/?.lua;/opt/?/init.lua;;
             - name: KONG_NGINX_WORKER_PROCESSES
@@ -768,6 +939,8 @@ spec:
               value: /dev/stdout basic
             - name: KONG_PROXY_STREAM_ERROR_LOG
               value: /dev/stderr
+            - name: KONG_ROLE
+              value: traditional
             - name: KONG_ROUTER_FLAVOR
               value: traditional
             - name: KONG_STATUS_ACCESS_LOG
@@ -794,20 +967,20 @@ spec:
               type: RuntimeDefault
           volumeMounts:
             - mountPath: /kong_prefix/
-              name: chartsnap-kong-prefix-dir
+              name: chartsnap-gateway-prefix-dir
             - mountPath: /tmp
-              name: chartsnap-kong-tmp
+              name: chartsnap-gateway-tmp
       securityContext: {}
-      serviceAccountName: chartsnap-kong
+      serviceAccountName: chartsnap-gateway
       terminationGracePeriodSeconds: 30
       volumes:
         - emptyDir:
             sizeLimit: 256Mi
-          name: chartsnap-kong-prefix-dir
+          name: chartsnap-gateway-prefix-dir
         - emptyDir:
             sizeLimit: 1Gi
-          name: chartsnap-kong-tmp
-        - name: chartsnap-kong-token
+          name: chartsnap-gateway-tmp
+        - name: chartsnap-gateway-token
           projected:
             sources:
               - serviceAccountToken:
@@ -824,9 +997,6 @@ spec:
                         apiVersion: v1
                         fieldPath: metadata.namespace
                       path: namespace
-        - name: webhook-cert
-          secret:
-            secretName: chartsnap-kong-validation-webhook-keypair
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
@@ -834,18 +1004,70 @@ metadata:
   labels:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
+    app.kubernetes.io/name: controller
     app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.38.0
-  name: chartsnap-kong-validations
+    helm.sh/chart: controller-2.39.0
+  name: chartsnap-controller-validations
   namespace: default
 webhooks:
   - admissionReviewVersions:
+      - v1
+    clientConfig:
+      caBundle: '###DYNAMIC_FIELD###'
+      service:
+        name: chartsnap-controller-validation-webhook
+        namespace: default
+    failurePolicy: Ignore
+    matchPolicy: Equivalent
+    name: secrets.credentials.validation.ingress-controller.konghq.com
+    objectSelector:
+      matchExpressions:
+        - key: konghq.com/credential
+          operator: Exists
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - secrets
+    sideEffects: None
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      caBundle: '###DYNAMIC_FIELD###'
+      service:
+        name: chartsnap-controller-validation-webhook
+        namespace: default
+    failurePolicy: Ignore
+    matchPolicy: Equivalent
+    name: secrets.plugins.validation.ingress-controller.konghq.com
+    objectSelector:
+      matchExpressions:
+        - key: owner
+          operator: NotIn
+          values:
+            - helm
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - secrets
+    sideEffects: None
+  - admissionReviewVersions:
       - v1beta1
     clientConfig:
-      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKRENDQWd5Z0F3SUJBZ0lSQVBQYTBSOTd4d0xqMHI5d3R0L3REU2N3RFFZSktvWklodmNOQVFFTEJRQXcKSERFYU1CZ0dBMVVFQXhNUmEyOXVaeTFoWkcxcGMzTnBiMjR0WTJFd0hoY05NalF3TmpFek1UZzFOalUzV2hjTgpNelF3TmpFeE1UZzFOalUzV2pBY01Sb3dHQVlEVlFRREV4RnJiMjVuTFdGa2JXbHpjMmx2YmkxallUQ0NBU0l3CkRRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFMbi9vQ0JxdWpIN1Z6d1FnelJ1Z2xoWWhYSkQKWmpZUGd4Tm1IK0c2QzZFYmRBU0VtMkV4MktBdFVMeFJvSkwybzlrK1BVZnhzQ2JQZG80bGtvemtwNXBZRGQwSgprcHhGRFBjRlJoUUw4NTk5bkpjZEpBRkJKTUw1UkM2cEUvci9ZR1MyeFIydnJzTURlM1QzZ2V3QkkrVUovc1RTCk5Rd2VtSUNjWWhOZnRKUVRCeFBGcW41a3drMGV0ZDhOVDBXaDBBWjFwRUZwNEVVekgrdUEyMmZmb1RHR3ZWYjcKRzl2NUx4MzlFMUNhTHZZUnRZQkg1S1cvbGxVeXdFeHRmRlNFNnl0L2lpRUxxbE0yQlc2anlXU2lTdmtpajRXWApUeVRhQkNwUnNzL2M5a0t4OUQxU3J1bnhuTUtxcHBQK25ZNzlnWHJaaURkekFocE9MQzRLQkd0U25BOENBd0VBCkFhTmhNRjh3RGdZRFZSMFBBUUgvQkFRREFnS2tNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUYKQlFjREFqQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCU2ZPR1B4U2hjTE90bEtnalp5UGZibgo5ajlXTXpBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQUFTczBZb2Nmc1VQRjM4alBOSmxyMjJibnNIZHJQTGFCCkpaUG9UY1NMd0pHYWI1ZDIvTFJUQlJCWHltWXJWdEIrazhia1ZVdWkxWmMyMzRkaFVYNDYvQW1GT0NHN3duKzAKUTZhdmRUcFppRlY3V3dSRkM2c21aTjkrMG14WUx0aXUrY01yUE9WeHdNeVZpV09JOXNFeEpoVm9EVm5NY1ZzNQpGZmw1SURDaDZaRVpGRk1NQXpsa3haSUNIVTA1enJSNDErcFRua2dTZDh2Z21SODNxdTc0T2RqeGtOb25DdUdRCk5vSTdsTDM0RUNMT2kwLzBPajR6aHQxNTRFMTloMUJiL3krSUh1cWgwQzNMdHpzNDJoei9uYjlCbXlQMEc0d0sKaWlQQWFSNHZycWVzTWd6YWQzYWNIYmdIVDNTQkJmVzFrMWVwWWZqaUFmS2NMWU8xWjdhSG5BPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+      caBundle: '###DYNAMIC_FIELD###'
       service:
-        name: chartsnap-kong-validation-webhook
+        name: chartsnap-controller-validation-webhook
         namespace: default
     failurePolicy: Ignore
     name: validations.kong.konghq.com
@@ -876,7 +1098,6 @@ webhooks:
           - CREATE
           - UPDATE
         resources:
-          - secrets
           - services
       - apiGroups:
           - networking.k8s.io
