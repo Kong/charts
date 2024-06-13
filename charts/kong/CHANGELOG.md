@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+Nothing yet.
+
+## 2.39.2
+
+### Fixed
+
+* Fixes `KongLicense` policy rules for Ingress controller when using `watchNamespaces`
+  [#1084](https://github.com/Kong/charts/pull/1084)
+
 ## 2.39.1
 
 ### Fixed
