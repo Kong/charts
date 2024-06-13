@@ -57,4 +57,6 @@ _chartsnap.ingress:
 
 .PHONY: _chartsnap
 _chartsnap: chartsnap
+	@ helm repo update
+	@ helm dependencies update charts/ingress
 	@ helm chartsnap -c ./charts/$(GOLDEN_TEST_CHART) -f $(GOLDEN_TEST_CHART_VALUES_DIR) $(CHARTSNAP_ARGS)
