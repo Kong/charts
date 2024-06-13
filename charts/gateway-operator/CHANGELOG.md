@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.9
+
+### Fixes
+
+- Fix missing `customentities` RBAC policy rules in operator's manager-role
+  [#1089](https://github.com/Kong/charts/pull/1089)
+- Bump KIC's CRDs to 3.2.0
+  [#1089](https://github.com/Kong/charts/pull/1089)
+
 ## 0.1.8
 
 ### Features
