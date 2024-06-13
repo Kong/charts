@@ -44,6 +44,23 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  creationTimestamp: null
+  name: {{ template "kong.fullname" . }}-kong-mtls-secret-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - create
+  - patch
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
   name: {{ template "kong.fullname" . }}-manager-role
 rules:
 - apiGroups:
@@ -173,6 +190,22 @@ rules:
   - configuration.konghq.com
   resources:
   - kongconsumers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongcustomentities
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongcustomentities/status
   verbs:
   - get
   - patch
@@ -737,23 +770,6 @@ rules:
   - create
   - delete
   - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  creationTimestamp: null
-  name: {{ template "kong.fullname" . }}-kong-mtls-secret-role
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - list
-  - create
-  - patch
-  - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

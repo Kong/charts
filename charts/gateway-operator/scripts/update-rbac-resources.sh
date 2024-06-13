@@ -40,25 +40,35 @@ then
   exit 1
 fi
 
+SED=sed
+if [[ $(uname -s) == "Darwin" ]]; then
+  if gsed --version 2>&1 >/dev/null ; then
+    SED=gsed
+  else
+    echo "GNU sed is required on macOS. You can install it via Homebrew with 'brew install gnu-sed'."
+    exit 1
+  fi
+fi
+
 # create a function named update_rbac_resources
 function update_rbac_resources {
   # build the kustomize resources
   kustomize build $KGO_REPO_PATH/config/rbac > /tmp/rbac-resources.yaml
 
   # replace the namespace
-  sed -i 's/namespace: kong-system/namespace: {{ template "kong.namespace" . }}/g' /tmp/rbac-resources.yaml
+  ${SED} -i 's/namespace: kong-system/namespace: {{ template "kong.namespace" . }}/g' /tmp/rbac-resources.yaml
 
   # replace the service account name
-  sed -i 's/name: controller-manager$/name: {{ template "kong.serviceAccountName" . }}/g' /tmp/rbac-resources.yaml
+  ${SED} -i 's/name: controller-manager$/name: {{ template "kong.serviceAccountName" . }}/g' /tmp/rbac-resources.yaml
 
   # replace the role name
-  sed -i 's/name: gateway-operator-manager-role/name: {{ template "kong.fullname" . }}-manager-role/g' /tmp/rbac-resources.yaml
+  ${SED} -i 's/name: gateway-operator-manager-role/name: {{ template "kong.fullname" . }}-manager-role/g' /tmp/rbac-resources.yaml
 
   # replace the metrics service name
-  sed -i 's/name: controller-manager-metrics-service/name: {{ template "kong.fullname" . }}-metrics-service/g' /tmp/rbac-resources.yaml
+  ${SED} -i 's/name: controller-manager-metrics-service/name: {{ template "kong.fullname" . }}-metrics-service/g' /tmp/rbac-resources.yaml
 
   # replace the name of the resources
-  sed -i '/name: {{\|name: https/!s/name: /name: {{ template "kong.fullname" . }}-/g' /tmp/rbac-resources.yaml
+  ${SED} -i '/name: {{\|name: https/!s/name: /name: {{ template "kong.fullname" . }}-/g' /tmp/rbac-resources.yaml
 
   # copy the contents of the file except for the Service Account resource
   (head -n 4 $CHARTS_REPO_PATH/charts/gateway-operator/templates/rbac-resources.yaml && tail -n +6 /tmp/rbac-resources.yaml) > /tmp/new-rbac-resources.yaml
