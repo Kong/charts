@@ -10,7 +10,5 @@ ingressController:
 # - to speed up, the test
 # - to prevent anonymous reports from being sent
 readinessProbe:
-  httpGet:
-    scheme: HTTP
   initialDelaySeconds: 1
   periodSeconds: 1
