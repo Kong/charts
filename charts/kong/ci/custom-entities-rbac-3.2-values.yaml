@@ -1,6 +1,3 @@
-env:
-  anonymous_reports: "off"
-
 ingressController:
   env:
     anonymous_reports: "false"
@@ -10,6 +7,9 @@ ingressController:
     # Unreleased yet so use the nightly and the effective semver
     effectiveSemver: "3.2"
 
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
 readinessProbe:
   httpGet:
     path: "/status"
@@ -17,3 +17,6 @@ readinessProbe:
     scheme: HTTP
   initialDelaySeconds: 1
   periodSeconds: 1
+
+env:
+  anonymous_reports: "off"

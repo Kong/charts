@@ -33,3 +33,14 @@ dblessConfig:
         - name: example
           paths:
           - "/example"
+
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  httpGet:
+    path: "/status"
+    port: status
+    scheme: HTTP
+  initialDelaySeconds: 1
+  periodSeconds: 1
