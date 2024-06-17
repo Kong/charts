@@ -688,7 +688,7 @@ spec:
               value: "off"
             - name: KONG_NGINX_DAEMON
               value: "off"
-          image: kong:3.4.1
+          image: kong:3.4
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -724,8 +724,8 @@ spec:
               path: /status/ready
               port: status
               scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 1
+            periodSeconds: 1
             successThreshold: 1
             timeoutSeconds: 5
           resources: {}
@@ -800,7 +800,7 @@ spec:
               value: 0.0.0.0:8100, [::]:8100
             - name: KONG_STREAM_LISTEN
               value: "off"
-          image: kong:3.4.1
+          image: kong:3.4
           imagePullPolicy: IfNotPresent
           name: clear-stale-pid
           resources: {}

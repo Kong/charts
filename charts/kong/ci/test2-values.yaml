@@ -78,3 +78,10 @@ extraObjects:
     name: env-config
   data:
     test-env: test
+
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1

@@ -11,51 +11,6 @@ metadata:
   namespace: default
 ---
 apiVersion: v1
-data:
-  kong.yml: |
-    _format_version: "1.1"
-    services:
-    - name: example.com
-      url: http://example.com
-      routes:
-      - name: example
-        paths:
-        - "/example"
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/instance: chartsnap
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.39.2
-  name: chartsnap-kong-custom-dbless-config
-  namespace: default
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/instance: chartsnap
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
-    helm.sh/chart: kong-2.39.2
-  name: chartsnap-kong-admin
-  namespace: default
-spec:
-  ports:
-    - name: kong-admin-tls
-      port: 8444
-      protocol: TCP
-      targetPort: 8444
-  selector:
-    app.kubernetes.io/component: app
-    app.kubernetes.io/instance: chartsnap
-    app.kubernetes.io/name: kong
-  type: ClusterIP
----
-apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -132,7 +87,6 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/dbless.config: 626be043e4a43b0d55af934d06216254abe132b29af82450379439ecd927219a
         kuma.io/gateway: enabled
         kuma.io/service-account-token-volume: chartsnap-kong-token
         traffic.sidecar.istio.io/includeInboundPorts: ""
@@ -158,15 +112,13 @@ spec:
             - name: KONG_ADMIN_GUI_ERROR_LOG
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
-              value: 0.0.0.0:8444 http2 ssl, [::]:8444 http2 ssl
+              value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
             - name: KONG_ANONYMOUS_REPORTS
               value: "off"
             - name: KONG_CLUSTER_LISTEN
               value: "off"
             - name: KONG_DATABASE
               value: "off"
-            - name: KONG_DECLARATIVE_CONFIG
-              value: /kong_dbless/kong.yml
             - name: KONG_LUA_PACKAGE_PATH
               value: /opt/?.lua;/opt/?/init.lua;;
             - name: KONG_NGINX_WORKER_PROCESSES
@@ -201,7 +153,7 @@ spec:
               value: "off"
             - name: KONG_NGINX_DAEMON
               value: "off"
-          image: kong:3.6
+          image: kong/kong-gateway:3.4
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -222,9 +174,6 @@ spec:
             timeoutSeconds: 5
           name: proxy
           ports:
-            - containerPort: 8444
-              name: admin-tls
-              protocol: TCP
             - containerPort: 8000
               name: proxy
               protocol: TCP
@@ -260,8 +209,6 @@ spec:
               name: chartsnap-kong-prefix-dir
             - mountPath: /tmp
               name: chartsnap-kong-tmp
-            - mountPath: /kong_dbless/
-              name: kong-custom-dbless-config-volume
       initContainers:
         - command:
             - rm
@@ -277,15 +224,13 @@ spec:
             - name: KONG_ADMIN_GUI_ERROR_LOG
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
-              value: 0.0.0.0:8444 http2 ssl, [::]:8444 http2 ssl
+              value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
             - name: KONG_ANONYMOUS_REPORTS
               value: "off"
             - name: KONG_CLUSTER_LISTEN
               value: "off"
             - name: KONG_DATABASE
               value: "off"
-            - name: KONG_DECLARATIVE_CONFIG
-              value: /kong_dbless/kong.yml
             - name: KONG_LUA_PACKAGE_PATH
               value: /opt/?.lua;/opt/?/init.lua;;
             - name: KONG_NGINX_WORKER_PROCESSES
@@ -318,7 +263,7 @@ spec:
               value: 0.0.0.0:8100, [::]:8100
             - name: KONG_STREAM_LISTEN
               value: "off"
-          image: kong:3.6
+          image: kong/kong-gateway:3.4
           imagePullPolicy: IfNotPresent
           name: clear-stale-pid
           resources: {}
@@ -337,8 +282,6 @@ spec:
               name: chartsnap-kong-prefix-dir
             - mountPath: /tmp
               name: chartsnap-kong-tmp
-            - mountPath: /kong_dbless/
-              name: kong-custom-dbless-config-volume
       securityContext: {}
       serviceAccountName: chartsnap-kong
       terminationGracePeriodSeconds: 30
@@ -366,6 +309,3 @@ spec:
                         apiVersion: v1
                         fieldPath: metadata.namespace
                       path: namespace
-        - configMap:
-            name: chartsnap-kong-custom-dbless-config
-          name: kong-custom-dbless-config-volume

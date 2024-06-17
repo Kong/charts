@@ -827,8 +827,8 @@ spec:
               path: /status/ready
               port: status
               scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 1
+            periodSeconds: 1
             successThreshold: 1
             timeoutSeconds: 5
           resources: {}

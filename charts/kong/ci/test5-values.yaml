@@ -43,3 +43,10 @@ updateStrategy:
   rollingUpdate:
     maxSurge: 1
     maxUnavailable: 0
+
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
