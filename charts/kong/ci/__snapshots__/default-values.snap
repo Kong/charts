@@ -721,11 +721,11 @@ spec:
           readinessProbe:
             failureThreshold: 3
             httpGet:
-              path: /status/ready
+              path: /status
               port: status
               scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 1
+            periodSeconds: 1
             successThreshold: 1
             timeoutSeconds: 5
           resources: {}

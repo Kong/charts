@@ -657,6 +657,8 @@ spec:
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
               value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
+            - name: KONG_ANONYMOUS_REPORTS
+              value: "off"
             - name: KONG_CLUSTER_LISTEN
               value: "off"
             - name: KONG_DATABASE
@@ -730,11 +732,11 @@ spec:
           readinessProbe:
             failureThreshold: 3
             httpGet:
-              path: /status/ready
+              path: /status
               port: status
               scheme: HTTP
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            initialDelaySeconds: 1
+            periodSeconds: 1
             successThreshold: 1
             timeoutSeconds: 5
           resources: {}
@@ -769,6 +771,8 @@ spec:
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
               value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
+            - name: KONG_ANONYMOUS_REPORTS
+              value: "off"
             - name: KONG_CLUSTER_LISTEN
               value: "off"
             - name: KONG_DATABASE
