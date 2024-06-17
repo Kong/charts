@@ -73,8 +73,6 @@ deployment:
 # - to prevent anonymous reports from being sent
 readinessProbe:
   httpGet:
-    path: "/status"
-    port: status
     scheme: HTTP
   initialDelaySeconds: 1
   periodSeconds: 1

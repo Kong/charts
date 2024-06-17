@@ -730,7 +730,7 @@ spec:
           readinessProbe:
             failureThreshold: 3
             httpGet:
-              path: /status
+              path: /status/ready
               port: status
               scheme: HTTP
             initialDelaySeconds: 1
