@@ -6,8 +6,6 @@ autoscaling:
     - --alsologtostderr
 # - ingressController deploys without a database (default)
 ingressController:
-  env:
-    anonymous_reports: "false"
   enabled: true
 # - webhook is enabled and deploys
   admissionWebhook:
