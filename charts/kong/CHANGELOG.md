@@ -4,6 +4,15 @@
 
 Nothing yet.
 
+## 2.39.3
+
+### Fixed
+
+* `KONG_ADMIN_GUI_SESSION_CONF` is not populated only when `enterprise.rbac.admin_gui_auth`
+  is set to `openid-connect`. The default value of `enterprise.rbac.session_conf_secret` is
+  restored to `kong-session-config` to avoid breaking changes.
+  [#1093](https://github.com/Kong/charts/pull/1093)
+
 ## 2.39.2
 
 ### Fixed
