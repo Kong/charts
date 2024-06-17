@@ -1,0 +1,107 @@
+image:
+  repository: docker.io/kong/gateway-operator
+  tag: 1.2
+
+kubeRBACProxy:
+  # Additional pod containers in the controller.
+  image: gcr.io/kubebuilder/kube-rbac-proxy
+  tag: v0.8.0
+  # Use this section to customize the requests and limits of kube-rbac-proxy
+  resources:
+    limits:
+      cpu: 500m
+      memory: 128Mi
+    requests:
+      cpu: 5m
+      memory: 64Mi
+
+ # Override namespace for gateway-operator chart resources. By default, the chart creates resources in the release namespace.
+# namespace: kong-system
+
+replicaCount: 1
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: controller-manager
+
+test:
+  enabled: false
+
+# This section can be used to configure some extra labels that will be added to each Kubernetes object generated.
+extraLabels: {}
+
+# Labels to be added to KGO pods
+podLabels: {}
+
+# Install KIC's CRDs
+kic-crds:
+  enabled: true
+
+# Install Gateway API standard CRDs
+gwapi-standard-crds:
+  enabled: true
+
+# Install Gateway API experimental CRDs
+gwapi-experimental-crds:
+  enabled: false
+
+# Customize gateway-operator livenessProbe.
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8081
+  initialDelaySeconds: 15
+  periodSeconds: 20
+# Customize gateway-operator readinessProbe.
+readinessProbe:
+  httpGet:
+    path: /readyz
+    port: 8081
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+# Use this section to customize the requests and limits of gateway-operator
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 10m
+    memory: 128Mi
+
+# Use this section to add environment variables to operator's container
+# NOTE: This is mutually exclusive with the args sections.
+# When both an env and a corresponding arg are provided, the arg will take precedence.
+env: {}
+  # # gateway controller
+  # enable_controller_gateway: true
+  # # controlPlane controller
+  # enable_controller_controlplane: true
+  # # dataplane controller. mutually exclusive with dataplane bluegreen controller
+  # enable_controller_dataplane: true
+  # # dataplane bluegreen controller. mutually exclusive with dataplane controller
+  # enable_controller_dataplane_bluegreen: true
+  # # aigateway controller. (experimental)
+  # enable_controller_aigateway: false
+  # # konglicense controller. (EE only)
+  # enable_controller_konglicense: true
+  # # controlplane extensions controller. (EE only)
+  # enable_controller_controlplaneextensions: true
+
+# This section is any customer specific environments variables that doesn't require CONTROLLER_ prefix.
+# Example as below, uncomment if required and add additional attributes as required.
+# customEnv:
+#   TZ: "Europe/Berlin"
+
+# Use this section to add extra args to the operator's container.
+# NOTE: This is a list of strings, so each arg should be a separate item in the list.
+# NOTE: This is mutually exclusive with the env and customEnv sections.
+# When both an env and a corresponding arg are provided, the arg will take precedence.
+args: []
+
+# Use this section to change the certs-dir emptyDir size
+certsDir:
+  sizeLimit: 256Mi

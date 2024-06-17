@@ -41,6 +41,91 @@ metadata:
   {{- end }}
   {{- end }}
 webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    {{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
+    caBundle: {{ b64enc $caCert }}
+    {{- else }}
+    {{- if .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    caBundle: {{ b64enc .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    {{- end }}
+    {{- end }}
+    service:
+      name: {{ template "kong.service.validationWebhook" . }}
+      namespace: {{ template "kong.namespace" . }}
+  failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
+  matchPolicy: Equivalent
+  name: secrets.credentials.validation.ingress-controller.konghq.com
+  {{- with .Values.ingressController.admissionWebhook.namespaceSelector }}
+  namespaceSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.ingressController.admissionWebhook.timeoutSeconds }}
+  timeoutSeconds: {{ . }}
+  {{- end }}
+  objectSelector:
+    matchExpressions:
+    - key: "konghq.com/credential"
+      operator: "Exists"
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - secrets
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    {{- if not .Values.ingressController.admissionWebhook.certificate.provided }}
+    caBundle: {{ b64enc $caCert }}
+    {{- else }}
+    {{- if .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    caBundle: {{ b64enc .Values.ingressController.admissionWebhook.certificate.caBundle }}
+    {{- end }}
+    {{- end }}
+    service:
+      name: {{ template "kong.service.validationWebhook" . }}
+      namespace: {{ template "kong.namespace" . }}
+  failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
+  matchPolicy: Equivalent
+  name: secrets.plugins.validation.ingress-controller.konghq.com
+  {{- with .Values.ingressController.admissionWebhook.namespaceSelector }}
+  namespaceSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.ingressController.admissionWebhook.timeoutSeconds }}
+  timeoutSeconds: {{ . }}
+  {{- end }}
+  {{- if .Values.ingressController.admissionWebhook.filterSecrets }}
+  objectSelector:
+    matchExpressions:
+    - key: "konghq.com/validate"
+      operator: "Exists"
+  {{- else }}
+  objectSelector:
+    matchExpressions:
+    - key: owner
+      operator: NotIn
+      values:
+      - helm
+  {{- end }}
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - secrets
+  sideEffects: None
 - name: validations.kong.konghq.com
   {{- with .Values.ingressController.admissionWebhook.namespaceSelector }}
   namespaceSelector:
@@ -75,6 +160,7 @@ webhooks:
 {{- if (semverCompare ">= 2.8.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
     - kongingresses
 {{- end }}
+{{- if (semverCompare ">= 3.0.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
   - apiGroups:
     - ''
     apiVersions:
@@ -82,7 +168,6 @@ webhooks:
     operations:
 {{- if (semverCompare ">= 2.12.1" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
     - CREATE
-{{- end }}
     - UPDATE
     resources:
     - secrets

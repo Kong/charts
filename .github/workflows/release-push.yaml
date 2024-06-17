@@ -8,12 +8,14 @@ on:
 
 jobs:
   lint-test:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     strategy:
       matrix:
         chart-name:
           - kong
           - ingress
+          - gateway-operator
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,9 +23,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: v3.11.0
+        uses: azure/setup-helm@v4.2.0
 
       - uses: actions/setup-python@v5
         with:
@@ -38,14 +38,16 @@ jobs:
           helm repo add kong https://charts.konghq.com
 
       - name: Run chart-testing (lint)
-        run: ct lint --charts ${{ matrix.chart-name }}
+        run: ct lint --target-branch main --charts ${{ matrix.chart-name }}
         working-directory: charts
 
       - name: setup testing environment (kind-cluster)
+        env:
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-env.sh
 
       - name: run chart-testing (install)
-        run: ct install --charts ${{ matrix.chart-name }}
+        run: ct install --target-branch main --charts ${{ matrix.chart-name }}
         working-directory: charts
         if: matrix.chart-name == 'kong'
 
@@ -57,14 +59,14 @@ jobs:
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
   release:
+    timeout-minutes: 30
     needs: lint-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Fetch history
-        run: git fetch --prune --unshallow
+        with:
+          fetch-depth: 0
 
       - name: Configure Git
         run: |
@@ -73,9 +75,7 @@ jobs:
 
       # See https://github.com/helm/chart-releaser-action/issues/6
       - name: Set up Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: v3.11.0
+        uses: azure/setup-helm@v4.2.0
 
       - name: Add dependency chart repos
         run: |

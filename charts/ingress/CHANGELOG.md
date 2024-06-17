@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.12.0
+
+### Improvements
+
+- Bumped dependencies on `kong/kong` chart to `>=2.38.0`. Review the [kong chart
+  changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md#2380)
+  for details.
+
+## 0.11.1
+
+### Improvements
+
+- Bumped dependencies on `kong/kong` chart to `>=2.37.1`. This includes a fix for
+  controller's status port being scraped by Prometheus unnecessarily.
+  [#1013](
+
+## 0.11.0
+
+### Improvements
+
+- Bumped dependencies on `kong/kong` chart to `>=2.37.0`.
+  [#1012](https://github.com/Kong/charts/pull/1012)
+
+## 0.10.2
+
+### Fixed
+
+- Bumped dependencies on `kong/kong` chart to `>=2.33.3`. Includes fixes for RBAC
+  rules for namespaces and `affinity` field template for migration Pods.
+  [#984](https://github.com/Kong/charts/pull/984)
+
+## 0.10.1
+
+### Fixed
+
+- Bumped dependencies on `kong/kong` chart to `>=2.33.1`. This fixes an API group
+  name of `KongServiceFacade` in the controller RBAC rules after a rename.
+  [#969](https://github.com/Kong/charts/pull/969)
+
 ## 0.10.0
 
 ### Improvements

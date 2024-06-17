@@ -1,0 +1,6 @@
+env:
+  # gateway controller
+  enable_controller_gateway: false
+
+customEnv:
+  TZ: "Europe/Berlin"

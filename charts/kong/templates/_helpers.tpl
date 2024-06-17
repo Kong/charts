@@ -198,19 +198,27 @@ spec:
   ports:
   {{- if .http }}
   {{- if .http.enabled }}
+  {{- if ne ( .http.servicePort | toString ) "0" }}
   - name: kong-{{ .serviceName }}
     port: {{ .http.servicePort }}
     targetPort: {{ .http.containerPort }}
+  {{- if .http.appProtocol }}
+    appProtocol: {{ .http.appProtocol }}
+  {{- end }}
   {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .http.nodePort))) }}
     nodePort: {{ .http.nodePort }}
   {{- end }}
     protocol: TCP
   {{- end }}
   {{- end }}
+  {{- end }}
   {{- if .tls.enabled }}
   - name: kong-{{ .serviceName }}-tls
     port: {{ .tls.servicePort }}
     targetPort: {{ .tls.overrideServiceTargetPort | default .tls.containerPort }}
+  {{- if .tls.appProtocol }}
+    appProtocol: {{ .tls.appProtocol }}
+  {{- end }}
   {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .tls.nodePort))) }}
     nodePort: {{ .tls.nodePort }}
   {{- end }}
@@ -255,6 +263,7 @@ Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
 */}}
 {{- define "kong.listen" -}}
   {{- $unifiedListen := list -}}
+  {{- $defaultAddrs := (list "0.0.0.0" "[::]") -}}
 
   {{/* Some services do not support these blocks at all, so these checks are a
        two-stage "is it safe to evaluate this?" and then "should we evaluate
@@ -264,9 +273,12 @@ Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
     {{- if .http.enabled -}}
       {{- $listenConfig := dict -}}
       {{- $listenConfig := merge $listenConfig .http -}}
-      {{- $_ := set $listenConfig "address" (default "0.0.0.0" .address) -}}
-      {{- $httpListen := (include "kong.singleListen" $listenConfig) -}}
-      {{- $unifiedListen = append $unifiedListen $httpListen -}}
+      {{- $addresses := (default $defaultAddrs .addresses) -}}
+      {{- range $addresses -}}
+        {{- $_ := set $listenConfig "address" . -}}
+        {{- $httpListen := (include "kong.singleListen" $listenConfig) -}}
+        {{- $unifiedListen = append $unifiedListen $httpListen -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 
@@ -283,9 +295,12 @@ Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
       {{- $listenConfig := merge $listenConfig .tls -}}
       {{- $parameters := append .tls.parameters "ssl" -}}
       {{- $_ := set $listenConfig "parameters" $parameters -}}
-      {{- $_ := set $listenConfig "address" (default "0.0.0.0" .address) -}}
-      {{- $tlsListen := (include "kong.singleListen" $listenConfig) -}}
-      {{- $unifiedListen = append $unifiedListen $tlsListen -}}
+      {{- $addresses := (default $defaultAddrs .addresses) -}}
+      {{- range $addresses -}}
+        {{- $_ := set $listenConfig "address" . -}}
+        {{- $tlsListen := (include "kong.singleListen" $listenConfig) -}}
+        {{- $unifiedListen = append $unifiedListen $tlsListen -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 
@@ -304,7 +319,9 @@ Parameters: takes a service (e.g. .Values.proxy) as its argument and returns KON
   {{- $portMaps := list -}}
 
   {{- if .http.enabled -}}
+  {{- if ne (.http.servicePort | toString ) "0" -}}
         {{- $portMaps = append $portMaps (printf "%d:%d" (int64 .http.servicePort) (int64 .http.containerPort)) -}}
+  {{- end -}}
   {{- end -}}
 
   {{- if .tls.enabled -}}
@@ -320,19 +337,22 @@ Create KONG_STREAM_LISTEN string
 */}}
 {{- define "kong.streamListen" -}}
   {{- $unifiedListen := list -}}
-  {{- $address := (default "0.0.0.0" .address) -}}
+  {{- $defaultAddrs := (list "0.0.0.0" "[::]") -}}
   {{- range .stream -}}
     {{- $listenConfig := dict -}}
     {{- $listenConfig := merge $listenConfig . -}}
-    {{- $_ := set $listenConfig "address" $address -}}
-    {{/* You set NGINX stream listens to UDP using a parameter due to historical reasons.
-         Our configuration is dual-purpose, for both the Service and listen string, so we
-         forcibly inject this parameter if that's the Service protocol. The default handles
-         configs that predate the addition of the protocol field, where we only supported TCP. */}}
-    {{- if (eq (default "TCP" .protocol) "UDP") -}}
-      {{- $_ := set $listenConfig "parameters" (append (default (list) .parameters) "udp") -}}
+    {{- $addresses := (default $defaultAddrs .addresses) -}}
+    {{- range $addresses -}}
+      {{- $_ := set $listenConfig "address" . -}}
+      {{/* You set NGINX stream listens to UDP using a parameter due to historical reasons.
+           Our configuration is dual-purpose, for both the Service and listen string, so we
+           forcibly inject this parameter if that's the Service protocol. The default handles
+           configs that predate the addition of the protocol field, where we only supported TCP. */}}
+      {{- if (eq (default "TCP" $listenConfig.protocol) "UDP") -}}
+        {{- $_ := set $listenConfig "parameters" (append (default (list) $listenConfig.parameters) "udp") -}}
+      {{- end -}}
+      {{- $unifiedListen = append $unifiedListen (include "kong.singleListen" $listenConfig ) -}}
     {{- end -}}
-    {{- $unifiedListen = append $unifiedListen (include "kong.singleListen" $listenConfig ) -}}
   {{- end -}}
 
   {{- $listenString := ($unifiedListen | join ", ") -}}
@@ -788,6 +808,7 @@ The name of the Service which will be used by the controller to update the Ingre
   {{ toYaml .Values.containerSecurityContext | nindent 4 }}
   env:
   {{- include "kong.env" . | nindent 2 }}
+  {{- include "kong.envFrom" .Values.envFrom | nindent 2 }}
 {{/* TODO the prefix override is to work around https://github.com/Kong/charts/issues/295
      Note that we use args instead of command here to /not/ override the standard image entrypoint. */}}
   args: [ "/bin/bash", "-c", "export KONG_NGINX_DAEMON=on KONG_PREFIX=`mktemp -d` KONG_KEYRING_ENABLED=off; until kong start; do echo 'waiting for db'; sleep 1; done; kong stop"]
@@ -819,6 +840,72 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end -}}
 {{- end -}}
 
+{{- define "kong.controller-container" -}}
+- name: ingress-controller
+  securityContext:
+{{ toYaml .Values.containerSecurityContext | nindent 4 }}
+  args:
+  {{ if .Values.ingressController.args}}
+  {{- range $val := .Values.ingressController.args }}
+  - {{ $val }}
+  {{- end }}
+  {{- end }}
+  ports:
+  {{- if .Values.ingressController.admissionWebhook.enabled }}
+  - name: webhook
+    containerPort: {{ .Values.ingressController.admissionWebhook.port }}
+    protocol: TCP
+  {{- end }}
+  {{ if (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) -}}
+  - name: cmetrics
+    containerPort: 10255
+    protocol: TCP
+  {{- end }}
+  - name: cstatus
+    containerPort: 10254
+    protocol: TCP
+  env:
+  - name: POD_NAME
+    valueFrom:
+      fieldRef:
+        apiVersion: v1
+        fieldPath: metadata.name
+  - name: POD_NAMESPACE
+    valueFrom:
+      fieldRef:
+        apiVersion: v1
+        fieldPath: metadata.namespace
+{{- include "kong.ingressController.env" .  | indent 2 }}
+{{ include "kong.envFrom" .Values.ingressController.envFrom | indent 2 }}
+  image: {{ include "kong.getRepoTag" .Values.ingressController.deployment.pod.container.image }}
+  imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{/* disableReadiness is a hidden setting to drop this block entirely for use with a debugger
+     Helm value interpretation doesn't let you replace the default HTTP checks with any other
+     check type, and all HTTP checks freeze when a debugger pauses operation.
+     Setting disableReadiness to ANY value disables the probes.
+*/}}
+{{- if (not (hasKey .Values.ingressController "disableProbes")) }}
+  readinessProbe:
+{{ toYaml .Values.ingressController.readinessProbe | indent 4 }}
+  livenessProbe:
+{{ toYaml .Values.ingressController.livenessProbe | indent 4 }}
+{{- end }}
+  resources:
+{{ toYaml .Values.ingressController.resources | indent 4 }}
+  volumeMounts:
+{{- if .Values.ingressController.admissionWebhook.enabled }}
+  - name: webhook-cert
+    mountPath: /admission-webhook
+    readOnly: true
+{{- end }}
+{{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
+  - name: {{ template "kong.serviceAccountTokenName" . }}
+    mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+    readOnly: true
+{{- end }}
+  {{- include "kong.userDefinedVolumeMounts" .Values.ingressController | nindent 2 }}
+  {{- include "controller.adminApiCertVolumeMount" . | nindent 2 }}
+{{- end -}}
 
 {{- define "secretkeyref" -}}
 valueFrom:
@@ -866,13 +953,11 @@ the template that it itself is using form the above sections.
 {{- end -}}
 
 {{- with .Values.admin -}}
-  {{- $address := "0.0.0.0" -}}
-  {{- if (not .enabled) -}}
-    {{- $address = "127.0.0.1" -}}
-  {{- end -}}
   {{- $listenConfig := dict -}}
   {{- $listenConfig := merge $listenConfig . -}}
-  {{- $_ := set $listenConfig "address" (default $address .address) -}}
+  {{- if (and (not (hasKey . "addresses")) (not .enabled)) -}}
+    {{- $_ := set $listenConfig "addresses" (list "127.0.0.1" "[::1]") -}}
+  {{- end -}}
   {{- $_ := set $autoEnv "KONG_ADMIN_LISTEN" (include "kong.listen" $listenConfig) -}}
 
   {{- if or .tls.client.secretName .tls.client.caBundle (and $.Values.ingressController.adminApi.tls.client.enabled (not $.Values.ingressController.adminApi.tls.client.certProvided)) -}}
@@ -995,8 +1080,10 @@ the template that it itself is using form the above sections.
       {{- $_ := set $autoEnv "KONG_ADMIN_GUI_AUTH_CONF" $guiAuthConf -}}
     {{- end }}
 
-    {{- $guiSessionConf := include "secretkeyref" (dict "name" .Values.enterprise.rbac.session_conf_secret "key" "admin_gui_session_conf") -}}
-    {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SESSION_CONF" $guiSessionConf -}}
+    {{- if .Values.enterprise.rbac.session_conf_secret }}
+      {{- $guiSessionConf := include "secretkeyref" (dict "name" .Values.enterprise.rbac.session_conf_secret "key" "admin_gui_session_conf") -}}
+      {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SESSION_CONF" $guiSessionConf -}}
+    {{- end }}
   {{- end }}
 
   {{- if .Values.enterprise.smtp.enabled }}
@@ -1044,7 +1131,9 @@ the template that it itself is using form the above sections.
 {{- end }}
 {{- end }}
 
+{{- if (.Values.plugins) }}
 {{- $_ := set $autoEnv "KONG_PLUGINS" (include "kong.plugins" .) -}}
+{{- end }}
 
 {{/*
     ====== USER-SET ENVIRONMENT VARIABLES ======
@@ -1121,6 +1210,7 @@ Environment variables are sorted alphabetically
   imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
   env:
   {{- include "kong.no_daemon_env" . | nindent 2 }}
+  {{- include "kong.envFrom" .Values.envFrom | nindent 2 }}
   command: [ "bash", "/wait_postgres/wait.sh" ]
   volumeMounts:
   - name: {{ template "kong.fullname" . }}-bash-wait-for-postgres
@@ -1154,7 +1244,6 @@ Kubernetes namespace-scoped resources it uses to build Kong configuration.
 
 Collectively, these are built from:
 kubectl kustomize github.com/kong/kubernetes-ingress-controller/config/rbac?ref=main
-kubectl kustomize github.com/kong/kubernetes-ingress-controller/config/rbac/knative?ref=main
 kubectl kustomize github.com/kong/kubernetes-ingress-controller/config/rbac/gateway?ref=main
 
 However, there is no way to generate the split between cluster and namespaced
@@ -1162,6 +1251,24 @@ role sets used in the charts. Updating these requires separating out cluster
 resource roles into their separate templates.
 */}}
 {{- define "kong.kubernetesRBACRules" -}}
+{{- if (semverCompare ">= 3.2.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongcustomentities
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongcustomentities/status
+  verbs:
+  - get
+  - patch
+  - update
+{{- end }}
 {{- if and (semverCompare ">= 3.1.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image))
            (contains (print .Values.ingressController.env.feature_gates) "KongServiceFacade=true") }}
 - apiGroups:
@@ -1533,6 +1640,42 @@ of a Role or ClusterRole) that provide the ingress controller access to the
 Kubernetes Cluster-scoped resources it uses to build Kong configuration.
 */}}
 {{- define "kong.kubernetesRBACClusterRules" -}}
+{{- if (semverCompare ">= 3.1.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - konglicenses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - konglicenses/status
+  verbs:
+  - get
+  - patch
+  - update
+{{- end -}}
+{{- if (semverCompare ">= 3.1.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image)) }}
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongvaults
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongvaults/status
+  verbs:
+  - get
+  - patch
+  - update
+{{- end }}
 - apiGroups:
   - configuration.konghq.com
   resources:
@@ -1574,6 +1717,14 @@ Kubernetes Cluster-scoped resources it uses to build Kong configuration.
   verbs:
   - get
   - update
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
 {{- end }}
 - apiGroups:
   - networking.k8s.io
@@ -1629,4 +1780,12 @@ extensions/v1beta1
     {{- end -}}
 {{- end -}}
 {{- (toYaml $proxyReadiness) -}}
+{{- end -}}
+
+{{- define "kong.envFrom" -}}
+  {{- if (gt (len .) 0) -}}
+envFrom:
+{{- toYaml . | nindent 2 -}}
+  {{- else -}}
+  {{- end -}}
 {{- end -}}
