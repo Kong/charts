@@ -13,7 +13,7 @@ ingressController:
         env:
           anonymous_reports: "false"
         image:
-          unifiedRepoTag: kong/kubernetes-ingress-controller:3.6
+          unifiedRepoTag: kong/kubernetes-ingress-controller:3.2
         # NOTE: The purpose of those values below is to:
         # - to speed up, the test
         # - to prevent anonymous reports from being sent
