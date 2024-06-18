@@ -1119,7 +1119,7 @@ the template that it itself is using form the above sections.
       {{- $_ := set $autoEnv "KONG_ADMIN_GUI_AUTH_CONF" $guiAuthConf -}}
     {{- end }}
 
-    {{- if .Values.enterprise.rbac.session_conf_secret }}
+    {{- if not (eq .Values.enterprise.rbac.admin_gui_auth "openid-connect") }}
       {{- $guiSessionConf := include "secretkeyref" (dict "name" .Values.enterprise.rbac.session_conf_secret "key" "admin_gui_session_conf") -}}
       {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SESSION_CONF" $guiSessionConf -}}
     {{- end }}
