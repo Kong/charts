@@ -19,6 +19,18 @@ dynamicFields:
     jsonPath:
       - /data/tls.crt
       - /data/tls.key
+  - apiVersion: v1
+    kind: Secret
+    name: chartsnap-kong-admin-api-keypair
+    jsonPath:
+      - /data/tls.crt
+      - /data/tls.key
+  - apiVersion: v1
+    kind: Secret
+    name: chartsnap-kong-admin-api-ca-keypair
+    jsonPath:
+      - /data/tls.crt
+      - /data/tls.key
   - apiVersion: admissionregistration.k8s.io/v1
     kind: ValidatingWebhookConfiguration
     name: chartsnap-kong-validations
