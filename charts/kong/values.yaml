@@ -1007,6 +1007,7 @@ serviceMonitor:
 
   # honorLabels: false
   # metricRelabelings: []
+  # relabelings: []
 
 # -----------------------------------------------------------------------------
 # Kong Enterprise parameters
