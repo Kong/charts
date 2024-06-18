@@ -1203,7 +1203,7 @@ resource roles into their separate templates.
   - update
 {{- end }}
 {{- if and (semverCompare ">= 3.1.0" (include "kong.effectiveVersion" .Values.ingressController.deployment.pod.container.image))
-           (contains (print .Values.ingressController.env.feature_gates) "KongServiceFacade=true") }}
+           (contains (print .Values.ingressController.deployment.pod.container.env.feature_gates) "KongServiceFacade=true") }}
 - apiGroups:
   - incubator.ingress-controller.konghq.com
   resources:
