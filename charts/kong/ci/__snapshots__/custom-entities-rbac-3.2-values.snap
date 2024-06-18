@@ -7,7 +7,19 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.39.2
-  name: chartsnap-kong
+  name: chartsnap-kong-proxy
+  namespace: default
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: kong-2.39.2
+  name: chartsnap-kong-controller
   namespace: default
 ---
 apiVersion: v1
@@ -39,6 +51,38 @@ metadata:
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.39.2
   name: chartsnap-kong-validation-webhook-keypair
+  namespace: default
+type: kubernetes.io/tls
+---
+apiVersion: v1
+data:
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: kong-2.39.2
+  name: chartsnap-kong-admin-api-keypair
+  namespace: default
+type: kubernetes.io/tls
+---
+apiVersion: v1
+data:
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: kong-2.39.2
+  name: chartsnap-kong-admin-api-ca-keypair
   namespace: default
 type: kubernetes.io/tls
 ---
@@ -354,7 +398,7 @@ roleRef:
   name: chartsnap-kong
 subjects:
   - kind: ServiceAccount
-    name: chartsnap-kong
+    name: chartsnap-kong-controller
     namespace: default
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -420,6 +464,14 @@ rules:
       - services
     verbs:
       - get
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - get
+      - list
+      - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -438,7 +490,7 @@ roleRef:
   name: chartsnap-kong
 subjects:
   - kind: ServiceAccount
-    name: chartsnap-kong
+    name: chartsnap-kong-controller
     namespace: default
 ---
 apiVersion: v1
@@ -465,6 +517,29 @@ spec:
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.39.2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: kong-2.39.2
+  name: chartsnap-kong-admin
+  namespace: default
+spec:
+  ports:
+    - name: kong-admin-tls
+      port: 8444
+      protocol: TCP
+      targetPort: 8444
+  selector:
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/name: kong
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
@@ -525,30 +600,32 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.kubernetes.io/component: app
+    app.kubernetes.io/component: controller
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.39.2
-  name: chartsnap-kong
+  name: chartsnap-kong-controller
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/component: app
+      app.kubernetes.io/component: controller
       app.kubernetes.io/instance: chartsnap
       app.kubernetes.io/name: kong
   template:
     metadata:
       annotations:
         kuma.io/gateway: enabled
-        kuma.io/service-account-token-volume: chartsnap-kong-token
+        kuma.io/service-account-token-volume: chartsnap-kong-controller-token
+        traffic.kuma.io/exclude-outbound-ports: "8444"
+        traffic.sidecar.istio.io/excludeOutboundPorts: "8444"
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         app: chartsnap-kong
-        app.kubernetes.io/component: app
+        app.kubernetes.io/component: controller
         app.kubernetes.io/instance: chartsnap
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kong
@@ -572,19 +649,23 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_ADMISSION_WEBHOOK_LISTEN
               value: 0.0.0.0:8080
-            - name: CONTROLLER_ANONYMOUS_REPORTS
-              value: "false"
             - name: CONTROLLER_ELECTION_ID
               value: kong-ingress-controller-leader-kong
+            - name: CONTROLLER_GATEWAY_DISCOVERY_DNS_STRATEGY
+              value: pod
             - name: CONTROLLER_INGRESS_CLASS
               value: kong
+            - name: CONTROLLER_KONG_ADMIN_SVC
+              value: default/chartsnap-kong-admin
+            - name: CONTROLLER_KONG_ADMIN_TLS_CLIENT_CERT_FILE
+              value: /etc/secrets/admin-api-cert/tls.crt
+            - name: CONTROLLER_KONG_ADMIN_TLS_CLIENT_KEY_FILE
+              value: /etc/secrets/admin-api-cert/tls.key
             - name: CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY
               value: "true"
-            - name: CONTROLLER_KONG_ADMIN_URL
-              value: https://localhost:8444
             - name: CONTROLLER_PUBLISH_SERVICE
               value: default/chartsnap-kong-proxy
-          image: kong/nightly-ingress-controller:2024-06-09
+          image: kong/kubernetes-ingress-controller:3.2
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -605,7 +686,10 @@ spec:
               name: cmetrics
               protocol: TCP
             - containerPort: 10254
-              name: cstatus
+              name: status
+              protocol: TCP
+            - containerPort: 10256
+              name: diagnostic
               protocol: TCP
           readinessProbe:
             failureThreshold: 3
@@ -629,12 +713,85 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
+            - mountPath: /tmp
+              name: chartsnap-kong-tmp
             - mountPath: /admission-webhook
               name: webhook-cert
               readOnly: true
             - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-              name: chartsnap-kong-token
+              name: chartsnap-kong-controller-token
               readOnly: true
+            - mountPath: /etc/secrets/admin-api-cert
+              name: admin-api-cert
+              readOnly: true
+      securityContext: {}
+      serviceAccountName: chartsnap-kong-controller
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - emptyDir:
+            sizeLimit: 1Gi
+          name: chartsnap-kong-tmp
+        - name: webhook-cert
+          secret:
+            secretName: chartsnap-kong-validation-webhook-keypair
+        - name: admin-api-cert
+          secret:
+            secretName: chartsnap-kong-admin-api-keypair
+        - name: chartsnap-kong-controller-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  expirationSeconds: 3607
+                  path: token
+              - configMap:
+                  items:
+                    - key: ca.crt
+                      path: ca.crt
+                  name: kube-root-ca.crt
+              - downwardAPI:
+                  items:
+                    - fieldRef:
+                        apiVersion: v1
+                        fieldPath: metadata.namespace
+                      path: namespace
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: kong-2.39.2
+  name: chartsnap-kong
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: app
+      app.kubernetes.io/instance: chartsnap
+      app.kubernetes.io/name: kong
+  template:
+    metadata:
+      annotations:
+        kuma.io/gateway: enabled
+        kuma.io/service-account-token-volume: chartsnap-kong-proxy-token
+        traffic.sidecar.istio.io/includeInboundPorts: ""
+      labels:
+        app: chartsnap-kong
+        app.kubernetes.io/component: app
+        app.kubernetes.io/instance: chartsnap
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: kong
+        app.kubernetes.io/version: "3.6"
+        helm.sh/chart: kong-2.39.2
+        version: "3.6"
+    spec:
+      automountServiceAccountToken: false
+      containers:
         - env:
             - name: KONG_ADMIN_ACCESS_LOG
               value: /dev/stdout
@@ -645,7 +802,7 @@ spec:
             - name: KONG_ADMIN_GUI_ERROR_LOG
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
-              value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
+              value: 0.0.0.0:8444 http2 ssl, [::]:8444 http2 ssl
             - name: KONG_ANONYMOUS_REPORTS
               value: "off"
             - name: KONG_CLUSTER_LISTEN
@@ -656,6 +813,10 @@ spec:
               value: "on"
             - name: KONG_LUA_PACKAGE_PATH
               value: /opt/?.lua;/opt/?/init.lua;;
+            - name: KONG_NGINX_ADMIN_SSL_CLIENT_CERTIFICATE
+              value: /etc/admin-client-ca/tls.crt
+            - name: KONG_NGINX_ADMIN_SSL_VERIFY_CLIENT
+              value: "on"
             - name: KONG_NGINX_WORKER_PROCESSES
               value: "2"
             - name: KONG_PORTAL_API_ACCESS_LOG
@@ -709,6 +870,9 @@ spec:
             timeoutSeconds: 5
           name: proxy
           ports:
+            - containerPort: 8444
+              name: admin-tls
+              protocol: TCP
             - containerPort: 8000
               name: proxy
               protocol: TCP
@@ -744,6 +908,9 @@ spec:
               name: chartsnap-kong-prefix-dir
             - mountPath: /tmp
               name: chartsnap-kong-tmp
+            - mountPath: /etc/admin-client-ca/
+              name: admin-client-ca
+              readOnly: true
       initContainers:
         - command:
             - rm
@@ -759,7 +926,7 @@ spec:
             - name: KONG_ADMIN_GUI_ERROR_LOG
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
-              value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
+              value: 0.0.0.0:8444 http2 ssl, [::]:8444 http2 ssl
             - name: KONG_ANONYMOUS_REPORTS
               value: "off"
             - name: KONG_CLUSTER_LISTEN
@@ -770,6 +937,10 @@ spec:
               value: "on"
             - name: KONG_LUA_PACKAGE_PATH
               value: /opt/?.lua;/opt/?/init.lua;;
+            - name: KONG_NGINX_ADMIN_SSL_CLIENT_CERTIFICATE
+              value: /etc/admin-client-ca/tls.crt
+            - name: KONG_NGINX_ADMIN_SSL_VERIFY_CLIENT
+              value: "on"
             - name: KONG_NGINX_WORKER_PROCESSES
               value: "2"
             - name: KONG_PORTAL_API_ACCESS_LOG
@@ -819,8 +990,11 @@ spec:
               name: chartsnap-kong-prefix-dir
             - mountPath: /tmp
               name: chartsnap-kong-tmp
+            - mountPath: /etc/admin-client-ca/
+              name: admin-client-ca
+              readOnly: true
       securityContext: {}
-      serviceAccountName: chartsnap-kong
+      serviceAccountName: chartsnap-kong-proxy
       terminationGracePeriodSeconds: 30
       volumes:
         - emptyDir:
@@ -829,7 +1003,7 @@ spec:
         - emptyDir:
             sizeLimit: 1Gi
           name: chartsnap-kong-tmp
-        - name: chartsnap-kong-token
+        - name: chartsnap-kong-proxy-token
           projected:
             sources:
               - serviceAccountToken:
@@ -849,6 +1023,15 @@ spec:
         - name: webhook-cert
           secret:
             secretName: chartsnap-kong-validation-webhook-keypair
+        - name: admin-client-ca
+          secret:
+            items:
+              - key: tls.crt
+                path: tls.crt
+            secretName: chartsnap-kong-admin-api-ca-keypair
+        - name: admin-api-cert
+          secret:
+            secretName: chartsnap-kong-admin-api-keypair
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
@@ -950,6 +1133,7 @@ webhooks:
           - CREATE
           - UPDATE
         resources:
+          - secrets
           - services
       - apiGroups:
           - networking.k8s.io

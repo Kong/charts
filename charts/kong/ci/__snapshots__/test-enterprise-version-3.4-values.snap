@@ -7,8 +7,63 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.39.2
-  name: chartsnap-kong
+  name: chartsnap-kong-proxy
   namespace: default
+---
+apiVersion: v1
+data:
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: kong-2.39.2
+  name: chartsnap-kong-admin-api-keypair
+  namespace: default
+type: kubernetes.io/tls
+---
+apiVersion: v1
+data:
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: kong-2.39.2
+  name: chartsnap-kong-admin-api-ca-keypair
+  namespace: default
+type: kubernetes.io/tls
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: kong-2.39.2
+  name: chartsnap-kong-admin
+  namespace: default
+spec:
+  ports:
+    - name: kong-admin-tls
+      port: 8444
+      protocol: TCP
+      targetPort: 8444
+  selector:
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/name: kong
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
@@ -88,7 +143,7 @@ spec:
     metadata:
       annotations:
         kuma.io/gateway: enabled
-        kuma.io/service-account-token-volume: chartsnap-kong-token
+        kuma.io/service-account-token-volume: chartsnap-kong-proxy-token
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         app: chartsnap-kong
@@ -112,7 +167,7 @@ spec:
             - name: KONG_ADMIN_GUI_ERROR_LOG
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
-              value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
+              value: 0.0.0.0:8444 http2 ssl, [::]:8444 http2 ssl
             - name: KONG_ANONYMOUS_REPORTS
               value: "off"
             - name: KONG_CLUSTER_LISTEN
@@ -121,6 +176,10 @@ spec:
               value: "off"
             - name: KONG_LUA_PACKAGE_PATH
               value: /opt/?.lua;/opt/?/init.lua;;
+            - name: KONG_NGINX_ADMIN_SSL_CLIENT_CERTIFICATE
+              value: /etc/admin-client-ca/tls.crt
+            - name: KONG_NGINX_ADMIN_SSL_VERIFY_CLIENT
+              value: "on"
             - name: KONG_NGINX_WORKER_PROCESSES
               value: "2"
             - name: KONG_PORTAL_API_ACCESS_LOG
@@ -174,6 +233,9 @@ spec:
             timeoutSeconds: 5
           name: proxy
           ports:
+            - containerPort: 8444
+              name: admin-tls
+              protocol: TCP
             - containerPort: 8000
               name: proxy
               protocol: TCP
@@ -209,6 +271,9 @@ spec:
               name: chartsnap-kong-prefix-dir
             - mountPath: /tmp
               name: chartsnap-kong-tmp
+            - mountPath: /etc/admin-client-ca/
+              name: admin-client-ca
+              readOnly: true
       initContainers:
         - command:
             - rm
@@ -224,7 +289,7 @@ spec:
             - name: KONG_ADMIN_GUI_ERROR_LOG
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
-              value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
+              value: 0.0.0.0:8444 http2 ssl, [::]:8444 http2 ssl
             - name: KONG_ANONYMOUS_REPORTS
               value: "off"
             - name: KONG_CLUSTER_LISTEN
@@ -233,6 +298,10 @@ spec:
               value: "off"
             - name: KONG_LUA_PACKAGE_PATH
               value: /opt/?.lua;/opt/?/init.lua;;
+            - name: KONG_NGINX_ADMIN_SSL_CLIENT_CERTIFICATE
+              value: /etc/admin-client-ca/tls.crt
+            - name: KONG_NGINX_ADMIN_SSL_VERIFY_CLIENT
+              value: "on"
             - name: KONG_NGINX_WORKER_PROCESSES
               value: "2"
             - name: KONG_PORTAL_API_ACCESS_LOG
@@ -282,8 +351,11 @@ spec:
               name: chartsnap-kong-prefix-dir
             - mountPath: /tmp
               name: chartsnap-kong-tmp
+            - mountPath: /etc/admin-client-ca/
+              name: admin-client-ca
+              readOnly: true
       securityContext: {}
-      serviceAccountName: chartsnap-kong
+      serviceAccountName: chartsnap-kong-proxy
       terminationGracePeriodSeconds: 30
       volumes:
         - emptyDir:
@@ -292,7 +364,7 @@ spec:
         - emptyDir:
             sizeLimit: 1Gi
           name: chartsnap-kong-tmp
-        - name: chartsnap-kong-token
+        - name: chartsnap-kong-proxy-token
           projected:
             sources:
               - serviceAccountToken:
@@ -309,3 +381,9 @@ spec:
                         apiVersion: v1
                         fieldPath: metadata.namespace
                       path: namespace
+        - name: admin-client-ca
+          secret:
+            items:
+              - key: tls.crt
+                path: tls.crt
+            secretName: chartsnap-kong-admin-api-ca-keypair

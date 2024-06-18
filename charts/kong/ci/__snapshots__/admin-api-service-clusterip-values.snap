@@ -7,8 +7,40 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.39.2
-  name: chartsnap-kong
+  name: chartsnap-kong-proxy
   namespace: default
+---
+apiVersion: v1
+data:
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: kong-2.39.2
+  name: chartsnap-kong-admin-api-keypair
+  namespace: default
+type: kubernetes.io/tls
+---
+apiVersion: v1
+data:
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.6"
+    helm.sh/chart: kong-2.39.2
+  name: chartsnap-kong-admin-api-ca-keypair
+  namespace: default
+type: kubernetes.io/tls
 ---
 apiVersion: v1
 data:
@@ -134,7 +166,7 @@ spec:
       annotations:
         checksum/dbless.config: 626be043e4a43b0d55af934d06216254abe132b29af82450379439ecd927219a
         kuma.io/gateway: enabled
-        kuma.io/service-account-token-volume: chartsnap-kong-token
+        kuma.io/service-account-token-volume: chartsnap-kong-proxy-token
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         app: chartsnap-kong
@@ -169,6 +201,10 @@ spec:
               value: /kong_dbless/kong.yml
             - name: KONG_LUA_PACKAGE_PATH
               value: /opt/?.lua;/opt/?/init.lua;;
+            - name: KONG_NGINX_ADMIN_SSL_CLIENT_CERTIFICATE
+              value: /etc/admin-client-ca/tls.crt
+            - name: KONG_NGINX_ADMIN_SSL_VERIFY_CLIENT
+              value: "on"
             - name: KONG_NGINX_WORKER_PROCESSES
               value: "2"
             - name: KONG_PORTAL_API_ACCESS_LOG
@@ -262,6 +298,9 @@ spec:
               name: chartsnap-kong-tmp
             - mountPath: /kong_dbless/
               name: kong-custom-dbless-config-volume
+            - mountPath: /etc/admin-client-ca/
+              name: admin-client-ca
+              readOnly: true
       initContainers:
         - command:
             - rm
@@ -288,6 +327,10 @@ spec:
               value: /kong_dbless/kong.yml
             - name: KONG_LUA_PACKAGE_PATH
               value: /opt/?.lua;/opt/?/init.lua;;
+            - name: KONG_NGINX_ADMIN_SSL_CLIENT_CERTIFICATE
+              value: /etc/admin-client-ca/tls.crt
+            - name: KONG_NGINX_ADMIN_SSL_VERIFY_CLIENT
+              value: "on"
             - name: KONG_NGINX_WORKER_PROCESSES
               value: "2"
             - name: KONG_PORTAL_API_ACCESS_LOG
@@ -339,8 +382,11 @@ spec:
               name: chartsnap-kong-tmp
             - mountPath: /kong_dbless/
               name: kong-custom-dbless-config-volume
+            - mountPath: /etc/admin-client-ca/
+              name: admin-client-ca
+              readOnly: true
       securityContext: {}
-      serviceAccountName: chartsnap-kong
+      serviceAccountName: chartsnap-kong-proxy
       terminationGracePeriodSeconds: 30
       volumes:
         - emptyDir:
@@ -349,7 +395,7 @@ spec:
         - emptyDir:
             sizeLimit: 1Gi
           name: chartsnap-kong-tmp
-        - name: chartsnap-kong-token
+        - name: chartsnap-kong-proxy-token
           projected:
             sources:
               - serviceAccountToken:
@@ -369,3 +415,9 @@ spec:
         - configMap:
             name: chartsnap-kong-custom-dbless-config
           name: kong-custom-dbless-config-volume
+        - name: admin-client-ca
+          secret:
+            items:
+              - key: tls.crt
+                path: tls.crt
+            secretName: chartsnap-kong-admin-api-ca-keypair
