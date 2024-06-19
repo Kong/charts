@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+* Added serviceMonitor.trustCRDsExist for render based deployments
 
 * Added support for ServiceMonitor relabelings allowing labels manipulation before scraping.
 

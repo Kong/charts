@@ -906,6 +906,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | securityContext                    | Set the securityContext for Kong Pods                                                 | `{}`                |
 | containerSecurityContext           | Set the securityContext for Containers                                                | See values.yaml     |
 | serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | `false`             |
+| serviceMonitor.trustCRDsExist      | Do not check for the Prometheus Operator CRDs, just try to deploy                     | `false`             |
 | serviceMonitor.interval            | Scraping interval                                                                     | `30s`               |
 | serviceMonitor.namespace           | Where to create ServiceMonitor                                                        |                     |
 | serviceMonitor.labels              | ServiceMonitor labels                                                                 | `{}`                |
