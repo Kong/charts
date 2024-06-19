@@ -1,3 +1,49 @@
+{{- $minCRDVersion := (dict
+  "2.12" "2.12.0"
+  "2.14" "2.14.0"
+  "2.16" "2.16.0"
+) -}}
+
+{{- $versionKeys := (sortAlpha (keys $minCRDVersion)) -}}
+
+{{- $checkCRDs := true -}}
+{{/* Use the same installCRDs values.yaml setting here, since it's already the one we tell people to use if they have no CRD permissions */}}
+{{- if (hasKey .Values.ingressController "installCRDs") -}}
+  {{/* Explicitly set, honor whatever's set */}}
+  {{- $checkCRDs = .Values.ingressController.installCRDs -}}
+{{- end -}}
+{{- if $checkCRDs -}}
+  {{- $kongPluginCRD := (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "kongplugins.configuration.konghq.com") -}}
+  {{- if $kongPluginCRD -}}
+    {{- if (hasKey $kongPluginCRD.metadata "annotations") -}}
+      {{/* TODO handle missing */}}
+      {{- $crdVersion := (semver (get $kongPluginCRD.metadata.annotations "konghq.com/kic-crd-release" )) -}}
+
+      {{- $controllerV := (semver (include "kong.effectiveVersion" .Values.ingressController.image)) -}}
+      {{- $majorMinor := (printf "%d.%d" $controllerV.Major $controllerV.Minor) -}}
+      {{- $minCRDActual := (get $minCRDVersion (first $versionKeys)) -}}
+      {{- range $versionKeys -}}
+        {{- if (semverCompare (printf "<= %s" .) $majorMinor) -}}
+          {{- $minCRDActual = (get $minCRDVersion .) -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- if (not (semverCompare (printf ">= %s" $minCRDActual) $crdVersion.Original)) -}}
+        {{- fail (printf "\nNew CRD version avaiable. Update using:\n\nkubectl kustomize build https://github.com/Kong/kubernetes-ingress-controller//config/crd/?v%s\n" $controllerV) -}}
+      {{- else -}}
+KongPlugin CRD has {{- printf "version %s >= %s minimum version for KIC version %s" $crdVersion $minCRDActual $controllerV -}}, proceeding.
+      {{- end -}}
+    {{- else -}}
+KongPlugin CRD has no annotations, CRD check skipped.
+    {{- end -}}
+  {{- else -}}
+KongPlugin CRD not found, CRD check skipped.
+{{ printf "%s" $kongPluginCRD }}
+  {{- end -}}
+{{- else -}}
+CRD checking manually disabled.
+{{- end }}
+
 To connect to Kong, please execute the following commands:
 {{ if contains "LoadBalancer" .Values.proxy.type }}
 HOST=$(kubectl get svc --namespace {{ template "kong.namespace" . }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
