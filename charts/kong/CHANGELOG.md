@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-Nothing yet.
+* Added support for ServiceMonitor relabelings allowing labels manipulation before scraping.
 
 ## 2.39.3
 

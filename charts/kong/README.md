@@ -912,6 +912,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | serviceMonitor.targetLabels        | ServiceMonitor targetLabels                                                           | `{}`                |
 | serviceMonitor.honorLabels         | ServiceMonitor honorLabels                                                            | `{}`                |
 | serviceMonitor.metricRelabelings   | ServiceMonitor metricRelabelings                                                      | `{}`                |
+| serviceMonitor.relabelings         | ServiceMonitor relabelings                                                            | `[]`                |
 | extraConfigMaps                    | ConfigMaps to add to mounted volumes                                                  | `[]`                |
 | extraSecrets                       | Secrets to add to mounted volumes                                                     | `[]`                |
 | nameOverride                       | Replaces "kong" in resource names, like "RELEASENAME-nameOverride" instead of "RELEASENAME-kong" | `""`                |
