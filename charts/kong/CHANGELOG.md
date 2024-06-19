@@ -52,6 +52,9 @@
 * Bumped default `kong/kubernetes-ingress-controller` image tag to 3.2.
   [#1085](https://github.com/Kong/charts/pull/1085)
 
+* Added an optional property `allowAnyOrigin` under `manager.ingress` to enable users to allow access to Kong Manager from any origin.
+  [#1078](https://github.com/Kong/charts/pull/1078)
+
 ## 2.38.0
 
 ### Changes

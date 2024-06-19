@@ -1082,7 +1082,7 @@ the template that it itself is using form the above sections.
   {{- $_ := set $autoEnv "KONG_ADMIN_GUI_ERROR_LOG" "/dev/stderr" -}}
 
   {{- $_ := set $autoEnv "KONG_ADMIN_GUI_LISTEN" (include "kong.listen" .Values.manager) -}}
-  {{- if .Values.manager.ingress.enabled }}
+  {{- if and .Values.manager.ingress.enabled (not .Values.manager.ingress.allowAnyOrigin) }}
     {{- $_ := set $autoEnv "KONG_ADMIN_GUI_URL" (include "kong.ingress.serviceUrl" .Values.manager.ingress) -}}
   {{- end -}}
 
