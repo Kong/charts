@@ -29,9 +29,9 @@ deployment:
     # container. Some sidecars require enabling this. Note that enabling this exposes Kubernetes credentials to Kong
     # Lua code, increasing potential attack surface.
     automountServiceAccountToken: false
-    # Optionally specify the name of the service account to create and the annotations to add.
-    name: ""
-    annotations: {}
+  ## Optionally specify the name of the service account to create and the annotations to add.
+  #  name:
+  #  annotations: {}
 
   ## Optionally specify any extra sidecar containers to be included in the deployment
   ## See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#container-v1-core
@@ -120,13 +120,17 @@ env:
 #         name: api_key
 #   client_name: testClient
 
+# Load all ConfigMap or Secret keys as environment variables:
+# https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables
+envFrom: []
+
 # This section can be used to configure some extra labels that will be added to each Kubernetes object generated.
 extraLabels: {}
 
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "3.5"
+  tag: "3.6"
   # Kong Enterprise
   # repository: kong/kong-gateway
   # tag: "3.5"
@@ -144,6 +148,8 @@ image:
 # Specify Kong admin API service and listener configuration
 admin:
   # Enable creating a Kubernetes service for the admin API
+  # Disabling this is recommended for most ingress controller configurations
+  # Enterprise users that wish to use Kong Manager with the controller should enable this
   enabled: true
   type: ClusterIP
   loadBalancerClass:
@@ -182,9 +188,6 @@ admin:
     # - secretName - the secret must contain a key named "tls.crt" with the PEM-encoded certificate.
     # - caBundle (PEM-encoded certificate string).
     # If both are set, caBundle takes precedence.
-    # If neither are set, and the controller uses generated client certificates
-    # (ingressController.adminApi.tls.client.enabled=true and ingressController.adminApi.tls.client.certProvided=false),
-    # the chart will use the generated certificate's CA for the Kong admin API
     client:
       caBundle: ""
       secretName: ""
@@ -294,6 +297,9 @@ proxy:
   http:
     # Enable plaintext HTTP listen for the proxy
     enabled: true
+    # Set the servicePort: 0 to skip exposing in the service but still
+    # let the port open in container to allow https to http mapping for
+    # tls terminated at LB.
     servicePort: 80
     containerPort: 8000
     # Set a nodePort which is available if service type is NodePort
@@ -313,6 +319,10 @@ proxy:
     # Additional listen parameters, e.g. "reuseport", "backlog=16384"
     parameters:
     - http2
+
+    # Specify the Service's TLS port's appProtocol. This can be useful when integrating with
+    # external load balancers that require the `appProtocol` field to be set (e.g. GCP).
+    appProtocol: ""
 
   # Define stream (TCP) listen
   # To enable, remove "[]", uncomment the section below, and select your desired
@@ -591,10 +601,14 @@ ingressController:
           #        key: CHANGEME-admin-token-key
         # Additional non-Kong environment variables. Keys here will be set in
         # the container environment _without_ prepending a "CONTROLLER_" prefix.
-        # customEnv: {}
+        customEnv: {}
+        # Load all ConfigMap or Secret keys as environment variables:
+        # https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables
+        envFrom: []
+
         image:
           repository: kong/kubernetes-ingress-controller
-          tag: "3.0"
+          tag: "3.2"
           # Optionally set a semantic version for version-gated features. This can normally
           # be left unset. You only need to set this if your tag is not a semver string,
           # such as when you are using a "next" tag. Set this to the effective semantic
@@ -655,6 +669,10 @@ ingressController:
 
   gatewayDiscovery:
     enabled: true
+    generateAdminApiService: false
+    adminApiService:
+      namespace: ""
+      name: ""
 
   # Specify individual namespaces to watch for ingress configuration. By default,
   # when no namespaces are set, the controller watches all namespaces and uses a
@@ -667,6 +685,7 @@ ingressController:
 
   admissionWebhook:
     enabled: true
+    filterSecrets: false
     failurePolicy: Ignore
     port: 8080
     certificate:

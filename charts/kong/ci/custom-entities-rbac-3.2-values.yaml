@@ -1,0 +1,22 @@
+ingressController:
+  env:
+    anonymous_reports: "false"
+  image:
+    repository: kong/nightly-ingress-controller
+    tag: "2024-06-09"
+    # Unreleased yet so use the nightly and the effective semver
+    effectiveSemver: "3.2"
+
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  httpGet:
+    path: "/status"
+    port: status
+    scheme: HTTP
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"

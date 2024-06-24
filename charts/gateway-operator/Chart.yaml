@@ -1,0 +1,25 @@
+apiVersion: v2
+description: Deploy Kong Gateway Operator
+home: https://konghq.com/
+icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
+maintainers:
+  - name: team-k8s-bot
+    email: team-k8s@konghq.com
+name: gateway-operator
+sources:
+  - https://github.com/Kong/charts/tree/main/charts/gateway-operator
+version: 0.1.9
+appVersion: "1.2"
+annotations:
+  artifacthub.io/prerelease: "false"
+
+dependencies:
+  - name: kic-crds
+    version: 3.2.0
+    condition: kic-crds.enabled
+  - name: gwapi-standard-crds
+    version: 1.0.0
+    condition: gwapi-standard-crds.enabled
+  - name: gwapi-experimental-crds
+    version: 1.0.0
+    condition: gwapi-experimental-crds.enabled

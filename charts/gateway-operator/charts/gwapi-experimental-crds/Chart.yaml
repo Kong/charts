@@ -1,0 +1,5 @@
+apiVersion: v2
+name: gwapi-experimental-crds
+version: 1.0.0
+appVersion: "1.0.0"
+description: A Helm chart for Kubernetes Gateway API experimental channel's CRDs

@@ -1,0 +1,20 @@
+ingressController:
+  enabled: false
+
+image:
+  repository: kong/kong-gateway
+  tag: "3.4"
+
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  # Ingress controller is disabled so use the plain /status endpoint instead of config readiness probe.
+  httpGet:
+    path: "/status"
+    port: status
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"

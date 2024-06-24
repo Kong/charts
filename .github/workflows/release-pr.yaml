@@ -11,9 +11,15 @@ on:
     branches:
       - main
       - release/*
+      - prepare-kgo-chart
+
+env:
+  # Specify this here because these tests rely on ktf to run kind for cluster creation.
+  KIND_VERSION: v0.23.0
 
 jobs:
   lint:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,15 +36,14 @@ jobs:
         run: make lint
 
   lint-test:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
-    env:
-      # Specify this here because these tests rely on ktf to run kind for cluster creation.
-      KIND_VERSION: v0.20.0
     strategy:
       matrix:
         chart-name:
           - kong
           - ingress
+          - gateway-operator
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,9 +51,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: v3.11.0
+        uses: azure/setup-helm@v4.2.0
 
       - name: Add Helm repos
         run: |
@@ -63,47 +66,46 @@ jobs:
         uses: helm/chart-testing-action@v2.6.1
 
       - name: Run chart-testing (lint)
-        run: ct lint --check-version-increment=false
+        run: ct lint --target-branch main --check-version-increment=false
 
       - name: setup testing environment (kind-cluster)
         env:
           KUBERNETES_VERSION: ${{ matrix.kubernetes-version }}
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-env.sh
 
       - name: Run chart-testing (install)
-        run: ct install --charts charts/${{ matrix.chart-name}}
+        run: ct install --target-branch main --charts charts/${{ matrix.chart-name}}
 
   integration-test:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     env:
-      # Specify this here because these tests rely on ktf to run kind for cluster creation.
-      KIND_VERSION: v0.20.0
-      GATEWAY_API_VERSION: v0.8.1
+      GATEWAY_API_VERSION: v1.0.0
     strategy:
       matrix:
         kubernetes-version:
-        - "1.23.13"
-        - "1.24.7"
-        - "1.25.9"
-        - "1.26.4"
-        - "1.27.1"
+          - "1.25.16"
+          - "1.26.15"
+          - "1.27.13"
+          - "1.28.9"
+          - "1.29.4"
+          - "1.30.0"
         chart-name:
           - kong
           - ingress
+          - gateway-operator
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: setup helm
-        uses: azure/setup-helm@v3
-        with:
-          version: v3.11.0
+        uses: azure/setup-helm@v4.2.0
 
       - name: setup testing environment (kind-cluster)
         env:
           KUBERNETES_VERSION: ${{ matrix.kubernetes-version }}
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-env.sh
 
       - name: run integration tests (integration)
@@ -119,34 +121,31 @@ jobs:
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
   oldversion-integration-test:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     env:
-      # Specify this here because these tests rely on ktf to run kind for cluster creation.
-      KIND_VERSION: v0.20.0
       GATEWAY_API_VERSION: v0.8.1
     strategy:
       matrix:
         kic-version:
-        - "2.10"
-        - "2.11"
+          - "2.10"
+          - "2.11"
         kong-version:
-        - "3.3"
-        - "3.2"
+          - "3.3"
+          - "3.2"
         chart-name:
           - kong
           - ingress
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: setup helm
-        uses: azure/setup-helm@v3
-        with:
-          version: v3.11.0
+        uses: azure/setup-helm@v4.2.0
 
       - name: setup testing environment (kind-cluster)
+        env:
+          CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-env.sh
 
       - name: run integration tests (integration)
@@ -159,15 +158,38 @@ jobs:
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
 
+  golden-tests:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    name: golden-tests
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup helm
+        uses: azure/setup-helm@v4.2.0
+
+      - name: build helm chart dependency
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add kong https://charts.konghq.com
+          helm dependency build charts/kong
+          helm dependency build charts/ingress
+
+      - name: run golden tests
+        run: make test.golden
+
   # Workaround to allow checking the matrix tests as required tests without adding the individual cases
   # Ref: https://github.com/orgs/community/discussions/26822#discussioncomment-3305794
   passed:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     needs:
       - lint
       - lint-test
       - integration-test
       - oldversion-integration-test
+      - golden-tests
     if: always()
     steps:
       - if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
