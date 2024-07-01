@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Added support for ServiceMonitor relabelings allowing labels manipulation before scraping.
+* Added `ingressController.konnect.controlPlaneID` and deprecated `ingressController.konnect.runtimeGroupID`
 
 ## 2.39.3
 

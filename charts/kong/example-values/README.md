@@ -65,7 +65,7 @@ common Kong deployment scenarios on Kubernetes.
 * [minimal-kong-gd-controller-konnect.yaml](minimal-kong-gd-controller-konnect.yaml) and
   [minimal-kong-gd-gateway.yaml](minimal-kong-gd-gateway.yaml) install a single Ingress
   Controller with Kong's Konnect sync feature enabled and a cluster of gateway instances.
-  In order to make it work, `ingressController.konnect.runtimeGroupID` has to be
+  In order to make it work, `ingressController.konnect.controlPlaneID` has to be
   supplied and a `konnect-client-tls` secret has to be created upfront.
 
 All Enterprise examples require some level of additional user configuration to
