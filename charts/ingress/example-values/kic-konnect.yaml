@@ -2,7 +2,7 @@ controller:
   ingressController:
     konnect:
       enabled: true
-      runtimeGroupID: "dd74208f-7eff-47d0-a286-ba6df3db278b"
+      controlPlaneID: "dd74208f-7eff-47d0-a286-ba6df3db278b"
       tlsClientSecretName: konnect-client-tls
       apiHostname: "us.kic.api.konghq.com"
 

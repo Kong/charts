@@ -649,7 +649,10 @@ ingressController:
     enabled: false
 
     # Specifies a Konnect Runtime Group's ID that the controller will push its data-plane config to.
+    # Deprecated: please use controlPlaneID instead.
     runtimeGroupID: ""
+    # Specifies a Konnect Control Plane's ID that the controller will push its data-plane config to.
+    controlPlaneID: ""
 
     # Specifies a Konnect API hostname that the controller will use to push its data-plane config to.
     # By default, this is set to US region's production API hostname.
