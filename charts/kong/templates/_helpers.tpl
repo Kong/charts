@@ -1126,7 +1126,14 @@ the template that it itself is using form the above sections.
       {{- $_ := set $autoEnv "KONG_ADMIN_GUI_AUTH_CONF" $guiAuthConf -}}
     {{- end }}
 
-    {{- if not (eq .Values.enterprise.rbac.admin_gui_auth "openid-connect") }}
+    {{/*
+    KONG_ADMIN_GUI_SESSION_CONF is required for Kong versions <3.6.0.
+    For >=3.6.0, when openid-connect is used as the admin_gui_auth, the session_conf_secret is not required.
+    https://docs.konghq.com/gateway/3.6.x/kong-manager/auth/oidc/migrate/
+    */}}
+    {{- if or (not (eq .Values.enterprise.rbac.admin_gui_auth "openid-connect"))
+              (semverCompare "< 3.6.0" (include "kong.effectiveVersion" .Values.image))
+    -}}
       {{- $guiSessionConf := include "secretkeyref" (dict "name" .Values.enterprise.rbac.session_conf_secret "key" "admin_gui_session_conf") -}}
       {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SESSION_CONF" $guiSessionConf -}}
     {{- end }}
