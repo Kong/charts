@@ -30,13 +30,12 @@ lint.shellcheck:
 
 .PHONY: test.golden
 test.golden:
-	@ $(MAKE) _chartsnap.kong && $(MAKE) _chartsnap.ingress || \
+	@ $(MAKE) _chartsnap.kong || \
 	(echo "$$GOLDEN_TEST_FAILURE_MSG" && exit 1)
 
 .PHONY: test.golden.update
 test.golden.update:
 	@ $(MAKE) _chartsnap.kong CHARTSNAP_ARGS="-u"
-	@ $(MAKE) _chartsnap.ingress CHARTSNAP_ARGS="-u"
 
 # Defining multi-line strings to echo: https://stackoverflow.com/a/649462/7958339
 define GOLDEN_TEST_FAILURE_MSG
@@ -50,13 +49,7 @@ _chartsnap.kong:
 	@ $(MAKE) _chartsnap GOLDEN_TEST_CHART=kong GOLDEN_TEST_CHART_VALUES_DIR=./charts/kong/ci/ \
 	CHARTSNAP_ARGS=$(CHARTSNAP_ARGS)
 
-.PHONY: _chartsnap.ingress
-_chartsnap.ingress:
-	@ $(MAKE) _chartsnap GOLDEN_TEST_CHART=ingress GOLDEN_TEST_CHART_VALUES_DIR=./charts/ingress/ci/ \
-	CHARTSNAP_ARGS=$(CHARTSNAP_ARGS)
-
 .PHONY: _chartsnap
 _chartsnap: chartsnap
 	@ helm repo update
-	@ helm dependencies update charts/ingress
 	@ helm chartsnap -c ./charts/$(GOLDEN_TEST_CHART) -f $(GOLDEN_TEST_CHART_VALUES_DIR) $(CHARTSNAP_ARGS)
