@@ -96,23 +96,23 @@ metadata:
   if [[ "${TAG}" != "default" ]]
   then
     TAG_MESSAGE="with controller tag ${TAG} "
-    ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.image.tag=${TAG} ");
+    ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.image.tag=${TAG} ");
   fi
 
   # Configure values for all tests
   # Enable Gateway API
-  ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.env.feature_gates=GatewayAlpha=true")
+  ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.env.feature_gates=GatewayAlpha=true")
   # Tests should not show up in reporting
-  ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports=false")
+  ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.env.anonymous_reports=false")
 
   if [[ -n "${KONG_VERSION-}" ]]
   then
-  ADDITIONAL_FLAGS+=("--set ${GATEWAY_PREFIX}image.tag=${KONG_VERSION}")
+  ADDITIONAL_FLAGS+=("--set image.tag=${KONG_VERSION}")
   fi
 
   if [[ -n "${KIC_VERSION-}" ]]
   then
-  ADDITIONAL_FLAGS+=("--set ${CONTROLLER_PREFIX}ingressController.image.tag=${KIC_VERSION}")
+  ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.image.tag=${KIC_VERSION}")
   fi
 
   echo "INFO: installing chart as release ${RELEASE_NAME} ${TAG_MESSAGE}to namespace ${RELEASE_NAMESPACE}"

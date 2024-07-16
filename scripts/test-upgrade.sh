@@ -46,7 +46,7 @@ else
   set -x
   # shellcheck disable=SC2048,SC2086
   helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-      --set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports="false" \
+      --set ingressController.deployment.pod.container.env.anonymous_reports="false" \
       --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
       "charts/${CHART_NAME}"
   set +x
@@ -84,10 +84,10 @@ else
   set -x
   # shellcheck disable=SC2048,SC2086
   helm upgrade --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-      --set ${CONTROLLER_PREFIX}ingressController.image.tag="${TAG}" \
+      --set ingressController.deployment.pod.container.image.tag="${TAG}" \
       --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
-      --set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports="false" \
-      --set ${CONTROLLER_PREFIX}ingressController.image.effectiveSemver="${EFFECTIVE_TAG}" \
+      --set ingressController.deployment.pod.container.env.anonymous_reports="false" \
+      --set ingressController.deployment.pod.container.image.effectiveSemver="${EFFECTIVE_TAG}" \
       "charts/${CHART_NAME}"
   set +x
 fi
