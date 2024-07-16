@@ -126,38 +126,6 @@ metadata:
 
 fi
 
-TAG_MESSAGE=""
-if [[ "${TAG}" != "default" ]]
-then
-  TAG_MESSAGE="with controller tag ${TAG} "
-  ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.image.tag=${TAG} ");
-fi
-
-# Configure values for all tests
-# Enable Gateway API
-ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.env.feature_gates=GatewayAlpha=true")
-# Tests should not show up in reporting
-ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.env.anonymous_reports=false")
-
-if [[ -n "${KONG_VERSION-}" ]]
-then
-ADDITIONAL_FLAGS+=("--set image.tag=${KONG_VERSION}")
-fi
-
-if [[ -n "${KIC_VERSION-}" ]]
-then
-ADDITIONAL_FLAGS+=("--set ingressController.deployment.pod.container.image.tag=${KIC_VERSION}")
-fi
-
-echo "INFO: installing chart as release ${RELEASE_NAME} ${TAG_MESSAGE}to namespace ${RELEASE_NAMESPACE}"
-set -x
-# shellcheck disable=SC2048,SC2086
-helm install --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-    --set deployment.test.enabled=true \
-    ${ADDITIONAL_FLAGS[*]} \
-    "charts/${CHART_NAME}"
-set +x
-
 # ------------------------------------------------------------------------------
 # Test Chart 
 # ------------------------------------------------------------------------------

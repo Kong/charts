@@ -52,13 +52,6 @@ else
   set +x
 fi
 
-set -x
-# shellcheck disable=SC2048,SC2086
-helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-    --set ingressController.deployment.pod.container.env.anonymous_reports="false" \
-    --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
-    "charts/${CHART_NAME}"
-set +x
 # ------------------------------------------------------------------------------
 # Test Chart
 # ------------------------------------------------------------------------------
