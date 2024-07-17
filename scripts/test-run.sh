@@ -30,11 +30,6 @@ KUBERNETES_VERSION="$($KUBECTL version -o json | jq -r '.serverVersion.gitVersio
 
 ADDITIONAL_FLAGS=()
 
-# ------------------------------------------------------------------------------
-# Deploy Kuma configuration and test namespace
-# ------------------------------------------------------------------------------
-
-
 if [[ "${CHART_NAME}" == "gateway-operator" ]]
 then
   # ------------------------------------------------------------------------------
