@@ -1,19 +1,6 @@
-## Kong Ingress Controller
+# Migrate to consolidated chart
 
-[Kong for Kubernetes](https://github.com/Kong/kubernetes-ingress-controller)
-is an open-source Ingress Controller for Kubernetes that offers
-API management capabilities with a plugin architecture.
+The 3.x `kong` chart consolidates the functionality provided by the `ingress`
 
-This is a meta chart that deploys an opinionated Kong Ingress Controller with
-Kong Gateway using [Helm](https://helm.sh) package manager.
-
-## Usage
-
-```bash
-helm repo add kong https://charts.konghq.com
-helm repo update
-
-helm install kong kong/ingress -n kong
-```
-
-If you need more control over what is deployed, see the [kong/kong chart](https://github.com/Kong/charts/blob/main/charts/kong/README.md). Any `values.yaml` setting can be specified in the `controller` or `gateway` section of your `values.yaml` using this chart.
+and 2.x `kong` charts into a single chart. `ingress` users should upgrade to
+`kong` 3.x following the [upgrade guide](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#300).

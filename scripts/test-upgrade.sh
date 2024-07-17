@@ -28,22 +28,10 @@ TEST_ENV_NAME="${TEST_ENV_NAME:-kong-charts-tests}"
 KUBECTL="kubectl --context kind-${TEST_ENV_NAME}"
 KUBERNETES_VERSION="$($KUBECTL version -o json | jq -r '.serverVersion.gitVersion')"
 
-CONTROLLER_PREFIX=""
 ADDITIONAL_FLAGS=()
 
 # ------------------------------------------------------------------------------
-# Configure per-chart settings
-# ------------------------------------------------------------------------------
-if [[ "${CHART_NAME}" == "ingress" ]]; then
-  CONTROLLER_PREFIX="controller."
-  # this is intentionally a no-op at present. this originally had a set that was
-  # made obsolete by a values default change. it's now a placeholder showing an
-  # example modification
-  # ADDITIONAL_FLAGS+=("<replace with a --set command>")
-fi
-
-# ------------------------------------------------------------------------------
-# Deploy Chart
+# Deploy Chart - Kubernetes Ingress Controller
 # ------------------------------------------------------------------------------
 echo "INFO: installing chart as release ${RELEASE_NAME} to namespace ${RELEASE_NAMESPACE}"
 if [[ "${CHART_NAME}" == "gateway-operator" ]]
@@ -58,7 +46,7 @@ else
   set -x
   # shellcheck disable=SC2048,SC2086
   helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-      --set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports="false" \
+      --set ingressController.deployment.pod.container.env.anonymous_reports="false" \
       --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
       "charts/${CHART_NAME}"
   set +x
@@ -89,13 +77,25 @@ else
   set -x
   # shellcheck disable=SC2048,SC2086
   helm upgrade --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
-      --set ${CONTROLLER_PREFIX}ingressController.image.tag="${TAG}" \
+      --set ingressController.deployment.pod.container.image.tag="${TAG}" \
       --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
-      --set ${CONTROLLER_PREFIX}ingressController.env.anonymous_reports="false" \
-      --set ${CONTROLLER_PREFIX}ingressController.image.effectiveSemver="${EFFECTIVE_TAG}" \
+      --set ingressController.deployment.pod.container.env.anonymous_reports="false" \
+      --set ingressController.deployment.pod.container.image.effectiveSemver="${EFFECTIVE_TAG}" \
       "charts/${CHART_NAME}"
   set +x
 fi
+
+echo "INFO: upgrading the helm chart to image tag ${TAG}"
+set -x
+# shellcheck disable=SC2048,SC2086
+helm upgrade --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
+    --set ingressController.deployment.pod.container.image.tag="${TAG}" \
+    --set deployment.test.enabled=true ${ADDITIONAL_FLAGS[*]} \
+    --set ingressController.deployment.pod.container.env.anonymous_reports="false" \
+    --set ingressController.deployment.pod.container.image.effectiveSemver="${EFFECTIVE_TAG}" \
+    "charts/${CHART_NAME}"
+set +x
+
 # ------------------------------------------------------------------------------
 # Test Upgraded Chart
 # ------------------------------------------------------------------------------
