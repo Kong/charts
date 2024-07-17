@@ -2,7 +2,14 @@
 
 ## Unreleased
 
+### Changes
+
 * Added support for ServiceMonitor relabelings allowing labels manipulation before scraping.
+
+### Breaking changes
+
+* Added `ingressController.konnect.controlPlaneID` and removed `ingressController.konnect.runtimeGroupID`
+  [#1099](https://github.com/Kong/charts/pull/1099)
 
 ## 2.39.3
 

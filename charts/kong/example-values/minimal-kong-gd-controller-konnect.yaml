@@ -21,4 +21,4 @@ ingressController:
 
   konnect:
     enabled: true
-    runtimeGroupID: "00000000-0000-0000-0000-000000000000" # CHANGEME
+    controlPlaneID: "00000000-0000-0000-0000-000000000000" # CHANGEME
