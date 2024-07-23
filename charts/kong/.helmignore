@@ -20,3 +20,7 @@
 .idea/
 *.tmproj
 OWNERS
+ci
+example-values
+.helmignore
+templates/tests
