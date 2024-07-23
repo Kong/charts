@@ -21,3 +21,7 @@
 .idea/
 *.tmproj
 .vscode/
+ci
+example-values
+.helmignore
+templates/tests
