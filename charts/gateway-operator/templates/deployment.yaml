@@ -27,6 +27,14 @@ spec:
         {{ include "kong.renderTpl" (dict "value" .Values.podLabels "context" $) | nindent 8 }}
         {{- end }}
     spec:
+      {{- with .Values.tolerations }}
+      tolerations:
+      {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+      {{ toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: manager
         {{ with .Values.args -}}

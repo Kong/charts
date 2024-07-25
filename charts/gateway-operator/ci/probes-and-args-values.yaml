@@ -11,3 +11,6 @@ readinessProbe:
 
 args:
   - --zap-log-level=debug
+
+env:
+  anonymous_reports: "false"

@@ -1,3 +1,8 @@
+tolerations:
+- key: "example-key"
+  operator: "Exists"
+  effect: "NoSchedule"
+
 livenessProbe:
   httpGet:
     path: /healthz
@@ -10,8 +15,4 @@ readinessProbe:
   periodSeconds: 1
 
 env:
-  # gateway controller
-  enable_controller_gateway: false
-
-args:
-  - --zap-log-level=debug
+  anonymous_reports: "false"

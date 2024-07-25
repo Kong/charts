@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.10
+
+### Changes
+
+- Added `tolerations` and `affinity` fields support to specify on operator's Pods
+
 ## 0.1.9
 
 ### Fixes

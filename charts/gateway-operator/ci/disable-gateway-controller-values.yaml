@@ -1,3 +1,4 @@
 env:
   # gateway controller
   enable_gateway_controller: false
+  anonymous_reports: "false"
