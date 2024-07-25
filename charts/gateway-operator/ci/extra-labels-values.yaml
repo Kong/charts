@@ -8,3 +8,6 @@ livenessProbe:
 readinessProbe:
   initialDelaySeconds: 1
   periodSeconds: 1
+
+env:
+  anonymous_reports: "false"
