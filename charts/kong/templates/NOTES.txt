@@ -25,6 +25,12 @@ Kong: https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/gettin
 {{- end -}}
 {{- end -}}
 
+{{- if and .Values.ingressController.konnect.enabled .Values.ingressController.konnect.runtimeGroupID -}}
+{{- if not .Values.ingressController.konnect.controlPlaneID -}}
+{{- $warnings = append $warnings "Please use `.ingressController.konnect.controlPlaneID` instead. `.ingressController.konnect.runtimeGroupID` will be removed in a future release." -}}
+{{- end -}}
+{{- end -}}
+
 {{- include "kong.deprecation-warnings" $warnings -}}
 
 {{- if .Values.demo -}}

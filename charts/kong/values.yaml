@@ -647,7 +647,8 @@ ingressController:
 
   konnect:
     enabled: false
-
+    # Deprecated: Specifies a Konnect Runtime Group's ID that the controller will push its data-plane config to.
+    runtimeGroupID: ""
     # Specifies a Konnect Control Plane's ID that the controller will push its data-plane config to.
     controlPlaneID: ""
 

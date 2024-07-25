@@ -533,8 +533,15 @@ The name of the Service which will be used by the controller to update the Ingre
   {{- $konnect := .Values.ingressController.konnect -}}
   {{- $_ := required "ingressController.konnect.controlPlaneID is required when ingressController.konnect.enabled" $konnect.controlPlaneID -}}
 
-  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_SYNC_ENABLED" true -}}
+  {{- if $konnect.controlPlaneID }}
   {{- $_ = set $autoEnv "CONTROLLER_KONNECT_CONTROL_PLANE_ID" $konnect.controlPlaneID -}}
+  {{- else if $konnect.runtimeGroupID }}
+  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_CONTROL_PLANE_ID" $konnect.runtimeGroupID -}}
+  {{- else }}
+  {{- fail "At least one of konnect.controlPlaneID or konnect.runtimeGroupID must be set." -}}
+  {{- end }}
+
+  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_SYNC_ENABLED" true -}}
   {{- $_ = set $autoEnv "CONTROLLER_KONNECT_ADDRESS" (printf "https://%s" .Values.ingressController.konnect.apiHostname) -}}
 
   {{- $tlsCert := include "secretkeyref" (dict "name" $konnect.tlsClientCertSecretName "key" "tls.crt") -}}
