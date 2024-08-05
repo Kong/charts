@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+* Add `revisionHistoryLimit` value to set the number of replicasets wants to keep.
+
 ### Changes
 
 * Added support for ServiceMonitor relabelings allowing labels manipulation before scraping.

@@ -23,6 +23,7 @@ spec:
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   {{- end }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
       {{- include "kong.selectorLabels" . | nindent 6 }}

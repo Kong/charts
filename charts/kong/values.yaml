@@ -903,6 +903,9 @@ podLabels: {}
 # It has no effect when autoscaling.enabled is set to true
 replicaCount: 1
 
+# The number of replicasets will be retain
+revisionHistoryLimit: 10
+
 # Annotations to be added to Kong deployment
 deploymentAnnotations: {}
 
