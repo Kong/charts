@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-* Add `revisionHistoryLimit` value to set the number of replicasets wants to keep.
+* Add `deployment.revisionHistoryLimit` to set how many old `ReplicaSet`s you want to retain.
 
 ### Changes
 
