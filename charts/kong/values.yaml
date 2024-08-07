@@ -19,6 +19,10 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
+  
+  # The number of replicasets will be retain
+  revisionHistoryLimit: 10
+
   ## Minimum number of seconds for which a newly created pod should be ready without any of its container crashing,
   ## for it to be considered available.
   # minReadySeconds: 60
@@ -902,9 +906,6 @@ podLabels: {}
 # Kong pod count.
 # It has no effect when autoscaling.enabled is set to true
 replicaCount: 1
-
-# The number of replicasets will be retain
-revisionHistoryLimit: 10
 
 # Annotations to be added to Kong deployment
 deploymentAnnotations: {}
