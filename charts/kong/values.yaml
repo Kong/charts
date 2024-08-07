@@ -20,7 +20,7 @@ deployment:
     # controller-only release.
     enabled: true
   
-  # The number of replicasets will be retain
+  # The number of old `ReplicaSet`s to retain.
   revisionHistoryLimit: 10
 
   ## Minimum number of seconds for which a newly created pod should be ready without any of its container crashing,
