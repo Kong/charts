@@ -19,7 +19,6 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
-  
   # The number of old `ReplicaSet`s to retain.
   revisionHistoryLimit: 10
 
