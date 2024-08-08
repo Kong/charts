@@ -534,6 +534,7 @@ metadata:
   name: chartsnap-kong
   namespace: default
 spec:
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app.kubernetes.io/component: app
