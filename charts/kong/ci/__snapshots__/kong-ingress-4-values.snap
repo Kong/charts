@@ -643,6 +643,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
@@ -754,6 +755,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
@@ -829,6 +831,7 @@ spec:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+            runAsGroup: 1000
             runAsNonRoot: true
             runAsUser: 1000
             seccompProfile:
@@ -838,7 +841,9 @@ spec:
               name: chartsnap-kong-prefix-dir
             - mountPath: /tmp
               name: chartsnap-kong-tmp
-      securityContext: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: chartsnap-kong
       terminationGracePeriodSeconds: 30
       volumes:
