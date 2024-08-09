@@ -1,12 +1,17 @@
 # Changelog
 
-## Unreleased
+## 2.40.0
 
 * Add `deployment.revisionHistoryLimit` to set how many old `ReplicaSet`s you want to retain.
 
 ### Changes
-
 * Added support for ServiceMonitor relabelings allowing labels manipulation before scraping.
+  [#1095](https://github.com/Kong/charts/pull/1095)
+
+### Fixed
+* Populate `KONG_ADMIN_GUI_SESSION_CONF` even if `enterprise.rbac.admin_gui_auth` is set to `openid-connect`
+  for Kong versions < 3.6.0.
+  [#1101](https://github.com/Kong/charts/pull/1101)
 
 ### Breaking changes
 
