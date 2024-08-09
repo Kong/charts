@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.11
+
+### Changes
+
+- Added `poddisruptionbudgets` to RBAC policy rules in operator's manager-role.
+  [#1114](https://github.com/Kong/charts/pull/1114)
+
 ## 0.1.10
 
 ### Changes
