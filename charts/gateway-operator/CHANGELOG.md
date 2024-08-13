@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0
+
+### Changes
+
+- Bump default version to 1.3.0 and Gateway API CRDs to 1.1.0.
+  [#1115](https://github.com/Kong/charts/pull/1115)
+
 ## 0.1.11
 
 ### Changes
