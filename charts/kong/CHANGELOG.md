@@ -5,6 +5,7 @@
 ### Changes
 
 * Explicitly cert-manager group on Certificate. [#1128](https://github.com/Kong/charts/pull/1128)
+* Add missing load balancer service values. [#1116](https://github.com/Kong/charts/pull/1116)
 
 ## 2.42.0
 
