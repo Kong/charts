@@ -283,9 +283,6 @@ proxy:
   enabled: true
   type: LoadBalancer
   loadBalancerClass: ""
-  # The .loadBalancerIP field for a Service was deprecated in Kubernetes v1.24.
-  # For a complete reference, visit https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
-  loadBalancerIP: ""
   # Configures optional firewall rules and in the VPC network to only allow certain source ranges.
   loadBalancerSourceRanges: []
   # Override proxy Service name
