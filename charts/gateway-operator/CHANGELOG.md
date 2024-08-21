@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Added the ability to define deployment selector labels
+  [#1118](https://github.com/Kong/charts/pull/1118)
+
 ## 0.2.0
 
 ### Changes
