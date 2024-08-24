@@ -109,3 +109,7 @@ args: []
 # Use this section to change the certs-dir emptyDir size
 certsDir:
   sizeLimit: 256Mi
+
+# Override the default deployment selector labels. This is useful if you don't want
+# to use the defaults or are migrating to this chart and want to use existing labels.
+# selectorLabels: []

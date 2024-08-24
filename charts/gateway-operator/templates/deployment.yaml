@@ -10,7 +10,11 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
+      {{- if .Values.selectorLabels }}
+      {{- toYaml .Values.selectorLabels | nindent 6}}
+      {{- else }}
       {{- include "kong.selectorLabels" . | nindent 6 }}
+      {{- end }}
   strategy:
     type: Recreate
   template:
