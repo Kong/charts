@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.41.0
+
+### Changes
+
+* Bumped default `kong/kubernetes-ingress-controller` image tag to 3.3.
+  [#1121](https://github.com/Kong/charts/pull/1121)
+
 ## 2.40.0
 
 * Add `deployment.revisionHistoryLimit` to set how many old `ReplicaSet`s you want to retain.
