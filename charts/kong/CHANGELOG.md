@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.41.1
+
+### Changes
+
+* Deleted an unnecessary conditional statement for `ingressController.konnect.controlPlaneID`.
+  [#1126](https://github.com/Kong/charts/pull/1126)
+
 ## 2.41.0
 
 ### Changes

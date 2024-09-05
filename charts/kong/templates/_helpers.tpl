@@ -531,7 +531,6 @@ The name of the Service which will be used by the controller to update the Ingre
   {{- end }}
 
   {{- $konnect := .Values.ingressController.konnect -}}
-  {{- $_ := required "ingressController.konnect.controlPlaneID is required when ingressController.konnect.enabled" $konnect.controlPlaneID -}}
 
   {{- if $konnect.controlPlaneID }}
   {{- $_ = set $autoEnv "CONTROLLER_KONNECT_CONTROL_PLANE_ID" $konnect.controlPlaneID -}}
