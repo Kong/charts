@@ -71,18 +71,22 @@ spec:
   {{- end }}
   {{ if .clusterIssuer -}}
   issuerRef:
+    group: cert-manager.io
     name: {{ .clusterIssuer }}
     kind: ClusterIssuer
   {{ else if .issuer -}}
   issuerRef:
+    group: cert-manager.io
     name: {{ .issuer }}
     kind: Issuer
   {{ else if .globalClusterIssuer -}}
   issuerRef:
+    group: cert-manager.io
     name: {{ .globalClusterIssuer}}
     kind: ClusterIssuer
   {{ else if .globalIssuer -}}
   issuerRef:
+    group: cert-manager.io
     name: {{ .globalIssuer }}
     kind: Issuer
   {{- end -}}
