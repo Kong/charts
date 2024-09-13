@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.14.1
+
+### Improvements
+
+- Bumped dependencies on `kong/kong` chart to `==2.41.1`. Review the [kong chart
+  changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md#2411)
+  for details.
+
 ## 0.14.0
 
 ### Improvements
