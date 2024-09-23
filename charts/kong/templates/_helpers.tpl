@@ -30,7 +30,8 @@ app.kubernetes.io/name: {{ template "kong.name" . }}
 helm.sh/chart: {{ template "kong.chart" . }}
 app.kubernetes.io/instance: "{{ .Release.Name }}"
 app.kubernetes.io/managed-by: "{{ .Release.Service }}"
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{ $version := semver (include "kong.effectiveVersion" .Values.image) }}
+app.kubernetes.io/version: {{ printf "%d.%d" $version.Major $version.Minor | quote }}
 {{- range $key, $value := .Values.extraLabels }}
 {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote }}
 {{- end }}
