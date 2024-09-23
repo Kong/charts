@@ -467,6 +467,14 @@ spec:
       port: 443
       protocol: TCP
       targetPort: webhook
+    - name: cmetrics
+      port: 10255
+      protocol: TCP
+      targetPort: cmetrics
+    - name: status
+      port: 10254
+      protocol: TCP
+      targetPort: cstatus
   selector:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: chartsnap

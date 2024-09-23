@@ -227,6 +227,16 @@ spec:
     port: 443
     protocol: TCP
     targetPort: webhook
+  {{- if and .Values.ingressController.enabled (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+  - name: cmetrics
+    port: 10255
+    protocol: TCP
+    targetPort: cmetrics
+  - name: status
+    port: 10254
+    protocol: TCP
+    targetPort: cstatus
+  {{- end }}
   selector:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: app
