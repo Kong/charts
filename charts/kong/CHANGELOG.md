@@ -1,12 +1,17 @@
 # Changelog
 
-## Unreleased
+## 2.42.0
 
 ### Fixes
 
 * Fixed handling version labels `app.kubernetes.io/version` and `version` so that
   they are not based on `Chart.yaml`'s version but on the version set in `values.yaml`.
   [#1132](https://github.com/Kong/charts/pull/1132)
+
+### Changes
+
+* Bumped default `kong` image tag to 3.7.
+  [#1131](https://github.com/Kong/charts/pull/1131)
 
 ## 2.41.1
 

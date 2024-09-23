@@ -9,7 +9,7 @@ name: kong
 sources:
   - https://github.com/Kong/charts/tree/main/charts/kong
 version: 2.41.1
-appVersion: "3.6"
+appVersion: "3.7"
 dependencies:
   - name: postgresql
     version: 11.9.13
