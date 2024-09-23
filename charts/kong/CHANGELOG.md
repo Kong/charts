@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Fixes
+
+* Fixed handling version labels `app.kubernetes.io/version` and `version` so that
+  they are not based on `Chart.yaml`'s version but on the version set in `values.yaml`.
+  [#1132](https://github.com/Kong/charts/pull/1132)
+
 ## 2.41.1
 
 ### Changes
