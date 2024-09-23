@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong
   namespace: default
@@ -20,7 +20,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong-validation-webhook-ca-keypair
   namespace: default
@@ -36,7 +36,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong-validation-webhook-keypair
   namespace: default
@@ -58,7 +58,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong
 rules:
@@ -354,7 +354,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong
 roleRef:
@@ -373,7 +373,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong
   namespace: default
@@ -437,7 +437,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong
   namespace: default
@@ -457,7 +457,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong-validation-webhook
   namespace: default
@@ -472,7 +472,7 @@ spec:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
 ---
 apiVersion: v1
@@ -482,7 +482,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong-manager
   namespace: default
@@ -509,7 +509,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     enable-metrics: "true"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong-proxy
@@ -538,7 +538,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong
   namespace: default
@@ -562,9 +562,9 @@ spec:
         app.kubernetes.io/instance: chartsnap
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kong
-        app.kubernetes.io/version: "3.6"
+        app.kubernetes.io/version: "3.7"
         helm.sh/chart: kong-2.41.1
-        version: "3.6"
+        version: "3.7"
     spec:
       automountServiceAccountToken: false
       containers:
@@ -698,7 +698,7 @@ spec:
               value: "off"
             - name: KONG_NGINX_DAEMON
               value: "off"
-          image: kong:3.6
+          image: kong:3.7
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -810,7 +810,7 @@ spec:
               value: 0.0.0.0:8100, [::]:8100
             - name: KONG_STREAM_LISTEN
               value: "off"
-          image: kong:3.6
+          image: kong:3.7
           imagePullPolicy: IfNotPresent
           name: clear-stale-pid
           resources: {}
@@ -867,7 +867,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong-proxy
   namespace: default
@@ -893,7 +893,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.6"
+    app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.41.1
   name: chartsnap-kong-validations
   namespace: default
