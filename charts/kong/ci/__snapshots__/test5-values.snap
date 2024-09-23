@@ -1548,6 +1548,7 @@ webhooks:
         name: chartsnap-kong-validation-webhook
         namespace: default
     failurePolicy: Ignore
+    matchPolicy: Equivalent
     name: validations.kong.konghq.com
     objectSelector:
       matchExpressions:

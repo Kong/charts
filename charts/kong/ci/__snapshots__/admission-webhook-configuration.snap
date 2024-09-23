@@ -1,3 +1,9 @@
+apiVersion: helm-chartsnap.jlandowner.dev/v1alpha1
+kind: Unknown
+raw: |
+  coalesce.go:286: warning: cannot overwrite table with non table for kong.ingressController.admissionWebhook.objectSelector (map[matchExpressions:[map[key:owner operator:NotIn values:[helm]]]])
+  coalesce.go:286: warning: cannot overwrite table with non table for kong.ingressController.admissionWebhook.objectSelector (map[matchExpressions:[map[key:owner operator:NotIn values:[helm]]]])
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -573,8 +579,6 @@ spec:
                   fieldPath: metadata.namespace
             - name: CONTROLLER_ADMISSION_WEBHOOK_LISTEN
               value: 0.0.0.0:8080
-            - name: CONTROLLER_ANONYMOUS_REPORTS
-              value: "false"
             - name: CONTROLLER_ELECTION_ID
               value: kong-ingress-controller-leader-kong
             - name: CONTROLLER_INGRESS_CLASS
@@ -585,7 +589,7 @@ spec:
               value: https://localhost:8444
             - name: CONTROLLER_PUBLISH_SERVICE
               value: default/chartsnap-kong-proxy
-          image: kong/kubernetes-ingress-controller:3.0
+          image: kong/kubernetes-ingress-controller:3.3
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -647,8 +651,6 @@ spec:
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
               value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
-            - name: KONG_ANONYMOUS_REPORTS
-              value: "off"
             - name: KONG_CLUSTER_LISTEN
               value: "off"
             - name: KONG_DATABASE
@@ -689,7 +691,7 @@ spec:
               value: "off"
             - name: KONG_NGINX_DAEMON
               value: "off"
-          image: kong:3.4
+          image: kong:3.7
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -725,8 +727,8 @@ spec:
               path: /status/ready
               port: status
               scheme: HTTP
-            initialDelaySeconds: 1
-            periodSeconds: 1
+            initialDelaySeconds: 5
+            periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 5
           resources: {}
@@ -761,8 +763,6 @@ spec:
               value: /dev/stderr
             - name: KONG_ADMIN_LISTEN
               value: 127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl
-            - name: KONG_ANONYMOUS_REPORTS
-              value: "off"
             - name: KONG_CLUSTER_LISTEN
               value: "off"
             - name: KONG_DATABASE
@@ -801,7 +801,7 @@ spec:
               value: 0.0.0.0:8100, [::]:8100
             - name: KONG_STREAM_LISTEN
               value: "off"
-          image: kong:3.4
+          image: kong:3.7
           imagePullPolicy: IfNotPresent
           name: clear-stale-pid
           resources: {}
@@ -871,7 +871,7 @@ webhooks:
         name: chartsnap-kong-validation-webhook
         namespace: default
     failurePolicy: Ignore
-    matchPolicy: Equivalent
+    matchPolicy: Exact
     name: secrets.credentials.validation.ingress-controller.konghq.com
     objectSelector:
       matchExpressions:
@@ -888,6 +888,7 @@ webhooks:
         resources:
           - secrets
     sideEffects: None
+    timeoutSeconds: 5
   - admissionReviewVersions:
       - v1
     clientConfig:
@@ -896,14 +897,12 @@ webhooks:
         name: chartsnap-kong-validation-webhook
         namespace: default
     failurePolicy: Ignore
-    matchPolicy: Equivalent
+    matchPolicy: Exact
     name: secrets.plugins.validation.ingress-controller.konghq.com
     objectSelector:
       matchExpressions:
-        - key: owner
-          operator: NotIn
-          values:
-            - helm
+        - key: konghq.com/validate
+          operator: Exists
     rules:
       - apiGroups:
           - ""
@@ -915,6 +914,7 @@ webhooks:
         resources:
           - secrets
     sideEffects: None
+    timeoutSeconds: 5
   - admissionReviewVersions:
       - v1beta1
     clientConfig:
@@ -923,14 +923,24 @@ webhooks:
         name: chartsnap-kong-validation-webhook
         namespace: default
     failurePolicy: Ignore
-    matchPolicy: Equivalent
+    matchConditions:
+      - expression: '!(request.resource.group == "coordination.k8s.io" && request.resource.resource == "leases")'
+        name: exclude-leases
+      - expression: '!("system:nodes" in request.userInfo.groups)'
+        name: exclude-kubelet-requests
+      - expression: request.resource.group != "rbac.authorization.k8s.io"
+        name: rbac
+    matchPolicy: Exact
     name: validations.kong.konghq.com
     objectSelector:
-      matchExpressions:
-        - key: owner
-          operator: NotIn
-          values:
-            - helm
+      - key: owner
+        operator: NotIn
+        values:
+          - helm
+      - key: infra
+        operator: In
+        values:
+          - cloud
     rules:
       - apiGroups:
           - configuration.konghq.com
@@ -975,3 +985,4 @@ webhooks:
           - gateways
           - httproutes
     sideEffects: None
+    timeoutSeconds: 5
