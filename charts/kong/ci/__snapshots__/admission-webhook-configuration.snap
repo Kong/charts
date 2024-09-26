@@ -1,8 +1,8 @@
 apiVersion: helm-chartsnap.jlandowner.dev/v1alpha1
 kind: Unknown
 raw: |
-  coalesce.go:286: warning: cannot overwrite table with non table for kong.ingressController.admissionWebhook.objectSelector (map[matchExpressions:[map[key:owner operator:NotIn values:[helm]]]])
-  coalesce.go:286: warning: cannot overwrite table with non table for kong.ingressController.admissionWebhook.objectSelector (map[matchExpressions:[map[key:owner operator:NotIn values:[helm]]]])
+  coalesce.go:220: warning: cannot overwrite table with non table for kong.ingressController.admissionWebhook.objectSelector (map[matchExpressions:[map[key:owner operator:NotIn values:[helm]]]])
+  coalesce.go:220: warning: cannot overwrite table with non table for kong.ingressController.admissionWebhook.objectSelector (map[matchExpressions:[map[key:owner operator:NotIn values:[helm]]]])
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong
   namespace: default
 ---
@@ -27,7 +27,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong-validation-webhook-ca-keypair
   namespace: default
 type: kubernetes.io/tls
@@ -43,7 +43,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong-validation-webhook-keypair
   namespace: default
 type: kubernetes.io/tls
@@ -56,7 +56,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong
 rules:
   - apiGroups:
@@ -352,7 +352,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -371,7 +371,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong
   namespace: default
 rules:
@@ -435,7 +435,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong
   namespace: default
 roleRef:
@@ -455,7 +455,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong-validation-webhook
   namespace: default
 spec:
@@ -470,7 +470,7 @@ spec:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
 ---
 apiVersion: v1
 kind: Service
@@ -480,7 +480,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong-manager
   namespace: default
 spec:
@@ -508,7 +508,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
     enable-metrics: "true"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong-proxy
   namespace: default
 spec:
@@ -536,7 +536,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong
   namespace: default
 spec:
@@ -560,7 +560,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kong
         app.kubernetes.io/version: "3.7"
-        helm.sh/chart: kong-2.41.1
+        helm.sh/chart: kong-2.42.0
         version: "3.7"
     spec:
       automountServiceAccountToken: false
@@ -859,7 +859,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
-    helm.sh/chart: kong-2.41.1
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong-validations
   namespace: default
 webhooks:
