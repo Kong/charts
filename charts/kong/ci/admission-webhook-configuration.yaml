@@ -5,14 +5,15 @@ ingressController:
     timeoutSeconds: 5
     filterSecrets: true
     objectSelector:
-    - key: owner
-      operator: NotIn
-      values:
-      - helm
-    - key: infra
-      operator: In
-      values:
-      - cloud
+      matchExpressions:
+      - key: owner
+        operator: NotIn
+        values:
+        - helm
+      - key: infra
+        operator: In
+        values:
+        - cloud
     matchPolicy: Exact
     matchConditions:
       - name: 'exclude-leases' # Each match condition must have a unique name

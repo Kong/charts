@@ -1,9 +1,3 @@
-apiVersion: helm-chartsnap.jlandowner.dev/v1alpha1
-kind: Unknown
-raw: |
-  coalesce.go:220: warning: cannot overwrite table with non table for kong.ingressController.admissionWebhook.objectSelector (map[matchExpressions:[map[key:owner operator:NotIn values:[helm]]]])
-  coalesce.go:220: warning: cannot overwrite table with non table for kong.ingressController.admissionWebhook.objectSelector (map[matchExpressions:[map[key:owner operator:NotIn values:[helm]]]])
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -933,14 +927,15 @@ webhooks:
     matchPolicy: Exact
     name: validations.kong.konghq.com
     objectSelector:
-      - key: owner
-        operator: NotIn
-        values:
-          - helm
-      - key: infra
-        operator: In
-        values:
-          - cloud
+      matchExpressions:
+        - key: owner
+          operator: NotIn
+          values:
+            - helm
+        - key: infra
+          operator: In
+          values:
+            - cloud
     rules:
       - apiGroups:
           - configuration.konghq.com
