@@ -1,0 +1,24 @@
+ingressController:
+  enabled: true
+  admissionWebhook:
+    enabled: true
+    timeoutSeconds: 5
+    filterSecrets: true
+    objectSelector:
+      matchExpressions:
+      - key: owner
+        operator: NotIn
+        values:
+        - helm
+      - key: infra
+        operator: In
+        values:
+        - cloud
+    matchPolicy: Exact
+    matchConditions:
+      - name: 'exclude-leases' # Each match condition must have a unique name
+        expression: '!(request.resource.group == "coordination.k8s.io" && request.resource.resource == "leases")' # Match non-lease resources.
+      - name: 'exclude-kubelet-requests'
+        expression: '!("system:nodes" in request.userInfo.groups)' # Match requests made by non-node users.
+      - name: 'rbac' # Skip RBAC requests, which are handled by the second webhook.
+        expression: 'request.resource.group != "rbac.authorization.k8s.io"'

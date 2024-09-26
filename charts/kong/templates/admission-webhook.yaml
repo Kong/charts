@@ -55,7 +55,7 @@ webhooks:
       name: {{ template "kong.service.validationWebhook" . }}
       namespace: {{ template "kong.namespace" . }}
   failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
-  matchPolicy: Equivalent
+  matchPolicy: {{ .Values.ingressController.admissionWebhook.matchPolicy }}
   name: secrets.credentials.validation.ingress-controller.konghq.com
   {{- with .Values.ingressController.admissionWebhook.namespaceSelector }}
   namespaceSelector:
@@ -93,7 +93,7 @@ webhooks:
       name: {{ template "kong.service.validationWebhook" . }}
       namespace: {{ template "kong.namespace" . }}
   failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
-  matchPolicy: Equivalent
+  matchPolicy: {{ .Values.ingressController.admissionWebhook.matchPolicy }}
   name: secrets.plugins.validation.ingress-controller.konghq.com
   {{- with .Values.ingressController.admissionWebhook.namespaceSelector }}
   namespaceSelector:
@@ -127,19 +127,22 @@ webhooks:
     - secrets
   sideEffects: None
 - name: validations.kong.konghq.com
+  matchPolicy: {{ .Values.ingressController.admissionWebhook.matchPolicy }}
   {{- with .Values.ingressController.admissionWebhook.namespaceSelector }}
   namespaceSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.ingressController.admissionWebhook.matchConditions }}
+  matchConditions:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.ingressController.admissionWebhook.objectSelector }}
+  objectSelector:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .Values.ingressController.admissionWebhook.timeoutSeconds }}
   timeoutSeconds: {{ . }}
   {{- end }}
-  objectSelector:
-    matchExpressions:
-    - key: owner
-      operator: NotIn
-      values:
-      - helm
   failurePolicy: {{ .Values.ingressController.admissionWebhook.failurePolicy }}
   sideEffects: None
   admissionReviewVersions: ["v1beta1"]

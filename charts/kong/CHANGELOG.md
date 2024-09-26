@@ -12,6 +12,11 @@
 
 * Bumped default `kong` image tag to 3.7.
   [#1131](https://github.com/Kong/charts/pull/1131)
+* Add new admission webhook configuration fields:
+  * `matchPolicy`
+  * `matchConditions` and
+  * `objectSelector`
+  [#1133](https://github.com/Kong/charts/pull/1133)
 
 ## 2.41.1
 
