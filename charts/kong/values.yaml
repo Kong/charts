@@ -133,10 +133,10 @@ extraLabels: {}
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "3.6"
+  tag: "3.7"
   # Kong Enterprise
   # repository: kong/kong-gateway
-  # tag: "3.5"
+  # tag: "3.7"
 
   # Specify a semver version if your image tag is not one (e.g. "nightly")
   effectiveSemver:
@@ -584,6 +584,7 @@ ingressController:
   envFrom: []
 
   admissionWebhook:
+    matchPolicy: Equivalent
     enabled: true
     filterSecrets: false
     failurePolicy: Ignore
@@ -591,6 +592,13 @@ ingressController:
     certificate:
       provided: false
     namespaceSelector: {}
+    # ObjectSelector specifies which objects to match against validations.kong.konghq.com webhook webhook
+    objectSelector:
+      matchExpressions:
+      - key: owner
+        operator: NotIn
+        values:
+        - helm
     # Specifiy the secretName when the certificate is provided via a TLS secret
     # secretName: ""
     # Specifiy the CA bundle of the provided certificate.
