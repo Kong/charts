@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Explicitly cert-manager group on Certificate
+
 ## 2.41.1
 
 ### Changes
