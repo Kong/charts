@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+
+* Explicitly cert-manager group on Certificate. [#1128](https://github.com/Kong/charts/pull/1128)
+
 ## 2.42.0
 
 ### Fixes
