@@ -1011,6 +1011,7 @@ serviceMonitor:
   # If you wish to gather metrics from a Kong instance with the proxy disabled (such as a hybrid control plane), see:
   # https://github.com/Kong/charts/blob/main/charts/kong/README.md#prometheus-operator-integration
   enabled: false
+  trustCRDsExist: false
   # interval: 30s
   # Specifies namespace, where ServiceMonitor should be installed
   # namespace: monitoring
