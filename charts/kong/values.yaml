@@ -282,7 +282,9 @@ proxy:
   # Enable creating a Kubernetes service for the proxy
   enabled: true
   type: LoadBalancer
-  loadBalancerClass:
+  loadBalancerClass: ""
+  # Configures optional firewall rules and in the VPC network to only allow certain source ranges.
+  loadBalancerSourceRanges: []
   # Override proxy Service name
   nameOverride: ""
   # To specify annotations or labels for the proxy service, add them to the respective
