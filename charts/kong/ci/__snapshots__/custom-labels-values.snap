@@ -485,6 +485,37 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.7"
     helm.sh/chart: kong-2.42.0
+  name: chartsnap-kong-metrics
+  namespace: default
+spec:
+  ports:
+    - name: cmetrics
+      port: 10255
+      protocol: TCP
+      targetPort: cmetrics
+    - name: status
+      port: 10254
+      protocol: TCP
+      targetPort: cstatus
+  selector:
+    acme.com/some-key: some-value
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.7"
+    helm.sh/chart: kong-2.42.0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    acme.com/some-key: some-value
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/version: "3.7"
+    helm.sh/chart: kong-2.42.0
   name: chartsnap-kong-manager
   namespace: default
 spec:
