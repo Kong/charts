@@ -9,7 +9,7 @@
 
 ### Fixes
 
-* Fixes KIC webhook service config to correctly work with ServiceMonitor (by adding in the correct ports to match ServiceMonitor config)
+* Enables KIC metrics to be scraped by adding in a service to correctly work with the defined ServiceMonitor.
 
 ## 2.42.0
 
