@@ -6,6 +6,8 @@
 
 - Updated CRDs for KGO 1.4.0 release
   [#1139](https://github.com/Kong/charts/pull/1139)
+- Update RBAC policy rules for KGO 1.4.0
+  [#1138](https://github.com/Kong/charts/pull/1138)
 
 ## 0.2.1
 
