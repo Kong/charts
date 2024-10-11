@@ -967,12 +967,6 @@ Use the Pod security context defined in Values or set the UID by default
 {{ .Values.securityContext | toYaml }}
 {{- end -}}
 
-{{- define "kong.no_daemon_env" -}}
-{{- template "kong.env" . }}
-- name: KONG_NGINX_DAEMON
-  value: "off"
-{{- end -}}
-
 {{/*
 The environment values passed to Kong; this should come after all
 the template that it itself is using form the above sections.
@@ -1841,4 +1835,10 @@ envFrom:
 {{- toYaml . | nindent 2 -}}
   {{- else -}}
   {{- end -}}
+{{- end -}}
+
+{{- define "kong.no_daemon_env" -}}
+{{- template "kong.env" . }}
+- name: KONG_NGINX_DAEMON
+  value: "off"
 {{- end -}}
