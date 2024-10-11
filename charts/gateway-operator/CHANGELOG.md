@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+
+- Updated CRDs for KGO 1.4.0 release
+  [#1139](https://github.com/Kong/charts/pull/1139)
+
 ## 0.2.1
 
 ### Changes
