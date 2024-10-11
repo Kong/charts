@@ -1,0 +1,25 @@
+{{- if and .Values.ingressController.enabled (semverCompare ">= 2.0.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "kong.fullname" . }}-metrics
+  namespace: {{ template "kong.namespace" . }}
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+    {{- if .Values.ingressController.labels }}
+      {{- toYaml .Values.ingressController.labels | nindent 4 }}
+    {{- end }}
+spec:
+  ports:
+  - name: cmetrics
+    port: 10255
+    protocol: TCP
+    targetPort: cmetrics
+  - name: status
+    port: 10254
+    protocol: TCP
+    targetPort: cstatus
+  selector:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: app
+{{- end }}
