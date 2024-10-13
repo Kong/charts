@@ -351,6 +351,7 @@ rules:
   - gateway-operator.konghq.com
   resources:
   - gatewayconfigurations
+  - dataplanemetricsextensions
   verbs:
   - get
   - list
