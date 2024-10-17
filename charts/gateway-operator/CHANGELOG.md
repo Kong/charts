@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.3
+
+### Fixes
+
+- Fixed manager's policy rules
+  [#1148](https://github.com/Kong/charts/pull/1148)
+
 ## 0.2.2
 
 ### Changes
