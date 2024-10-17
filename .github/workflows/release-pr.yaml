@@ -77,7 +77,10 @@ jobs:
         run: ./scripts/test-env.sh
 
       - name: Run chart-testing (install)
-        run: ct install --target-branch main --charts charts/${{ matrix.chart-name}}
+        run: |
+          kubectl create ns kong-test
+          ct install --target-branch main --charts charts/${{ matrix.chart-name}} --namespace kong-test
+          # No need to delete the ns the cluster is scrapped after the job anyway.
 
   integration-test:
     timeout-minutes: 30
