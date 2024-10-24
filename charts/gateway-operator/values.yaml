@@ -40,6 +40,10 @@ podLabels: {}
 kic-crds:
   enabled: true
 
+# Install Kong's Kubernetes Configuration CRDs (https://github.com/Kong/kubernetes-configuration)
+kubernetes-configuration-crds:
+  enabled: false
+
 # Install Gateway API standard CRDs
 gwapi-standard-crds:
   enabled: true

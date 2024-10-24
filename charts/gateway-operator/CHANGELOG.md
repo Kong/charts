@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+### Changes
+
+- Added a `kubernetes-configuration-crds` subchart to install Kong's Kubernetes Configuration CRDs.
+  It's off by default.
+  [#1151](https://github.com/Kong/charts/pull/1151)
+
 ## 0.2.3
 
 ### Fixes
