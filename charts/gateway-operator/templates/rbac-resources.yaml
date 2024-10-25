@@ -179,22 +179,38 @@ rules:
       - configuration.konghq.com
     resources:
       - kongcacertificates/finalizers
+      - kongcacertificates/status
       - kongcertificates/finalizers
+      - kongcertificates/status
       - kongconsumergroups/finalizers
       - kongconsumers/finalizers
       - kongcredentialacls/finalizers
+      - kongcredentialacls/status
       - kongcredentialapikeys/finalizers
+      - kongcredentialapikeys/status
       - kongcredentialbasicauths/finalizers
+      - kongcredentialbasicauths/status
       - kongcredentialhmacs/finalizers
+      - kongcredentialhmacs/status
       - kongcredentialjwts/finalizers
+      - kongcredentialjwts/status
       - kongdataplaneclientcertificates/finalizers
+      - kongdataplaneclientcertificates/status
       - kongkeys/finalizers
+      - kongkeys/status
       - kongkeysets/finalizers
+      - kongkeysets/status
+      - kongpluginbindings/status
       - kongroutes/finalizers
+      - kongroutes/status
       - kongservices/finalizers
+      - kongservices/status
       - kongsnis/finalizers
+      - kongsnis/status
       - kongtargets/finalizers
+      - kongtargets/status
       - kongupstreams/finalizers
+      - kongupstreams/status
       - kongvaults/finalizers
     verbs:
       - patch
@@ -202,29 +218,14 @@ rules:
   - apiGroups:
       - configuration.konghq.com
     resources:
-      - kongcacertificates/status
-      - kongcertificates/status
       - kongclusterplugins/status
       - kongconsumergroups/status
       - kongconsumers/status
-      - kongcredentialacls/status
-      - kongcredentialapikeys/status
-      - kongcredentialbasicauths/status
-      - kongcredentialhmacs/status
-      - kongcredentialjwts/status
       - kongcustomentities/status
-      - kongdataplaneclientcertificates/status
       - kongingresses/status
-      - kongkeys/status
-      - kongkeysets/status
       - konglicenses/status
       - kongplugins/status
-      - kongroutes/status
-      - kongservices/status
-      - kongsnis/status
-      - kongtargets/status
       - kongupstreampolicies/status
-      - kongupstreams/status
       - kongvaults/status
       - tcpingresses/status
       - udpingresses/status
@@ -416,6 +417,7 @@ rules:
     resources:
       - konnectapiauthconfigurations/finalizers
       - konnectgatewaycontrolplanes/finalizers
+      - konnectgatewaycontrolplanes/status
     verbs:
       - patch
       - update
@@ -423,7 +425,6 @@ rules:
       - konnect.konghq.com
     resources:
       - konnectapiauthconfigurations/status
-      - konnectgatewaycontrolplanes/status
     verbs:
       - get
       - patch
