@@ -14,6 +14,16 @@ Note that not all versions contain breaking changes. If a version is not
 present in the table of contents, it requires no version-specific changes when
 upgrading from a previous version.
 
+## Updating operator version
+
+The operator version is following [SemVer][semver].
+This means that users should not expect breaking changes without a major version change.
+
+Any changes requiring manual user action will be called out in operator [release notes][kgo_release_notes].
+
+[semver]: https://semver.org/
+[kgo_release_notes]: https://github.com/Kong/gateway-operator/blob/main/CHANGELOG.md
+
 ## Updates to CRDs
 
 Helm installs CRDs at initial install but [does not update them after][hip0011].

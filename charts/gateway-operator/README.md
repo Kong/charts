@@ -11,6 +11,10 @@ helm repo update
 helm install kgo kong/gateway-operator -n kong-system --create-namespace
 ```
 
+## Minimal supported versions
+
+This chart supports operator versions starting from 1.2.0.
+
 ### CRD management
 
 Helm 3 introduced a simplified CRD management method that is safer than what was
