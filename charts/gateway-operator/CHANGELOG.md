@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0
+
+### Changes
+
+- Bump the operator's default version to 1.4.0 and `kong/kubernetes-configuration` CRDs to 0.0.41.
+  [#1161](https://github.com/Kong/charts/pull/1161)
+
 ## 0.3.0
 
 ### Changes
