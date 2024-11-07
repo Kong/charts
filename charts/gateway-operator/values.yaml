@@ -1,6 +1,6 @@
 image:
   repository: docker.io/kong/gateway-operator
-  tag: 1.3
+  tag: 1.4
 
 kubeRBACProxy:
   # Additional pod containers in the controller.
