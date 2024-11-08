@@ -1,7 +1,7 @@
 module github.com/kong/charts/tools
 
 go 1.21
-require golang.stackrox.io/kube-linter v0.7.0
+require golang.stackrox.io/kube-linter v0.7.1
 
 require (
 	dario.cat/mergo v1.0.1 // indirect
