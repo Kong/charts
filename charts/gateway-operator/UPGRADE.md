@@ -33,11 +33,11 @@ them before upgrading your release.
 
 [hip0011]: https://github.com/helm/community/blob/main/hips/hip-0011.md
 
-For example, upgrading Kong's [kubernetes-configuration][kcfg] CRDs to v0.0.38 requires
+For example, upgrading Kong's [kubernetes-configuration][kcfg] CRDs to v0.0.45 requires
 running:
 
 ```
-kustomize build github.com/Kong/kubernetes-configuration/config/crd\?rev\=v0.0.38 | kubectl apply -f -
+kustomize build github.com/Kong/kubernetes-configuration/config/crd/gateway-operator?ref=v0.0.45 | kubectl apply -f -
 ```
 
 [kcfg]: https://github.com/Kong/kubernetes-configuration
