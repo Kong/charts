@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-CHARTSNAP_VERSION="0.3.1"
+if [ -z "${CHARTSNAP_VERSION}" ]; then
+  echo "ERROR: CHARTSNAP_VERSION is not set"
+  exit 1
+fi
 
 # Only install the plugin if it is not already installed or if the version is different.
 if [[ $(helm plugin list | grep chartsnap | grep -Eo '[0-9]{1,}.[0-9]{1,}.[0-9]{1,}') == "${CHARTSNAP_VERSION}" ]]; then

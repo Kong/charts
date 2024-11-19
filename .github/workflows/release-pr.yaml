@@ -26,15 +26,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
+      - uses: jdx/mise-action@v2
         with:
-          go-version-file: third_party/go.mod
+          install: false
 
       - name: Run linters
+        env:
+          MISE_VERBOSE: 1
+          MISE_DEBUG: 1
         run: make lint
 
   lint-test:
@@ -173,6 +173,10 @@ jobs:
 
       - name: setup helm
         uses: azure/setup-helm@v4.2.0
+
+      - uses: jdx/mise-action@v2
+        with:
+          install: false
 
       - name: build helm chart dependency
         run: |
