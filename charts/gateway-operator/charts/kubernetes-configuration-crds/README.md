@@ -11,5 +11,5 @@ This sub-chart contains Kong's [Kubernetes Configuration][kconf] CRDs, allowing 
 To update the CRDs, you can run the following command:
 
 ```bash
-kustomize build github.com/kong/kubernetes-configuration/config/crd > ./charts/gateway-operator/charts/kubernetes-configuration-crds/crds/kubernetes-configuration-crds.yaml
+kustomize build github.com/kong/kubernetes-configuration/config/crd/gateway-operator > ./charts/gateway-operator/charts/kubernetes-configuration-crds/crds/kubernetes-configuration-crds.yaml
 ```
