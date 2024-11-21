@@ -1,22 +1,45 @@
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
-CHARTSNAP_VERSION ?= v0.3.1
+TOOLS_VERSIONS_FILE = .tools_versions.yaml
 
-.PHONY: _download_tool
-_download_tool:
-	(cd third_party && go mod tidy && \
-		GOBIN=$(PROJECT_DIR)/bin go generate -tags=third_party ./$(TOOL).go )
+MISE := $(shell which mise)
+.PHONY: mise
+mise:
+	@mise -V >/dev/null || (echo "mise - https://github.com/jdx/mise - not found. Please install it." && exit 1)
 
-.PHONY: tools
-tools: kube-linter chartsnap
+export MISE_DATA_DIR = $(PROJECT_DIR)/bin/
 
-KUBE_LINTER = $(PROJECT_DIR)/bin/kube-linter
+# NOTE: mise targets use -q to silence the output.
+# Users can use MISE_VERBOSE=1 MISE_DEBUG=1 to get more verbose output.
+
+.PHONY: mise-plugin-install
+mise-plugin-install: mise
+	@$(MISE) plugin install --yes -q $(DEP) $(URL)
+
+.PHONY: mise-install
+mise-install: mise
+	@$(MISE) install -q $(DEP_VER)
+
+KUBE_LINTER_VERSION = $(shell yq -ojson -r '.kube-linter' < $(TOOLS_VERSIONS_FILE))
+KUBE_LINTER = $(PROJECT_DIR)/bin/installs/kube-linter/v$(KUBE_LINTER_VERSION)/bin/kube-linter
 .PHONY: kube-linter
-kube-linter:
-	@$(MAKE) _download_tool TOOL=kube-linter
+kube-linter: mise
+	@$(MAKE) mise-plugin-install DEP=kube-linter
+	@$(MAKE) mise-install DEP_VER=kube-linter@v$(KUBE_LINTER_VERSION)
 
+CHARTSNAP_VERSION = $(shell yq -ojson -r '.chartsnap' < $(TOOLS_VERSIONS_FILE))
 .PHONY: chartsnap
 chartsnap:
-	./scripts/install-chartsnap.sh
+	CHARTSNAP_VERSION=${CHARTSNAP_VERSION} ./scripts/install-chartsnap.sh
+
+SHELLCHECK_VERSION = $(shell yq -ojson -r '.shellcheck' < $(TOOLS_VERSIONS_FILE))
+SHELLCHECK = $(PROJECT_DIR)/bin/installs/shellcheck/$(SHELLCHECK_VERSION)/bin/shellcheck
+.PHONY: shellcheck
+shellcheck: mise
+	@$(MAKE) mise-plugin-install DEP=shellcheck
+	@$(MAKE) mise-install DEP_VER=shellcheck@$(SHELLCHECK_VERSION)
+
+.PHONY: tools
+tools: kube-linter chartsnap shellcheck
 
 .PHONY: lint
 lint: tools lint.charts.kong lint.shellcheck
@@ -25,8 +48,10 @@ lint: tools lint.charts.kong lint.shellcheck
 lint.charts.kong:
 	$(KUBE_LINTER) lint charts/kong
 
-lint.shellcheck:
-	shellcheck ./scripts/*
+.PHONY: lint.shellcheck
+lint.shellcheck: shellcheck
+	$(SHELLCHECK) ./scripts/*
+	$(SHELLCHECK) ./charts/gateway-operator/scripts/*
 
 .PHONY: test.golden
 test.golden:

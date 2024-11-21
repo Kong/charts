@@ -19,10 +19,10 @@ KGO_REPO_PATH="${1}"
 KGOEE_REPO_PATH="${2}"
 CHARTS_REPO_PATH="${3}"
 
-SED=sed
+SED="sed"
 if [[ $(uname -s) == "Darwin" ]]; then
-  if gsed --version 2>&1 >/dev/null ; then
-    SED=gsed
+  if gsed --version >/dev/null 2>&1 ; then
+    SED="gsed"
   else
     echo "GNU sed is required on macOS. You can install it via Homebrew with 'brew install gnu-sed'."
     exit 1
@@ -44,12 +44,13 @@ function require_var_dir() {
 }
 
 function update_rbac_resources {
-  local TMPFILE=$(mktemp).yaml
+  local TMPFILE
+  TMPFILE=$(mktemp).yaml
 
   # build the kustomize resources
-  kustomize build $KGOEE_REPO_PATH/config/rbac > "${TMPFILE}"
+  kustomize build "${KGOEE_REPO_PATH}/config/rbac" > "${TMPFILE}"
   echo "---" >> "${TMPFILE}"
-  kustomize build $KGO_REPO_PATH/config/rbac/base >> "${TMPFILE}"
+  kustomize build "${KGO_REPO_PATH}/config/rbac/base" >> "${TMPFILE}"
 
   # copy the contents of the file except for the Service Account resource
   yq --inplace e ". | select(.kind != \"ServiceAccount\")" "${TMPFILE}"
@@ -70,7 +71,7 @@ function update_rbac_resources {
   ${SED} -i '/name: {{\|name: https/!s/name: /name: {{ template "kong.fullname" . }}-/g' "${TMPFILE}"
 
   # move the new file to the charts directory
-  mv "${TMPFILE}" $CHARTS_REPO_PATH/charts/gateway-operator/templates/rbac-resources.yaml
+  mv "${TMPFILE}" "${CHARTS_REPO_PATH}/charts/gateway-operator/templates/rbac-resources.yaml"
 }
 
 require_var_dir KGOEE_REPO_PATH

@@ -1,0 +1,6 @@
+# renovate: datasource=github-releases depName=stackrox/kube-linter
+kube-linter: "0.7.1"
+# renovate: datasource=github-releases depName=jlandowner/helm-chartsnap
+chartsnap: "0.3.1"
+# renovate: datasource=github-releases depName=koalaman/shellcheck
+shellcheck: "0.10.0"
