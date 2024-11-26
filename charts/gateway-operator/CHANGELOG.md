@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.1
+
+### Changes
+
+- Update operator's RBAC policy rules.
+  [#1153](https://github.com/Kong/charts/pull/1153)
+
 ## 0.4.0
 
 ### Changes
