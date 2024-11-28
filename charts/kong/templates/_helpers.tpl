@@ -584,9 +584,33 @@ The name of the Service which will be used by the controller to update the Ingre
 
 {{- end -}}
 
+{{- define "kong.migrationPodFilter" -}}
+{{ $newList := list }}
+{{- range . }}
+{{- if or (eq .excludeMigrationPod false) (not (hasKey . "excludeMigrationPod")) }}
+{{ $newList = append $newList (omit . "excludeMigrationPod") }}
+{{- end }}
+{{- end }}
+{{ toJson $newList }}
+{{- end }}
+
+{{- define "kong.userDefinedMigrationVolumes" -}}
+{{- if .Values.deployment.userDefinedVolumes }}
+{{- include "kong.migrationPodFilter" .Values.deployment.userDefinedVolumes | fromJsonArray | toYaml }}
+{{- end }}
+{{- end -}}
+
+{{- define "kong.migrationPropertyFilter" -}}
+{{ $newList := list }}
+{{- range . }}
+{{ $newList = append $newList (omit . "excludeMigrationPod") }}
+{{- end }}
+{{ toJson $newList }}
+{{- end }}
+
 {{- define "kong.userDefinedVolumes" -}}
 {{- if .Values.deployment.userDefinedVolumes }}
-{{- toYaml .Values.deployment.userDefinedVolumes }}
+{{- include "kong.migrationPropertyFilter" .Values.deployment.userDefinedVolumes | fromJsonArray | toYaml }}
 {{- end }}
 {{- end -}}
 
@@ -746,9 +770,15 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- end -}}
 {{- end -}}
 
+{{- define "kong.userDefinedMigrationVolumeMounts" -}}
+{{- if .userDefinedVolumeMounts }}
+{{- include "kong.migrationPodFilter" .userDefinedVolumeMounts | fromJsonArray | toYaml }}
+{{- end }}
+{{- end -}}
+
 {{- define "kong.userDefinedVolumeMounts" -}}
 {{- if .userDefinedVolumeMounts }}
-{{- toYaml .userDefinedVolumeMounts }}
+{{- include "kong.migrationPropertyFilter" .userDefinedVolumeMounts | fromJsonArray | toYaml }}
 {{- end }}
 {{- end -}}
 
