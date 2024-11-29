@@ -18,6 +18,9 @@ metadata:
   {{- end }}
 spec:
   backoffLimit: {{ .Values.migrations.backoffLimit }}
+  {{- if .Values.migrations.ttlSecondsAfterFinished }}
+  ttlSecondsAfterFinished: {{ .Values.migrations.ttlSecondsAfterFinished }}
+  {{- end }}
   template:
     metadata:
       name: {{ template "kong.name" . }}-post-upgrade-migrations
