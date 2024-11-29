@@ -1,15 +1,21 @@
 # Changelog
 
 ## Unreleased
-* Added serviceMonitor.trustCRDsExist for render based deployments
-* Add `migrations.ttlSecondsAfterFinished` option to chart
-[#1174](https://github.com/Kong/charts/pull/1174)
+
+## 2.43.0
 
 ### Changes
 
-* Explicitly cert-manager group on Certificate. [#1128](https://github.com/Kong/charts/pull/1128)
-* Add missing load balancer service values. [#1116](https://github.com/Kong/charts/pull/1116)
-* Enables KIC metrics to be scraped by adding in a service to correctly work with the defined ServiceMonitor. [#1134](https://github.com/Kong/charts/pull/1134)
+* Added `serviceMonitor.trustCRDsExist` for render based deployments
+  [#1077](https://github.com/Kong/charts/pull/1077)
+* Add `migrations.ttlSecondsAfterFinished` option to chart
+  [#1174](https://github.com/Kong/charts/pull/1174)
+* Explicitly cert-manager group on Certificate.
+  [#1128](https://github.com/Kong/charts/pull/1128)
+* Add missing load balancer service values.
+  [#1116](https://github.com/Kong/charts/pull/1116)
+* Enables KIC metrics to be scraped by adding in a service to correctly work with the defined ServiceMonitor.
+  [#1134](https://github.com/Kong/charts/pull/1134)
 
 ## 2.42.0
 
