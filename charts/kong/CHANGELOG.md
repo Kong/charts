@@ -3,6 +3,7 @@
 ## Unreleased
 * Added serviceMonitor.trustCRDsExist for render based deployments
 * Add `migrations.ttlSecondsAfterFinished` option to chart
+[#1174](https://github.com/Kong/charts/pull/1174)
 
 ### Changes
 
