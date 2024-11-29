@@ -2,7 +2,7 @@
 
 ## Unreleased
 * Added serviceMonitor.trustCRDsExist for render based deployments
-* Add migrations.ttlSecondsAfterFinished option to chart
+* Add `migrations.ttlSecondsAfterFinished` option to chart
 
 ### Changes
 

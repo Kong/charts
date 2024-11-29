@@ -483,6 +483,8 @@ migrations:
   jobAnnotations: {}
   # Optionally set a backoffLimit. If none is set, Jobs will use the cluster default
   backoffLimit:
+  # Optionally set to specify the time-to-live (TTL) for a pod after it has completed its execution before automatic deletion. If left unset, pod lifetime is indefinite.
+  ttlSecondsAfterFinished:
   resources: {}
   # Example reasonable setting for "resources":
   # resources:
