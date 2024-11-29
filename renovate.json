@@ -14,13 +14,36 @@
   "schedule": "before 5am every weekday",
   "customManagers": [
     {
-      "description": "Match dependencies in .tools_verisons.yaml that are properly annotated with `# renovate: datasource={} depName={}.`",
+      "description": "Match dependencies in .tools_verisons.yaml and .github/workflows/* that are properly annotated with `# renovate: datasource={} depName={}.`",
       "customType": "regex",
       "fileMatch": [
-        "\\.tools_versions\\.yaml$"
+        "\\.tools_versions\\.yaml$",
+        "\\.github/workflows/.*\\.yaml$"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)\\n.+\"(?<currentValue>.*?)\""
+      ]
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Ignore minor updates if depName has `@only-patch` suffix.",
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "enabled": false,
+      "matchDepNames": [
+        "/.*@only-patch/"
+      ]
+    },
+    {
+      "description": "Group Kubernetes updates together.",
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "groupName": "kubernetes",
+      "matchDepNames": [
+        "kubernetes/kubernetes"
       ]
     }
   ]
