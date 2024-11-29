@@ -30,13 +30,14 @@ set -euo pipefail
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
-KIND_VERSION="${KIND_VERSION:-v0.22.0}"
-KUBERNETES_VERSION="${KUBERNETES_VERSION:-1.29.2}"
 GATEWAY_API_VERSION="${GATEWAY_API_VERSION:-v1.0.0}"
 CHART_NAME="${CHART_NAME:-ingress}"
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')"
 KTF_URL=https://github.com/Kong/kubernetes-testing-framework/releases/latest/download/ktf.${OS}.${ARCH}
+
+[[ -z ${KUBERNETES_VERSION} ]] && echo "ERROR: KUBERNETES_VERSION is not set" && exit 1
+[[ -z ${KIND_VERSION} ]] && echo "ERROR: KIND_VERSION is not set" && exit 1
 
 # ------------------------------------------------------------------------------
 # Setup Tools - Docker
@@ -59,7 +60,7 @@ docker info 1>/dev/null
 # ensure kind command is accessible
 if ! command -v kind &> /dev/null
 then
-    go install sigs.k8s.io/kind@"${KIND_VERSION}"
+    go install sigs.k8s.io/kind@v"${KIND_VERSION}"
 fi
 
 # ensure kind is functional
