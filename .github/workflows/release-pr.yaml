@@ -90,17 +90,17 @@ jobs:
     strategy:
       matrix:
         kubernetes-version:
-          # renovate: datasource=github-tags depName=kubernetes/kubernetes@only-patch
+          # renovate: datasource=github-tags depName=kubernetes/kubernetes
           - "1.26.15"
-          # renovate: datasource=github-tags depName=kubernetes/kubernetes@only-patch
+          # renovate: datasource=github-tags depName=kubernetes/kubernetes
           - "1.27.13"
-          # renovate: datasource=github-tags depName=kubernetes/kubernetes@only-patch
+          # renovate: datasource=github-tags depName=kubernetes/kubernetes
           - "1.28.9"
-          # renovate: datasource=github-tags depName=kubernetes/kubernetes@only-patch
+          # renovate: datasource=github-tags depName=kubernetes/kubernetes
           - "1.29.4"
-          # renovate: datasource=github-tags depName=kubernetes/kubernetes@only-patch
+          # renovate: datasource=github-tags depName=kubernetes/kubernetes
           - "1.30.0"
-          # renovate: datasource=github-tags depName=kubernetes/kubernetes@only-patch
+          # renovate: datasource=github-tags depName=kubernetes/kubernetes
           - "1.31.0"
         chart-name:
           - kong

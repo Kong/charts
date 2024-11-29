@@ -27,13 +27,14 @@
   ],
   "packageRules": [
     {
-      "description": "Ignore minor updates if depName has `@only-patch` suffix.",
+      "description": "Only update patch versions for selected dependencies.",
       "matchUpdateTypes": [
+        "major",
         "minor"
       ],
       "enabled": false,
       "matchDepNames": [
-        "/.*@only-patch/"
+        "kubernetes/kubernetes"
       ]
     },
     {
@@ -41,7 +42,7 @@
       "matchUpdateTypes": [
         "patch"
       ],
-      "groupName": "kubernetes",
+      "groupName": "kubernetes/kubernetes",
       "matchDepNames": [
         "kubernetes/kubernetes"
       ]
