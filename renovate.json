@@ -34,7 +34,7 @@
       ],
       "enabled": false,
       "matchDepNames": [
-        "kubernetes/kubernetes"
+        "kindest/node"
       ]
     },
     {
@@ -42,9 +42,9 @@
       "matchUpdateTypes": [
         "patch"
       ],
-      "groupName": "kubernetes/kubernetes",
+      "groupName": "kindest/node",
       "matchDepNames": [
-        "kubernetes/kubernetes"
+        "kindest/node"
       ]
     }
   ]
