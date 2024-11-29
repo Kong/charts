@@ -93,15 +93,15 @@ jobs:
           # renovate: datasource=github-tags depName=kubernetes/kubernetes
           - "1.26.15"
           # renovate: datasource=github-tags depName=kubernetes/kubernetes
-          - "1.27.13"
+          - "1.27.16"
           # renovate: datasource=github-tags depName=kubernetes/kubernetes
-          - "1.28.9"
+          - "1.28.15"
           # renovate: datasource=github-tags depName=kubernetes/kubernetes
-          - "1.29.4"
+          - "1.29.11"
           # renovate: datasource=github-tags depName=kubernetes/kubernetes
-          - "1.30.0"
+          - "1.30.7"
           # renovate: datasource=github-tags depName=kubernetes/kubernetes
-          - "1.31.0"
+          - "1.31.3"
         chart-name:
           - kong
           - ingress
