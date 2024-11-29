@@ -12,7 +12,6 @@ on:
       - main
       - release/kong-2.x
       - release/kong-3.x
-      - prepare-kgo-chart
   workflow_dispatch: {}
 
 env:

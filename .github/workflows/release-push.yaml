@@ -6,12 +6,19 @@ on:
       - main
       - release/kong-2.x
 
+env:
+  # Specify this here because these tests rely on ktf to run kind for cluster creation.
+  KIND_VERSION: v0.23.0
+
 jobs:
   lint-test:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        kubernetes-version:
+          # renovate: datasource=docker depName=kindest/node
+          - "1.31.0"
         chart-name:
           - kong
           - ingress
@@ -43,6 +50,7 @@ jobs:
 
       - name: setup testing environment (kind-cluster)
         env:
+          KUBERNETES_VERSION: ${{ matrix.kubernetes-version }}
           CHART_NAME: ${{ matrix.chart-name }}
         run: ./scripts/test-env.sh
 
@@ -58,6 +66,7 @@ jobs:
 
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
+
   release:
     timeout-minutes: 30
     needs: lint-test
