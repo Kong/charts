@@ -18,7 +18,7 @@ jobs:
       matrix:
         kubernetes-version:
           # renovate: datasource=docker depName=kindest/node
-          - "1.31.0"
+          - "1.31.2"
         chart-name:
           - kong
           - ingress
