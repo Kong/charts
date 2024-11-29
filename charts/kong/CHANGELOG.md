@@ -2,6 +2,7 @@
 
 ## Unreleased
 * Added serviceMonitor.trustCRDsExist for render based deployments
+* Add support for `excludeMigrationPod` to userDefinedVolumes and userDefinedVolumeMounts
 
 ### Changes
 

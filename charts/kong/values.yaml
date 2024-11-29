@@ -57,6 +57,28 @@ deployment:
   # userDefinedVolumeMounts:
   # - name: "volumeName"
   #   mountPath: "/opt/user/dir/mount"
+
+  ## userDefinedVolumes & userDefinedVolumeMounts can be specified with excludeMigrationPod which disables adding the volumes and mounts to migration pods
+  # userDefinedVolumes:
+  # - name: "volumeNameAlways"
+  #   emptyDir: { }
+  # - name: "volumeNameNever"
+  #   excludeMigrationPod: true
+  #   emptyDir: {}
+  # - name: "volumeNameYes"
+  #   excludeMigrationPod: false
+  #   persistentVolumeClaim:
+  #     claimName: "my_claim"
+  # userDefinedVolumeMounts:
+  # - name: "volumeNameAlways"
+  #   mountPath: "/opt/user/dir/mountAlways"
+  # - name: "volumeNameNever"
+  #   excludeMigrationPod: true
+  #   mountPath: "/opt/user/dir/volumeNameNever"
+  # - name: "volumeNameYes"
+  #   excludeMigrationPod: false
+  #   mountPath: "/opt/user/dir/volumeNameYes"
+
   test:
     # Enable creation of test resources for use with "helm test"
     enabled: false
