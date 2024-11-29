@@ -77,7 +77,7 @@ spec:
         args: [ "kong", "migrations", "up" ]
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 8 }}
-        {{- include "kong.userDefinedMigrationVolumeMounts" .Values.deployment | nindent 8 }}
+        {{- include "kong.userDefinedVolumeMounts" .Values.deployment | nindent 8 }}
         resources:
         {{- toYaml .Values.migrations.resources| nindent 10 }}
       securityContext:
@@ -97,6 +97,6 @@ spec:
       restartPolicy: OnFailure
       volumes:
       {{- include "kong.volumes" . | nindent 6 -}}
-      {{- include "kong.userDefinedMigrationVolumes" . | nindent 6 -}}
+      {{- include "kong.userDefinedVolumes" . | nindent 6 -}}
 {{- end }}
 {{- end }}
