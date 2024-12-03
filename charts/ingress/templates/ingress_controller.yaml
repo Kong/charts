@@ -1,0 +1,1 @@
+{{- include "ingressController.enforceGatewayRouterFlavorFor3_0AndUp" . -}}
