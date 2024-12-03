@@ -8,7 +8,7 @@
   * `secrets.credentials.validation.ingress-controller.konghq.com`
   * and `secrets.plugins.validation.ingress-controller.konghq.com`
   to not validate Konnect (`konnect`) credentials in `Secret`s which are reconciled by KGO.
-  [#1078](https://github.com/Kong/charts/pull/1078)
+  [#1186](https://github.com/Kong/charts/pull/1186)
 
 ## 2.43.0
 
