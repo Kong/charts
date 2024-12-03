@@ -68,6 +68,11 @@ webhooks:
     matchExpressions:
     - key: "konghq.com/credential"
       operator: "Exists"
+    {{- /* Do not validate Konnect credentials, these are targeted for KGO */}}
+    - key: "konghq.com/credential"
+      operator: "NotIn"
+      values:
+      - "konnect"
   rules:
   - apiGroups:
     - ""
@@ -107,6 +112,11 @@ webhooks:
     matchExpressions:
     - key: "konghq.com/validate"
       operator: "Exists"
+    {{- /* Do not validate Konnect credentials, these are targeted for KGO */}}
+    - key: "konghq.com/credential"
+      operator: "NotIn"
+      values:
+      - "konnect"
   {{- else }}
   objectSelector:
     matchExpressions:
@@ -114,6 +124,11 @@ webhooks:
       operator: NotIn
       values:
       - helm
+    {{- /* Do not validate Konnect credentials, these are targeted for KGO */}}
+    - key: "konghq.com/credential"
+      operator: "NotIn"
+      values:
+      - "konnect"
   {{- end }}
   rules:
   - apiGroups:

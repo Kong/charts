@@ -590,6 +590,8 @@ ingressController:
   admissionWebhook:
     matchPolicy: Equivalent
     enabled: true
+    # Limit the `secrets.plugins.validation.ingress-controller.konghq.com` webhook
+    # to only Secrets with the appropriate KIC "konghq.com/validate" label.
     filterSecrets: false
     failurePolicy: Ignore
     port: 8080
