@@ -8,7 +8,9 @@ controller:
     enabled: true
 
     image:
-      repository: kong/kubernetes-ingress-controller
+      repository: kong/nightly-ingress-controller
+      tag: "2024-12-12"
+      effectiveSemver: "3.4"
 
     gatewayDiscovery:
       enabled: true
