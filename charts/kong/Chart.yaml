@@ -8,7 +8,7 @@ maintainers:
 name: kong
 sources:
   - https://github.com/Kong/charts/tree/main/charts/kong
-version: 2.44.0
+version: 2.44.1
 appVersion: "3.7"
 dependencies:
   - name: postgresql
