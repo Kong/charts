@@ -133,10 +133,10 @@ extraLabels: {}
 # Specify Kong's Docker image and repository details here
 image:
   repository: kong
-  tag: "3.7"
+  tag: "3.8"
   # Kong Enterprise
   # repository: kong/kong-gateway
-  # tag: "3.7"
+  # tag: "3.8"
 
   # Specify a semver version if your image tag is not one (e.g. "nightly")
   effectiveSemver:
