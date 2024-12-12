@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.44.1
+
+### Fixes
+
+* Added missing RBAC policy rules for `BackendTLSPolicy` and `ConfigMap`s
+  [#1191](https://github.com/Kong/charts/pull/1191)
+
 ## 2.44.0
 
 ### Fixes
