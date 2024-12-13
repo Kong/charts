@@ -8,10 +8,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 ---
 # Source: ingress/charts/gateway/templates/service-account.yaml
 apiVersion: v1
@@ -21,10 +21,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: gateway
-    helm.sh/chart: gateway-2.44.1
+    helm.sh/chart: gateway-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 ---
 # Source: ingress/charts/controller/templates/admission-webhook.yaml
 apiVersion: v1
@@ -34,10 +34,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 type: kubernetes.io/tls
 data:
   tls.crt: '###DYNAMIC_FIELD###'
@@ -51,10 +51,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 type: kubernetes.io/tls
 data:
   tls.crt: '###DYNAMIC_FIELD###'
@@ -68,10 +68,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 type: kubernetes.io/tls
 data:
   tls.crt: '###DYNAMIC_FIELD###'
@@ -85,10 +85,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 type: kubernetes.io/tls
 data:
   tls.crt: '###DYNAMIC_FIELD###'
@@ -100,10 +100,10 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
   name: chartsnap-controller
 rules:
 - apiGroups:
@@ -421,10 +421,10 @@ metadata:
   name: chartsnap-controller
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -442,10 +442,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 rules:
 - apiGroups:
   - ""
@@ -512,10 +512,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -533,10 +533,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 spec:
   ports:
   - name: webhook
@@ -545,10 +545,10 @@ spec:
     targetPort: webhook
   selector:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
     app.kubernetes.io/component: app
 ---
 # Source: ingress/charts/controller/templates/controller-service-metrics.yaml
@@ -559,10 +559,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 spec:
   ports:
   - name: cmetrics
@@ -575,10 +575,10 @@ spec:
     targetPort: cstatus
   selector:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
     app.kubernetes.io/component: app
 ---
 # Source: ingress/charts/gateway/templates/service-kong-admin.yaml
@@ -589,10 +589,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: gateway
-    helm.sh/chart: gateway-2.44.1
+    helm.sh/chart: gateway-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 spec:
   type: ClusterIP
   ports:
@@ -614,10 +614,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: gateway
-    helm.sh/chart: gateway-2.44.1
+    helm.sh/chart: gateway-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 spec:
   type: NodePort
   ports:
@@ -642,10 +642,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: gateway
-    helm.sh/chart: gateway-2.44.1
+    helm.sh/chart: gateway-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
     enable-metrics: "true"
 spec:
   type: LoadBalancer
@@ -671,10 +671,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
     app.kubernetes.io/component: app
 spec:
   replicas: 1
@@ -694,13 +694,13 @@ spec:
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         app.kubernetes.io/name: controller
-        helm.sh/chart: controller-2.44.1
+        helm.sh/chart: controller-2.45.0
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/managed-by: "Helm"
-        app.kubernetes.io/version: "3.7"
+        app.kubernetes.io/version: "3.8"
         app.kubernetes.io/component: app
         app: chartsnap-controller
-        version: "3.7"
+        version: "3.8"
     spec:
       serviceAccountName: chartsnap-controller
       automountServiceAccountToken: false
@@ -830,10 +830,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: gateway
-    helm.sh/chart: gateway-2.44.1
+    helm.sh/chart: gateway-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
     app.kubernetes.io/component: app
 spec:
   replicas: 1
@@ -851,19 +851,19 @@ spec:
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         app.kubernetes.io/name: gateway
-        helm.sh/chart: gateway-2.44.1
+        helm.sh/chart: gateway-2.45.0
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/managed-by: "Helm"
-        app.kubernetes.io/version: "3.7"
+        app.kubernetes.io/version: "3.8"
         app.kubernetes.io/component: app
         app: chartsnap-gateway
-        version: "3.7"
+        version: "3.8"
     spec:
       serviceAccountName: chartsnap-gateway
       automountServiceAccountToken: false
       initContainers:
       - name: clear-stale-pid
-        image: kong:3.7
+        image: kong:3.8
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false
@@ -938,7 +938,7 @@ spec:
           mountPath: /tmp
       containers:
       - name: "proxy"
-        image: kong:3.7
+        image: kong:3.8
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false
@@ -1084,10 +1084,10 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.44.1
+    helm.sh/chart: controller-2.45.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "3.8"
 webhooks:
 - admissionReviewVersions:
   - v1
