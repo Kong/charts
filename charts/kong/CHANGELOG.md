@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.45.0
+
+### Changes
+
+* Bump default `kong` image tag to 3.8.
+  [#1192](https://github.com/Kong/charts/pull/1192)
+
 ## 2.44.1
 
 ### Fixes
