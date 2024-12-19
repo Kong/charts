@@ -19,6 +19,9 @@ helm install kong/kong --generate-name
 
 ## Table of contents
 
+- [Kong for Kubernetes](#kong-for-kubernetes)
+- [TL;DR;](#tldr)
+- [Table of contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
 - [Install](#install)
 - [Uninstall](#uninstall)
@@ -57,6 +60,8 @@ helm install kong/kong --generate-name
   - [Ingress Controller Parameters](#ingress-controller-parameters)
     - [The `env` section](#the-env-section)
     - [The `customEnv` section](#the-customenv-section)
+    - [The `gatewayDiscovery` section](#the-gatewaydiscovery-section)
+      - [Configuration](#configuration-1)
   - [General Parameters](#general-parameters)
     - [The `env` section](#the-env-section-1)
     - [The `customEnv` section](#the-customenv-section-1)
@@ -71,9 +76,7 @@ helm install kong/kong --generate-name
   - [Sessions](#sessions)
   - [Email/SMTP](#emailsmtp)
 - [Prometheus Operator integration](#prometheus-operator-integration)
-- [Argo CD considerations](#argo-cd-considerations)
-- [Changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md)
-- [Upgrading](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
+- [Argo CD Considerations](#argo-cd-considerations)
 - [Seeking help](#seeking-help)
 
 ## Prerequisites
@@ -738,7 +741,7 @@ section of `values.yaml` file:
 |--------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------|
 | enabled                                    | Deploy the ingress controller, rbac and crd                                                                                                              | true                               |
 | image.repository                           | Docker image with the ingress controller                                                                                                                 | kong/kubernetes-ingress-controller |
-| image.tag                                  | Version of the ingress controller                                                                                                                        | `3.3`                              |
+| image.tag                                  | Version of the ingress controller                                                                                                                        | `3.4`                              |
 | image.effectiveSemver                      | Version of the ingress controller used for version-specific features when image.tag is not a valid semantic version                                      |                                    |
 | readinessProbe                             | Kong ingress controllers readiness probe                                                                                                                 |                                    |
 | livenessProbe                              | Kong ingress controllers liveness probe                                                                                                                  |                                    |

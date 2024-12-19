@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.46.0
+
+### Changes
+
+* Bumped default `kong/kubernetes-ingress-controller` image tag to 3.4.
+  []()
+
 ## 2.45.0
 
 ### Changes
