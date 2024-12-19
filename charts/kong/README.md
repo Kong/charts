@@ -467,7 +467,7 @@ listens if you do not provide your own. The chart can create
 configure them for you. To use this integration, install cert-manager, create
 an issuer, set `certificates.enabled: true` in values.yaml, and set your issuer
 name in `certificates.issuer` or `certificates.clusterIssuer` depending on the
-issuer type. 
+issuer type.
 
 If you do not have an issuer available, you can install the example [self-signed ClusterIssuer](https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-issuers)
 and set `certificates.clusterIssuer: selfsigned-issuer` for testing. You
@@ -709,7 +709,7 @@ or `ingress` sections, as it is used only for stream listens.
 
 #### Admin Service mTLS
 
-On top of the common parameters listed above, the `admin` service supports parameters for mTLS client verification. 
+On top of the common parameters listed above, the `admin` service supports parameters for mTLS client verification.
 If any of `admin.tls.client.caBundle` or `admin.tls.client.secretName` are set, the admin service will be configured to
 require mTLS client verification. If both are set, `admin.tls.client.caBundle` will take precedence.
 
@@ -885,8 +885,8 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | autoscaling.targetCPUUtilizationPercentage | Target Percentage for when autoscaling takes affect. Only used if cluster does not support `autoscaling/v2` or `autoscaling/v2beta2` | `80`  |
 | autoscaling.metrics                | metrics used for autoscaling for clusters that supports `autoscaling/v2` or `autoscaling/v2beta2`           | See [values.yaml](values.yaml) |
 | updateStrategy                     | update strategy for deployment                                                        | `{}`                |
-| readinessProbe                     | Kong readiness probe                                                                  |                     |
-| livenessProbe                      | Kong liveness probe                                                                   |                     |
+| readinessProbe                     | Kong readiness probe                                                                  | See [values.yaml](values.yaml#L826) |
+| livenessProbe                      | Kong liveness probe                                                                   | See [values.yaml](values.yaml#L838) |
 | startupProbe                       | Kong startup probe                                                                    |                     |
 | lifecycle                          | Proxy container lifecycle hooks                                                       | see `values.yaml`   |
 | terminationGracePeriodSeconds      | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pods | 30                  |
@@ -937,11 +937,11 @@ containerSecurityContext: # run as root to bind to lower ports
   runAsUser: 0
 ```
 
-**Note:** The default `podAnnotations` values disable inbound proxying for Kuma 
-and Istio. This is appropriate when using Kong as a gateway for external 
+**Note:** The default `podAnnotations` values disable inbound proxying for Kuma
+and Istio. This is appropriate when using Kong as a gateway for external
 traffic inbound into the cluster.
 
-If you want to use Kong as an internal proxy within the cluster network, you 
+If you want to use Kong as an internal proxy within the cluster network, you
 should enable inbound the inbound mesh proxies:
 
 ```yaml
