@@ -8,7 +8,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -21,7 +21,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: gateway
-    helm.sh/chart: gateway-2.45.0
+    helm.sh/chart: gateway-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -34,7 +34,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -51,7 +51,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -68,7 +68,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -85,7 +85,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -100,7 +100,7 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -421,7 +421,7 @@ metadata:
   name: chartsnap-controller
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -442,7 +442,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -512,7 +512,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -533,7 +533,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -545,7 +545,7 @@ spec:
     targetPort: webhook
   selector:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -559,7 +559,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -575,7 +575,7 @@ spec:
     targetPort: cstatus
   selector:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -589,7 +589,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: gateway
-    helm.sh/chart: gateway-2.45.0
+    helm.sh/chart: gateway-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -614,7 +614,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: gateway
-    helm.sh/chart: gateway-2.45.0
+    helm.sh/chart: gateway-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -642,7 +642,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: gateway
-    helm.sh/chart: gateway-2.45.0
+    helm.sh/chart: gateway-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -671,7 +671,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -694,7 +694,7 @@ spec:
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         app.kubernetes.io/name: controller
-        helm.sh/chart: controller-2.45.0
+        helm.sh/chart: controller-2.46.0
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/managed-by: "Helm"
         app.kubernetes.io/version: "3.8"
@@ -830,7 +830,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: gateway
-    helm.sh/chart: gateway-2.45.0
+    helm.sh/chart: gateway-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
@@ -851,7 +851,7 @@ spec:
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         app.kubernetes.io/name: gateway
-        helm.sh/chart: gateway-2.45.0
+        helm.sh/chart: gateway-2.46.0
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/managed-by: "Helm"
         app.kubernetes.io/version: "3.8"
@@ -1084,7 +1084,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: controller
-    helm.sh/chart: controller-2.45.0
+    helm.sh/chart: controller-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.8"
