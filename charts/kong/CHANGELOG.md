@@ -5,7 +5,7 @@
 ### Changes
 
 * Bumped default `kong/kubernetes-ingress-controller` image tag to 3.4.
-  []()
+  [#1200](https://github.com/Kong/charts/pull/1200)
 
 ## 2.45.0
 
