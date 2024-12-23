@@ -10,6 +10,6 @@ dependencies:
   version: 1.1.0
 - name: kubernetes-configuration-crds
   repository: ""
-  version: 0.0.41
-digest: sha256:7833a0a6b9d736a0227f77212df4ad2eec572b367da2c8d1fece5eb617d45a95
-generated: "2024-11-07T10:09:06.705774+01:00"
+  version: 1.0.0
+digest: sha256:aada875705523f6cf423247ed04ccd199e65ce503ca4d4f7301ad5b79d07bf1c
+generated: "2024-12-23T17:45:41.861667+01:00"

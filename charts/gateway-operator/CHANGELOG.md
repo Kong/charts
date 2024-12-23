@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.2
+
+### Changes
+
+- Update kubernetes-configuration CRDs to 1.0.0
+  [#1203](https://github.com/Kong/charts/pull/1203)
+
 ## 0.4.1
 
 ### Changes
