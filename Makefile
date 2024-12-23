@@ -42,11 +42,11 @@ shellcheck: mise
 tools: kube-linter chartsnap shellcheck
 
 .PHONY: lint
-lint: tools lint.charts.kong lint.shellcheck
+lint: tools lint.charts lint.shellcheck
 
-.PHONY: lint.charts.kong
-lint.charts.kong:
-	$(KUBE_LINTER) lint charts/kong
+.PHONY: lint.charts
+lint.charts:
+	$(KUBE_LINTER) lint charts/
 
 .PHONY: lint.shellcheck
 lint.shellcheck: shellcheck

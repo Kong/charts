@@ -69,6 +69,10 @@ spec:
           capabilities:
             drop:
             - ALL
+        ports:
+        - containerPort: 8081
+          name: probe
+          protocol: TCP
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 8 }}
       - args:
