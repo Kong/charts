@@ -926,8 +926,7 @@ spec:
 kind: ValidatingWebhookConfiguration
 apiVersion: admissionregistration.k8s.io/v1
 metadata:
-  name: chartsnap-kong-validations
-  namespace: default
+  name: chartsnap-kong-default-validations
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.46.0

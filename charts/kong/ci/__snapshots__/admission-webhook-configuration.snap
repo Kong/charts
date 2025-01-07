@@ -906,8 +906,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.8"
     helm.sh/chart: kong-2.46.0
-  name: chartsnap-kong-validations
-  namespace: default
+  name: chartsnap-kong-default-validations
 webhooks:
   - admissionReviewVersions:
       - v1

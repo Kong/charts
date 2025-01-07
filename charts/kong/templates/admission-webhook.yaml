@@ -30,8 +30,7 @@ apiVersion: admissionregistration.k8s.io/v1
 apiVersion: admissionregistration.k8s.io/v1beta1
 {{- end }}
 metadata:
-  name: {{ template "kong.fullname" . }}-validations
-  namespace: {{ template "kong.namespace" . }}
+  name: {{ template "kong.fullname" . }}-{{ template "kong.namespace" . }}-validations
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
   {{- if .Values.ingressController.admissionWebhook.annotations }}

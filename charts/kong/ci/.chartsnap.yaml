@@ -21,7 +21,7 @@ dynamicFields:
       - /data/tls.key
   - apiVersion: admissionregistration.k8s.io/v1
     kind: ValidatingWebhookConfiguration
-    name: chartsnap-kong-validations
+    name: chartsnap-kong-default-validations
     jsonPath:
       - /webhooks/0/clientConfig/caBundle
       - /webhooks/1/clientConfig/caBundle
