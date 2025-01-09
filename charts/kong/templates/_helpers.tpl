@@ -843,6 +843,12 @@ The name of the Service which will be used by the controller to update the Ingre
 {{- range .Values.plugins.secrets -}}
   {{ $myList = append $myList .pluginName -}}
 {{- end }}
+{{- if .Values.plugins.preInstalled -}}
+  {{- $preInstalledPlugins := split "," .Values.plugins.preInstalled -}}
+  {{- range $preInstalledPlugins -}}
+    {{- $myList = append $myList . -}}
+  {{- end -}}
+{{- end }}
 {{- $myList | uniq | join "," -}}
 {{- end -}}
 

@@ -456,6 +456,8 @@ plugins: {}
   # secrets:
   # - pluginName: rewriter
   #   name: kong-plugin-rewriter
+  # If your development cycle preinstalls the plugin as part of the image, this appends them to the plugins env var
+  # preInstalled: sweet-plugin,another-sweet-plugin
 # Inject specified secrets as a volume in Kong Container at path /etc/secrets/{secret-name}/
 # This can be used to override default SSL certificates.
 # Be aware that the secret name will be used verbatim, and that certain types
