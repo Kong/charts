@@ -193,6 +193,7 @@ jobs:
           helm repo add kong https://charts.konghq.com
           helm dependency build charts/kong
           helm dependency build charts/ingress
+          helm dependency build charts/gateway-operator
 
       - name: run golden tests
         run: make test.golden
