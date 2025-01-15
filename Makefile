@@ -76,15 +76,12 @@ endef
 export GOLDEN_TEST_FAILURE_MSG
 
 .PHONY: _chartsnap
-_chartsnap:
-	$(MAKE) _chartsnap.deps \
-		GOLDEN_TEST_CHART=$(CHART) \
-		GOLDEN_TEST_CHART_VALUES_DIR=./charts/$(CHART)/ci/ \
-		CHARTSNAP_ARGS=$(CHARTSNAP_ARGS)
+.PHONY: _chartsnap
+_chartsnap: _chartsnap.deps
+	helm chartsnap -c ./charts/$(CHART) -f ./charts/$(CHART)/ci/ $(CHARTSNAP_ARGS)
 
 .PHONY: _chartsnap.deps
 _chartsnap.deps: chartsnap
-ifeq ($(CHART),"kong")
-	$(CHART) helm dependencies update charts/ingress
-endif
-	helm chartsnap -c ./charts/$(GOLDEN_TEST_CHART) -f $(GOLDEN_TEST_CHART_VALUES_DIR) $(CHARTSNAP_ARGS)
+	@ if [ "$(CHART)" = "kong" ]; then \
+		helm dependencies update charts/ingress; \
+	fi
