@@ -8,6 +8,7 @@
   `<FULLNAME>-validations` to `<FULLNAME>-<CHART-INSTALLATION-NAMESPACE>-validations`
   to avoid collisions in case of multiple installations.
   [#1211](https://github.com/Kong/charts/pull/1211)
+* Bumped default `kong` image tag to 3.9. [#1219](https://github.com/Kong/charts/pull/1219)
 
 ## 2.46.0
 

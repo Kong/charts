@@ -11,7 +11,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
 ---
 # Source: kong/templates/admission-webhook.yaml
 apiVersion: v1
@@ -24,7 +24,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
 type: kubernetes.io/tls
 data:
   tls.crt: '###DYNAMIC_FIELD###'
@@ -41,7 +41,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
 type: kubernetes.io/tls
 data:
   tls.crt: '###DYNAMIC_FIELD###'
@@ -56,7 +56,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
   name: chartsnap-kong
 rules:
 - apiGroups:
@@ -377,7 +377,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -398,7 +398,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
 rules:
 - apiGroups:
   - ""
@@ -468,7 +468,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -489,7 +489,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
 spec:
   ports:
   - name: webhook
@@ -501,7 +501,7 @@ spec:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     app.kubernetes.io/component: app
 ---
 # Source: kong/templates/controller-service-metrics.yaml
@@ -515,7 +515,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
 spec:
   ports:
   - name: cmetrics
@@ -531,7 +531,7 @@ spec:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     app.kubernetes.io/component: app
 ---
 # Source: kong/templates/service-kong-manager.yaml
@@ -545,7 +545,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
 spec:
   type: NodePort
   ports:
@@ -573,7 +573,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     enable-metrics: "true"
 spec:
   type: LoadBalancer
@@ -602,7 +602,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     app.kubernetes.io/component: app
 spec:
   replicas: 1
@@ -623,16 +623,16 @@ spec:
         helm.sh/chart: kong-2.46.0
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/managed-by: "Helm"
-        app.kubernetes.io/version: "3.8"
+        app.kubernetes.io/version: "3.9"
         app.kubernetes.io/component: app
         app: chartsnap-kong
-        version: "3.8"
+        version: "3.9"
     spec:
       serviceAccountName: chartsnap-kong
       automountServiceAccountToken: false
       initContainers:
       - name: clear-stale-pid
-        image: kong:3.8
+        image: kong:3.9
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false
@@ -784,7 +784,7 @@ spec:
           mountPath: /var/run/secrets/kubernetes.io/serviceaccount
           readOnly: true
       - name: "proxy"
-        image: kong:3.8
+        image: kong:3.9
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false
@@ -932,7 +932,7 @@ metadata:
     helm.sh/chart: kong-2.46.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
 webhooks:
 - admissionReviewVersions:
   - v1
