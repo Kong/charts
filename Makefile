@@ -78,7 +78,9 @@ export GOLDEN_TEST_FAILURE_MSG
 .PHONY: _chartsnap
 .PHONY: _chartsnap
 _chartsnap: _chartsnap.deps
-	helm chartsnap -c ./charts/$(CHART) -f ./charts/$(CHART)/ci/ $(CHARTSNAP_ARGS)
+	helm chartsnap -c ./charts/$(CHART) -f ./charts/$(CHART)/ci/ $(CHARTSNAP_ARGS) \
+		-- \
+		--api-versions gateway.networking.k8s.io/v1
 
 .PHONY: _chartsnap.deps
 _chartsnap.deps: chartsnap
