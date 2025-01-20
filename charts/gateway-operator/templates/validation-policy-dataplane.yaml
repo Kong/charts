@@ -1,4 +1,5 @@
 {{- if and (.Capabilities.APIVersions.Has "admissionregistration.k8s.io/v1/ValidatingAdmissionPolicy") (.Capabilities.APIVersions.Has "admissionregistration.k8s.io/v1/ValidatingAdmissionPolicyBinding") -}}
+---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingAdmissionPolicy
 metadata:
@@ -18,8 +19,12 @@ spec:
         resources:
           - "dataplanes"
   variables:
+  - name: network
+    expression: object.spec.network
+  - name: services
+    expression: variables.network.services
   - name: ingressPorts
-    expression: object.spec.network.services.ingress.ports
+    expression: variables.services.ingress.ports
   - name: podTemplateSpec
     expression: object.spec.deployment.podTemplateSpec
   - name: proxyContainer
@@ -35,33 +40,37 @@ spec:
       variables.proxyContainer.env.filter(e, e.name == "KONG_PROXY_LISTEN")
   - name: envPortMaps
     expression: |
-      variables.envFilteredPortMaps.size() > 0 ? variables.envFilteredPortMaps[0] : null
+      variables.envFilteredPortMaps.size() > 0 ? variables.envFilteredPortMaps[0].value : null
   - name: envProxyListen
     expression: |
-      variables.envFilteredProxyListen.size() > 0 ? variables.envFilteredProxyListen[0] : null
+      variables.envFilteredProxyListen.size() > 0 ? variables.envFilteredProxyListen[0].value : null
   # Using string functions from: https://pkg.go.dev/github.com/google/cel-go/ext
   validations:
   - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PORT_MAPS env'"
     expression: |
-        variables.ingressPorts == null ||
-        variables.envPortMaps == null ||
-        variables.ingressPorts.all(p, variables.envPortMaps.value.
-                  split(",").
-                  exists(pm,
-                      pm.split(":")[1].trim() == string(p.targetPort)
-                      )
-                  )
+      !has(object.spec.network) ||
+      !has(object.spec.network.services) ||
+      variables.ingressPorts == null ||
+      variables.envPortMaps == null ||
+      variables.ingressPorts.all(p, variables.envPortMaps.
+                split(",").
+                exists(pm,
+                    pm.split(":")[1].trim() == string(p.targetPort)
+                    )
+                )
     reason: Invalid
   - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PROXY_LISTEN env'"
     expression: |
-        variables.ingressPorts == null ||
-        variables.envProxyListen == null ||
-        variables.ingressPorts.all(p, variables.envProxyListen.value.
-                  split(",").
-                  exists(pm,
-                    pm.trim().split(" ")[0].split(":")[1].trim() == string(p.targetPort)
-                    )
+      !has(object.spec.network) ||
+      !has(object.spec.network.services) ||
+      variables.ingressPorts == null ||
+      variables.envProxyListen == null ||
+      variables.ingressPorts.all(p, variables.envProxyListen.
+                split(",").
+                exists(pm,
+                  pm.trim().split(" ")[0].split(":")[1].trim() == string(p.targetPort)
                   )
+                )
     reason: Invalid
 ---
 apiVersion: admissionregistration.k8s.io/v1
