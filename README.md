@@ -11,31 +11,63 @@ helm repo add kong https://charts.konghq.com
 helm repo update
 ```
 
-There are two available charts.
+## Charts
+
+- [`kong/ingress`][#kongingress]: An umbrella chart for Kong Gateway and Kong Ingress Controller.
+- [`kong/kong`][#kongkong]: A flexible building block for supporting a wide variety of environment configurations.
+- [`kong/gateway-operator`][#konggateway-operator]: Installs Kong Gateway Operator.
+
+[#kongingress]: #kongingress
+[#kongkong]: #kongkong
+[#konggateway-operator]: #konggateway-operator
+
+### `kong/ingress`
 
 `kong/ingress` provides an opinionated ingress controller-managed DB-less
-environment. It is the recommended chart for new installations. To use it:
+environment.
+It is **the recommended chart** for new installations. To use it:
 
 ```bash
 helm install kong/ingress --generate-name
 ```
 
 `kong/ingress` is an umbrella chart using two instances of the `kong/kong`
-chart with some pre-configured values.yaml settings. The `controller` and
-`gateway` subsections support additional settings available in the `kong/kong`
-values.yaml.
+chart with some pre-configured `values.yaml` settings.
+The `controller` and `gateway` subsections support additional settings available
+in the `kong/kong` `values.yaml`.
+
+### `kong/kong`
 
 `kong/kong` is a flexible building block for supporting a wide variety of
 environment configurations not supported by `kong/ingress`, such as hybrid mode
-or unmanaged (no controller) Kong instances. To use it:
+or unmanaged (no controller) Kong instances.
+
+To use it:
 
 ```bash
 helm install kong/kong --generate-name
 ```
 
 For more details about the configuration required to support various
-environments, see the "Deployment Options" subsection of the `kong/kong`
-documentation's table of contents.
+environments, see the ["Deployment Options" subsection][kong_deployment_options]
+of the `kong/kong` documentation's table of contents.
+
+[kong_deployment_options]: ./charts/kong#deployment-options
+
+### `kong/gateway-operator`
+
+`kong/gateway-operator` installs [Kong Gateway Operator][kgo_gh].
+
+To use it:
+
+```bash
+helm install kong/gateway-operator --generate-name
+```
+
+For more details about the chart, see the [chart's README][kgo_chart].
+
+[kgo_gh]: https://github.com/Kong/gateway-operator
+[kgo_chart]: ./charts/gateway-operator/
 
 ## Documentation
 
