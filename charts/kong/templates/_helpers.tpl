@@ -1320,7 +1320,6 @@ resource roles into their separate templates.
   - list
   - watch
 {{- if or (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha3") (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1alpha2") (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1beta1") (.Capabilities.APIVersions.Has "gateway.networking.k8s.io/v1")}}
-{{- end }}
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
@@ -1336,6 +1335,7 @@ resource roles into their separate templates.
   verbs:
   - patch
   - update
+{{- end }}
 {{- end }}
 {{- if (semverCompare ">= 3.2.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
 - apiGroups:

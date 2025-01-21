@@ -38,11 +38,18 @@ shellcheck: mise
 	@$(MAKE) mise-plugin-install DEP=shellcheck
 	@$(MAKE) mise-install DEP_VER=shellcheck@$(SHELLCHECK_VERSION)
 
+ACTIONLINT_VERSION = $(shell yq -r '.actionlint' < $(TOOLS_VERSIONS_FILE))
+ACTIONLINT = $(PROJECT_DIR)/bin/installs/actionlint/$(ACTIONLINT_VERSION)/bin/actionlint
+.PHONY: download.actionlint
+download.actionlint: mise ## Download actionlint locally if necessary.
+	@$(MISE) plugin install --yes -q actionlint
+	@$(MISE) install -q actionlint@$(ACTIONLINT_VERSION)
+
 .PHONY: tools
 tools: kube-linter chartsnap shellcheck
 
 .PHONY: lint
-lint: tools lint.charts lint.shellcheck
+lint: tools lint.charts lint.shellcheck lint.actions
 
 .PHONY: lint.charts
 lint.charts:
@@ -53,15 +60,26 @@ lint.shellcheck: shellcheck
 	$(SHELLCHECK) ./scripts/*
 	$(SHELLCHECK) ./charts/gateway-operator/scripts/*
 
+.PHONY: lint.actions
+lint.actions: download.actionlint shellcheck
+# TODO: add more files to be checked
+	$(ACTIONLINT) -shellcheck $(SHELLCHECK) \
+		./.github/workflows/*
+
 .PHONY: test.golden
 test.golden:
-	@ $(MAKE) _chartsnap.kong && $(MAKE) _chartsnap.ingress || \
+	@ \
+		$(MAKE) _chartsnap CHART=kong && \
+		$(MAKE) _chartsnap CHART=ingress && \
+		$(MAKE) _chartsnap CHART=gateway-operator || \
 	(echo "$$GOLDEN_TEST_FAILURE_MSG" && exit 1)
 
 .PHONY: test.golden.update
 test.golden.update:
-	@ $(MAKE) _chartsnap.kong CHARTSNAP_ARGS="-u"
-	@ $(MAKE) _chartsnap.ingress CHARTSNAP_ARGS="-u"
+	helm repo update kong
+	@ $(MAKE) _chartsnap CHART=kong CHARTSNAP_ARGS="-u"
+	@ $(MAKE) _chartsnap CHART=ingress CHARTSNAP_ARGS="-u"
+	@ $(MAKE) _chartsnap CHART=gateway-operator CHARTSNAP_ARGS="-u"
 
 # Defining multi-line strings to echo: https://stackoverflow.com/a/649462/7958339
 define GOLDEN_TEST_FAILURE_MSG
@@ -70,18 +88,17 @@ define GOLDEN_TEST_FAILURE_MSG
 endef
 export GOLDEN_TEST_FAILURE_MSG
 
-.PHONY: _chartsnap.kong
-_chartsnap.kong:
-	@ $(MAKE) _chartsnap GOLDEN_TEST_CHART=kong GOLDEN_TEST_CHART_VALUES_DIR=./charts/kong/ci/ \
-	CHARTSNAP_ARGS=$(CHARTSNAP_ARGS)
-
-.PHONY: _chartsnap.ingress
-_chartsnap.ingress:
-	@ $(MAKE) _chartsnap GOLDEN_TEST_CHART=ingress GOLDEN_TEST_CHART_VALUES_DIR=./charts/ingress/ci/ \
-	CHARTSNAP_ARGS=$(CHARTSNAP_ARGS)
-
 .PHONY: _chartsnap
-_chartsnap: chartsnap
-	@ helm repo update kong
-	@ helm dependencies update charts/ingress
-	@ helm chartsnap -c ./charts/$(GOLDEN_TEST_CHART) -f $(GOLDEN_TEST_CHART_VALUES_DIR) $(CHARTSNAP_ARGS)
+.PHONY: _chartsnap
+_chartsnap: _chartsnap.deps
+	helm chartsnap -c ./charts/$(CHART) -f ./charts/$(CHART)/ci/ $(CHARTSNAP_ARGS) \
+		-- \
+		--api-versions gateway.networking.k8s.io/v1 \
+		--api-versions admissionregistration.k8s.io/v1/ValidatingAdmissionPolicy \
+		--api-versions admissionregistration.k8s.io/v1/ValidatingAdmissionPolicyBinding
+
+.PHONY: _chartsnap.deps
+_chartsnap.deps: chartsnap
+	@ if [ "$(CHART)" = "kong" ]; then \
+		helm dependencies update charts/ingress; \
+	fi

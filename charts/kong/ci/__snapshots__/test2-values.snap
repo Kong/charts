@@ -5,7 +5,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong
   namespace: default
@@ -35,7 +35,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-validation-webhook-ca-keypair
   namespace: default
@@ -51,7 +51,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-validation-webhook-keypair
   namespace: default
@@ -77,7 +77,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-bash-wait-for-postgres
   namespace: default
@@ -89,7 +89,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong
 rules:
@@ -149,6 +149,29 @@ rules:
       - list
       - watch
   - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gatewayclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gatewayclasses/status
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - networking.k8s.io
     resources:
       - ingressclasses
@@ -164,7 +187,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong
 roleRef:
@@ -183,7 +206,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong
   namespace: default
@@ -247,7 +270,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-default
   namespace: default
@@ -473,6 +496,112 @@ rules:
       - patch
       - update
   - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gateways
+    verbs:
+      - get
+      - list
+      - update
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gateways/status
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - httproutes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - httproutes/status
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - referencegrants
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - referencegrants/status
+    verbs:
+      - get
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - tcproutes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - tcproutes/status
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - tlsroutes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - tlsroutes/status
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - udproutes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - udproutes/status
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - grpcroutes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - grpcroutes/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
       - networking.k8s.io
     resources:
       - ingresses
@@ -504,7 +633,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong
   namespace: default
@@ -524,7 +653,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-default
   namespace: default
@@ -594,7 +723,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-validation-webhook
   namespace: default
@@ -609,7 +738,7 @@ spec:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
 ---
 apiVersion: v1
@@ -619,7 +748,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-metrics
   namespace: default
@@ -638,7 +767,7 @@ spec:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
 ---
 apiVersion: v1
@@ -648,7 +777,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-manager
   namespace: default
@@ -675,7 +804,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     enable-metrics: "true"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-proxy
@@ -712,7 +841,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong
   namespace: default
@@ -741,9 +870,9 @@ spec:
         app.kubernetes.io/instance: chartsnap
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kong
-        app.kubernetes.io/version: "3.8"
+        app.kubernetes.io/version: "3.9"
         helm.sh/chart: kong-2.46.0
-        version: "3.8"
+        version: "3.9"
     spec:
       automountServiceAccountToken: false
       containers:
@@ -900,7 +1029,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: env-config
-          image: kong:3.8
+          image: kong:3.9
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -1034,7 +1163,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: env-config
-          image: kong:3.8
+          image: kong:3.9
           imagePullPolicy: IfNotPresent
           name: clear-stale-pid
           resources: {}
@@ -1137,7 +1266,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: env-config
-          image: kong:3.8
+          image: kong:3.9
           imagePullPolicy: IfNotPresent
           name: wait-for-db
           resources: {}
@@ -1354,7 +1483,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-init-migrations
   namespace: default
@@ -1370,7 +1499,7 @@ spec:
         app.kubernetes.io/instance: chartsnap
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kong
-        app.kubernetes.io/version: "3.8"
+        app.kubernetes.io/version: "3.9"
         helm.sh/chart: kong-2.46.0
       name: kong-init-migrations
     spec:
@@ -1449,7 +1578,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: env-config
-          image: kong:3.8
+          image: kong:3.9
           imagePullPolicy: IfNotPresent
           name: kong-migrations
           resources: {}
@@ -1554,7 +1683,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: env-config
-          image: kong:3.8
+          image: kong:3.9
           imagePullPolicy: IfNotPresent
           name: wait-for-postgres
           resources: {}
@@ -1603,7 +1732,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-proxy
   namespace: default
@@ -1627,7 +1756,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-default-validations
 webhooks:
@@ -1764,7 +1893,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-post-upgrade-migrations
   namespace: default
@@ -1780,7 +1909,7 @@ spec:
         app.kubernetes.io/instance: chartsnap
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kong
-        app.kubernetes.io/version: "3.8"
+        app.kubernetes.io/version: "3.9"
         helm.sh/chart: kong-2.46.0
       name: kong-post-upgrade-migrations
     spec:
@@ -1859,7 +1988,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: env-config
-          image: kong:3.8
+          image: kong:3.9
           imagePullPolicy: IfNotPresent
           name: kong-post-upgrade-migrations
           resources: {}
@@ -1964,7 +2093,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: env-config
-          image: kong:3.8
+          image: kong:3.9
           imagePullPolicy: IfNotPresent
           name: wait-for-postgres
           resources: {}
@@ -2019,7 +2148,7 @@ metadata:
     app.kubernetes.io/instance: chartsnap
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
-    app.kubernetes.io/version: "3.8"
+    app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.46.0
   name: chartsnap-kong-pre-upgrade-migrations
   namespace: default
@@ -2035,7 +2164,7 @@ spec:
         app.kubernetes.io/instance: chartsnap
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kong
-        app.kubernetes.io/version: "3.8"
+        app.kubernetes.io/version: "3.9"
         helm.sh/chart: kong-2.46.0
       name: kong-pre-upgrade-migrations
     spec:
@@ -2114,7 +2243,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: env-config
-          image: kong:3.8
+          image: kong:3.9
           imagePullPolicy: IfNotPresent
           name: kong-upgrade-migrations
           resources: {}
@@ -2219,7 +2348,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: env-config
-          image: kong:3.8
+          image: kong:3.9
           imagePullPolicy: IfNotPresent
           name: wait-for-postgres
           resources: {}

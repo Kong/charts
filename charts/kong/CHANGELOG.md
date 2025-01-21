@@ -11,6 +11,7 @@
 * Bumped default `kong` image tag to 3.9. [#1219](https://github.com/Kong/charts/pull/1219)
 * Option to add pre-installed plugins to plugin list [#1214](https://github.com/Kong/charts/pull/1214)
 
+
 ## 2.46.0
 
 ### Changes
