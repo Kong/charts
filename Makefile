@@ -38,11 +38,18 @@ shellcheck: mise
 	@$(MAKE) mise-plugin-install DEP=shellcheck
 	@$(MAKE) mise-install DEP_VER=shellcheck@$(SHELLCHECK_VERSION)
 
+ACTIONLINT_VERSION = $(shell yq -r '.actionlint' < $(TOOLS_VERSIONS_FILE))
+ACTIONLINT = $(PROJECT_DIR)/bin/installs/actionlint/$(ACTIONLINT_VERSION)/bin/actionlint
+.PHONY: download.actionlint
+download.actionlint: mise ## Download actionlint locally if necessary.
+	@$(MISE) plugin install --yes -q actionlint
+	@$(MISE) install -q actionlint@$(ACTIONLINT_VERSION)
+
 .PHONY: tools
 tools: kube-linter chartsnap shellcheck
 
 .PHONY: lint
-lint: tools lint.charts lint.shellcheck
+lint: tools lint.charts lint.shellcheck lint.actions
 
 .PHONY: lint.charts
 lint.charts:
@@ -52,6 +59,12 @@ lint.charts:
 lint.shellcheck: shellcheck
 	$(SHELLCHECK) ./scripts/*
 	$(SHELLCHECK) ./charts/gateway-operator/scripts/*
+
+.PHONY: lint.actions
+lint.actions: download.actionlint shellcheck
+# TODO: add more files to be checked
+	$(ACTIONLINT) -shellcheck $(SHELLCHECK) \
+		./.github/workflows/*
 
 .PHONY: test.golden
 test.golden:
