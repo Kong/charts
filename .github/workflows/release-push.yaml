@@ -6,6 +6,9 @@ on:
       - main
       - release/kong-2.x
 
+permissions:
+  contents: read
+
 env:
   # Specify this here because these tests rely on ktf to run kind for cluster creation.
   KIND_VERSION: v0.23.0
@@ -71,6 +74,8 @@ jobs:
     timeout-minutes: 30
     needs: lint-test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2

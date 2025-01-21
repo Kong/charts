@@ -14,6 +14,9 @@ on:
       - release/kong-3.x
   workflow_dispatch: {}
 
+permissions:
+  contents: read
+
 env:
   # Specify this here because these tests rely on ktf to run kind for cluster creation.
   KIND_VERSION: v0.23.0
