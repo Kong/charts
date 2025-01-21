@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.5
+
+### Changes
+
+- Fix rules of `ValidatingAdmissionPolicy` validating `DataPlane` ports.
+  [#1215](https://github.com/Kong/charts/pull/1215)
+
 ## 0.4.4
 
 ### Changes
@@ -12,7 +19,7 @@
 
 ### Changes
 
-- Added `ValidatingAdmissionPolicy` and ``ValidatingAdmissionPolicyBinding` for
+- Added `ValidatingAdmissionPolicy` and `ValidatingAdmissionPolicyBinding` for
   validating `DataPlane` ports.
   [#1215](https://github.com/Kong/charts/pull/1215)
 

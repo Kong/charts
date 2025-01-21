@@ -826,18 +826,17 @@ spec:
       resources:
       - "dataplanes"
   variables:
-  - name: network
-    expression: object.spec.network
-  - name: services
-    expression: variables.network.services
   - name: ingressPorts
-    expression: variables.services.ingress.ports
+    expression: object.spec.network.services.ingress.ports
   - name: podTemplateSpec
     expression: object.spec.deployment.podTemplateSpec
+  - name: proxyContainers
+    expression: |
+      variables.podTemplateSpec.spec.containers.filter(c, c.name == 'proxy')
   - name: proxyContainer
     expression: |
-      variables.podTemplateSpec.spec.containers.exists(c, c.name == 'proxy') ?
-        variables.podTemplateSpec.spec.containers.filter(c, c.name == 'proxy')[0] :
+      variables.proxyContainers.size() > 0 ?
+        variables.proxyContainers[0] :
         null
   - name: envFilteredPortMaps
     expression: |
@@ -857,27 +856,35 @@ spec:
     expression: |
       !has(object.spec.network) ||
       !has(object.spec.network.services) ||
-      variables.ingressPorts == null ||
-      variables.envPortMaps == null ||
-      variables.ingressPorts.all(p, variables.envPortMaps.
-                split(",").
-                exists(pm,
-                    pm.split(":")[1].trim() == string(p.targetPort)
-                    )
-                )
+      !has(object.spec.network.services.ingress) ||
+      !has(object.spec.network.services.ingress.ports) ||
+      (
+        has(variables.proxyContainer.env) &&
+        variables.envPortMaps != null &&
+        variables.ingressPorts.all(p, variables.envPortMaps.
+                  split(",").
+                  exists(pm,
+                      pm.split(":")[1].trim() == string(p.targetPort)
+                      )
+                  )
+      )
     reason: Invalid
   - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PROXY_LISTEN env'"
     expression: |
       !has(object.spec.network) ||
       !has(object.spec.network.services) ||
-      variables.ingressPorts == null ||
-      variables.envProxyListen == null ||
-      variables.ingressPorts.all(p, variables.envProxyListen.
-                split(",").
-                exists(pm,
-                  pm.trim().split(" ")[0].split(":")[1].trim() == string(p.targetPort)
+      !has(object.spec.network.services.ingress) ||
+      !has(object.spec.network.services.ingress.ports) ||
+      (
+        has(variables.proxyContainer.env) &&
+        variables.envProxyListen != null &&
+        variables.ingressPorts.all(p, variables.envProxyListen.
+                  split(",").
+                  exists(pm,
+                    pm.trim().split(" ")[0].split(":")[1].trim() == string(p.targetPort)
+                    )
                   )
-                )
+      )
     reason: Invalid
 ---
 # Source: gateway-operator/templates/validation-policy-dataplane.yaml
