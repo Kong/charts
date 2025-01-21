@@ -13,13 +13,14 @@ helm repo update
 
 ## Charts
 
-- [`kong/ingress`][#kongingress]: An umbrella chart for Kong Gateway and Kong Ingress Controller.
+- [`kong/ingress`][#kongingress]: An umbrella chart for Kong Gateway and [Kong Ingress Controller][kic_gh].
 - [`kong/kong`][#kongkong]: A flexible building block for supporting a wide variety of environment configurations.
-- [`kong/gateway-operator`][#konggateway-operator]: Installs Kong Gateway Operator.
+- [`kong/gateway-operator`][#konggateway-operator]: Installs [Kong Gateway Operator][kgo_gh].
 
 [#kongingress]: #kongingress
 [#kongkong]: #kongkong
 [#konggateway-operator]: #konggateway-operator
+[kic_gh]: https://github.com/Kong/kubernetes-ingress-controller
 
 ### `kong/ingress`
 
@@ -64,17 +65,15 @@ To use it:
 helm install kong/gateway-operator --generate-name
 ```
 
-For more details about the chart, see the [chart's README][kgo_chart].
-
 [kgo_gh]: https://github.com/Kong/gateway-operator
-[kgo_chart]: ./charts/gateway-operator/
 
 ## Documentation
 
 The documentation for Kong's Helm Charts is available on GitHub:
 
-* [kong/ingress](https://github.com/Kong/charts/blob/main/charts/ingress/README.md)
-* [kong/kong](https://github.com/Kong/charts/blob/main/charts/kong/README.md)
+- [kong/ingress](https://github.com/Kong/charts/blob/main/charts/ingress/README.md)
+- [kong/kong](https://github.com/Kong/charts/blob/main/charts/kong/README.md)
+- [kong/gateway-operator](https://github.com/Kong/charts/blob/main/charts/gateway-operator/README.md)
 
 ## Seeking help
 
