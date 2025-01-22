@@ -346,6 +346,7 @@ rules:
   - tcproutes
   - tlsroutes
   - udproutes
+  - backendtlspolicies
   verbs:
   - get
   - list
@@ -356,6 +357,7 @@ rules:
   - gatewayclasses/status
   - gateways/status
   - grpcroutes/status
+  - backendtlspolicies/status
   verbs:
   - get
   - patch
