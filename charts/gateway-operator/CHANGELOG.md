@@ -6,7 +6,7 @@
 
 - Fix rules of `ValidatingAdmissionPolicy` validating `DataPlane` ports.
   [#1215](https://github.com/Kong/charts/pull/1215)
-- Bumped `kong/kubernetes-configuration` CRDs to 1.1.0.
+- Bumped `kong/kubernetes-configuration` CRDs to 1.0.7.
   [#1231](https://github.com/Kong/charts/pull/1231)
 
 ## 0.4.4
