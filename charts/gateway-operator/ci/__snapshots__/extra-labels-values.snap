@@ -696,7 +696,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.4.4
+    helm.sh/chart: gateway-operator-0.4.5
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "1.4"
     a: "b"
@@ -719,7 +719,7 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: gateway-operator
-        helm.sh/chart: gateway-operator-0.4.4
+        helm.sh/chart: gateway-operator-0.4.5
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/version: "1.4"
         a: "b"
@@ -810,7 +810,7 @@ metadata:
   name: ports.dataplane.gateway-operator.konghq.com
   labels:
     app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.4.4
+    helm.sh/chart: gateway-operator-0.4.5
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "1.4"
     a: "b"
@@ -895,7 +895,7 @@ metadata:
   name: binding-ports.dataplane.gateway-operator.konghq.com
   labels:
     app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.4.4
+    helm.sh/chart: gateway-operator-0.4.5
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "1.4"
     a: "b"
