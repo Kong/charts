@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.6
+
+### Changes
+
+- Remove `ValidatingAdmissionPolicy` validating `DataPlane` ports.
+  [#1234](https://github.com/Kong/charts/pull/1234)
+
 ## 0.4.5
 
 ### Changes
