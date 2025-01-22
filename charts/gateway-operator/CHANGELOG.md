@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.4
+
+### Changes
+
+- Added permissions to `get/list/watch` `backendtlspolicies` and `update/patch`
+  `backendtlspolicies/status` to enable BackendTLSPolicy controller in KIC.
+  [#1230](https://github.com/Kong/charts/pull/1230)
+
 ## 0.4.3
 
 ### Changes
