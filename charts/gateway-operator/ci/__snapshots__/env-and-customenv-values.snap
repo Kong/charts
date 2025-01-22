@@ -696,7 +696,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.4.5
+    helm.sh/chart: gateway-operator-0.4.6
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "1.4"
     app.kubernetes.io/component: kgo
@@ -718,7 +718,7 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: gateway-operator
-        helm.sh/chart: gateway-operator-0.4.5
+        helm.sh/chart: gateway-operator-0.4.6
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/version: "1.4"
         app.kubernetes.io/component: kgo
@@ -804,102 +804,3 @@ spec:
       - name: chartsnap-gateway-operator-certs-dir
         emptyDir:
           sizeLimit: 256Mi
----
-# Source: gateway-operator/templates/validation-policy-dataplane.yaml
-apiVersion: admissionregistration.k8s.io/v1
-kind: ValidatingAdmissionPolicy
-metadata:
-  name: ports.dataplane.gateway-operator.konghq.com
-  labels:
-    app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.4.5
-    app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "1.4"
-spec:
-  matchConstraints:
-    resourceRules:
-    - apiGroups:
-      - "gateway-operator.konghq.com"
-      apiVersions:
-      - "v1beta1"
-      operations:
-      - "CREATE"
-      - "UPDATE"
-      resources:
-      - "dataplanes"
-  variables:
-  - name: ingressPorts
-    expression: object.spec.network.services.ingress.ports
-  - name: podTemplateSpec
-    expression: object.spec.deployment.podTemplateSpec
-  - name: proxyContainers
-    expression: |
-      variables.podTemplateSpec.spec.containers.filter(c, c.name == 'proxy')
-  - name: proxyContainer
-    expression: |
-      variables.proxyContainers.size() > 0 ?
-        variables.proxyContainers[0] :
-        null
-  - name: envFilteredPortMaps
-    expression: |
-      variables.proxyContainer.env.filter(e, e.name == "KONG_PORT_MAPS")
-  - name: envFilteredProxyListen
-    expression: |
-      variables.proxyContainer.env.filter(e, e.name == "KONG_PROXY_LISTEN")
-  - name: envPortMaps
-    expression: |
-      variables.envFilteredPortMaps.size() > 0 ? variables.envFilteredPortMaps[0].value : null
-  - name: envProxyListen
-    expression: |
-      variables.envFilteredProxyListen.size() > 0 ? variables.envFilteredProxyListen[0].value : null
-  # Using string functions from: https://pkg.go.dev/github.com/google/cel-go/ext
-  validations:
-  - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PORT_MAPS env'"
-    expression: |
-      !has(object.spec.network) ||
-      !has(object.spec.network.services) ||
-      !has(object.spec.network.services.ingress) ||
-      !has(object.spec.network.services.ingress.ports) ||
-      (
-        has(variables.proxyContainer.env) &&
-        variables.envPortMaps != null &&
-        variables.ingressPorts.all(p, variables.envPortMaps.
-                  split(",").
-                  exists(pm,
-                      pm.split(":")[1].trim() == string(p.targetPort)
-                      )
-                  )
-      )
-    reason: Invalid
-  - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PROXY_LISTEN env'"
-    expression: |
-      !has(object.spec.network) ||
-      !has(object.spec.network.services) ||
-      !has(object.spec.network.services.ingress) ||
-      !has(object.spec.network.services.ingress.ports) ||
-      (
-        has(variables.proxyContainer.env) &&
-        variables.envProxyListen != null &&
-        variables.ingressPorts.all(p, variables.envProxyListen.
-                  split(",").
-                  exists(pm,
-                    pm.trim().split(" ")[0].split(":")[1].trim() == string(p.targetPort)
-                    )
-                  )
-      )
-    reason: Invalid
----
-# Source: gateway-operator/templates/validation-policy-dataplane.yaml
-apiVersion: admissionregistration.k8s.io/v1
-kind: ValidatingAdmissionPolicyBinding
-metadata:
-  name: binding-ports.dataplane.gateway-operator.konghq.com
-  labels:
-    app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.4.5
-    app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "1.4"
-spec:
-  policyName: ports.dataplane.gateway-operator.konghq.com
-  validationActions:
-  - Deny
