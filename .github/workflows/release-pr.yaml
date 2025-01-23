@@ -112,7 +112,7 @@ jobs:
           # renovate: datasource=docker depName=kindest/node
           - "1.31.4"
           # renovate: datasource=docker depName=kindest/node
-          - "1.32.0"
+          - "1.32.1"
         chart-name:
           - kong
           - ingress
