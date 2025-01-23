@@ -617,7 +617,7 @@ directory.
 | image.pullPolicy                   | Image pull policy                                                                     | `IfNotPresent`      |
 | image.pullSecrets                  | Image pull secrets                                                                    | `null`              |
 | replicaCount                       | Kong instance count. It has no effect when `autoscaling.enabled` is set to true       | `1`                 |
-| plugins                            | Install custom plugins into Kong via ConfigMaps or Secrets                            | `{}`                |
+| plugins                            | Install custom plugins into Kong via ConfigMaps, Secrets or preInstalled                            | `{}`                |
 | env                                | Additional [Kong configurations](https://getkong.org/docs/latest/configuration/)      |                     |
 | customEnv                          | Custom Environment variables without `KONG_` prefix                                   |                     |
 | envFrom                            | Populate environment variables from ConfigMap or Secret keys                          |                     |
