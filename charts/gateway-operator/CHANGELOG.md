@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.7
+
+## Changes
+
+- Bumped `kong/kubernetes-configuration` CRDs to 1.0.8.
+  [#1238](https://github.com/Kong/charts/pull/1238)
+
 ## 0.4.6
 
 ### Changes
