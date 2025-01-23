@@ -31,6 +31,7 @@ spec:
         {{ include "kong.renderTpl" (dict "value" .Values.podLabels "context" $) | nindent 8 }}
         {{- end }}
     spec:
+      hostNetwork: {{ .Values.hostNetwork }}
       {{- with .Values.tolerations }}
       tolerations:
       {{ toYaml . | nindent 8 }}
