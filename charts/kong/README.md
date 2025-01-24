@@ -881,6 +881,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | autoscaling.enabled                | Set this to `true` to enable autoscaling                                              | `false`             |
 | autoscaling.minReplicas            | Set minimum number of replicas                                                        | `2`                 |
 | autoscaling.maxReplicas            | Set maximum number of replicas                                                        | `5`                 |
+| autoscaling.annotations            | Annotations for autoscaling                                                           | {}                  |
 | autoscaling.behavior               | Sets the [behavior for scaling up and down](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#configurable-scaling-behavior) | `{}`                |
 | autoscaling.targetCPUUtilizationPercentage | Target Percentage for when autoscaling takes affect. Only used if cluster does not support `autoscaling/v2` or `autoscaling/v2beta2` | `80`  |
 | autoscaling.metrics                | metrics used for autoscaling for clusters that supports `autoscaling/v2` or `autoscaling/v2beta2`           | See [values.yaml](values.yaml) |
