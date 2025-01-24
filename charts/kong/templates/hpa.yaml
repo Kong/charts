@@ -6,6 +6,12 @@ metadata:
   namespace:  {{ template "kong.namespace" . }}
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
+  {{- if .Values.autoscaling.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.autoscaling.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
