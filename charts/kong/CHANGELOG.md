@@ -159,6 +159,10 @@
 * Bumped default `kong/kubernetes-ingress-controller` image tag to 3.2.
   [#1085](https://github.com/Kong/charts/pull/1085)
 
+* Allows overriding the liveness/readiness probes to use a command, default behavior is not changed
+  [#1070](https://github.com/Kong/charts/pull/1070)
+
+
 ## 2.38.0
 
 ### Changes
@@ -346,7 +350,7 @@
 
 ## 2.26.5
 
-### Fixed 
+### Fixed
 
 * Kuma ServiceAccount Token hints and volumes are also available in migrations
   Pods.
@@ -354,19 +358,19 @@
 
 ## 2.26.4
 
-### Fixed 
+### Fixed
 
-* updated `admin_api_uri` to `admin_gui_api_url` as per [kong documentation](https://docs.konghq.com/gateway/3.4.x/reference/configuration/#admin_api_uri). 
+* updated `admin_api_uri` to `admin_gui_api_url` as per [kong documentation](https://docs.konghq.com/gateway/3.4.x/reference/configuration/#admin_api_uri).
 
 ## 2.26.3
 
-### Fixed 
+### Fixed
 
 * Enabled Service and Ingress in Kong Manager for non enterprise users.
 
 ## 2.26.2
 
-### Fixed 
+### Fixed
 
 * Add missing CRD KongConsumerGroup and extend status subresource for CRDs
 
