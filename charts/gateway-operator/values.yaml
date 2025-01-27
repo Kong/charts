@@ -117,3 +117,7 @@ certsDir:
 # Override the default deployment selector labels. This is useful if you don't want
 # to use the defaults or are migrating to this chart and want to use existing labels.
 # selectorLabels: []
+
+# Deploy the deployment in host network.
+# May be required to set to true if Calico CNI is used.
+hostNetwork: false
