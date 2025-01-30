@@ -650,6 +650,10 @@ spec:
     - name: https
       port: 8443
       protocol: TCP
+{{ if (semverCompare "< 1.5.0" (include "kong.effectiveVersion" .Values.image)) }}
       targetPort: https
+{{- else }}
+      targetPort: metrics
+{{- end }}
   selector:
     control-plane: controller-manager

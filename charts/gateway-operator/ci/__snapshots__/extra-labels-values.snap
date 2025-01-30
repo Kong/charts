@@ -696,7 +696,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.4.7
+    helm.sh/chart: gateway-operator-0.4.8
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "1.4"
     a: "b"
@@ -719,7 +719,7 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: gateway-operator
-        helm.sh/chart: gateway-operator-0.4.7
+        helm.sh/chart: gateway-operator-0.4.8
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/version: "1.4"
         a: "b"
@@ -735,7 +735,7 @@ spec:
         - name: GATEWAY_OPERATOR_HEALTH_PROBE_BIND_ADDRESS
           value: ":8081"
         - name: GATEWAY_OPERATOR_METRICS_BIND_ADDRESS
-          value: "127.0.0.1:8080"
+          value: "0.0.0.0:8080"
         - name: POD_NAMESPACE
           valueFrom:
             fieldRef:
@@ -772,6 +772,9 @@ spec:
         ports:
         - containerPort: 8081
           name: probe
+          protocol: TCP
+        - containerPort: 8080
+          name: metrics
           protocol: TCP
         volumeMounts:
         - name: chartsnap-gateway-operator-certs-dir

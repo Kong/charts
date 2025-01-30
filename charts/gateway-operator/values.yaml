@@ -1,7 +1,15 @@
 image:
   repository: docker.io/kong/gateway-operator
-  tag: 1.4
+  tag: "1.4"
+  # Optionally set a semantic version for version-gated features. This can normally
+  # be left unset. You only need to set this if your tag is not a semver string,
+  # such as when you are using a "next" tag. Set this to the effective semantic
+  # version of your tag: for example if using a "nightly" image for an unreleased 1.5.0
+  # version, set this to "1.5.0".
+  effectiveSemver: ""
 
+# Deprecated: KGO versions 1.5+ do not use kube-rbac-proxy.
+# Use --metrics-access-filter flag instead to control access to metrics endpoint.
 kubeRBACProxy:
   # Additional pod containers in the controller.
   image: gcr.io/kubebuilder/kube-rbac-proxy
