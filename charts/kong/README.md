@@ -904,6 +904,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | podDisruptionBudget.enabled        | Enable PodDisruptionBudget for Kong                                                   | `false`             |
 | podDisruptionBudget.maxUnavailable | Represents the minimum number of Pods that can be unavailable (integer or percentage) | `50%`               |
 | podDisruptionBudget.minAvailable   | Represents the number of Pods that must be available (integer or percentage)          |                     |
+| podDisruptionBudget.unhealthyPodEvictionPolicy | Controls the criteria when unhealthy Pods should be considered for eviction. Either `AlwaysAllow` or `IfHealthyBudget` | `IfHealthyBudget`   |
 | podSecurityPolicy.enabled          | Enable podSecurityPolicy for Kong                                                     | `false`             |
 | podSecurityPolicy.labels           | Labels to add to podSecurityPolicy for Kong                                           | `{}`             |
 | podSecurityPolicy.annotations      | Annotations to add to podSecurityPolicy for Kong                                      | `{}`             |

@@ -1,0 +1,19 @@
+replicaCount: 2
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: "50%"
+
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
+
+ingressController:
+  env:
+    anonymous_reports: "false"
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"

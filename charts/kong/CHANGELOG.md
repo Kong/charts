@@ -9,6 +9,11 @@
   `securityContext` in your values.
   [#1057](https://github.com/Kong/charts/pull/1057)
 
+### Changes
+
+* Add support for custom `unhealthyPodEvictionPolicy` in PodDisruptionBudget
+  [#1244](https://github.com/Kong/charts/pull/1244)
+
 ## 2.47.0
 
 ### Changes
