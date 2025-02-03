@@ -63,7 +63,7 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 
 {{- $defaultEnv := dict -}}
 {{- $_ := set $defaultEnv "GATEWAY_OPERATOR_HEALTH_PROBE_BIND_ADDRESS" ":8081" -}}
-{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_METRICS_BIND_ADDRESS" "127.0.0.1:8080" -}}
+{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_METRICS_BIND_ADDRESS" "0.0.0.0:8080" -}}
 
 {{- range $key, $val := .Values.env -}}
   {{- $var := printf "GATEWAY_OPERATOR_%s" ( upper $key ) -}}
@@ -100,3 +100,24 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 - name: {{ template "kong.fullname" . }}-certs-dir
   mountPath: /tmp/k8s-webhook-server/serving-certs
 {{- end }}
+
+{{/* effectiveVersion takes an image dict from values.yaml. if .effectiveSemver is set, it returns that, else it returns .tag */}}
+{{- define "kong.effectiveVersion" -}}
+{{- /* Because Kong Gateway enterprise uses versions with 4 segments and not 3 */ -}}
+{{- /* as semver does, we need to account for that here by extracting */ -}}
+{{- /* first 3 segments for comparison */ -}}
+{{- if .effectiveSemver -}}
+  {{- if regexMatch "^[0-9]+.[0-9]+.[0-9]+" .effectiveSemver -}}
+  {{- regexFind "^[0-9]+.[0-9]+.[0-9]+" .effectiveSemver -}}
+  {{- else -}}
+  {{- .effectiveSemver -}}
+  {{- end -}}
+{{- else -}}
+  {{- $tag := (trimSuffix "-redhat" .tag) -}}
+  {{- if regexMatch "^[0-9]+.[0-9]+.[0-9]+" .tag -}}
+  {{- regexFind "^[0-9]+.[0-9]+.[0-9]+" .tag -}}
+  {{- else -}}
+  {{- .tag -}}
+  {{- end -}}
+{{- end -}}
+{{- end -}}

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.8
+
+## Changes
+
+- Remove kube-rbac-proxy for operator versions 1.5+.
+  In order to controler metrics endpoint access for these version please see
+  [kubernetes-sigs/kubebuilder/discussions/3907][kubebuilder_discussion_3907].
+  Operator exposes `--metrics-access-filter` flag to control access to the metrics endpoint.
+  [#1243](https://github.com/Kong/charts/pull/1243)
+
+[kubebuilder_discussion_3907]: https://github.com/kubernetes-sigs/kubebuilder/discussions/3907
+
 ## 0.4.7
 
 ## Changes
