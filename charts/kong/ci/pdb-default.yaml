@@ -1,0 +1,5 @@
+replicaCount: 2
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: "50%"
