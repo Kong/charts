@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+* Add support for custom `unhealthyPodEvictionPolicy` in PodDisruptionBudget
+  [#1244](https://github.com/Kong/charts/pull/1244)
+
+### Changes
+
 ## 2.47.0
 
 ### Changes
