@@ -727,8 +727,6 @@ spec:
     spec:
       containers:
       - name: manager
-        args:
-        - --zap-log-level=debug
         env:
         - name: GATEWAY_OPERATOR_ANONYMOUS_REPORTS
           value: "false"
@@ -740,7 +738,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: "docker.io/kong/gateway-operator:1.4"
+        image: "docker.io/kong/nightly-gateway-operator-oss:nightly"
         livenessProbe:
           httpGet:
             path: /healthz

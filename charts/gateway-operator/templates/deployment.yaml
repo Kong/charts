@@ -78,7 +78,7 @@ spec:
           protocol: TCP
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 8 }}
-{{- if (semverCompare "< 1.5.0" (include "kong.effectiveVersion" .Values.image)) }}
+{{- if (semverCompare "< 1.5.0" (include "kong.effectiveVersion" .)) }}
       - args:
         - --secure-listen-address=0.0.0.0:8443
         - --upstream=http://127.0.0.1:8080/
