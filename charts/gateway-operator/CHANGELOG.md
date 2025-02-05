@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.9
+
+## Changes
+
+- Fix using non semver tags (e.g. `nightly`) without specifying the
+  `.image.effectiveSemver`. Now the latter default to current chart `appVersion`.
+  [#1246](https://github.com/Kong/charts/pull/1246)
+
 ## 0.4.8
 
 ## Changes
