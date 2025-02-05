@@ -5,6 +5,41 @@ entries:
       artifacthub.io/prerelease: "false"
     apiVersion: v2
     appVersion: "1.4"
+    created: "2025-02-05T10:42:07.004837732Z"
+    dependencies:
+    - condition: kic-crds.enabled
+      name: kic-crds
+      repository: ""
+      version: 3.2.0
+    - condition: gwapi-standard-crds.enabled
+      name: gwapi-standard-crds
+      repository: ""
+      version: 1.1.0
+    - condition: gwapi-experimental-crds.enabled
+      name: gwapi-experimental-crds
+      repository: ""
+      version: 1.1.0
+    - condition: kubernetes-configuration-crds.enabled
+      name: kubernetes-configuration-crds
+      repository: ""
+      version: 1.0.8
+    description: Deploy Kong Gateway Operator
+    digest: 8cfc18c36ddb95086d94591776093ad8958f3a9f92020f681fa90e3cb769eea5
+    home: https://konghq.com/
+    icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
+    maintainers:
+    - email: team-k8s@konghq.com
+      name: team-k8s-bot
+    name: gateway-operator
+    sources:
+    - https://github.com/Kong/charts/tree/main/charts/gateway-operator
+    urls:
+    - https://github.com/Kong/charts/releases/download/gateway-operator-0.4.9/gateway-operator-0.4.9.tgz
+    version: 0.4.9
+  - annotations:
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: "1.4"
     created: "2025-02-03T14:35:25.138070433Z"
     dependencies:
     - condition: kic-crds.enabled
@@ -4232,4 +4267,4 @@ entries:
     urls:
     - https://github.com/Kong/charts/releases/download/kong-0.36.5/kong-0.36.5.tgz
     version: 0.36.5
-generated: "2025-02-03T14:35:25.138444951Z"
+generated: "2025-02-05T10:42:07.005247085Z"
