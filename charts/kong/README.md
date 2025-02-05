@@ -467,7 +467,7 @@ listens if you do not provide your own. The chart can create
 configure them for you. To use this integration, install cert-manager, create
 an issuer, set `certificates.enabled: true` in values.yaml, and set your issuer
 name in `certificates.issuer` or `certificates.clusterIssuer` depending on the
-issuer type. 
+issuer type.
 
 If you do not have an issuer available, you can install the example [self-signed ClusterIssuer](https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-issuers)
 and set `certificates.clusterIssuer: selfsigned-issuer` for testing. You
@@ -709,7 +709,7 @@ or `ingress` sections, as it is used only for stream listens.
 
 #### Admin Service mTLS
 
-On top of the common parameters listed above, the `admin` service supports parameters for mTLS client verification. 
+On top of the common parameters listed above, the `admin` service supports parameters for mTLS client verification.
 If any of `admin.tls.client.caBundle` or `admin.tls.client.secretName` are set, the admin service will be configured to
 require mTLS client verification. If both are set, `admin.tls.client.caBundle` will take precedence.
 
@@ -910,7 +910,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | podSecurityPolicy.spec             | Collection of [PodSecurityPolicy settings](https://kubernetes.io/docs/concepts/policy/pod-security-policy/#what-is-a-pod-security-policy) | |
 | priorityClassName                  | Set pod scheduling priority class for Kong pods                                       | `""`                |
 | secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |
-| securityContext                    | Set the securityContext for Kong Pods                                                 | `{}`                |
+| securityContext                    | Set the securityContext for Kong Pods                                                 | See values.yaml     |
 | containerSecurityContext           | Set the securityContext for Containers                                                | See values.yaml     |
 | serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | `false`             |
 | serviceMonitor.trustCRDsExist      | Do not check for the Prometheus Operator CRDs, just try to deploy                     | `false`             |
@@ -938,11 +938,11 @@ containerSecurityContext: # run as root to bind to lower ports
   runAsUser: 0
 ```
 
-**Note:** The default `podAnnotations` values disable inbound proxying for Kuma 
-and Istio. This is appropriate when using Kong as a gateway for external 
+**Note:** The default `podAnnotations` values disable inbound proxying for Kuma
+and Istio. This is appropriate when using Kong as a gateway for external
 traffic inbound into the cluster.
 
-If you want to use Kong as an internal proxy within the cluster network, you 
+If you want to use Kong as an internal proxy within the cluster network, you
 should enable inbound the inbound mesh proxies:
 
 ```yaml

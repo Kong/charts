@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+## Changes
+
+- Set `readOnlyRootFilesystem: true` for kube-rbac-proxy
+  [#1057](https://github.com/Kong/charts/pull/1057)
+
 ## 0.4.9
 
 ## Changes
