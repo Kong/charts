@@ -8,16 +8,16 @@ maintainers:
 name: ingress
 sources:
   - https://github.com/Kong/charts/tree/main/charts/ingress
-version: 0.17.0
-appVersion: "3.8"
+version: 0.18.0
+appVersion: "3.9"
 dependencies:
   - name: kong
-    version: "=2.46.0"
+    version: "=2.47.0"
     repository: https://charts.konghq.com
     alias: controller
     condition: controller.enabled
   - name: kong
-    version: "=2.46.0"
+    version: "=2.47.0"
     repository: https://charts.konghq.com
     alias: gateway
     condition: gateway.enabled
