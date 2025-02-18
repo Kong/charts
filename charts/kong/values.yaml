@@ -549,6 +549,35 @@ ingressController:
     # version, set this to "3.1.0".
     effectiveSemver:
   args: []
+  admissionWebhook:
+    matchPolicy: Equivalent
+    enabled: true
+    # Limit the `secrets.plugins.validation.ingress-controller.konghq.com` webhook
+    # to only Secrets with the appropriate KIC "konghq.com/validate" label.
+    filterSecrets: false
+    failurePolicy: Ignore
+    port: 8080
+    certificate:
+      provided: false
+    namespaceSelector: {}
+    # ObjectSelector specifies which objects to match against validations.kong.konghq.com webhook webhook
+    objectSelector:
+      matchExpressions:
+      - key: owner
+        operator: NotIn
+        values:
+        - helm
+    # Specifiy the secretName when the certificate is provided via a TLS secret
+    # secretName: ""
+    # Specifiy the CA bundle of the provided certificate.
+    # This is a PEM encoded CA bundle which will be used to validate the webhook certificate. If unspecified, system trust roots on the apiserver are used.
+    # caBundle:
+    #   | Add the CA bundle content here.
+    service:
+      # Specify custom labels for the validation webhook service.
+      labels: {}
+    # Tune the default Kubernetes timeoutSeconds of 10 seconds
+    # timeoutSeconds: 10
 
   gatewayDiscovery:
     enabled: false
@@ -588,36 +617,6 @@ ingressController:
   # Load all ConfigMap or Secret keys as environment variables:
   # https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables
   envFrom: []
-
-  admissionWebhook:
-    matchPolicy: Equivalent
-    enabled: true
-    # Limit the `secrets.plugins.validation.ingress-controller.konghq.com` webhook
-    # to only Secrets with the appropriate KIC "konghq.com/validate" label.
-    filterSecrets: false
-    failurePolicy: Ignore
-    port: 8080
-    certificate:
-      provided: false
-    namespaceSelector: {}
-    # ObjectSelector specifies which objects to match against validations.kong.konghq.com webhook webhook
-    objectSelector:
-      matchExpressions:
-      - key: owner
-        operator: NotIn
-        values:
-        - helm
-    # Specifiy the secretName when the certificate is provided via a TLS secret
-    # secretName: ""
-    # Specifiy the CA bundle of the provided certificate.
-    # This is a PEM encoded CA bundle which will be used to validate the webhook certificate. If unspecified, system trust roots on the apiserver are used.
-    # caBundle:
-    #   | Add the CA bundle content here.
-    service:
-      # Specify custom labels for the validation webhook service.
-      labels: {}
-    # Tune the default Kubernetes timeoutSeconds of 10 seconds
-    # timeoutSeconds: 10
 
   ingressClass: kong
   # annotations for IngressClass resource (Kubernetes 1.18+)
