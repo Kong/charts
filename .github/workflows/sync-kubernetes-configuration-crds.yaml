@@ -1,0 +1,44 @@
+name: Sync Kubernetes Configuration CRDs
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version/ref to sync from kubernetes-configuration repository'
+        required: true
+        type: string
+
+jobs:
+  sync-crds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install Kustomize
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh -o /tmp/install_kustomize.sh
+          sh /tmp/install_kustomize.sh /tmp
+
+      - name: Generate kustomization.yaml
+        run: |
+          mkdir -p /tmp/kubernetes-configuration
+          cat > /tmp/kubernetes-configuration/kustomization.yaml << EOF
+          apiVersion: kustomize.config.k8s.io/v1beta1
+          kind: Kustomization
+          resources:
+            - https://github.com/kong/kubernetes-configuration/config/crd/gateway-operator?ref=${{ github.event.inputs.version }}
+          EOF
+
+      - name: Build CRDs
+        run: |
+          /tmp/kustomize build /tmp/kubernetes-configuration > charts/gateway-operator/charts/kubernetes-configuration-crds/crds/kubernetes-configuration-crds.yaml
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f
+        with:
+          title: 'chore: update kubernetes-configuration CRDs to ${{ github.event.inputs.version }}'
+          commit-message: 'chore: update kubernetes-configuration CRDs to ${{ github.event.inputs.version }}'
+          branch: chore/update-kubernetes-configuration-crds
+          delete-branch: true
+          body: 'This PR updates the kubernetes-configuration CRDs to ${{ github.event.inputs.version }}.'
