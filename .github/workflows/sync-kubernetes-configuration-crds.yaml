@@ -18,7 +18,7 @@ jobs:
       - name: Install Kustomize
         run: |
           curl -fsSL https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh -o /tmp/install_kustomize.sh
-          sh /tmp/install_kustomize.sh /tmp
+          bash /tmp/install_kustomize.sh /tmp
 
       - name: Generate kustomization.yaml
         run: |
@@ -37,8 +37,15 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@dd2324fc52d5d43c699a5636bcf19fceaa70c284
         with:
-          title: 'chore: update kubernetes-configuration CRDs to ${{ github.event.inputs.version }}'
+          token: ${{ secrets.K8S_TEAM_BOT_GH_PAT }}
+          title: Sync kubernetes-configuration CRDs to ${{ github.event.inputs.version }}
           commit-message: 'chore: update kubernetes-configuration CRDs to ${{ github.event.inputs.version }}'
-          branch: chore/update-kubernetes-configuration-crds
+          committer: Kong's Team k8s bot <team-k8s+github-bot@konghq.com>
+          author: Kong's Team k8s bot <team-k8s+github-bot@konghq.com>
+          signoff: true
+          base: main
+          branch: chore/auto-update-kubernetes-configuration-crds
           delete-branch: true
-          body: 'This PR updates the kubernetes-configuration CRDs to ${{ github.event.inputs.version }}.'
+          draft: false
+          body: Sync kubernetes-configuration CRDs to ${{ github.event.inputs.version }}
+          labels: dependencies
