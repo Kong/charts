@@ -50,5 +50,6 @@ jobs:
           base: main
           branch: chore/auto-update-kubernetes-configuration-crds
           delete-branch: true
-          draft: true
+          draft: false
           body: Sync kubernetes-configuration CRDs to ${{ github.event.inputs.version }}
+          labels: dependencies
