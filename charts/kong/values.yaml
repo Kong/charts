@@ -966,6 +966,7 @@ podDisruptionBudget:
   # Uncomment only one of the following when enabled is set to true
   # maxUnavailable: "50%"
   # minAvailable: "50%"
+  unhealthyPodEvictionPolicy: IfHealthyBudget
 
 podSecurityPolicy:
   enabled: false
