@@ -5,7 +5,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: chartsnap-controller
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -18,7 +18,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: chartsnap-gateway
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: gateway
     helm.sh/chart: gateway-2.47.0
@@ -31,7 +31,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: chartsnap-controller-validation-webhook-ca-keypair
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -48,7 +48,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: chartsnap-controller-validation-webhook-keypair
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -65,7 +65,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: chartsnap-controller-admin-api-keypair
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -82,7 +82,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: chartsnap-controller-admin-api-ca-keypair
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -561,14 +561,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: chartsnap-controller
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 ---
 # Source: ingress/charts/controller/templates/controller-rbac-resources.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: chartsnap-controller
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -638,7 +638,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: chartsnap-controller
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -652,14 +652,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: chartsnap-controller
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 ---
 # Source: ingress/charts/controller/templates/admission-webhook.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: chartsnap-controller-validation-webhook
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -685,7 +685,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: chartsnap-controller-metrics
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -715,7 +715,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: chartsnap-gateway-admin
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: gateway
     helm.sh/chart: gateway-2.47.0
@@ -740,7 +740,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: chartsnap-gateway-manager
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: gateway
     helm.sh/chart: gateway-2.47.0
@@ -768,7 +768,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: chartsnap-gateway-proxy
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: gateway
     helm.sh/chart: gateway-2.47.0
@@ -797,7 +797,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: chartsnap-controller
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -876,7 +876,7 @@ spec:
         - name: CONTROLLER_INGRESS_CLASS
           value: "kong"
         - name: CONTROLLER_KONG_ADMIN_SVC
-          value: "6f9a4139-1f3b-4cae-a05e-35a4a478eb91/chartsnap-gateway-admin"
+          value: "default/chartsnap-gateway-admin"
         - name: CONTROLLER_KONG_ADMIN_TLS_CLIENT_CERT_FILE
           value: "/etc/secrets/admin-api-cert/tls.crt"
         - name: CONTROLLER_KONG_ADMIN_TLS_CLIENT_KEY_FILE
@@ -884,7 +884,7 @@ spec:
         - name: CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY
           value: "true"
         - name: CONTROLLER_PUBLISH_SERVICE
-          value: "6f9a4139-1f3b-4cae-a05e-35a4a478eb91/chartsnap-gateway-proxy"
+          value: "default/chartsnap-gateway-proxy"
         image: kong/nightly-ingress-controller:2024-12-12
         imagePullPolicy: IfNotPresent
         readinessProbe:
@@ -956,7 +956,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: chartsnap-gateway
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
   labels:
     app.kubernetes.io/name: gateway
     helm.sh/chart: gateway-2.47.0
@@ -1209,7 +1209,7 @@ spec:
 kind: ValidatingWebhookConfiguration
 apiVersion: admissionregistration.k8s.io/v1
 metadata:
-  name: chartsnap-controller-6f9a4139-1f3b-4cae-a05e-35a4a478eb91-validations
+  name: chartsnap-controller-default-validations
   labels:
     app.kubernetes.io/name: controller
     helm.sh/chart: controller-2.47.0
@@ -1220,10 +1220,10 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKRENDQWd5Z0F3SUJBZ0lSQU5veXk0Z3FxT2tZK1ZHMERaSmVzY0V3RFFZSktvWklodmNOQVFFTEJRQXcKSERFYU1CZ0dBMVVFQXhNUmEyOXVaeTFoWkcxcGMzTnBiMjR0WTJFd0hoY05NalV3TXpBMU1UZzBNelExV2hjTgpNelV3TXpBek1UZzBNelExV2pBY01Sb3dHQVlEVlFRREV4RnJiMjVuTFdGa2JXbHpjMmx2YmkxallUQ0NBU0l3CkRRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFPaFFBbVNyN1ozN0tSUUgzOUdkdjRDbW1mNEkKRlcyMDRxdDV4c2pLNVNHOVRpWUNyMVJwRnNPZ01SclhpZTFRWHpZbVVvVDNTeVBndmZZNVRBY1lrbUtrdlBGeApMUlhEazlPa1VkNlA4eXgzWU9GdkdrUC9vcXFEVnNFejdVaFdITnZwSjFBdzJ3U1pRMHh4dzlSR3B0NkxDazh5ClN0aGJwN3c4dXNDZEE2QUdlY2FndnNISytjQzFEVWhXeTVid0N2OVpkRUY0OS9MSGRYM21la2RuQXNFc2dJWDkKVUdOZ01BQ0ZaUHJoU0NxL2ZRNU5yM05lRmVZUzVPeGMya2sxU0Y3Z3NhZlo3UG8vdkpvdXhOQWFSSE1JS3NVQQoyVnNFWENEL3NTVk5SVE5xRGxHQWlkazMzWlJ4cFo5VUtaOHNCV0EzMllibWQ5Yi9kdTJzaWF5QWlTa0NBd0VBCkFhTmhNRjh3RGdZRFZSMFBBUUgvQkFRREFnS2tNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUYKQlFjREFqQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCVDdPaGdvMGl5bGxWdWlpUFljcmMrWQpSMFRNalRBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQVU2UitYb1RNeXNBUDhabER0L1JWRGxUTVZlWEZGWENUCktIMHpZV1ZzdHFQc1NIdENKaDkwUVR0UVpHTlNlcXhkU1hNbC9mYUFHVGhuTzJTcnRXSG9ueUY2QTEyWGJKeE4KTmk1aWdoYW9sWEZVRUlVeVpweG1lQytXV0pHN01xYWRQMHJFbFVJUTFwdWM2VlBOemRuVnFrSFYwZGVZRUhzVApZeWU2dGswekREbzR2NXcrOEVFVzJuNmhhTTBnbVEweGtTV0xXbWZJRVhXRXl4WlpocHc1dlRyTzMwdTBKMmlwClR3N3ZSY2Y0emZPSjBnL05xbVdKNld5TWJFSmhmVExWb282cVEyN2k3WlViYmdwcFpPVXVvOFRsRWRiNFBoTXoKUXlFejNna3ZTejRPTXlFSkNTT2JJUkJNMERKWkEvanNydFkxdHEwN254THBRc1NkeTR4ZUR3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    caBundle: '###DYNAMIC_FIELD###'
     service:
       name: chartsnap-controller-validation-webhook
-      namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+      namespace: default
   failurePolicy: Ignore
   matchPolicy: Equivalent
   name: secrets.credentials.validation.ingress-controller.konghq.com
@@ -1249,10 +1249,10 @@ webhooks:
 - admissionReviewVersions:
   - v1
   clientConfig:
-    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKRENDQWd5Z0F3SUJBZ0lSQU5veXk0Z3FxT2tZK1ZHMERaSmVzY0V3RFFZSktvWklodmNOQVFFTEJRQXcKSERFYU1CZ0dBMVVFQXhNUmEyOXVaeTFoWkcxcGMzTnBiMjR0WTJFd0hoY05NalV3TXpBMU1UZzBNelExV2hjTgpNelV3TXpBek1UZzBNelExV2pBY01Sb3dHQVlEVlFRREV4RnJiMjVuTFdGa2JXbHpjMmx2YmkxallUQ0NBU0l3CkRRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFPaFFBbVNyN1ozN0tSUUgzOUdkdjRDbW1mNEkKRlcyMDRxdDV4c2pLNVNHOVRpWUNyMVJwRnNPZ01SclhpZTFRWHpZbVVvVDNTeVBndmZZNVRBY1lrbUtrdlBGeApMUlhEazlPa1VkNlA4eXgzWU9GdkdrUC9vcXFEVnNFejdVaFdITnZwSjFBdzJ3U1pRMHh4dzlSR3B0NkxDazh5ClN0aGJwN3c4dXNDZEE2QUdlY2FndnNISytjQzFEVWhXeTVid0N2OVpkRUY0OS9MSGRYM21la2RuQXNFc2dJWDkKVUdOZ01BQ0ZaUHJoU0NxL2ZRNU5yM05lRmVZUzVPeGMya2sxU0Y3Z3NhZlo3UG8vdkpvdXhOQWFSSE1JS3NVQQoyVnNFWENEL3NTVk5SVE5xRGxHQWlkazMzWlJ4cFo5VUtaOHNCV0EzMllibWQ5Yi9kdTJzaWF5QWlTa0NBd0VBCkFhTmhNRjh3RGdZRFZSMFBBUUgvQkFRREFnS2tNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUYKQlFjREFqQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCVDdPaGdvMGl5bGxWdWlpUFljcmMrWQpSMFRNalRBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQVU2UitYb1RNeXNBUDhabER0L1JWRGxUTVZlWEZGWENUCktIMHpZV1ZzdHFQc1NIdENKaDkwUVR0UVpHTlNlcXhkU1hNbC9mYUFHVGhuTzJTcnRXSG9ueUY2QTEyWGJKeE4KTmk1aWdoYW9sWEZVRUlVeVpweG1lQytXV0pHN01xYWRQMHJFbFVJUTFwdWM2VlBOemRuVnFrSFYwZGVZRUhzVApZeWU2dGswekREbzR2NXcrOEVFVzJuNmhhTTBnbVEweGtTV0xXbWZJRVhXRXl4WlpocHc1dlRyTzMwdTBKMmlwClR3N3ZSY2Y0emZPSjBnL05xbVdKNld5TWJFSmhmVExWb282cVEyN2k3WlViYmdwcFpPVXVvOFRsRWRiNFBoTXoKUXlFejNna3ZTejRPTXlFSkNTT2JJUkJNMERKWkEvanNydFkxdHEwN254THBRc1NkeTR4ZUR3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    caBundle: '###DYNAMIC_FIELD###'
     service:
       name: chartsnap-controller-validation-webhook
-      namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+      namespace: default
   failurePolicy: Ignore
   matchPolicy: Equivalent
   name: secrets.plugins.validation.ingress-controller.konghq.com
@@ -1332,7 +1332,7 @@ webhooks:
     - gateways
     - httproutes
   clientConfig:
-    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKRENDQWd5Z0F3SUJBZ0lSQU5veXk0Z3FxT2tZK1ZHMERaSmVzY0V3RFFZSktvWklodmNOQVFFTEJRQXcKSERFYU1CZ0dBMVVFQXhNUmEyOXVaeTFoWkcxcGMzTnBiMjR0WTJFd0hoY05NalV3TXpBMU1UZzBNelExV2hjTgpNelV3TXpBek1UZzBNelExV2pBY01Sb3dHQVlEVlFRREV4RnJiMjVuTFdGa2JXbHpjMmx2YmkxallUQ0NBU0l3CkRRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFPaFFBbVNyN1ozN0tSUUgzOUdkdjRDbW1mNEkKRlcyMDRxdDV4c2pLNVNHOVRpWUNyMVJwRnNPZ01SclhpZTFRWHpZbVVvVDNTeVBndmZZNVRBY1lrbUtrdlBGeApMUlhEazlPa1VkNlA4eXgzWU9GdkdrUC9vcXFEVnNFejdVaFdITnZwSjFBdzJ3U1pRMHh4dzlSR3B0NkxDazh5ClN0aGJwN3c4dXNDZEE2QUdlY2FndnNISytjQzFEVWhXeTVid0N2OVpkRUY0OS9MSGRYM21la2RuQXNFc2dJWDkKVUdOZ01BQ0ZaUHJoU0NxL2ZRNU5yM05lRmVZUzVPeGMya2sxU0Y3Z3NhZlo3UG8vdkpvdXhOQWFSSE1JS3NVQQoyVnNFWENEL3NTVk5SVE5xRGxHQWlkazMzWlJ4cFo5VUtaOHNCV0EzMllibWQ5Yi9kdTJzaWF5QWlTa0NBd0VBCkFhTmhNRjh3RGdZRFZSMFBBUUgvQkFRREFnS2tNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUYKQlFjREFqQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCVDdPaGdvMGl5bGxWdWlpUFljcmMrWQpSMFRNalRBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQVU2UitYb1RNeXNBUDhabER0L1JWRGxUTVZlWEZGWENUCktIMHpZV1ZzdHFQc1NIdENKaDkwUVR0UVpHTlNlcXhkU1hNbC9mYUFHVGhuTzJTcnRXSG9ueUY2QTEyWGJKeE4KTmk1aWdoYW9sWEZVRUlVeVpweG1lQytXV0pHN01xYWRQMHJFbFVJUTFwdWM2VlBOemRuVnFrSFYwZGVZRUhzVApZeWU2dGswekREbzR2NXcrOEVFVzJuNmhhTTBnbVEweGtTV0xXbWZJRVhXRXl4WlpocHc1dlRyTzMwdTBKMmlwClR3N3ZSY2Y0emZPSjBnL05xbVdKNld5TWJFSmhmVExWb282cVEyN2k3WlViYmdwcFpPVXVvOFRsRWRiNFBoTXoKUXlFejNna3ZTejRPTXlFSkNTT2JJUkJNMERKWkEvanNydFkxdHEwN254THBRc1NkeTR4ZUR3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    caBundle: '###DYNAMIC_FIELD###'
     service:
       name: chartsnap-controller-validation-webhook
-      namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+      namespace: default

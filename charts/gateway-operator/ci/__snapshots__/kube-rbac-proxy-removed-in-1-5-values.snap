@@ -5,7 +5,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: controller-manager
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 ---
 # Source: gateway-operator/templates/rbac-resources.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -572,7 +572,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: controller-manager
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 ---
 # Source: gateway-operator/templates/rbac-resources.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -586,7 +586,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: controller-manager
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 ---
 # Source: gateway-operator/templates/rbac-resources.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -600,14 +600,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: controller-manager
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 ---
 # Source: gateway-operator/templates/rbac-resources.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: chartsnap-gateway-operator-leader-election-role
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 rules:
 - apiGroups:
   - ""
@@ -646,7 +646,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: chartsnap-gateway-operator-leader-election-rolebinding
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -654,7 +654,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: controller-manager
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 ---
 # Source: gateway-operator/templates/rbac-resources.yaml
 apiVersion: v1
@@ -663,7 +663,7 @@ metadata:
   labels:
     control-plane: controller-manager
   name: chartsnap-gateway-operator-metrics-service
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 spec:
   ports:
   - name: https
@@ -680,7 +680,7 @@ metadata:
   labels:
     app.kubernetes.io/component: kgo
   name: chartsnap-gateway-operator
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 spec:
   ports:
   - name: https
@@ -696,12 +696,12 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.4.10
+    helm.sh/chart: gateway-operator-0.4.10-rc.1
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "1.4"
     app.kubernetes.io/component: kgo
   name: chartsnap-gateway-operator-controller-manager
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -718,7 +718,7 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: gateway-operator
-        helm.sh/chart: gateway-operator-0.4.10
+        helm.sh/chart: gateway-operator-0.4.10-rc.1
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/version: "1.4"
         app.kubernetes.io/component: kgo

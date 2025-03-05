@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 ---
 apiVersion: v1
 kind: Service
@@ -20,7 +20,7 @@ metadata:
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong-manager
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 spec:
   ports:
     - name: kong-manager
@@ -47,7 +47,7 @@ metadata:
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong-portalapi
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 spec:
   ports:
     - name: kong-portalapi
@@ -74,7 +74,7 @@ metadata:
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong-portal
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 spec:
   ports:
     - name: kong-portal
@@ -102,7 +102,7 @@ metadata:
     enable-metrics: "true"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong-proxy
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 spec:
   ports:
     - name: kong-proxy
@@ -130,7 +130,7 @@ metadata:
     app.kubernetes.io/version: "3.6"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong
-  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
+  namespace: default
 spec:
   replicas: 1
   revisionHistoryLimit: 10

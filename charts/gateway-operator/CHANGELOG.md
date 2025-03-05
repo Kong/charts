@@ -4,7 +4,7 @@
 
 ### Changes
 
-## 0.4.10
+## 0.4.10-rc.1
 
 ### Changes
 
@@ -23,7 +23,7 @@
 
 ## 0.4.8
 
-## Changes
+### Changes
 
 - Remove kube-rbac-proxy for operator versions 1.5+.
   In order to controler metrics endpoint access for these version please see
@@ -35,7 +35,7 @@
 
 ## 0.4.7
 
-## Changes
+### Changes
 
 - Bumped `kong/kubernetes-configuration` CRDs to 1.0.8.
   [#1238](https://github.com/Kong/charts/pull/1238)
