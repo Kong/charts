@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong
-  namespace: default
+  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 ---
 apiVersion: v1
 data:
@@ -23,7 +23,7 @@ metadata:
     app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong-validation-webhook-ca-keypair
-  namespace: default
+  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 type: kubernetes.io/tls
 ---
 apiVersion: v1
@@ -39,7 +39,7 @@ metadata:
     app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong-validation-webhook-keypair
-  namespace: default
+  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 type: kubernetes.io/tls
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -507,7 +507,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: chartsnap-kong
-    namespace: default
+    namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -519,7 +519,7 @@ metadata:
     app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong
-  namespace: default
+  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 rules:
   - apiGroups:
       - ""
@@ -583,7 +583,7 @@ metadata:
     app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong
-  namespace: default
+  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -591,7 +591,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: chartsnap-kong
-    namespace: default
+    namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 ---
 apiVersion: v1
 kind: Service
@@ -603,7 +603,7 @@ metadata:
     app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong-validation-webhook
-  namespace: default
+  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 spec:
   ports:
     - name: webhook
@@ -628,7 +628,7 @@ metadata:
     app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong-metrics
-  namespace: default
+  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 spec:
   ports:
     - name: cmetrics
@@ -657,7 +657,7 @@ metadata:
     app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong-manager
-  namespace: default
+  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 spec:
   ports:
     - name: kong-manager
@@ -685,7 +685,7 @@ metadata:
     enable-metrics: "true"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong-proxy
-  namespace: default
+  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 spec:
   ports:
     - name: kong-proxy
@@ -713,7 +713,7 @@ metadata:
     app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.47.0
   name: chartsnap-kong
-  namespace: default
+  namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -765,7 +765,7 @@ spec:
             - name: CONTROLLER_KONG_ADMIN_URL
               value: https://localhost:8444
             - name: CONTROLLER_PUBLISH_SERVICE
-              value: default/chartsnap-kong-proxy
+              value: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91/chartsnap-kong-proxy
           image: kong/kubernetes-ingress-controller:3.4
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -1046,15 +1046,15 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.9"
     helm.sh/chart: kong-2.47.0
-  name: chartsnap-kong-default-validations
+  name: chartsnap-kong-6f9a4139-1f3b-4cae-a05e-35a4a478eb91-validations
 webhooks:
   - admissionReviewVersions:
       - v1
     clientConfig:
-      caBundle: '###DYNAMIC_FIELD###'
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKRENDQWd5Z0F3SUJBZ0lSQUxyS1RJSS9EWDI2LytCbGo1eVBZd0V3RFFZSktvWklodmNOQVFFTEJRQXcKSERFYU1CZ0dBMVVFQXhNUmEyOXVaeTFoWkcxcGMzTnBiMjR0WTJFd0hoY05NalV3TXpBMU1UZzBNelEwV2hjTgpNelV3TXpBek1UZzBNelEwV2pBY01Sb3dHQVlEVlFRREV4RnJiMjVuTFdGa2JXbHpjMmx2YmkxallUQ0NBU0l3CkRRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFOd2tPMkZTWkpET1g0Mnh4alhQR2FTN2QydlIKTEM0N0lVclpZM0o5L1kxTGdGaWd0SEc5N0M4TWhJdXNuNnlTRFArOHdJVWgwa1ZNMWpiRGQyY2YwcGlTSjJwUQpYb3gxTG1HRFZvRjBZTVlFOHJWSU5aU1hrQnhPN1JuUGgrV09PUWhyRDdWN0VmRGhKSW1BRFBUNnZaaFFjQ2N1CkFBczdDb2ZUUjAzVmN2N2JKdi94Um5Qdnl0SCtibjlteXJDaEt3eHd1aC9VWDYwSlY2bmdjbWVXTXA5QnlJc3AKZ3NBb2lvU2Q2cURCRUFQeGhsKzlQajg2czFHYXNNaVB3K3hVWm1XSXlUakpHeVVJbDFxYStIU0FiUFFqVnpLbQpiWG9NRml4dk9tTHN0Q0M4YUEzMWhTekxXRFYybUhjVHZtSEhhSTlvbGdwVEovcmJBK283c2ZLa203VUNBd0VBCkFhTmhNRjh3RGdZRFZSMFBBUUgvQkFRREFnS2tNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUYKQlFjREFqQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCUUUvTTY4b0NJSERKRUdLNTlWM3hocApyWlNLekRBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQXlHNkhGTitiaDRsRk8rRUdtUFpxRHdkK3N0SGZNWXprClpBSVduZWpYWW0yMGVpekFHbE0rc0VxMXZxYkxCSWJlTnBZTlJUTklHczgvZWQzcDhWdmdDVFY3Rzl1YnlhdjcKTCsrYkxObmd5bnBvdDZPUmZ3WHVhV1BpMUdqY0VRTTRRVG1MUm93S1FLa2YzckdlVTc5NGRwSDlNSGpzTGJUawp3VmdILzJFbmJ2MnFUbnZ4VWt6WGZkS2dnYi9OUFdnRWExOWhnUG9IUHdicFhCaSs3MmIvNGVkRjl1bXpDTHlwCkhwQitvaGtGeFFZWVo4SFBwWGI5Nkc4U1g2dTVTZUNTbFRtNVJuUGRHUkV4b0VQTFhGK3JFQ2FtcEY1UFgwclAKeVFnaTNVcFkzOFc0aGR5NkNsL2dnVzJyWFhWcFhiMUtSbXdFQ1NLclRDV2NHWU5QL0RGU1J3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
       service:
         name: chartsnap-kong-validation-webhook
-        namespace: default
+        namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
     failurePolicy: Ignore
     matchPolicy: Equivalent
     name: secrets.credentials.validation.ingress-controller.konghq.com
@@ -1080,10 +1080,10 @@ webhooks:
   - admissionReviewVersions:
       - v1
     clientConfig:
-      caBundle: '###DYNAMIC_FIELD###'
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKRENDQWd5Z0F3SUJBZ0lSQUxyS1RJSS9EWDI2LytCbGo1eVBZd0V3RFFZSktvWklodmNOQVFFTEJRQXcKSERFYU1CZ0dBMVVFQXhNUmEyOXVaeTFoWkcxcGMzTnBiMjR0WTJFd0hoY05NalV3TXpBMU1UZzBNelEwV2hjTgpNelV3TXpBek1UZzBNelEwV2pBY01Sb3dHQVlEVlFRREV4RnJiMjVuTFdGa2JXbHpjMmx2YmkxallUQ0NBU0l3CkRRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFOd2tPMkZTWkpET1g0Mnh4alhQR2FTN2QydlIKTEM0N0lVclpZM0o5L1kxTGdGaWd0SEc5N0M4TWhJdXNuNnlTRFArOHdJVWgwa1ZNMWpiRGQyY2YwcGlTSjJwUQpYb3gxTG1HRFZvRjBZTVlFOHJWSU5aU1hrQnhPN1JuUGgrV09PUWhyRDdWN0VmRGhKSW1BRFBUNnZaaFFjQ2N1CkFBczdDb2ZUUjAzVmN2N2JKdi94Um5Qdnl0SCtibjlteXJDaEt3eHd1aC9VWDYwSlY2bmdjbWVXTXA5QnlJc3AKZ3NBb2lvU2Q2cURCRUFQeGhsKzlQajg2czFHYXNNaVB3K3hVWm1XSXlUakpHeVVJbDFxYStIU0FiUFFqVnpLbQpiWG9NRml4dk9tTHN0Q0M4YUEzMWhTekxXRFYybUhjVHZtSEhhSTlvbGdwVEovcmJBK283c2ZLa203VUNBd0VBCkFhTmhNRjh3RGdZRFZSMFBBUUgvQkFRREFnS2tNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUYKQlFjREFqQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCUUUvTTY4b0NJSERKRUdLNTlWM3hocApyWlNLekRBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQXlHNkhGTitiaDRsRk8rRUdtUFpxRHdkK3N0SGZNWXprClpBSVduZWpYWW0yMGVpekFHbE0rc0VxMXZxYkxCSWJlTnBZTlJUTklHczgvZWQzcDhWdmdDVFY3Rzl1YnlhdjcKTCsrYkxObmd5bnBvdDZPUmZ3WHVhV1BpMUdqY0VRTTRRVG1MUm93S1FLa2YzckdlVTc5NGRwSDlNSGpzTGJUawp3VmdILzJFbmJ2MnFUbnZ4VWt6WGZkS2dnYi9OUFdnRWExOWhnUG9IUHdicFhCaSs3MmIvNGVkRjl1bXpDTHlwCkhwQitvaGtGeFFZWVo4SFBwWGI5Nkc4U1g2dTVTZUNTbFRtNVJuUGRHUkV4b0VQTFhGK3JFQ2FtcEY1UFgwclAKeVFnaTNVcFkzOFc0aGR5NkNsL2dnVzJyWFhWcFhiMUtSbXdFQ1NLclRDV2NHWU5QL0RGU1J3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
       service:
         name: chartsnap-kong-validation-webhook
-        namespace: default
+        namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
     failurePolicy: Ignore
     matchPolicy: Equivalent
     name: secrets.plugins.validation.ingress-controller.konghq.com
@@ -1111,10 +1111,10 @@ webhooks:
   - admissionReviewVersions:
       - v1beta1
     clientConfig:
-      caBundle: '###DYNAMIC_FIELD###'
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKRENDQWd5Z0F3SUJBZ0lSQUxyS1RJSS9EWDI2LytCbGo1eVBZd0V3RFFZSktvWklodmNOQVFFTEJRQXcKSERFYU1CZ0dBMVVFQXhNUmEyOXVaeTFoWkcxcGMzTnBiMjR0WTJFd0hoY05NalV3TXpBMU1UZzBNelEwV2hjTgpNelV3TXpBek1UZzBNelEwV2pBY01Sb3dHQVlEVlFRREV4RnJiMjVuTFdGa2JXbHpjMmx2YmkxallUQ0NBU0l3CkRRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFOd2tPMkZTWkpET1g0Mnh4alhQR2FTN2QydlIKTEM0N0lVclpZM0o5L1kxTGdGaWd0SEc5N0M4TWhJdXNuNnlTRFArOHdJVWgwa1ZNMWpiRGQyY2YwcGlTSjJwUQpYb3gxTG1HRFZvRjBZTVlFOHJWSU5aU1hrQnhPN1JuUGgrV09PUWhyRDdWN0VmRGhKSW1BRFBUNnZaaFFjQ2N1CkFBczdDb2ZUUjAzVmN2N2JKdi94Um5Qdnl0SCtibjlteXJDaEt3eHd1aC9VWDYwSlY2bmdjbWVXTXA5QnlJc3AKZ3NBb2lvU2Q2cURCRUFQeGhsKzlQajg2czFHYXNNaVB3K3hVWm1XSXlUakpHeVVJbDFxYStIU0FiUFFqVnpLbQpiWG9NRml4dk9tTHN0Q0M4YUEzMWhTekxXRFYybUhjVHZtSEhhSTlvbGdwVEovcmJBK283c2ZLa203VUNBd0VBCkFhTmhNRjh3RGdZRFZSMFBBUUgvQkFRREFnS2tNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01CQmdnckJnRUYKQlFjREFqQVBCZ05WSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCUUUvTTY4b0NJSERKRUdLNTlWM3hocApyWlNLekRBTkJna3Foa2lHOXcwQkFRc0ZBQU9DQVFFQXlHNkhGTitiaDRsRk8rRUdtUFpxRHdkK3N0SGZNWXprClpBSVduZWpYWW0yMGVpekFHbE0rc0VxMXZxYkxCSWJlTnBZTlJUTklHczgvZWQzcDhWdmdDVFY3Rzl1YnlhdjcKTCsrYkxObmd5bnBvdDZPUmZ3WHVhV1BpMUdqY0VRTTRRVG1MUm93S1FLa2YzckdlVTc5NGRwSDlNSGpzTGJUawp3VmdILzJFbmJ2MnFUbnZ4VWt6WGZkS2dnYi9OUFdnRWExOWhnUG9IUHdicFhCaSs3MmIvNGVkRjl1bXpDTHlwCkhwQitvaGtGeFFZWVo4SFBwWGI5Nkc4U1g2dTVTZUNTbFRtNVJuUGRHUkV4b0VQTFhGK3JFQ2FtcEY1UFgwclAKeVFnaTNVcFkzOFc0aGR5NkNsL2dnVzJyWFhWcFhiMUtSbXdFQ1NLclRDV2NHWU5QL0RGU1J3PT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
       service:
         name: chartsnap-kong-validation-webhook
-        namespace: default
+        namespace: 6f9a4139-1f3b-4cae-a05e-35a4a478eb91
     failurePolicy: Ignore
     matchPolicy: Equivalent
     name: validations.kong.konghq.com

@@ -4,8 +4,14 @@
 
 ## Changes
 
+## 0.4.10
+
+## Changes
+
 - Set `readOnlyRootFilesystem: true` for kube-rbac-proxy
   [#1057](https://github.com/Kong/charts/pull/1057)
+- Add `ValidatingAdmissionPolicy` validating `DataPlane` ports.
+  [#1263](https://github.com/Kong/charts/pull/1263)
 
 ## 0.4.9
 
