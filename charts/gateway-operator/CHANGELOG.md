@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.4.11
+
+## Changes
+
+- Add the option to define a `nodeSelector` to the Kong Gateway Operator controller pod.
+  [#1262](https://github.com/Kong/charts/pull/1262)
+
 ### Changes
 
 ## 0.4.10-rc.1
