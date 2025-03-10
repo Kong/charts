@@ -1,0 +1,1045 @@
+# chartsnap: snapshot_version=v3
+---
+# Source: kong/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: chartsnap-kong
+  namespace: jx
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+---
+# Source: kong/templates/admission-webhook.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: chartsnap-kong-validation-webhook-ca-keypair
+  namespace: jx
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+type: kubernetes.io/tls
+data:
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
+---
+# Source: kong/templates/admission-webhook.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: chartsnap-kong-validation-webhook-keypair
+  namespace: jx
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+type: kubernetes.io/tls
+data:
+  tls.crt: '###DYNAMIC_FIELD###'
+  tls.key: '###DYNAMIC_FIELD###'
+---
+# Source: kong/templates/controller-rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+  name: chartsnap-kong
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongcustomentities
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongcustomentities/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongupstreampolicies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongupstreampolicies/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumergroups
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumergroups/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - ingressclassparameterses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongconsumers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongplugins
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongplugins/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - tcpingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - tcpingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - udpingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - udpingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - konglicenses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - konglicenses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongvaults
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongvaults/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingressclasses
+  verbs:
+  - get
+  - list
+  - watch
+---
+# Source: kong/templates/controller-rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: chartsnap-kong
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: chartsnap-kong
+subjects:
+- kind: ServiceAccount
+  name: chartsnap-kong
+  namespace: jx
+---
+# Source: kong/templates/controller-rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: chartsnap-kong
+  namespace: jx
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - pods
+  - secrets
+  - namespaces
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  resourceNames:
+  # Defaults to "<election-id>-<ingress-class>"
+  # Here: "<kong-ingress-controller-leader-nginx>-<nginx>"
+  # This has to be adapted if you change either parameter
+  # when launching the nginx-ingress-controller.
+  - "kong-ingress-controller-leader-kong-kong"
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+# Begin KIC 2.x leader permissions
+- apiGroups:
+  - ""
+  - coordination.k8s.io
+  resources:
+  - configmaps
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+---
+# Source: kong/templates/controller-rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: chartsnap-kong
+  namespace: jx
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: chartsnap-kong
+subjects:
+- kind: ServiceAccount
+  name: chartsnap-kong
+  namespace: jx
+---
+# Source: kong/templates/admission-webhook.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: chartsnap-kong-validation-webhook
+  namespace: jx
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+spec:
+  ports:
+  - name: webhook
+    port: 443
+    protocol: TCP
+    targetPort: webhook
+  selector:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+    app.kubernetes.io/component: app
+---
+# Source: kong/templates/controller-service-metrics.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: chartsnap-kong-metrics
+  namespace: jx
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+spec:
+  ports:
+  - name: cmetrics
+    port: 10255
+    protocol: TCP
+    targetPort: cmetrics
+  - name: status
+    port: 10254
+    protocol: TCP
+    targetPort: cstatus
+  selector:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+    app.kubernetes.io/component: app
+---
+# Source: kong/templates/service-kong-manager.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: chartsnap-kong-manager
+  namespace: jx
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+spec:
+  type: NodePort
+  ports:
+  - name: kong-manager
+    port: 8002
+    targetPort: 8002
+    protocol: TCP
+  - name: kong-manager-tls
+    port: 8445
+    targetPort: 8445
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: "chartsnap"
+---
+# Source: kong/templates/service-kong-proxy.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-name-override
+  namespace: jx
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+    enable-metrics: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: kong-proxy
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  - name: kong-proxy-tls
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: "chartsnap"
+---
+# Source: kong/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chartsnap-kong
+  namespace: jx
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+    app.kubernetes.io/component: app
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kong
+      app.kubernetes.io/component: app
+      app.kubernetes.io/instance: "chartsnap"
+  template:
+    metadata:
+      annotations:
+        kuma.io/service-account-token-volume: chartsnap-kong-token
+        kuma.io/gateway: "enabled"
+        traffic.sidecar.istio.io/includeInboundPorts: ""
+      labels:
+        app.kubernetes.io/name: kong
+        helm.sh/chart: kong-2.47.0
+        app.kubernetes.io/instance: "chartsnap"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/version: "3.9"
+        app.kubernetes.io/component: app
+        app: chartsnap-kong
+        version: "3.9"
+    spec:
+      serviceAccountName: chartsnap-kong
+      automountServiceAccountToken: false
+      initContainers:
+      - name: clear-stale-pid
+        image: kong:3.9
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        resources: {}
+        command:
+        - "rm"
+        - "-vrf"
+        - "$KONG_PREFIX/pids"
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_ANONYMOUS_REPORTS
+          value: "off"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "off"
+        - name: KONG_KIC
+          value: "on"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        volumeMounts:
+        - name: chartsnap-kong-prefix-dir
+          mountPath: /kong_prefix/
+        - name: chartsnap-kong-tmp
+          mountPath: /tmp
+      containers:
+      - name: ingress-controller
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        args:
+        ports:
+        - name: webhook
+          containerPort: 8080
+          protocol: TCP
+        - name: cmetrics
+          containerPort: 10255
+          protocol: TCP
+        - name: cstatus
+          containerPort: 10254
+          protocol: TCP
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: CONTROLLER_ADMISSION_WEBHOOK_LISTEN
+          value: "0.0.0.0:8080"
+        - name: CONTROLLER_ANONYMOUS_REPORTS
+          value: "false"
+        - name: CONTROLLER_ELECTION_ID
+          value: "kong-ingress-controller-leader-kong"
+        - name: CONTROLLER_INGRESS_CLASS
+          value: "kong"
+        - name: CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY
+          value: "true"
+        - name: CONTROLLER_KONG_ADMIN_URL
+          value: "https://localhost:8444"
+        - name: CONTROLLER_PUBLISH_SERVICE
+          value: "kong-namespace/test-name-override"
+        image: kong/kubernetes-ingress-controller:3.4
+        imagePullPolicy: IfNotPresent
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /readyz
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 10254
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources: {}
+        volumeMounts:
+        - name: webhook-cert
+          mountPath: /admission-webhook
+          readOnly: true
+        - name: chartsnap-kong-token
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          readOnly: true
+      - name: "proxy"
+        image: kong:3.9
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_ANONYMOUS_REPORTS
+          value: "off"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "off"
+        - name: KONG_KIC
+          value: "on"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_NGINX_DAEMON
+          value: "off"
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - kong
+              - quit
+              - --wait=15
+        ports:
+        - name: proxy
+          containerPort: 8000
+          protocol: TCP
+        - name: proxy-tls
+          containerPort: 8443
+          protocol: TCP
+        - name: status
+          containerPort: 8100
+          protocol: TCP
+        volumeMounts:
+        - name: chartsnap-kong-prefix-dir
+          mountPath: /kong_prefix/
+        - name: chartsnap-kong-tmp
+          mountPath: /tmp
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /status/ready
+            port: status
+            scheme: HTTP
+          initialDelaySeconds: 1
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 5
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /status
+            port: status
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: chartsnap-kong-prefix-dir
+        emptyDir:
+          sizeLimit: 256Mi
+      - name: chartsnap-kong-tmp
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: chartsnap-kong-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+              - key: ca.crt
+                path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+                path: namespace
+      - name: webhook-cert
+        secret:
+          secretName: chartsnap-kong-validation-webhook-keypair
+---
+# Source: kong/templates/admission-webhook.yaml
+kind: ValidatingWebhookConfiguration
+apiVersion: admissionregistration.k8s.io/v1
+metadata:
+  name: chartsnap-kong-jx-validations
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.47.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    caBundle: '###DYNAMIC_FIELD###'
+    service:
+      name: chartsnap-kong-validation-webhook
+      namespace: jx
+  failurePolicy: Ignore
+  matchPolicy: Equivalent
+  name: secrets.credentials.validation.ingress-controller.konghq.com
+  objectSelector:
+    matchExpressions:
+    - key: "konghq.com/credential"
+      operator: "Exists"
+    - key: "konghq.com/credential"
+      operator: "NotIn"
+      values:
+      - "konnect"
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - secrets
+  sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    caBundle: '###DYNAMIC_FIELD###'
+    service:
+      name: chartsnap-kong-validation-webhook
+      namespace: jx
+  failurePolicy: Ignore
+  matchPolicy: Equivalent
+  name: secrets.plugins.validation.ingress-controller.konghq.com
+  objectSelector:
+    matchExpressions:
+    - key: owner
+      operator: NotIn
+      values:
+      - helm
+    - key: "konghq.com/credential"
+      operator: "NotIn"
+      values:
+      - "konnect"
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - secrets
+  sideEffects: None
+- name: validations.kong.konghq.com
+  matchPolicy: Equivalent
+  objectSelector:
+    matchExpressions:
+    - key: owner
+      operator: NotIn
+      values:
+      - helm
+  failurePolicy: Ignore
+  sideEffects: None
+  admissionReviewVersions: ["v1beta1"]
+  rules:
+  - apiGroups:
+    - configuration.konghq.com
+    apiVersions:
+    - '*'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - kongconsumers
+    - kongplugins
+    - kongclusterplugins
+    - kongingresses
+  - apiGroups:
+    - ''
+    apiVersions:
+    - 'v1'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - services
+  - apiGroups:
+    - networking.k8s.io
+    apiVersions:
+    - 'v1'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - ingresses
+  - apiGroups:
+    - gateway.networking.k8s.io
+    apiVersions:
+    - 'v1alpha2'
+    - 'v1beta1'
+    - 'v1'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - gateways
+    - httproutes
+  clientConfig:
+    caBundle: '###DYNAMIC_FIELD###'
+    service:
+      name: chartsnap-kong-validation-webhook
+      namespace: jx

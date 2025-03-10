@@ -8,6 +8,7 @@
   **Note**: This change may be incompatible with user sidecar containers. In this case, change the
   `securityContext` in your values.
   [#1057](https://github.com/Kong/charts/pull/1057)
+* Add the ability to override the proxy service name using the already available `proxy.nameOverride` value. [#1266](https://github.com/Kong/charts/issues/1266)
 
 ### Changes
 
