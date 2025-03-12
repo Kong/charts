@@ -5,7 +5,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: chartsnap-kong
-  namespace: jx
+  namespace: default
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -18,7 +18,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: chartsnap-kong-validation-webhook-ca-keypair
-  namespace: jx
+  namespace: default
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -35,7 +35,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: chartsnap-kong-validation-webhook-keypair
-  namespace: jx
+  namespace: default
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -67,6 +67,21 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - backendtlspolicies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - backendtlspolicies/status
+  verbs:
+  - patch
+  - update
 - apiGroups:
   - configuration.konghq.com
   resources:
@@ -265,6 +280,112 @@ rules:
   - patch
   - update
 - apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - gateways
+  verbs:
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - gateways/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - httproutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - httproutes/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - referencegrants
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - referencegrants/status
+  verbs:
+  - get
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - tcproutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - tcproutes/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - tlsroutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - tlsroutes/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - udproutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - udproutes/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - grpcroutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - grpcroutes/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - networking.k8s.io
   resources:
   - ingresses
@@ -344,6 +465,29 @@ rules:
   - list
   - watch
 - apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - gatewayclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - gatewayclasses/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - networking.k8s.io
   resources:
   - ingressclasses
@@ -370,14 +514,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: chartsnap-kong
-  namespace: jx
+  namespace: default
 ---
 # Source: kong/templates/controller-rbac-resources.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: chartsnap-kong
-  namespace: jx
+  namespace: default
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -447,7 +591,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: chartsnap-kong
-  namespace: jx
+  namespace: default
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -461,14 +605,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: chartsnap-kong
-  namespace: jx
+  namespace: default
 ---
 # Source: kong/templates/admission-webhook.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: chartsnap-kong-validation-webhook
-  namespace: jx
+  namespace: default
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -494,7 +638,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: chartsnap-kong-metrics
-  namespace: jx
+  namespace: default
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -524,7 +668,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: chartsnap-kong-manager
-  namespace: jx
+  namespace: default
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -552,7 +696,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: test-name-override
-  namespace: jx
+  namespace: default
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -581,7 +725,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: chartsnap-kong
-  namespace: jx
+  namespace: default
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -916,7 +1060,7 @@ spec:
 kind: ValidatingWebhookConfiguration
 apiVersion: admissionregistration.k8s.io/v1
 metadata:
-  name: chartsnap-kong-jx-validations
+  name: chartsnap-kong-default-validations
   labels:
     app.kubernetes.io/name: kong
     helm.sh/chart: kong-2.47.0
@@ -930,7 +1074,7 @@ webhooks:
     caBundle: '###DYNAMIC_FIELD###'
     service:
       name: chartsnap-kong-validation-webhook
-      namespace: jx
+      namespace: default
   failurePolicy: Ignore
   matchPolicy: Equivalent
   name: secrets.credentials.validation.ingress-controller.konghq.com
@@ -959,7 +1103,7 @@ webhooks:
     caBundle: '###DYNAMIC_FIELD###'
     service:
       name: chartsnap-kong-validation-webhook
-      namespace: jx
+      namespace: default
   failurePolicy: Ignore
   matchPolicy: Equivalent
   name: secrets.plugins.validation.ingress-controller.konghq.com
@@ -1042,4 +1186,4 @@ webhooks:
     caBundle: '###DYNAMIC_FIELD###'
     service:
       name: chartsnap-kong-validation-webhook
-      namespace: jx
+      namespace: default
