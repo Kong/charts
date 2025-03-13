@@ -669,7 +669,7 @@ spec:
   - name: https
     port: 8443
     protocol: TCP
-    targetPort: https
+    targetPort: metrics
   selector:
     control-plane: controller-manager
 ---
@@ -696,9 +696,9 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.4.10-rc.1
+    helm.sh/chart: gateway-operator-0.5.0
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "1.4"
+    app.kubernetes.io/version: "1.5"
     app.kubernetes.io/component: kgo
   name: chartsnap-gateway-operator-controller-manager
   namespace: default
@@ -718,12 +718,12 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: gateway-operator
-        helm.sh/chart: gateway-operator-0.4.10-rc.1
+        helm.sh/chart: gateway-operator-0.5.0
         app.kubernetes.io/instance: "chartsnap"
-        app.kubernetes.io/version: "1.4"
+        app.kubernetes.io/version: "1.5"
         app.kubernetes.io/component: kgo
         app: chartsnap-gateway-operator
-        version: "1.4"
+        version: "1.5"
     spec:
       affinity:
         podAffinity:
@@ -748,7 +748,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: "docker.io/kong/gateway-operator:1.4"
+        image: "docker.io/kong/gateway-operator:1.5"
         livenessProbe:
           httpGet:
             path: /healthz
@@ -787,26 +787,6 @@ spec:
         volumeMounts:
         - name: chartsnap-gateway-operator-certs-dir
           mountPath: /tmp/k8s-webhook-server/serving-certs
-      - args:
-        - --secure-listen-address=0.0.0.0:8443
-        - --upstream=http://127.0.0.1:8080/
-        - --logtostderr=true
-        - --v=0
-        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
-        name: kube-rbac-proxy
-        ports:
-        - containerPort: 8443
-          name: https
-          protocol: TCP
-        securityContext:
-          readOnlyRootFilesystem: true
-        resources:
-          limits:
-            cpu: 500m
-            memory: 128Mi
-          requests:
-            cpu: 5m
-            memory: 64Mi
       securityContext:
         runAsNonRoot: true
       serviceAccountName: controller-manager
@@ -815,3 +795,97 @@ spec:
       - name: chartsnap-gateway-operator-certs-dir
         emptyDir:
           sizeLimit: 256Mi
+---
+# Source: gateway-operator/templates/validation-policy-dataplane.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: ports.dataplane.gateway-operator.konghq.com
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - "gateway-operator.konghq.com"
+      apiVersions:
+      - "v1beta1"
+      operations:
+      - "CREATE"
+      - "UPDATE"
+      resources:
+      - "dataplanes"
+  variables:
+  - name: ingressPorts
+    expression: object.spec.network.services.ingress.ports
+  - name: podTemplateSpec
+    expression: object.spec.deployment.podTemplateSpec
+  - name: proxyContainers
+    expression: |
+      variables.podTemplateSpec.spec.containers.filter(c, c.name == 'proxy')
+  - name: proxyContainer
+    expression: |
+      variables.proxyContainers.size() > 0 ?
+        variables.proxyContainers[0] :
+        null
+  - name: envFilteredPortMaps
+    expression: |
+      variables.proxyContainer.env.filter(e, e.name == "KONG_PORT_MAPS")
+  - name: envFilteredProxyListen
+    expression: |
+      variables.proxyContainer.env.filter(e, e.name == "KONG_PROXY_LISTEN")
+  - name: envPortMaps
+    expression: |
+      variables.envFilteredPortMaps.size() > 0 ? variables.envFilteredPortMaps[0].value : null
+  - name: envProxyListen
+    expression: |
+      variables.envFilteredProxyListen.size() > 0 ? variables.envFilteredProxyListen[0].value : null
+  # NOTE: Rules below do not validate the ports from the spec.network.services.ingress.ports
+  # when no KONG_PORT_MAPS or KONG_PROXY_LISTEN env variables are present in the proxy container.
+  # This has been the case before the introduction of validating admission policies so we are keeping
+  # the same behavior.
+
+  # Using string functions from: https://pkg.go.dev/github.com/google/cel-go/ext
+  validations:
+  - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PORT_MAPS env'"
+    expression: |
+      !has(object.spec.network) ||
+      !has(object.spec.network.services) ||
+      !has(object.spec.network.services.ingress) ||
+      !has(object.spec.network.services.ingress.ports) ||
+      !has(variables.proxyContainer.env) ||
+      variables.envPortMaps == null ||
+      (
+        variables.ingressPorts.all(p, variables.envPortMaps.
+                  split(",").
+                  exists(pm,
+                      pm.split(":")[1].trim() == string(p.targetPort)
+                      )
+                  )
+      )
+    reason: Invalid
+  - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PROXY_LISTEN env'"
+    expression: |
+      !has(object.spec.network) ||
+      !has(object.spec.network.services) ||
+      !has(object.spec.network.services.ingress) ||
+      !has(object.spec.network.services.ingress.ports) ||
+      !has(variables.proxyContainer.env) ||
+      variables.envProxyListen == null ||
+      (
+        variables.ingressPorts.all(p, variables.envProxyListen.
+                  split(",").
+                  exists(pm,
+                    pm.trim().split(" ")[0].split(":")[1].trim() == string(p.targetPort)
+                    )
+                  )
+      )
+    reason: Invalid
+---
+# Source: gateway-operator/templates/validation-policy-dataplane.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: binding-ports.dataplane.gateway-operator.konghq.com
+spec:
+  policyName: ports.dataplane.gateway-operator.konghq.com
+  validationActions:
+  - Deny
