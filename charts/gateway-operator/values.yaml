@@ -1,6 +1,6 @@
 image:
   repository: docker.io/kong/gateway-operator
-  tag: "1.4"
+  tag: "1.5"
   # Optionally set a semantic version for version-gated features. This can normally
   # be left unset. You only need to set this if your tag is not a semver string,
   # such as when you are using a "next" tag. Set this to the effective semantic
