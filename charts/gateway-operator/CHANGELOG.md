@@ -4,6 +4,9 @@
 
 ### Changes
 
+- Update `ClusterRole` for 1.5
+  [#1271](https://github.com/Kong/charts/pull/1271)
+
 ## 0.4.10-rc.1
 
 ### Changes

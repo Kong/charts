@@ -7,7 +7,7 @@ metadata:
   name: controller-manager
   namespace: default
 ---
-# Source: gateway-operator/templates/rbac-resources.yaml
+# Source: gateway-operator/templates/cluster-role-1.5.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -27,13 +27,6 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-  - ""
-  resources:
-  - configmaps/status
-  - serviceaccounts/status
-  verbs:
-  - get
 - apiGroups:
   - ""
   resources:
@@ -62,11 +55,19 @@ rules:
   resources:
   - secrets
   verbs:
-  - create
   - delete
   - get
   - list
+  - patch
+  - update
   - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets/finalizers
+  verbs:
+  - patch
+  - update
 - apiGroups:
   - ""
   resources:
@@ -107,12 +108,6 @@ rules:
   - update
   - watch
 - apiGroups:
-  - apps
-  resources:
-  - deployments/status
-  verbs:
-  - get
-- apiGroups:
   - autoscaling
   resources:
   - horizontalpodautoscalers
@@ -123,14 +118,6 @@ rules:
   - list
   - patch
   - watch
-- apiGroups:
-  - batch
-  resources:
-  - jobs
-  verbs:
-  - create
-  - delete
-  - get
 - apiGroups:
   - cert-manager.io
   resources:
@@ -165,15 +152,9 @@ rules:
   - kongcertificates
   - kongconsumergroups
   - kongconsumers
-  - kongcredentialacls
-  - kongcredentialapikeys
-  - kongcredentialbasicauths
-  - kongcredentialhmacs
-  - kongcredentialjwts
   - kongdataplaneclientcertificates
   - kongkeys
   - kongkeysets
-  - kongroutes
   - kongservices
   - kongsnis
   - kongtargets
@@ -246,10 +227,26 @@ rules:
 - apiGroups:
   - configuration.konghq.com
   resources:
+  - kongcredentialacls
+  - kongcredentialapikeys
+  - kongcredentialbasicauths
+  - kongcredentialhmacs
+  - kongcredentialjwts
   - kongpluginbindings
   - kongplugins
   verbs:
   - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongroutes
+  verbs:
   - delete
   - get
   - list
@@ -305,14 +302,15 @@ rules:
   - controlplanes/status
   - dataplanes/status
   - kongplugininstallations/status
+  - konnectextensions/finalizers
   - konnectextensions/status
   verbs:
-  - get
   - patch
   - update
 - apiGroups:
   - gateway-operator.konghq.com
   resources:
+  - controlplane
   - dataplanemetricsextensions
   - gatewayconfigurations
   verbs:
@@ -331,22 +329,15 @@ rules:
   - update
   - watch
 - apiGroups:
-  - gateway-operator.konghq.com
-  resources:
-  - konnectextensions/finalizers
-  verbs:
-  - patch
-  - update
-- apiGroups:
   - gateway.networking.k8s.io
   resources:
+  - backendtlspolicies
   - gatewayclasses
   - grpcroutes
   - referencegrants
   - tcproutes
   - tlsroutes
   - udproutes
-  - backendtlspolicies
   verbs:
   - get
   - list
@@ -354,10 +345,16 @@ rules:
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
+  - backendtlspolicies/status
+  verbs:
+  - patch
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
   - gatewayclasses/status
   - gateways/status
   - grpcroutes/status
-  - backendtlspolicies/status
   verbs:
   - get
   - patch
@@ -417,6 +414,9 @@ rules:
   - konnect.konghq.com
   resources:
   - konnectapiauthconfigurations
+  - konnectcloudgatewaydataplanegroupconfigurations
+  - konnectcloudgatewaynetworks
+  - konnectextensions
   - konnectgatewaycontrolplanes
   verbs:
   - get
@@ -428,17 +428,16 @@ rules:
   - konnect.konghq.com
   resources:
   - konnectapiauthconfigurations/finalizers
+  - konnectapiauthconfigurations/status
+  - konnectcloudgatewaydataplanegroupconfigurations/finalizers
+  - konnectcloudgatewaydataplanegroupconfigurations/status
+  - konnectcloudgatewaynetworks/finalizers
+  - konnectcloudgatewaynetworks/status
+  - konnectextensions/finalizers
+  - konnectextensions/status
   - konnectgatewaycontrolplanes/finalizers
   - konnectgatewaycontrolplanes/status
   verbs:
-  - patch
-  - update
-- apiGroups:
-  - konnect.konghq.com
-  resources:
-  - konnectapiauthconfigurations/status
-  verbs:
-  - get
   - patch
   - update
 - apiGroups:
@@ -494,16 +493,8 @@ rules:
   - list
   - patch
   - update
-  - watch
-- apiGroups:
-  - rbac.authorization.k8s.io
-  resources:
-  - clusterrolebindings/status
-  - clusterroles/status
-  verbs:
-  - get
-- apiGroups:
-  - rbac.authorization.k8s.io
+  - watch- apiGroups:
+    - rbac.authorization.k8s.io
   resources:
   - rolebindings
   - roles

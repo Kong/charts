@@ -1,0 +1,505 @@
+{{- if (semverCompare "< 1.5.0" (include "kong.effectiveVersion" .)) }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "kong.fullname" . }}-manager-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - serviceaccounts
+      - services
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps/status
+      - serviceaccounts/status
+    verbs:
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+      - pods
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - services/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - admissionregistration.k8s.io
+    resources:
+      - validatingwebhookconfigurations
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - deployments/status
+    verbs:
+      - get
+  - apiGroups:
+      - autoscaling
+    resources:
+      - horizontalpodautoscalers
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - create
+      - delete
+      - get
+  - apiGroups:
+      - cert-manager.io
+    resources:
+      - certificates
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - ingressclassparameterses
+      - kongclusterplugins
+      - kongcustomentities
+      - kongingresses
+      - konglicenses
+      - kongupstreampolicies
+      - tcpingresses
+      - udpingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - kongcacertificates
+      - kongcertificates
+      - kongconsumergroups
+      - kongconsumers
+      - kongcredentialacls
+      - kongcredentialapikeys
+      - kongcredentialbasicauths
+      - kongcredentialhmacs
+      - kongcredentialjwts
+      - kongdataplaneclientcertificates
+      - kongkeys
+      - kongkeysets
+      - kongroutes
+      - kongservices
+      - kongsnis
+      - kongtargets
+      - kongupstreams
+      - kongvaults
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - kongcacertificates/finalizers
+      - kongcacertificates/status
+      - kongcertificates/finalizers
+      - kongcertificates/status
+      - kongconsumergroups/finalizers
+      - kongconsumers/finalizers
+      - kongcredentialacls/finalizers
+      - kongcredentialacls/status
+      - kongcredentialapikeys/finalizers
+      - kongcredentialapikeys/status
+      - kongcredentialbasicauths/finalizers
+      - kongcredentialbasicauths/status
+      - kongcredentialhmacs/finalizers
+      - kongcredentialhmacs/status
+      - kongcredentialjwts/finalizers
+      - kongcredentialjwts/status
+      - kongdataplaneclientcertificates/finalizers
+      - kongdataplaneclientcertificates/status
+      - kongkeys/finalizers
+      - kongkeys/status
+      - kongkeysets/finalizers
+      - kongkeysets/status
+      - kongpluginbindings/status
+      - kongroutes/finalizers
+      - kongroutes/status
+      - kongservices/finalizers
+      - kongservices/status
+      - kongsnis/finalizers
+      - kongsnis/status
+      - kongtargets/finalizers
+      - kongtargets/status
+      - kongupstreams/finalizers
+      - kongupstreams/status
+      - kongvaults/finalizers
+    verbs:
+      - patch
+      - update
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - kongclusterplugins/status
+      - kongconsumergroups/status
+      - kongconsumers/status
+      - kongcustomentities/status
+      - kongingresses/status
+      - konglicenses/status
+      - kongplugins/status
+      - kongupstreampolicies/status
+      - kongvaults/status
+      - tcpingresses/status
+      - udpingresses/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - kongpluginbindings
+      - kongplugins
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway-operator.konghq.com
+    resources:
+      - aigateways
+      - controlplanes
+      - dataplanes
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - gateway-operator.konghq.com
+    resources:
+      - aigateways/finalizers
+      - controlplanes/finalizers
+      - dataplanes/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - gateway-operator.konghq.com
+    resources:
+      - aigateways/status
+      - controlplanes/status
+      - dataplanes/status
+      - kongplugininstallations/status
+      - konnectextensions/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - gateway-operator.konghq.com
+    resources:
+      - dataplanemetricsextensions
+      - gatewayconfigurations
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway-operator.konghq.com
+    resources:
+      - kongplugininstallations
+      - konnectextensions
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - gateway-operator.konghq.com
+    resources:
+      - konnectextensions/finalizers
+    verbs:
+      - patch
+      - update
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gatewayclasses
+      - grpcroutes
+      - referencegrants
+      - tcproutes
+      - tlsroutes
+      - udproutes
+      - backendtlspolicies
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gatewayclasses/status
+      - gateways/status
+      - grpcroutes/status
+      - backendtlspolicies/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gateways
+      - httproutes
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gateways/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - httproutes/status
+      - tcproutes/status
+      - tlsroutes/status
+      - udproutes/status
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - referencegrants/status
+    verbs:
+      - get
+  - apiGroups:
+      - incubator.ingress-controller.konghq.com
+    resources:
+      - kongservicefacades
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - incubator.ingress-controller.konghq.com
+    resources:
+      - kongservicefacades/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - konnect.konghq.com
+    resources:
+      - konnectapiauthconfigurations
+      - konnectgatewaycontrolplanes
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - konnect.konghq.com
+    resources:
+      - konnectapiauthconfigurations/finalizers
+      - konnectgatewaycontrolplanes/finalizers
+      - konnectgatewaycontrolplanes/status
+    verbs:
+      - patch
+      - update
+  - apiGroups:
+      - konnect.konghq.com
+    resources:
+      - konnectapiauthconfigurations/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingressclasses
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - networkpolicies
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - policy
+    resources:
+      - poddisruptionbudgets
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterrolebindings
+      - clusterroles
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - clusterrolebindings/status
+      - clusterroles/status
+    verbs:
+      - get
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - rolebindings
+      - roles
+    verbs:
+      - create
+      - delete
+      - get
+{{- end }}
