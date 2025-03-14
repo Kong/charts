@@ -101,9 +101,12 @@ jobs:
       GATEWAY_API_VERSION: v1.0.0
     strategy:
       matrix:
+        kic-version:
+          - "" # default from the chart
+          - "3.3"
+        kong-version:
+          - "" # default from the chart
         kubernetes-version:
-          # renovate: datasource=docker depName=kindest/node
-          - "1.27.16"
           # renovate: datasource=docker depName=kindest/node
           - "1.28.15"
           # renovate: datasource=docker depName=kindest/node
@@ -139,45 +142,9 @@ jobs:
       - name: run upgrade integration tests (integration-upgrade)
         env:
           CHART_NAME: ${{ matrix.chart-name }}
-        run: ./scripts/test-upgrade.sh
-
-      - name: cleanup integration tests (cleanup)
-        run: ./scripts/test-env.sh cleanup
-  oldversion-integration-test:
-    timeout-minutes: 30
-    runs-on: ubuntu-latest
-    env:
-      GATEWAY_API_VERSION: v0.8.1
-    strategy:
-      matrix:
-        kic-version:
-          - "2.10"
-          - "2.11"
-        kong-version:
-          - "3.3"
-          - "3.2"
-        chart-name:
-          - kong
-          - ingress
-    steps:
-      - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-
-      - name: setup helm
-        uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112 # v4.3.0
-
-      - name: setup testing environment (kind-cluster)
-        env:
-          KUBERNETES_VERSION: "1.29.2"
-          CHART_NAME: ${{ matrix.chart-name }}
-        run: ./scripts/test-env.sh
-
-      - name: run integration tests (integration)
-        env:
-          CHART_NAME: ${{ matrix.chart-name }}
           KONG_VERSION: ${{ matrix.kong-version }}
           KIC_VERSION: ${{ matrix.kic-version }}
-        run: ./scripts/test-run.sh
+        run: ./scripts/test-upgrade.sh
 
       - name: cleanup integration tests (cleanup)
         run: ./scripts/test-env.sh cleanup
@@ -218,7 +185,6 @@ jobs:
       - lint
       - lint-test
       - integration-test
-      - oldversion-integration-test
       - golden-tests
     if: always()
     steps:
