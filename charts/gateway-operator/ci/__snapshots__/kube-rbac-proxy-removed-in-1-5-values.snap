@@ -493,8 +493,9 @@ rules:
   - list
   - patch
   - update
-  - watch- apiGroups:
-    - rbac.authorization.k8s.io
+  - watch
+- apiGroups:
+  - rbac.authorization.k8s.io
   resources:
   - rolebindings
   - roles

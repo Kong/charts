@@ -485,17 +485,20 @@ rules:
     - patch
     - update
     - watch
-{{- /* This can be removed in 1.6+ as webhook in 1.5 doesn't handle roles anymore */ -}}
-{{- /* but we're leaving some soak time for 1.5+ versions to handle the cleanup */ -}}
-{{- /* that used these permissions */ -}}
+{{- /*
+This can be removed in 1.6+ as webhook in 1.5 doesn't handle roles anymore
+but we're leaving some soak time for 1.5+ versions to handle the cleanup
+that used these permissions
+*/}}
   - apiGroups:
-      - rbac.authorization.k8s.io
+    - rbac.authorization.k8s.io
     resources:
-      - rolebindings
-      - roles
+    - rolebindings
+    - roles
     verbs:
-      - create
-      - delete
-      - get
-{{- /* */ -}}
+    - create
+    - delete
+    - get
+{{- /*
+*/}}
 {{- end }}
