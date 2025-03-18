@@ -15,11 +15,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Install Kustomize
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh -o /tmp/install_kustomize.sh
-          sh /tmp/install_kustomize.sh /tmp
-
       - name: Generate kustomization.yaml
         run: |
           mkdir -p /tmp/kubernetes-configuration
@@ -32,13 +27,20 @@ jobs:
 
       - name: Build CRDs
         run: |
-          /tmp/kustomize build /tmp/kubernetes-configuration > charts/gateway-operator/charts/kubernetes-configuration-crds/crds/kubernetes-configuration-crds.yaml
+          kustomize build /tmp/kubernetes-configuration > charts/gateway-operator/charts/kubernetes-configuration-crds/crds/kubernetes-configuration-crds.yaml
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e
         with:
-          title: 'chore: update kubernetes-configuration CRDs to ${{ github.event.inputs.version }}'
+          token: ${{ secrets.K8S_TEAM_BOT_GH_PAT }}
+          title: Sync kubernetes-configuration CRDs to ${{ github.event.inputs.version }}
           commit-message: 'chore: update kubernetes-configuration CRDs to ${{ github.event.inputs.version }}'
-          branch: chore/update-kubernetes-configuration-crds
+          committer: Kong's Team k8s bot <team-k8s+github-bot@konghq.com>
+          author: Kong's Team k8s bot <team-k8s+github-bot@konghq.com>
+          signoff: true
+          base: ${{ github.ref_name == '' && 'main' || github.ref_name }}
+          branch: chore/auto-update-kubernetes-configuration-crds
           delete-branch: true
-          body: 'This PR updates the kubernetes-configuration CRDs to ${{ github.event.inputs.version }}.'
+          draft: false
+          body: This PR updates the kubernetes-configuration CRDs to https://github.com/Kong/kubernetes-configuration/releases/tag/${{ github.event.inputs.version }}
+          labels: dependencies
