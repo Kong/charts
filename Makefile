@@ -81,6 +81,12 @@ test.golden.update:
 	@ $(MAKE) _chartsnap CHART=ingress CHARTSNAP_ARGS="-u"
 	@ $(MAKE) _chartsnap CHART=gateway-operator CHARTSNAP_ARGS="-u"
 
+.PHONY: ci.set-chart-version
+ci.set-chart-version:
+	@echo "Setting chart version to '$(CHART_VERSION)'"
+	@yq eval '.version = "$(CHART_VERSION)" | .appVersion = "$(CHART_VERSION)"' \
+		-i $(CHART_YAML)
+
 # Defining multi-line strings to echo: https://stackoverflow.com/a/649462/7958339
 define GOLDEN_TEST_FAILURE_MSG
 >> Golden tests have failed.

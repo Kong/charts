@@ -29,6 +29,12 @@ jobs:
         run: |
           kustomize build /tmp/kubernetes-configuration > charts/gateway-operator/charts/kubernetes-configuration-crds/crds/kubernetes-configuration-crds.yaml
 
+      - name: Set .version and .appVersion in Chart.yaml
+        run: |
+          make ci.set-chart-version \
+            CHART_YAML=charts/gateway-operator/charts/kubernetes-configuration-crds/Chart.yaml \
+            CHART_VERSION=${{ github.event.inputs.version }}
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e
         with:
