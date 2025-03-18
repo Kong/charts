@@ -169,6 +169,5 @@ subjects:
     name: {{ template "kong.serviceAccountName" . }}
     namespace: {{ template "kong.namespace" . }}
 {{- end -}}
-
 {{- end -}}
 {{- end -}}
