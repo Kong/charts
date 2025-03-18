@@ -1,0 +1,16 @@
+nodeSelector:
+  karpenter.sh/nodepool: my-nodepool
+
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8081
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "false"
