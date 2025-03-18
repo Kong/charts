@@ -142,6 +142,8 @@ subjects:
     name: {{ template "kong.serviceAccountName" $ }}
     namespace: {{ template "kong.namespace" $ }}
 {{- end }}
+
+{{- if and (.Values.ingressController.rbac.enableClusterRoles) (ne (len .Values.ingressController.watchNamespaces) 0) }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -166,5 +168,7 @@ subjects:
   - kind: ServiceAccount
     name: {{ template "kong.serviceAccountName" . }}
     namespace: {{ template "kong.namespace" . }}
+{{- end -}}
+
 {{- end -}}
 {{- end -}}

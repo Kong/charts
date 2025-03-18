@@ -14,6 +14,9 @@
 
 * Add support for custom `unhealthyPodEvictionPolicy` in PodDisruptionBudget
   [#1244](https://github.com/Kong/charts/pull/1244)
+- Add `ingressController.rbac.enableClusterRoles` to enable user to enable or disable creating
+  `ClusterRole`s and `ClusterRoleBinding`s in creating RBAC resources.
+  [#1275](https://github.com/Kong/charts/pull/1275)
 
 ## 2.47.0
 

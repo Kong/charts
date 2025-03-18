@@ -632,6 +632,16 @@ ingressController:
   rbac:
     # Specifies whether RBAC resources should be created
     create: true
+    # Set to `false` to disable creating ClusterRole and ClusterRoleBinding, for the use cases where using ClusterRoles is not allowed.
+    # Warning: Reconciliation of some resources requires a ClusterRole because the controllers needs to watch cluster scoped resources.
+    # Disabling ClusterRoles causes them fail, so you need to disable the controllers when setting it to `false`.
+    # The resources includes:
+    # - All gateway API resources
+    # - `IngressClass`
+    # - `KNative/Ingress` (KIC 2.x only)
+    # - `KongClusterPlugin`
+    # - `KongVault`, `KongLicense` (KIC 3.1 and above)
+    enableClusterRoles: true
 
   # general properties
   livenessProbe:
