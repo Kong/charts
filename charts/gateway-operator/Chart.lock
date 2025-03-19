@@ -4,12 +4,12 @@ dependencies:
   version: 3.2.0
 - name: gwapi-standard-crds
   repository: ""
-  version: 1.1.0
+  version: 1.2.1
 - name: gwapi-experimental-crds
   repository: ""
-  version: 1.1.0
+  version: 1.2.1
 - name: kubernetes-configuration-crds
   repository: ""
-  version: 1.0.8
-digest: sha256:c03fa0214878f1b9b8b8d7890c22cd6d19cc4a95fa4236b4f55eb6b73e1db62f
-generated: "2025-01-23T15:58:39.886944+01:00"
+  version: 1.2.0
+digest: sha256:57c3d32995e2bb7a7ebb6c20a5fb4d3cd46cf8f0fe83d27f813bee41cd329fa1
+generated: "2025-03-19T12:05:14.029143+01:00"
