@@ -148,7 +148,7 @@ which means it will intercept requests for resources in all namespaces, includin
 
 #### Solution
 
-To ensure Kong's admission webhook does not interfere with the control plane, you can configure
+To ensure KIC's admission webhook does not interfere with the control plane, you can configure
 it to exclude the `kube-system` namespace by setting `ingressController.admissionWebhook.namespaceSelector`.
 
 This can be done by adding the following to your `values.yaml`:
