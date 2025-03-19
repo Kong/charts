@@ -18,10 +18,10 @@ dependencies:
     version: 3.2.0
     condition: kic-crds.enabled
   - name: gwapi-standard-crds
-    version: 1.1.0
+    version: 1.2.1
     condition: gwapi-standard-crds.enabled
   - name: gwapi-experimental-crds
-    version: 1.1.0
+    version: 1.2.1
     condition: gwapi-experimental-crds.enabled
   - name: kubernetes-configuration-crds
     version: 1.2.0
