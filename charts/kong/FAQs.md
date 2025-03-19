@@ -137,3 +137,29 @@ for setting a password:
 If you have already upgraded, the old password is lost. You will need to
 delete the Helm release and the Postgres PersistentVolumeClaim before
 re-installing with a non-random password.
+
+### Kong's admission webhook interrupts Kubernetes control plane operations
+
+Kubernetes control plane components rely on resources within the `kube-system` namespace.
+Modifying or rejecting requests in this namespace using an admission webhook may cause
+unintended disruptions to cluster operations, including failures in critical services like
+`kube-dns`. By default, Kong's admission webhook is configured with no namespace selector, 
+which means it will intercept requests for resources in all namespaces, including `kube-system`.
+
+#### Solution
+
+To ensure Kong's admission webhook does not interfere with the control plane, you can configure
+it to exclude the `kube-system` namespace by setting `ingressController.admissionWebhook.namespaceSelector`.
+
+This can be done by adding the following to your `values.yaml`:
+
+```yaml
+ingressController:
+  admissionWebhook:
+      namespaceSelector:
+        matchExpressions:
+          - key: kubernetes.io/metadata.name
+            operator: NotIn
+            values:
+              - kube-system
+```
