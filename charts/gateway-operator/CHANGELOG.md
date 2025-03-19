@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.1
+
+### Fixes
+
+- Fix `ClusterRole` permissions for `.Values.image.tag`s and `.Values.image.effectiveSemver`s
+  not using a full semver format (e.g. `1.4.0`) but `1.4`.
+  [#1281](https://github.com/Kong/charts/pull/1281)
+
 ## 0.5.0
 
 ### Changes

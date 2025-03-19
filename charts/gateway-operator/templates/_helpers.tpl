@@ -106,15 +106,15 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 {{- define "kong.effectiveVersion" -}}
 {{- $effectiveSemver := .Values.image.effectiveSemver -}}
 {{- if $effectiveSemver -}}
-  {{- if regexMatch "^[0-9]+.[0-9]+.[0-9]+" $effectiveSemver -}}
-  {{- regexFind "^[0-9]+.[0-9]+.[0-9]+" $effectiveSemver -}}
+  {{- if regexMatch "^[0-9]+.[0-9]+(\\.[0-9]+)?" $effectiveSemver -}}
+  {{- regexFind "^[0-9]+.[0-9]+(\\.[0-9]+)?" $effectiveSemver -}}
   {{- else -}}
   {{- $effectiveSemver -}}
   {{- end -}}
 {{- else -}}
   {{- $tag := (trimSuffix "-redhat" .Values.image.tag) -}}
-  {{- if regexMatch "^[0-9]+.[0-9]+.[0-9]+" $tag -}}
-  {{- regexFind "^[0-9]+.[0-9]+.[0-9]+" $tag -}}
+  {{- if regexMatch "^[0-9]+.[0-9]+(\\.[0-9]+)?" $tag -}}
+  {{- regexFind "^[0-9]+.[0-9]+(\\.[0-9]+)?" $tag -}}
   {{- else -}}
   {{- .Chart.AppVersion -}}
   {{- end -}}
