@@ -1,9 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.5.0
 
 ### Changes
 
+- Bump the operator's default version to 1.5.0 and `kong/kubernetes-configuration` CRDs to 1.2.0.
+  [#1269](https://github.com/Kong/charts/pull/1269)
 - Update `ClusterRole` for 1.5
   [#1271](https://github.com/Kong/charts/pull/1271)
 
