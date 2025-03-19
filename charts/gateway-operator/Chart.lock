@@ -1,7 +1,7 @@
 dependencies:
 - name: kic-crds
   repository: ""
-  version: 3.2.0
+  version: 1.2.0
 - name: gwapi-standard-crds
   repository: ""
   version: 1.2.1
@@ -11,5 +11,5 @@ dependencies:
 - name: kubernetes-configuration-crds
   repository: ""
   version: 1.2.0
-digest: sha256:57c3d32995e2bb7a7ebb6c20a5fb4d3cd46cf8f0fe83d27f813bee41cd329fa1
-generated: "2025-03-19T12:05:14.029143+01:00"
+digest: sha256:5b69f815367edaa40403a277ce10ab0da73ce9199c053c1a8de046ea4ffa01b8
+generated: "2025-03-19T12:34:56.795289+01:00"

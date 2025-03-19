@@ -15,7 +15,9 @@ annotations:
 
 dependencies:
   - name: kic-crds
-    version: 3.2.0
+    # This is the kubernetes-configuration repository version as KIC CRDs have been
+    # moved there.
+    version: 1.2.0
     condition: kic-crds.enabled
   - name: gwapi-standard-crds
     version: 1.2.1
