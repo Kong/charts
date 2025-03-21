@@ -599,6 +599,15 @@ ingressController:
     port: 8080
     certificate:
       provided: false
+    #  namespaceSelector specifies namespaces in which the resources are validated by the `*.validations.kong.konghq.com` webhooks.
+    #  For example, the `kube-system` namespace contains objects created by the Kubernetes system, like `kube-dns` service.
+    #  You can exclude the kube-system namespace from being intercepted using below namespaceSelector:
+    #  namespaceSelector:
+    #    matchExpressions:
+    #      - key: kubernetes.io/metadata.name
+    #        operator: NotIn
+    #        values:
+    #          - kube-system
     namespaceSelector: {}
     # ObjectSelector specifies which objects to match against validations.kong.konghq.com webhook webhook
     objectSelector:
