@@ -49,3 +49,32 @@ kustomize build github.com/kubernetes-sigs/gateway-api/config/crd\?ref=v1.2.0 | 
 ```
 
 [gwapi]: https://github.com/kubernetes-sigs/gateway-api/
+
+## Relevant changes by chart version
+
+Default operator version is `1.5` now.
+
+### v0.5.0
+
+#### CRDs
+
+KGO 1.5 uses the CRDs that are hosted in [kubernetes-configuration][kcfg] repository.
+
+The compatibility matrix between the operator and the CRDs can be found in operator's docs at [docs.konghq.com][kgo_docs_compat_matrix].
+
+To install/upgrade these CRDs please consult: [kubernetes-configuration install instructions][kcfg_crds_install].
+
+[kgo_docs_compat_matrix]: https://docs.konghq.com/gateway-operator/latest/reference/version-compatibility/#kubernetes-configuration-crds
+[kcfg_crds_install]: https://github.com/Kong/kubernetes-configuration?tab=readme-ov-file#install-crds
+
+### `kube-rbac-proxy` removal
+
+KGO 1.5 removed usage of `kube-rbac-proxy`.
+Its functionality of can be now achieved by using the new flag `--metrics-access-filter`
+(or a corresponding `GATEWAY_OPERATOR_METRICS_ACCESS_FILTER` env).
+The default value for the flag is `off` which doesn't restrict the access to the metrics
+endpoint. The flag can be set to `rbac` which will configure KGO to verify the token
+sent with the request.
+For more information on this migration please consult [kubernetes-sigs/kubebuilder#3907][kubebuilder_3907].
+
+[kubebuilder_3907]: https://github.com/kubernetes-sigs/kubebuilder/discussions/3907
