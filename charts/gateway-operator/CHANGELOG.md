@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.2
+
+### Fixes
+
+- Update Gateway Operator CRDs with the latest release (v1.2.0) from Kubernetes-configuration.
+  [#1283](https://github.com/Kong/charts/pull/1283)
+
 ## 0.5.1
 
 ### Fixes
