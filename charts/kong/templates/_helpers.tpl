@@ -247,6 +247,19 @@ spec:
         {{- $_ := set $streamEntry "protocol" $defaultProtocol }}
       {{- end }}
     {{- end }}
+  {{- if .additionalListeners }}
+    {{- range $index, $entry := .additionalListeners }}
+      {{- if .enabled }}
+  - name: kong-{{ .serviceName }}
+    port: {{ .servicePort }}
+    targetPort: {{ .containerPort }}
+        {{- if (and (or (eq .type "LoadBalancer") (eq .type "NodePort")) (not (empty .nodePort))) }}
+    nodePort: {{ .nodePort }}
+        {{- end }}
+    protocol: TCP
+      {{- end }}
+    {{- end }}
+  {{- end }}
   {{- range .stream }}
   - name: stream{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
     port: {{ .servicePort }}
@@ -313,6 +326,19 @@ Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
         {{- $_ := set $listenConfig "address" . -}}
         {{- $tlsListen := (include "kong.singleListen" $listenConfig) -}}
         {{- $unifiedListen = append $unifiedListen $tlsListen -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if .additionalListeners -}}
+    {{- range $index, $entry := .additionalListeners }}
+      {{- if .enabled }}
+      {{- $listenConfig := dict -}}
+      {{- $listenConfig := merge $listenConfig . -}}
+      {{- $_ := set $listenConfig "parameters" .parameters -}}
+      {{- $_ := set $listenConfig "address" (default "0.0.0.0" .addresses) -}}
+      {{- $tlsListen := (include "kong.singleListen" $listenConfig) -}}
+      {{- $unifiedListen = append $unifiedListen $tlsListen -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
