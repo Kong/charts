@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.48.0
 
 ### Fixes
 
@@ -14,7 +14,7 @@
 
 * Add support for custom `unhealthyPodEvictionPolicy` in PodDisruptionBudget
   [#1244](https://github.com/Kong/charts/pull/1244)
-- Add `ingressController.rbac.enableClusterRoles` to enable user to enable or disable creating
+* Add `ingressController.rbac.enableClusterRoles` to enable user to enable or disable creating
   `ClusterRole`s and `ClusterRoleBinding`s in creating RBAC resources.
   [#1275](https://github.com/Kong/charts/pull/1275)
 
@@ -232,11 +232,13 @@
 
 * The `envFrom` and `ingressController.envFrom` values.yaml keys now populate
   the container field of the same name. This loads environment variables from
-  ConfigMap or Secret resource keys in bulk:
-  https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables
+  ConfigMap or Secret resource keys in bulk.
+  Consult the [kubernetes.io docs][kubernetes_io_configmap_env] for details.
   [#987](https://github.com/Kong/charts/pull/987)
 * Kong listens now use both IPv4 and IPv6 addresses.
   [#986](https://github.com/Kong/charts/pull/986)
+
+[kubernetes_io_configmap_env]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables
 
 ## 2.33.3
 
@@ -421,7 +423,7 @@ you are affected and should review [the 2.26 upgrade instructions](https://githu
 
 ## 2.25.0
 
-- Generate the `adminApiService.name` value from `.Release.Name` rather than
+* Generate the `adminApiService.name` value from `.Release.Name` rather than
   hardcoding to `kong`
   [#839](https://github.com/Kong/charts/pull/839)
 
@@ -533,7 +535,7 @@ you are affected and should review [the 2.26 upgrade instructions](https://githu
 ### Improvements
 
 * Added support for the Admin API service TLS client verification.
-  [#780](https://github.com/Kong/charts/pull/780
+  [#780](https://github.com/Kong/charts/pull/780)
 
 ## 2.17.1
 
@@ -705,7 +707,6 @@ but doing so is not required.
   to be compatible to k8s 1.25+.
   [#680](https://github.com/Kong/charts/pull/680)
 
-
 ## 2.13.1
 
 ### Improvements
@@ -824,10 +825,10 @@ but doing so is not required.
 Postgres sub-chart version. Further details are available [in the upgrade guide](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md#280).
 
 The chart honors `ingressController.installCRDs: false` again. Remove it from
-your values.yaml if it is currently present. Unless your install user [lacks
-permissions to read
-CRDs](https://github.com/Kong/charts/blob/main/charts/kong/README.md#removing-c
-luster-scoped-permissions), which would have prevented you from installing
+your values.yaml if it is currently present.
+Unless your install user
+[lacks permissions to read CRDs](https://github.com/Kong/charts/blob/main/charts/kong/README.md#removing-cluster-scoped-permissions),
+which would have prevented you from installing
 earlier chart versions, you should omit this setting and let the templates
 detect whether you use the legacy CRD installation method automatically.
 
@@ -1488,7 +1489,6 @@ hybrid mode.
 * Add support for [hybrid mode
   deployments](https://docs.konghq.com/latest/hybrid-mode/).
   ([#160](https://github.com/Kong/charts/pull/160))
-
 
 ### Fixed
 
