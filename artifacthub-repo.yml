@@ -13,5 +13,5 @@
 # The ID of the Artifact Hub repository where the packages will be published to (optional, but it enables verified publisher)
 repositoryID: bea9d827-b263-4624-995f-17e51f3a9298
 owners: # (optional, used to claim repository ownership)
-- name: pmalek
+- name: patryk.malek
   email: patryk.malek@konghq.com
