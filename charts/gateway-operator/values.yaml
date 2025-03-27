@@ -44,6 +44,10 @@ extraLabels: {}
 # Labels to be added to KGO pods
 podLabels: {}
 
+# Node labels for pod assignment
+# Ref: https://kubernetes.io/docs/user-guide/node-selection/
+nodeSelector: {}
+
 # Install KIC's CRDs
 kic-crds:
   enabled: true
