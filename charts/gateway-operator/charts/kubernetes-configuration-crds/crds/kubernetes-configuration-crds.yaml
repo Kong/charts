@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: aigateways.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -534,7 +534,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: controlplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -8788,6 +8788,36 @@ spec:
 
                   If omitted, Ingress resources will not be supported by the ControlPlane.
                 type: string
+              watchNamespaces:
+                default:
+                  type: all
+                description: WatchNamespaces indicates the namespaces to watch for
+                  resources.
+                properties:
+                  list:
+                    description: |-
+                      List is a list of namespaces to watch for resources.
+                      Only used when Type is set to List.
+                    items:
+                      type: string
+                    type: array
+                  type:
+                    description: |-
+                      Type indicates the type of namespace watching to be done.
+                      By default, all namespaces are watched.
+                    enum:
+                    - all
+                    - list
+                    - own
+                    type: string
+                required:
+                - type
+                type: object
+                x-kubernetes-validations:
+                - message: list is required when type is 'list'
+                  rule: 'self.type == ''list'' ? has(self.list) : true'
+                - message: list must not be specified when type is not 'list'
+                  rule: 'self.type != ''list'' ? !has(self.list) : true'
             type: object
             x-kubernetes-validations:
             - message: Extension not allowed for ControlPlane
@@ -8881,7 +8911,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: dataplanemetricsextensions.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -9034,7 +9064,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: dataplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -18076,6 +18106,10 @@ spec:
                               `ClusterIP` allocates a cluster-internal IP address for load-balancing
                               to endpoints.
 
+                              `NodePort` exposes the Service on each Node's IP at a static port (the NodePort).
+                              To make the node port available, Kubernetes sets up a cluster IP address,
+                              the same as if you had requested a Service of type: ClusterIP.
+
                               `LoadBalancer` builds on NodePort and creates an external load-balancer
                               (if supported in the current cloud) which routes to the same endpoints
                               as the clusterIP.
@@ -18083,6 +18117,7 @@ spec:
                               More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
                             enum:
                             - LoadBalancer
+                            - NodePort
                             - ClusterIP
                             type: string
                         type: object
@@ -18507,7 +18542,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: gatewayconfigurations.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -35871,6 +35906,10 @@ spec:
                                   `ClusterIP` allocates a cluster-internal IP address for load-balancing
                                   to endpoints.
 
+                                  `NodePort` exposes the Service on each Node's IP at a static port (the NodePort).
+                                  To make the node port available, Kubernetes sets up a cluster IP address,
+                                  the same as if you had requested a Service of type: ClusterIP.
+
                                   `LoadBalancer` builds on NodePort and creates an external load-balancer
                                   (if supported in the current cloud) which routes to the same endpoints
                                   as the clusterIP.
@@ -35878,6 +35917,7 @@ spec:
                                   More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
                                 enum:
                                 - LoadBalancer
+                                - NodePort
                                 - ClusterIP
                                 type: string
                             type: object
@@ -35954,13 +35994,15 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: KonnectExtension must be set at the Gateway level
-              rule: 'has(self.dataPlaneOptions.extensions) ? self.dataPlaneOptions.extensions.all(e,
-                (e.group != ''konnect.konghq.com'' && e.group != ''gateway-operator.konghq.com'')
-                || e.kind != ''KonnectExtension'') : true'
+              rule: 'has(self.dataPlaneOptions) && has(self.dataPlaneOptions.extensions)
+                ? self.dataPlaneOptions.extensions.all(e, (e.group != ''konnect.konghq.com''
+                && e.group != ''gateway-operator.konghq.com'') || e.kind != ''KonnectExtension'')
+                : true'
             - message: KonnectExtension must be set at the Gateway level
-              rule: 'has(self.controlPlaneOptions.extensions) ? self.controlPlaneOptions.extensions.all(e,
-                (e.group != ''konnect.konghq.com'' && e.group != ''gateway-operator.konghq.com'')
-                || e.kind != ''KonnectExtension'') : true'
+              rule: 'has(self.controlPlaneOptions) && has(self.controlPlaneOptions.extensions)
+                ? self.controlPlaneOptions.extensions.all(e, (e.group != ''konnect.konghq.com''
+                && e.group != ''gateway-operator.konghq.com'') || e.kind != ''KonnectExtension'')
+                : true'
           status:
             description: GatewayConfigurationStatus defines the observed state of
               GatewayConfiguration
@@ -36044,7 +36086,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongcacertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -36294,7 +36336,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -36561,7 +36603,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongconsumergroups.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -36812,7 +36854,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongconsumers.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -37090,7 +37132,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongcredentialacls.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -37280,7 +37322,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongcredentialapikeys.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -37470,7 +37512,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongcredentialbasicauths.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -37664,7 +37706,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongcredentialhmacs.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -37860,7 +37902,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongcredentialjwts.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -38080,7 +38122,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongdataplaneclientcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -38328,7 +38370,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongkeys.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -38653,7 +38695,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongkeysets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -38902,7 +38944,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: konglicenses.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -39102,7 +39144,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongpluginbindings.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -39511,7 +39553,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongplugininstallations.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -39694,7 +39736,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongplugins.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -39996,7 +40038,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongroutes.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -40404,7 +40446,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongservices.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -40715,7 +40757,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongsnis.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -40903,7 +40945,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongtargets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -41096,7 +41138,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongupstreams.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -41538,7 +41580,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: kongvaults.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -41828,7 +41870,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: konnectapiauthconfigurations.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -42032,7 +42074,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: konnectcloudgatewaydataplanegroupconfigurations.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -42258,23 +42300,68 @@ spec:
                         type: object
                       type: array
                     networkRef:
-                      description: NetworkRef is the schema for the NetworkRef type.
+                      description: NetworkRef is the reference to the network that
+                        this data-plane group will be deployed on.
                       properties:
                         konnectID:
                           description: |-
                             KonnectID is the schema for the KonnectID type.
                             This field is required when the Type is konnectID.
                           type: string
+                        namespacedRef:
+                          description: |-
+                            NamespacedRef is a reference to a KeySet entity inside the cluster.
+                            This field is required when the Type is namespacedRef.
+                          properties:
+                            name:
+                              description: Name is the name of the referred resource.
+                              maxLength: 253
+                              minLength: 1
+                              type: string
+                            namespace:
+                              description: |-
+                                Namespace is the namespace of the referred resource.
+
+                                For namespace-scoped resources if no Namespace is provided then the
+                                namespace of the parent object MUST be used.
+
+                                This field MUST not be set when referring to cluster-scoped resources.
+                              type: string
+                          required:
+                          - name
+                          type: object
                         type:
-                          description: Type indicates the type of the control plane
-                            being referenced.
+                          description: |-
+                            Type defines type of the object which is referenced. It can be one of:
+
+                            - konnectID
+                            - namespacedRef
                           enum:
                           - konnectID
+                          - namespacedRef
                           type: string
+                      required:
+                      - type
                       type: object
                       x-kubernetes-validations:
+                      - message: cross namespace references are not supported for
+                          networkRef of type namespacedRef
+                        rule: 'self.type == ''namespacedRef'' && has(self.namespacedRef)
+                          ? !has(self.namespacedRef.namespace) : true'
+                      - message: when type is namespacedRef, namespacedRef must be
+                          set
+                        rule: 'self.type == ''namespacedRef'' ? has(self.namespacedRef)
+                          : true'
+                      - message: when type is namespacedRef, konnectID must not be
+                          set
+                        rule: 'self.type == ''namespacedRef'' ? !has(self.konnectID)
+                          : true'
                       - message: when type is konnectID, konnectID must be set
-                        rule: '(has(self.type) && self.type == ''konnectID'') ? has(self.konnectID)
+                        rule: 'self.type == ''konnectID'' ? has(self.konnectID) :
+                          true'
+                      - message: when type is konnectID, namespacedRef must not be
+                          set
+                        rule: 'self.type == ''konnectID'' ? !has(self.namespacedRef)
                           : true'
                     provider:
                       description: Name of cloud provider.
@@ -42446,7 +42533,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: konnectcloudgatewaynetworks.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -42685,7 +42772,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: konnectextensions.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -42892,7 +42979,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: konnectextensions.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -43316,7 +43403,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.2.0
+    kubernetes-configuration.konghq.com/version: v1.3.0
   name: konnectgatewaycontrolplanes.konnect.konghq.com
 spec:
   group: konnect.konghq.com
