@@ -717,16 +717,8 @@ spec:
         app: chartsnap-gateway-operator
         version: "1.5"
     spec:
-      affinity:
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: component
-                operator: NotIn
-                values:
-                - dummy
-            topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+      - name: myRegistryKeySecretName
       containers:
       - name: manager
         env:
@@ -745,8 +737,8 @@ spec:
           httpGet:
             path: /healthz
             port: 8081
-          initialDelaySeconds: 1
-          periodSeconds: 1
+          initialDelaySeconds: 15
+          periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /readyz

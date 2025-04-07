@@ -39,6 +39,12 @@ spec:
       affinity:
       {{ toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range $idx, $pullSecretName := . }}
+        - name: {{ $pullSecretName }}
+        {{- end }}
+      {{- end }}
       containers:
       - name: manager
         {{ with .Values.args -}}

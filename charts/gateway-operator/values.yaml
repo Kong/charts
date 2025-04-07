@@ -7,6 +7,12 @@ image:
   # version of your tag: for example if using a "nightly" image for an unreleased 1.5.0
   # version, set this to "1.5.0".
   effectiveSemver: ""
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ##
+  # pullSecrets:
+  #   - myRegistrKeySecretName
 
 # Deprecated: KGO versions 1.5+ do not use kube-rbac-proxy.
 # Use --metrics-access-filter flag instead to control access to metrics endpoint.
