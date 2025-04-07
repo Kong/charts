@@ -1,11 +1,18 @@
 # Changelog
 
+## 0.5.4
+
+### Added
+
+- Add `.Values.image.pullSecrets`
+  [#1294](https://github.com/Kong/charts/pull/1294)
+
 ## 0.5.3
 
 ### Fixes
 
 - Update Gateway Operator CRDs with the latest release (v1.3.0) from Kubernetes-configuration.
-  [#1283](https://github.com/Kong/charts/pull/1283)
+  [#1292](https://github.com/Kong/charts/pull/1292)
 
 ## 0.5.2
 
