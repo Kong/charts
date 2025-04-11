@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.5
+
+### Added
+
+- Add `ClusterRole` for 1.6.
+  [#1295](https://github.com/Kong/charts/pull/1295)
+
 ## 0.5.4
 
 ### Added
