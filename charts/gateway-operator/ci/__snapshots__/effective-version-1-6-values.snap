@@ -329,6 +329,13 @@ rules:
   - update
   - watch
 - apiGroups:
+  - gateway-operator.konghq.com
+  resources:
+  - watchnamespacegrants
+  verbs:
+  - list
+  - watch
+- apiGroups:
   - gateway.networking.k8s.io
   resources:
   - backendtlspolicies
@@ -416,6 +423,7 @@ rules:
   - konnectapiauthconfigurations
   - konnectcloudgatewaydataplanegroupconfigurations
   - konnectcloudgatewaynetworks
+  - konnectcloudgatewaytransitgateways
   - konnectextensions
   - konnectgatewaycontrolplanes
   verbs:
@@ -433,6 +441,8 @@ rules:
   - konnectcloudgatewaydataplanegroupconfigurations/status
   - konnectcloudgatewaynetworks/finalizers
   - konnectcloudgatewaynetworks/status
+  - konnectcloudgatewaytransitgateways/finalizers
+  - konnectcloudgatewaytransitgateways/status
   - konnectextensions/finalizers
   - konnectextensions/status
   - konnectgatewaycontrolplanes/finalizers
@@ -681,7 +691,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.5.5
+    helm.sh/chart: gateway-operator-0.5.6
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "1.5"
     app.kubernetes.io/component: kgo
@@ -703,7 +713,7 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: gateway-operator
-        helm.sh/chart: gateway-operator-0.5.5
+        helm.sh/chart: gateway-operator-0.5.6
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/version: "1.5"
         app.kubernetes.io/component: kgo

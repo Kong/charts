@@ -688,7 +688,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.5.5
+    helm.sh/chart: gateway-operator-0.5.6
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "1.5"
     a: "b"
@@ -711,7 +711,7 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: gateway-operator
-        helm.sh/chart: gateway-operator-0.5.5
+        helm.sh/chart: gateway-operator-0.5.6
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/version: "1.5"
         a: "b"
