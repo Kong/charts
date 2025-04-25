@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.6
+
+### Added
+
+- Update `ClusterRole` for 1.6 with `KonnectCloudGatewayTransitGateway` and
+  `WatchNamespaceGrant` policy rules.
+  [#1299](https://github.com/Kong/charts/pull/1299)
+
 ## 0.5.5
 
 ### Added
