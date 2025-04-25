@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.7
+
+### Added
+
+- Update Gateway Operator CRDs with the latest release (v1.4.0-rc.0) from `kong/kubernetes-configuration`
+  (including `KonnectCloudGatewayTransitGateway` and `WatchNamespaceGrant`).
+  [#1300](https://github.com/Kong/charts/pull/1300)
+
 ## 0.5.6
 
 ### Added
@@ -26,14 +34,14 @@
 
 ### Fixes
 
-- Update Gateway Operator CRDs with the latest release (v1.3.0) from Kubernetes-configuration.
+- Update Gateway Operator CRDs with the latest release (v1.3.0) from `kong/kubernetes-configuration`.
   [#1292](https://github.com/Kong/charts/pull/1292)
 
 ## 0.5.2
 
 ### Fixes
 
-- Update Gateway Operator CRDs with the latest release (v1.2.0) from Kubernetes-configuration.
+- Update Gateway Operator CRDs with the latest release (v1.2.0) from `kong/kubernetes-configuration`.
   [#1283](https://github.com/Kong/charts/pull/1283)
 
 ## 0.5.1

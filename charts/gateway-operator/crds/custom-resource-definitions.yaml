@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: aigateways.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -534,7 +534,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: controlplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -924,7 +924,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                 Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -939,7 +938,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                 Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -1108,7 +1106,6 @@ spec:
                                             pod labels will be ignored. The default value is empty.
                                             The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                             Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                            This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                           items:
                                             type: string
                                           type: array
@@ -1123,7 +1120,6 @@ spec:
                                             pod labels will be ignored. The default value is empty.
                                             The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                             Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                            This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                           items:
                                             type: string
                                           type: array
@@ -1290,7 +1286,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                 Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -1305,7 +1300,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                 Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -1474,7 +1468,6 @@ spec:
                                             pod labels will be ignored. The default value is empty.
                                             The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                             Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                            This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                           items:
                                             type: string
                                           type: array
@@ -1489,7 +1482,6 @@ spec:
                                             pod labels will be ignored. The default value is empty.
                                             The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                             Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                            This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                           items:
                                             type: string
                                           type: array
@@ -1753,7 +1745,7 @@ spec:
                                     Cannot be updated.
                                   items:
                                     description: EnvFromSource represents the source
-                                      of a set of ConfigMaps
+                                      of a set of ConfigMaps or Secrets
                                     properties:
                                       configMapRef:
                                         description: The ConfigMap to select from
@@ -1774,9 +1766,9 @@ spec:
                                         type: object
                                         x-kubernetes-map-type: atomic
                                       prefix:
-                                        description: An optional identifier to prepend
-                                          to each key in the ConfigMap. Must be a
-                                          C_IDENTIFIER.
+                                        description: Optional text to prepend to the
+                                          name of each environment variable. Must
+                                          be a C_IDENTIFIER.
                                         type: string
                                       secretRef:
                                         description: The Secret to select from
@@ -2048,6 +2040,12 @@ spec:
                                           - port
                                           type: object
                                       type: object
+                                    stopSignal:
+                                      description: |-
+                                        StopSignal defines which signal will be sent to a container when it is being stopped.
+                                        If not specified, the default is defined by the container runtime in use.
+                                        StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                      type: string
                                   type: object
                                 livenessProbe:
                                   description: |-
@@ -3279,7 +3277,7 @@ spec:
                                     Cannot be updated.
                                   items:
                                     description: EnvFromSource represents the source
-                                      of a set of ConfigMaps
+                                      of a set of ConfigMaps or Secrets
                                     properties:
                                       configMapRef:
                                         description: The ConfigMap to select from
@@ -3300,9 +3298,9 @@ spec:
                                         type: object
                                         x-kubernetes-map-type: atomic
                                       prefix:
-                                        description: An optional identifier to prepend
-                                          to each key in the ConfigMap. Must be a
-                                          C_IDENTIFIER.
+                                        description: Optional text to prepend to the
+                                          name of each environment variable. Must
+                                          be a C_IDENTIFIER.
                                         type: string
                                       secretRef:
                                         description: The Secret to select from
@@ -3571,6 +3569,12 @@ spec:
                                           - port
                                           type: object
                                       type: object
+                                    stopSignal:
+                                      description: |-
+                                        StopSignal defines which signal will be sent to a container when it is being stopped.
+                                        If not specified, the default is defined by the container runtime in use.
+                                        StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                      type: string
                                   type: object
                                 livenessProbe:
                                   description: Probes are not allowed for ephemeral
@@ -4626,7 +4630,7 @@ spec:
                               Init containers may not have Lifecycle actions, Readiness probes, Liveness probes, or Startup probes.
                               The resourceRequirements of an init container are taken into account during scheduling
                               by finding the highest request/limit for each resource type, and then using the max of
-                              of that value or the sum of the normal containers. Limits are applied to init containers
+                              that value or the sum of the normal containers. Limits are applied to init containers
                               in a similar fashion.
                               Init containers cannot currently be added or removed.
                               Cannot be updated.
@@ -4802,7 +4806,7 @@ spec:
                                     Cannot be updated.
                                   items:
                                     description: EnvFromSource represents the source
-                                      of a set of ConfigMaps
+                                      of a set of ConfigMaps or Secrets
                                     properties:
                                       configMapRef:
                                         description: The ConfigMap to select from
@@ -4823,9 +4827,9 @@ spec:
                                         type: object
                                         x-kubernetes-map-type: atomic
                                       prefix:
-                                        description: An optional identifier to prepend
-                                          to each key in the ConfigMap. Must be a
-                                          C_IDENTIFIER.
+                                        description: Optional text to prepend to the
+                                          name of each environment variable. Must
+                                          be a C_IDENTIFIER.
                                         type: string
                                       secretRef:
                                         description: The Secret to select from
@@ -5097,6 +5101,12 @@ spec:
                                           - port
                                           type: object
                                       type: object
+                                    stopSignal:
+                                      description: |-
+                                        StopSignal defines which signal will be sent to a container when it is being stopped.
+                                        If not specified, the default is defined by the container runtime in use.
+                                        StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                      type: string
                                   type: object
                                 livenessProbe:
                                   description: |-
@@ -6817,7 +6827,6 @@ spec:
                                     - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
 
                                     If this value is nil, the behavior is equivalent to the Honor policy.
-                                    This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
                                   type: string
                                 nodeTaintsPolicy:
                                   description: |-
@@ -6828,7 +6837,6 @@ spec:
                                     - Ignore: node taints are ignored. All nodes are included.
 
                                     If this value is nil, the behavior is equivalent to the Ignore policy.
-                                    This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
                                   type: string
                                 topologyKey:
                                   description: |-
@@ -7830,7 +7838,7 @@ spec:
                                     The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.
                                     The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.
                                     The volume will be mounted read-only (ro) and non-executable files (noexec).
-                                    Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath).
+                                    Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.
                                     The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.
                                   properties:
                                     pullPolicy:
@@ -8911,7 +8919,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: dataplanemetricsextensions.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -9064,7 +9072,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: dataplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -9443,7 +9451,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                 Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -9458,7 +9465,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                 Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -9627,7 +9633,6 @@ spec:
                                             pod labels will be ignored. The default value is empty.
                                             The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                             Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                            This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                           items:
                                             type: string
                                           type: array
@@ -9642,7 +9647,6 @@ spec:
                                             pod labels will be ignored. The default value is empty.
                                             The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                             Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                            This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                           items:
                                             type: string
                                           type: array
@@ -9809,7 +9813,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                 Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -9824,7 +9827,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                 Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -9993,7 +9995,6 @@ spec:
                                             pod labels will be ignored. The default value is empty.
                                             The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                             Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                            This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                           items:
                                             type: string
                                           type: array
@@ -10008,7 +10009,6 @@ spec:
                                             pod labels will be ignored. The default value is empty.
                                             The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                             Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                            This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                           items:
                                             type: string
                                           type: array
@@ -10272,7 +10272,7 @@ spec:
                                     Cannot be updated.
                                   items:
                                     description: EnvFromSource represents the source
-                                      of a set of ConfigMaps
+                                      of a set of ConfigMaps or Secrets
                                     properties:
                                       configMapRef:
                                         description: The ConfigMap to select from
@@ -10293,9 +10293,9 @@ spec:
                                         type: object
                                         x-kubernetes-map-type: atomic
                                       prefix:
-                                        description: An optional identifier to prepend
-                                          to each key in the ConfigMap. Must be a
-                                          C_IDENTIFIER.
+                                        description: Optional text to prepend to the
+                                          name of each environment variable. Must
+                                          be a C_IDENTIFIER.
                                         type: string
                                       secretRef:
                                         description: The Secret to select from
@@ -10567,6 +10567,12 @@ spec:
                                           - port
                                           type: object
                                       type: object
+                                    stopSignal:
+                                      description: |-
+                                        StopSignal defines which signal will be sent to a container when it is being stopped.
+                                        If not specified, the default is defined by the container runtime in use.
+                                        StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                      type: string
                                   type: object
                                 livenessProbe:
                                   description: |-
@@ -11798,7 +11804,7 @@ spec:
                                     Cannot be updated.
                                   items:
                                     description: EnvFromSource represents the source
-                                      of a set of ConfigMaps
+                                      of a set of ConfigMaps or Secrets
                                     properties:
                                       configMapRef:
                                         description: The ConfigMap to select from
@@ -11819,9 +11825,9 @@ spec:
                                         type: object
                                         x-kubernetes-map-type: atomic
                                       prefix:
-                                        description: An optional identifier to prepend
-                                          to each key in the ConfigMap. Must be a
-                                          C_IDENTIFIER.
+                                        description: Optional text to prepend to the
+                                          name of each environment variable. Must
+                                          be a C_IDENTIFIER.
                                         type: string
                                       secretRef:
                                         description: The Secret to select from
@@ -12090,6 +12096,12 @@ spec:
                                           - port
                                           type: object
                                       type: object
+                                    stopSignal:
+                                      description: |-
+                                        StopSignal defines which signal will be sent to a container when it is being stopped.
+                                        If not specified, the default is defined by the container runtime in use.
+                                        StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                      type: string
                                   type: object
                                 livenessProbe:
                                   description: Probes are not allowed for ephemeral
@@ -13145,7 +13157,7 @@ spec:
                               Init containers may not have Lifecycle actions, Readiness probes, Liveness probes, or Startup probes.
                               The resourceRequirements of an init container are taken into account during scheduling
                               by finding the highest request/limit for each resource type, and then using the max of
-                              of that value or the sum of the normal containers. Limits are applied to init containers
+                              that value or the sum of the normal containers. Limits are applied to init containers
                               in a similar fashion.
                               Init containers cannot currently be added or removed.
                               Cannot be updated.
@@ -13321,7 +13333,7 @@ spec:
                                     Cannot be updated.
                                   items:
                                     description: EnvFromSource represents the source
-                                      of a set of ConfigMaps
+                                      of a set of ConfigMaps or Secrets
                                     properties:
                                       configMapRef:
                                         description: The ConfigMap to select from
@@ -13342,9 +13354,9 @@ spec:
                                         type: object
                                         x-kubernetes-map-type: atomic
                                       prefix:
-                                        description: An optional identifier to prepend
-                                          to each key in the ConfigMap. Must be a
-                                          C_IDENTIFIER.
+                                        description: Optional text to prepend to the
+                                          name of each environment variable. Must
+                                          be a C_IDENTIFIER.
                                         type: string
                                       secretRef:
                                         description: The Secret to select from
@@ -13616,6 +13628,12 @@ spec:
                                           - port
                                           type: object
                                       type: object
+                                    stopSignal:
+                                      description: |-
+                                        StopSignal defines which signal will be sent to a container when it is being stopped.
+                                        If not specified, the default is defined by the container runtime in use.
+                                        StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                      type: string
                                   type: object
                                 livenessProbe:
                                   description: |-
@@ -15336,7 +15354,6 @@ spec:
                                     - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
 
                                     If this value is nil, the behavior is equivalent to the Honor policy.
-                                    This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
                                   type: string
                                 nodeTaintsPolicy:
                                   description: |-
@@ -15347,7 +15364,6 @@ spec:
                                     - Ignore: node taints are ignored. All nodes are included.
 
                                     If this value is nil, the behavior is equivalent to the Ignore policy.
-                                    This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
                                   type: string
                                 topologyKey:
                                   description: |-
@@ -16349,7 +16365,7 @@ spec:
                                     The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.
                                     The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.
                                     The volume will be mounted read-only (ro) and non-executable files (noexec).
-                                    Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath).
+                                    Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.
                                     The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.
                                   properties:
                                     pullPolicy:
@@ -17329,7 +17345,9 @@ spec:
                                   policies:
                                     description: |-
                                       policies is a list of potential scaling polices which can be used during scaling.
-                                      At least one policy must be specified, otherwise the HPAScalingRules will be discarded as invalid
+                                      If not set, use the default values:
+                                      - For scale up: allow doubling the number of pods, or an absolute change of 4 pods in a 15s window.
+                                      - For scale down: allow all pods to be removed in a 15s window.
                                     items:
                                       description: HPAScalingPolicy is a single policy
                                         which must hold true for a specified past
@@ -17373,6 +17391,24 @@ spec:
                                       - For scale down: 300 (i.e. the stabilization window is 300 seconds long).
                                     format: int32
                                     type: integer
+                                  tolerance:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
+                                    description: |-
+                                      tolerance is the tolerance on the ratio between the current and desired
+                                      metric value under which no updates are made to the desired number of
+                                      replicas (e.g. 0.01 for 1%). Must be greater than or equal to zero. If not
+                                      set, the default cluster-wide tolerance is applied (by default 10%).
+
+                                      For example, if autoscaling is configured with a memory consumption target of 100Mi,
+                                      and scale-down and scale-up tolerances of 5% and 1% respectively, scaling will be
+                                      triggered when the actual consumption falls below 95Mi or exceeds 101Mi.
+
+                                      This is an alpha field and requires enabling the HPAConfigurableTolerance
+                                      feature gate.
+                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                    x-kubernetes-int-or-string: true
                                 type: object
                               scaleUp:
                                 description: |-
@@ -17385,7 +17421,9 @@ spec:
                                   policies:
                                     description: |-
                                       policies is a list of potential scaling polices which can be used during scaling.
-                                      At least one policy must be specified, otherwise the HPAScalingRules will be discarded as invalid
+                                      If not set, use the default values:
+                                      - For scale up: allow doubling the number of pods, or an absolute change of 4 pods in a 15s window.
+                                      - For scale down: allow all pods to be removed in a 15s window.
                                     items:
                                       description: HPAScalingPolicy is a single policy
                                         which must hold true for a specified past
@@ -17429,6 +17467,24 @@ spec:
                                       - For scale down: 300 (i.e. the stabilization window is 300 seconds long).
                                     format: int32
                                     type: integer
+                                  tolerance:
+                                    anyOf:
+                                    - type: integer
+                                    - type: string
+                                    description: |-
+                                      tolerance is the tolerance on the ratio between the current and desired
+                                      metric value under which no updates are made to the desired number of
+                                      replicas (e.g. 0.01 for 1%). Must be greater than or equal to zero. If not
+                                      set, the default cluster-wide tolerance is applied (by default 10%).
+
+                                      For example, if autoscaling is configured with a memory consumption target of 100Mi,
+                                      and scale-down and scale-up tolerances of 5% and 1% respectively, scaling will be
+                                      triggered when the actual consumption falls below 95Mi or exceeds 101Mi.
+
+                                      This is an alpha field and requires enabling the HPAConfigurableTolerance
+                                      feature gate.
+                                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                    x-kubernetes-int-or-string: true
                                 type: object
                             type: object
                           maxReplicas:
@@ -18071,6 +18127,22 @@ spec:
                                     EndpointPort.
                                     Optional if only one ServicePort is defined on this service.
                                   type: string
+                                nodePort:
+                                  description: |-
+                                    The port on each node on which this service is exposed when type is
+                                    NodePort or LoadBalancer. Usually assigned by the system. If a value is
+                                    specified, in-range, and not in use it will be used, otherwise the
+                                    operation will fail. If not specified, a port will be allocated if this
+                                    Service requires one. If this field is specified when creating a
+                                    Service which does not need it, creation will fail. This field will be
+                                    wiped when updating a Service to no longer need it (e.g. changing type
+                                    from NodePort to ClusterIP).
+
+                                    More info: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+
+                                    Can only be specified if type is NodePort or LoadBalancer.
+                                  format: int32
+                                  type: integer
                                 port:
                                   description: The port that will be exposed by this
                                     service.
@@ -18122,6 +18194,11 @@ spec:
                             type: string
                         type: object
                         x-kubernetes-validations:
+                        - message: Cannot set NodePort when service type is not NodePort
+                            or LoadBalancer
+                          rule: '!has(self.ports) || !(self.ports.exists(p, has(p.nodePort)))
+                            ? true : has(self.type) && [''LoadBalancer'', ''NodePort''].exists(t,
+                            t == self.type)'
                         - message: Cannot set ExternalTrafficPolicy for ClusterIP
                             service.
                           rule: 'has(self.type) && self.type == ''ClusterIP'' ? !has(self.externalTrafficPolicy)
@@ -18529,12 +18606,16 @@ spec:
             e.name != ''KONG_DATABASE'' || e.value == ''off'' || size(e.value)==0))
             : true)'
         - message: DataPlane spec cannot be updated when promotion is in progress
-          rule: '((self.spec == oldSelf.spec) || !has(self.status.rollout)) ? true
-            : self.status.rollout.conditions.all(c, c.type != ''RolledOut'' || c.reason
-            != ''PromotionInProgress'')'
+          rule: '(self.spec != oldSelf.spec && has(self.status) && has (self.status.rollout))
+            ? self.status.rollout.conditions.all(c, c.type != ''RolledOut'' || c.reason
+            != ''PromotionInProgress'') : true'
     served: true
     storage: true
     subresources:
+      scale:
+        labelSelectorPath: .status.selector
+        specReplicasPath: .spec.deployment.replicas
+        statusReplicasPath: .status.replicas
       status: {}
 ---
 apiVersion: apiextensions.k8s.io/v1
@@ -18542,7 +18623,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: gatewayconfigurations.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -18935,7 +19016,6 @@ spec:
                                                     pod labels will be ignored. The default value is empty.
                                                     The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                     Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                                   items:
                                                     type: string
                                                   type: array
@@ -18950,7 +19030,6 @@ spec:
                                                     pod labels will be ignored. The default value is empty.
                                                     The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                     Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                                   items:
                                                     type: string
                                                   type: array
@@ -19120,7 +19199,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                 Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -19135,7 +19213,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                 Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -19304,7 +19381,6 @@ spec:
                                                     pod labels will be ignored. The default value is empty.
                                                     The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                     Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                                   items:
                                                     type: string
                                                   type: array
@@ -19319,7 +19395,6 @@ spec:
                                                     pod labels will be ignored. The default value is empty.
                                                     The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                     Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                                   items:
                                                     type: string
                                                   type: array
@@ -19489,7 +19564,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                 Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -19504,7 +19578,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                 Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -19773,7 +19846,7 @@ spec:
                                         Cannot be updated.
                                       items:
                                         description: EnvFromSource represents the
-                                          source of a set of ConfigMaps
+                                          source of a set of ConfigMaps or Secrets
                                         properties:
                                           configMapRef:
                                             description: The ConfigMap to select from
@@ -19794,8 +19867,8 @@ spec:
                                             type: object
                                             x-kubernetes-map-type: atomic
                                           prefix:
-                                            description: An optional identifier to
-                                              prepend to each key in the ConfigMap.
+                                            description: Optional text to prepend
+                                              to the name of each environment variable.
                                               Must be a C_IDENTIFIER.
                                             type: string
                                           secretRef:
@@ -20070,6 +20143,12 @@ spec:
                                               - port
                                               type: object
                                           type: object
+                                        stopSignal:
+                                          description: |-
+                                            StopSignal defines which signal will be sent to a container when it is being stopped.
+                                            If not specified, the default is defined by the container runtime in use.
+                                            StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                          type: string
                                       type: object
                                     livenessProbe:
                                       description: |-
@@ -21319,7 +21398,7 @@ spec:
                                         Cannot be updated.
                                       items:
                                         description: EnvFromSource represents the
-                                          source of a set of ConfigMaps
+                                          source of a set of ConfigMaps or Secrets
                                         properties:
                                           configMapRef:
                                             description: The ConfigMap to select from
@@ -21340,8 +21419,8 @@ spec:
                                             type: object
                                             x-kubernetes-map-type: atomic
                                           prefix:
-                                            description: An optional identifier to
-                                              prepend to each key in the ConfigMap.
+                                            description: Optional text to prepend
+                                              to the name of each environment variable.
                                               Must be a C_IDENTIFIER.
                                             type: string
                                           secretRef:
@@ -21613,6 +21692,12 @@ spec:
                                               - port
                                               type: object
                                           type: object
+                                        stopSignal:
+                                          description: |-
+                                            StopSignal defines which signal will be sent to a container when it is being stopped.
+                                            If not specified, the default is defined by the container runtime in use.
+                                            StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                          type: string
                                       type: object
                                     livenessProbe:
                                       description: Probes are not allowed for ephemeral
@@ -22682,7 +22767,7 @@ spec:
                                   Init containers may not have Lifecycle actions, Readiness probes, Liveness probes, or Startup probes.
                                   The resourceRequirements of an init container are taken into account during scheduling
                                   by finding the highest request/limit for each resource type, and then using the max of
-                                  of that value or the sum of the normal containers. Limits are applied to init containers
+                                  that value or the sum of the normal containers. Limits are applied to init containers
                                   in a similar fashion.
                                   Init containers cannot currently be added or removed.
                                   Cannot be updated.
@@ -22862,7 +22947,7 @@ spec:
                                         Cannot be updated.
                                       items:
                                         description: EnvFromSource represents the
-                                          source of a set of ConfigMaps
+                                          source of a set of ConfigMaps or Secrets
                                         properties:
                                           configMapRef:
                                             description: The ConfigMap to select from
@@ -22883,8 +22968,8 @@ spec:
                                             type: object
                                             x-kubernetes-map-type: atomic
                                           prefix:
-                                            description: An optional identifier to
-                                              prepend to each key in the ConfigMap.
+                                            description: Optional text to prepend
+                                              to the name of each environment variable.
                                               Must be a C_IDENTIFIER.
                                             type: string
                                           secretRef:
@@ -23159,6 +23244,12 @@ spec:
                                               - port
                                               type: object
                                           type: object
+                                        stopSignal:
+                                          description: |-
+                                            StopSignal defines which signal will be sent to a container when it is being stopped.
+                                            If not specified, the default is defined by the container runtime in use.
+                                            StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                          type: string
                                       type: object
                                     livenessProbe:
                                       description: |-
@@ -24894,7 +24985,6 @@ spec:
                                         - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
 
                                         If this value is nil, the behavior is equivalent to the Honor policy.
-                                        This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
                                       type: string
                                     nodeTaintsPolicy:
                                       description: |-
@@ -24905,7 +24995,6 @@ spec:
                                         - Ignore: node taints are ignored. All nodes are included.
 
                                         If this value is nil, the behavior is equivalent to the Ignore policy.
-                                        This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
                                       type: string
                                     topologyKey:
                                       description: |-
@@ -25916,7 +26005,7 @@ spec:
                                         The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.
                                         The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.
                                         The volume will be mounted read-only (ro) and non-executable files (noexec).
-                                        Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath).
+                                        Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.
                                         The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.
                                       properties:
                                         pullPolicy:
@@ -27216,7 +27305,6 @@ spec:
                                                     pod labels will be ignored. The default value is empty.
                                                     The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                     Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                                   items:
                                                     type: string
                                                   type: array
@@ -27231,7 +27319,6 @@ spec:
                                                     pod labels will be ignored. The default value is empty.
                                                     The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                     Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                                   items:
                                                     type: string
                                                   type: array
@@ -27401,7 +27488,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                 Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -27416,7 +27502,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                 Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -27585,7 +27670,6 @@ spec:
                                                     pod labels will be ignored. The default value is empty.
                                                     The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                     Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                                   items:
                                                     type: string
                                                   type: array
@@ -27600,7 +27684,6 @@ spec:
                                                     pod labels will be ignored. The default value is empty.
                                                     The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                     Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                    This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                                   items:
                                                     type: string
                                                   type: array
@@ -27770,7 +27853,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both matchLabelKeys and labelSelector.
                                                 Also, matchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -27785,7 +27867,6 @@ spec:
                                                 pod labels will be ignored. The default value is empty.
                                                 The same key is forbidden to exist in both mismatchLabelKeys and labelSelector.
                                                 Also, mismatchLabelKeys cannot be set when labelSelector isn't set.
-                                                This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).
                                               items:
                                                 type: string
                                               type: array
@@ -28054,7 +28135,7 @@ spec:
                                         Cannot be updated.
                                       items:
                                         description: EnvFromSource represents the
-                                          source of a set of ConfigMaps
+                                          source of a set of ConfigMaps or Secrets
                                         properties:
                                           configMapRef:
                                             description: The ConfigMap to select from
@@ -28075,8 +28156,8 @@ spec:
                                             type: object
                                             x-kubernetes-map-type: atomic
                                           prefix:
-                                            description: An optional identifier to
-                                              prepend to each key in the ConfigMap.
+                                            description: Optional text to prepend
+                                              to the name of each environment variable.
                                               Must be a C_IDENTIFIER.
                                             type: string
                                           secretRef:
@@ -28351,6 +28432,12 @@ spec:
                                               - port
                                               type: object
                                           type: object
+                                        stopSignal:
+                                          description: |-
+                                            StopSignal defines which signal will be sent to a container when it is being stopped.
+                                            If not specified, the default is defined by the container runtime in use.
+                                            StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                          type: string
                                       type: object
                                     livenessProbe:
                                       description: |-
@@ -29600,7 +29687,7 @@ spec:
                                         Cannot be updated.
                                       items:
                                         description: EnvFromSource represents the
-                                          source of a set of ConfigMaps
+                                          source of a set of ConfigMaps or Secrets
                                         properties:
                                           configMapRef:
                                             description: The ConfigMap to select from
@@ -29621,8 +29708,8 @@ spec:
                                             type: object
                                             x-kubernetes-map-type: atomic
                                           prefix:
-                                            description: An optional identifier to
-                                              prepend to each key in the ConfigMap.
+                                            description: Optional text to prepend
+                                              to the name of each environment variable.
                                               Must be a C_IDENTIFIER.
                                             type: string
                                           secretRef:
@@ -29894,6 +29981,12 @@ spec:
                                               - port
                                               type: object
                                           type: object
+                                        stopSignal:
+                                          description: |-
+                                            StopSignal defines which signal will be sent to a container when it is being stopped.
+                                            If not specified, the default is defined by the container runtime in use.
+                                            StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                          type: string
                                       type: object
                                     livenessProbe:
                                       description: Probes are not allowed for ephemeral
@@ -30963,7 +31056,7 @@ spec:
                                   Init containers may not have Lifecycle actions, Readiness probes, Liveness probes, or Startup probes.
                                   The resourceRequirements of an init container are taken into account during scheduling
                                   by finding the highest request/limit for each resource type, and then using the max of
-                                  of that value or the sum of the normal containers. Limits are applied to init containers
+                                  that value or the sum of the normal containers. Limits are applied to init containers
                                   in a similar fashion.
                                   Init containers cannot currently be added or removed.
                                   Cannot be updated.
@@ -31143,7 +31236,7 @@ spec:
                                         Cannot be updated.
                                       items:
                                         description: EnvFromSource represents the
-                                          source of a set of ConfigMaps
+                                          source of a set of ConfigMaps or Secrets
                                         properties:
                                           configMapRef:
                                             description: The ConfigMap to select from
@@ -31164,8 +31257,8 @@ spec:
                                             type: object
                                             x-kubernetes-map-type: atomic
                                           prefix:
-                                            description: An optional identifier to
-                                              prepend to each key in the ConfigMap.
+                                            description: Optional text to prepend
+                                              to the name of each environment variable.
                                               Must be a C_IDENTIFIER.
                                             type: string
                                           secretRef:
@@ -31440,6 +31533,12 @@ spec:
                                               - port
                                               type: object
                                           type: object
+                                        stopSignal:
+                                          description: |-
+                                            StopSignal defines which signal will be sent to a container when it is being stopped.
+                                            If not specified, the default is defined by the container runtime in use.
+                                            StopSignal can only be set for Pods with a non-empty .spec.os.name
+                                          type: string
                                       type: object
                                     livenessProbe:
                                       description: |-
@@ -33175,7 +33274,6 @@ spec:
                                         - Ignore: nodeAffinity/nodeSelector are ignored. All nodes are included in the calculations.
 
                                         If this value is nil, the behavior is equivalent to the Honor policy.
-                                        This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
                                       type: string
                                     nodeTaintsPolicy:
                                       description: |-
@@ -33186,7 +33284,6 @@ spec:
                                         - Ignore: node taints are ignored. All nodes are included.
 
                                         If this value is nil, the behavior is equivalent to the Ignore policy.
-                                        This is a beta-level feature default enabled by the NodeInclusionPolicyInPodTopologySpread feature flag.
                                       type: string
                                     topologyKey:
                                       description: |-
@@ -34197,7 +34294,7 @@ spec:
                                         The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field.
                                         The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images.
                                         The volume will be mounted read-only (ro) and non-executable files (noexec).
-                                        Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath).
+                                        Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath) before 1.33.
                                         The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.
                                       properties:
                                         pullPolicy:
@@ -35191,7 +35288,9 @@ spec:
                                       policies:
                                         description: |-
                                           policies is a list of potential scaling polices which can be used during scaling.
-                                          At least one policy must be specified, otherwise the HPAScalingRules will be discarded as invalid
+                                          If not set, use the default values:
+                                          - For scale up: allow doubling the number of pods, or an absolute change of 4 pods in a 15s window.
+                                          - For scale down: allow all pods to be removed in a 15s window.
                                         items:
                                           description: HPAScalingPolicy is a single
                                             policy which must hold true for a specified
@@ -35235,6 +35334,24 @@ spec:
                                           - For scale down: 300 (i.e. the stabilization window is 300 seconds long).
                                         format: int32
                                         type: integer
+                                      tolerance:
+                                        anyOf:
+                                        - type: integer
+                                        - type: string
+                                        description: |-
+                                          tolerance is the tolerance on the ratio between the current and desired
+                                          metric value under which no updates are made to the desired number of
+                                          replicas (e.g. 0.01 for 1%). Must be greater than or equal to zero. If not
+                                          set, the default cluster-wide tolerance is applied (by default 10%).
+
+                                          For example, if autoscaling is configured with a memory consumption target of 100Mi,
+                                          and scale-down and scale-up tolerances of 5% and 1% respectively, scaling will be
+                                          triggered when the actual consumption falls below 95Mi or exceeds 101Mi.
+
+                                          This is an alpha field and requires enabling the HPAConfigurableTolerance
+                                          feature gate.
+                                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                        x-kubernetes-int-or-string: true
                                     type: object
                                   scaleUp:
                                     description: |-
@@ -35247,7 +35364,9 @@ spec:
                                       policies:
                                         description: |-
                                           policies is a list of potential scaling polices which can be used during scaling.
-                                          At least one policy must be specified, otherwise the HPAScalingRules will be discarded as invalid
+                                          If not set, use the default values:
+                                          - For scale up: allow doubling the number of pods, or an absolute change of 4 pods in a 15s window.
+                                          - For scale down: allow all pods to be removed in a 15s window.
                                         items:
                                           description: HPAScalingPolicy is a single
                                             policy which must hold true for a specified
@@ -35291,6 +35410,24 @@ spec:
                                           - For scale down: 300 (i.e. the stabilization window is 300 seconds long).
                                         format: int32
                                         type: integer
+                                      tolerance:
+                                        anyOf:
+                                        - type: integer
+                                        - type: string
+                                        description: |-
+                                          tolerance is the tolerance on the ratio between the current and desired
+                                          metric value under which no updates are made to the desired number of
+                                          replicas (e.g. 0.01 for 1%). Must be greater than or equal to zero. If not
+                                          set, the default cluster-wide tolerance is applied (by default 10%).
+
+                                          For example, if autoscaling is configured with a memory consumption target of 100Mi,
+                                          and scale-down and scale-up tolerances of 5% and 1% respectively, scaling will be
+                                          triggered when the actual consumption falls below 95Mi or exceeds 101Mi.
+
+                                          This is an alpha field and requires enabling the HPAConfigurableTolerance
+                                          feature gate.
+                                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                        x-kubernetes-int-or-string: true
                                     type: object
                                 type: object
                               maxReplicas:
@@ -35945,6 +36082,77 @@ spec:
                       - name
                       type: object
                     type: array
+                  resources:
+                    description: |-
+                      GatewayConfigDataPlaneResources defines the resources that will be
+                      created and managed for Gateway's DataPlane.
+                    properties:
+                      podDisruptionBudget:
+                        description: |-
+                          PodDisruptionBudget is the configuration for the PodDisruptionBudget
+                          that will be created for the DataPlane.
+                        properties:
+                          spec:
+                            description: |-
+                              Spec defines the specification of the PodDisruptionBudget.
+                              Selector is managed by the controller and cannot be set by the user.
+                            properties:
+                              maxUnavailable:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                description: |-
+                                  An eviction is allowed if at most "maxUnavailable" pods selected by
+                                  "selector" are unavailable after the eviction, i.e. even in absence of
+                                  the evicted pod. For example, one can prevent all voluntary evictions
+                                  by specifying 0. This is a mutually exclusive setting with "minAvailable".
+                                x-kubernetes-int-or-string: true
+                              minAvailable:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                description: |-
+                                  An eviction is allowed if at least "minAvailable" pods selected by
+                                  "selector" will still be available after the eviction, i.e. even in the
+                                  absence of the evicted pod.  So for example you can prevent all voluntary
+                                  evictions by specifying "100%".
+                                x-kubernetes-int-or-string: true
+                              unhealthyPodEvictionPolicy:
+                                description: |-
+                                  UnhealthyPodEvictionPolicy defines the criteria for when unhealthy pods
+                                  should be considered for eviction. Current implementation considers healthy pods,
+                                  as pods that have status.conditions item with type="Ready",status="True".
+
+                                  Valid policies are IfHealthyBudget and AlwaysAllow.
+                                  If no policy is specified, the default behavior will be used,
+                                  which corresponds to the IfHealthyBudget policy.
+
+                                  IfHealthyBudget policy means that running pods (status.phase="Running"),
+                                  but not yet healthy can be evicted only if the guarded application is not
+                                  disrupted (status.currentHealthy is at least equal to status.desiredHealthy).
+                                  Healthy pods will be subject to the PDB for eviction.
+
+                                  AlwaysAllow policy means that all running pods (status.phase="Running"),
+                                  but not yet healthy are considered disrupted and can be evicted regardless
+                                  of whether the criteria in a PDB is met. This means perspective running
+                                  pods of a disrupted application might not get a chance to become healthy.
+                                  Healthy pods will be subject to the PDB for eviction.
+
+                                  Additional policies may be added in the future.
+                                  Clients making eviction decisions should disallow eviction of unhealthy pods
+                                  if they encounter an unrecognized policy in this field.
+
+                                  This field is beta-level. The eviction API uses this field when
+                                  the feature gate PDBUnhealthyPodEvictionPolicy is enabled (enabled by default).
+                                type: string
+                            type: object
+                            x-kubernetes-validations:
+                            - message: You can specify only one of maxUnavailable
+                                and minAvailable in a single PodDisruptionBudgetSpec.
+                              rule: (has(self.minAvailable) && !has(self.maxUnavailable))
+                                || (!has(self.minAvailable) && has(self.maxUnavailable))
+                        type: object
+                    type: object
                 type: object
                 x-kubernetes-validations:
                 - message: Extension not allowed for DataPlane
@@ -36086,7 +36294,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongcacertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -36142,6 +36350,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -36336,7 +36545,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -36398,6 +36607,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -36603,7 +36813,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongconsumergroups.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -36660,6 +36870,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -36854,7 +37065,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongconsumers.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -36936,6 +37147,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -37132,7 +37344,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongcredentialacls.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -37322,7 +37534,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongcredentialapikeys.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -37512,7 +37724,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongcredentialbasicauths.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -37706,7 +37918,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongcredentialhmacs.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -37902,7 +38114,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongcredentialjwts.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -38122,7 +38334,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongdataplaneclientcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -38180,6 +38392,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -38370,7 +38583,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongkeys.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -38422,6 +38635,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -38505,7 +38719,7 @@ spec:
                       This field is required when the Type is namespacedRef.
                     properties:
                       name:
-                        description: Name is the name of the KeySet object.
+                        description: Name is the name of the entity.
                         minLength: 1
                         type: string
                     required:
@@ -38695,7 +38909,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongkeysets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -38747,6 +38961,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -38944,7 +39159,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: konglicenses.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -39144,7 +39359,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongpluginbindings.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -39204,6 +39419,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -39553,7 +39769,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongplugininstallations.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -39736,7 +39952,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongplugins.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -40038,7 +40254,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongroutes.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -40091,6 +40307,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -40414,28 +40631,21 @@ spec:
         - spec
         type: object
         x-kubernetes-validations:
-        - message: serviceRef is required once set
-          rule: '!has(oldSelf.spec.serviceRef) || has(self.spec.serviceRef)'
         - message: If protocols has 'http', at least one of 'hosts', 'methods', 'paths'
             or 'headers' must be set
           rule: 'has(self.spec.protocols) && self.spec.protocols.exists(p, p == ''http'')
             ? (has(self.spec.hosts) || has(self.spec.methods) || has(self.spec.paths)
             || has(self.spec.paths) || has(self.spec.paths) || has(self.spec.headers)
             ) : true'
-        - message: Has to set either controlPlaneRef or serviceRef
-          rule: has(self.spec.controlPlaneRef) && !has(self.spec.serviceRef) || !has(self.spec.controlPlaneRef)
-            && has(self.spec.serviceRef)
         - message: spec.controlPlaneRef cannot specify namespace for namespaced resource
           rule: '(!has(self.spec.controlPlaneRef) || !has(self.spec.controlPlaneRef.konnectNamespacedRef))
             ? true : !has(self.spec.controlPlaneRef.konnectNamespacedRef.__namespace__)'
-        - message: spec.serviceRef is immutable when an entity is already Programmed
-          rule: '!has(self.spec.serviceRef) ? true : (!self.status.conditions.exists(c,
-            c.type == ''Programmed'' && c.status == ''True'')) ? true : oldSelf.spec.serviceRef
-            == self.spec.serviceRef'
+        - message: controlPlaneRef is required once set
+          rule: '!has(oldSelf.spec.controlPlaneRef) || has(self.spec.controlPlaneRef)'
         - message: spec.controlPlaneRef is immutable when an entity is already Programmed
-          rule: '!has(self.spec.controlPlaneRef) ? true :(!self.status.conditions.exists(c,
-            c.type == ''Programmed'' && c.status == ''True'')) ? true : oldSelf.spec.controlPlaneRef
-            == self.spec.controlPlaneRef'
+          rule: '(!has(self.spec) || !has(self.spec.controlPlaneRef)) ? true : (!has(self.status)
+            || !self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
+            == ''True'')) ? true : oldSelf.spec.controlPlaneRef == self.spec.controlPlaneRef'
     served: true
     storage: true
     subresources:
@@ -40446,7 +40656,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongservices.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -40511,6 +40721,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -40757,7 +40968,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongsnis.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -40945,7 +41156,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongtargets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -41008,6 +41219,7 @@ spec:
                 properties:
                   name:
                     description: Name is the name of the entity.
+                    minLength: 1
                     type: string
                 required:
                 - name
@@ -41138,7 +41350,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongupstreams.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -41200,6 +41412,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -41580,7 +41793,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: kongvaults.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -41664,6 +41877,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -41870,7 +42084,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: konnectapiauthconfigurations.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -42074,7 +42288,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: konnectcloudgatewaydataplanegroupconfigurations.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -42148,6 +42362,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -42300,8 +42515,12 @@ spec:
                         type: object
                       type: array
                     networkRef:
-                      description: NetworkRef is the reference to the network that
-                        this data-plane group will be deployed on.
+                      description: |-
+                        NetworkRef is the reference to the network that this data-plane group will be deployed on.
+
+                        Cross namespace references are not supported for networkRef of type namespacedRef.
+                        This will be enforced in the future but currently (due to limitation in CEL validation
+                        in Kubernetes 1.31 and older) it is not.
                       properties:
                         konnectID:
                           description: |-
@@ -42529,7 +42748,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: konnectcloudgatewaynetworks.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -42768,7 +42987,394 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
+  name: konnectcloudgatewaytransitgateways.konnect.konghq.com
+spec:
+  group: konnect.konghq.com
+  names:
+    categories:
+    - kong
+    kind: KonnectCloudGatewayTransitGateway
+    listKind: KonnectCloudGatewayTransitGatewayList
+    plural: konnectcloudgatewaytransitgateways
+    singular: konnectcloudgatewaytransitgateway
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: The Resource is Programmed on Konnect
+      jsonPath: .status.conditions[?(@.type=='Programmed')].status
+      name: Programmed
+      type: string
+    - description: The state the transit gateway is in
+      jsonPath: .status.state
+      name: State
+      type: string
+    - description: Konnect ID
+      jsonPath: .status.id
+      name: ID
+      type: string
+    - description: Network ID
+      jsonPath: .status.networkID
+      name: NetworkID
+      type: string
+    - description: Konnect Organization ID this resource belongs to.
+      jsonPath: .status.organizationID
+      name: OrgID
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KonnectCloudGatewayTransitGateway is the Schema for the Konnect
+          Transit Gateway API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec defines the desired state of KonnectCloudGatewayTransitGateway.
+            properties:
+              awsTransitGateway:
+                description: |-
+                  AWSTransitGateway is the configuration of an AWS transit gateway.
+                  Used when type is "AWS Transit Gateway".
+                properties:
+                  attachment_config:
+                    description: configuration to attach to AWS transit gateway on
+                      the AWS side.
+                    properties:
+                      ram_share_arn:
+                        description: RAMShareArn is the resource share ARN to verify
+                          request to create transit gateway attachment.
+                        type: string
+                      transit_gateway_id:
+                        description: TransitGatewayID is the AWS transit gateway ID
+                          to create attachment to.
+                        type: string
+                    required:
+                    - ram_share_arn
+                    - transit_gateway_id
+                    type: object
+                  cidr_blocks:
+                    description: |-
+                      CIDR blocks for constructing a route table for the transit gateway, when attaching to the owning
+                      network.
+                    items:
+                      type: string
+                    type: array
+                  dns_config:
+                    description: |-
+                      List of mappings from remote DNS server IP address sets to proxied internal domains, for a transit gateway
+                      attachment.
+                    items:
+                      description: TransitGatewayDNSConfig is the DNS configuration
+                        of a tansit gateway.
+                      properties:
+                        domain_proxy_list:
+                          description: |-
+                            DomainProxyList is the list of internal domain names to proxy for DNS resolution from the listed remote DNS server IP addresses,
+                            for a transit gateway.
+                          items:
+                            type: string
+                          type: array
+                        remote_dns_server_ip_addresses:
+                          description: RemoteDNSServerIPAddresses is the list of remote
+                            DNS server IP Addresses to connect to for resolving internal
+                            DNS via a transit gateway.
+                          items:
+                            type: string
+                          type: array
+                      type: object
+                    type: array
+                  name:
+                    description: Human-readable name of the transit gateway.
+                    maxLength: 120
+                    minLength: 1
+                    type: string
+                required:
+                - attachment_config
+                - cidr_blocks
+                - name
+                type: object
+              azureTransitGateway:
+                description: |-
+                  AzureTransitGateway is the configuration of an Azure transit gateway.
+                  Used when type is "Azure Transit Gateway".
+                properties:
+                  attachment_config:
+                    description: configuration to attach to Azure VNET peering gateway.
+                    properties:
+                      resource_group_name:
+                        description: ResourceGroupName is the resource group name
+                          for the Azure VNET Peering attachment.
+                        type: string
+                      subscription_id:
+                        description: SubscriptionID is the subscription ID for the
+                          Azure VNET Peering attachment.
+                        type: string
+                      tenant_id:
+                        description: TenantID is the tenant ID for the Azure VNET
+                          Peering attachment.
+                        type: string
+                      vnet_name:
+                        description: VnetName is the VNET Name for the Azure VNET
+                          Peering attachment.
+                        type: string
+                    required:
+                    - resource_group_name
+                    - subscription_id
+                    - tenant_id
+                    - vnet_name
+                    type: object
+                  dns_config:
+                    description: |-
+                      List of mappings from remote DNS server IP address sets to proxied internal domains, for a transit gateway
+                      attachment.
+                    items:
+                      description: TransitGatewayDNSConfig is the DNS configuration
+                        of a tansit gateway.
+                      properties:
+                        domain_proxy_list:
+                          description: |-
+                            DomainProxyList is the list of internal domain names to proxy for DNS resolution from the listed remote DNS server IP addresses,
+                            for a transit gateway.
+                          items:
+                            type: string
+                          type: array
+                        remote_dns_server_ip_addresses:
+                          description: RemoteDNSServerIPAddresses is the list of remote
+                            DNS server IP Addresses to connect to for resolving internal
+                            DNS via a transit gateway.
+                          items:
+                            type: string
+                          type: array
+                      type: object
+                    type: array
+                  name:
+                    description: Human-readable name of the transit gateway.
+                    maxLength: 120
+                    minLength: 1
+                    type: string
+                required:
+                - attachment_config
+                - name
+                type: object
+              networkRef:
+                description: NetworkRef is the schema for the NetworkRef type.
+                properties:
+                  konnectID:
+                    description: |-
+                      KonnectID is the schema for the KonnectID type.
+                      This field is required when the Type is konnectID.
+                    type: string
+                  namespacedRef:
+                    description: |-
+                      NamespacedRef is a reference to a KeySet entity inside the cluster.
+                      This field is required when the Type is namespacedRef.
+                    properties:
+                      name:
+                        description: Name is the name of the referred resource.
+                        maxLength: 253
+                        minLength: 1
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace is the namespace of the referred resource.
+
+                          For namespace-scoped resources if no Namespace is provided then the
+                          namespace of the parent object MUST be used.
+
+                          This field MUST not be set when referring to cluster-scoped resources.
+                        type: string
+                    required:
+                    - name
+                    type: object
+                  type:
+                    description: |-
+                      Type defines type of the object which is referenced. It can be one of:
+
+                      - konnectID
+                      - namespacedRef
+                    enum:
+                    - konnectID
+                    - namespacedRef
+                    type: string
+                required:
+                - type
+                type: object
+                x-kubernetes-validations:
+                - message: when type is namespacedRef, namespacedRef must be set
+                  rule: 'self.type == ''namespacedRef'' ? has(self.namespacedRef)
+                    : true'
+                - message: when type is namespacedRef, konnectID must not be set
+                  rule: 'self.type == ''namespacedRef'' ? !has(self.konnectID) : true'
+                - message: when type is konnectID, konnectID must be set
+                  rule: 'self.type == ''konnectID'' ? has(self.konnectID) : true'
+                - message: when type is konnectID, namespacedRef must not be set
+                  rule: 'self.type == ''konnectID'' ? !has(self.namespacedRef) : true'
+              type:
+                description: Type is the type of the Konnect transit gateway.
+                enum:
+                - AWSTransitGateway
+                - AzureTransitGateway
+                type: string
+            required:
+            - networkRef
+            - type
+            type: object
+            x-kubernetes-validations:
+            - message: only namespacedRef is supported currently
+              rule: self.networkRef.type == 'namespacedRef'
+            - message: spec.type is immutable
+              rule: self.type == oldSelf.type
+            - message: must set spec.awsTransitGateway when spec.type is 'AWSTransitGateway'
+              rule: 'self.type == ''AWSTransitGateway'' ? has(self.awsTransitGateway)
+                : true'
+            - message: must not set spec.awsTransitGateway when spec.type is not 'AWSTransitGateway'
+              rule: 'self.type != ''AWSTransitGateway'' ? !has(self.awsTransitGateway)
+                : true'
+            - message: must set spec.azureTransitGateway when spec.type is 'AzureTransitGateway'
+              rule: 'self.type == ''AzureTransitGateway'' ? has(self.azureTransitGateway)
+                : true'
+            - message: must not set spec.azureTransitGateway when spec.type is not
+                'AzureTransitGateway'
+              rule: 'self.type != ''AzureTransitGateway'' ? !has(self.azureTransitGateway)
+                : true'
+          status:
+            description: Status defines the observed state of KonnectCloudGatewayTransitGateway.
+            properties:
+              conditions:
+                default:
+                - lastTransitionTime: "1970-01-01T00:00:00Z"
+                  message: Waiting for controller
+                  reason: Pending
+                  status: Unknown
+                  type: Programmed
+                description: |-
+                  Conditions describe the current conditions of the KonnectCloudGatewayDataPlaneGroupConfiguration.
+
+                  Known condition types are:
+
+                  * "Programmed"
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                maxItems: 8
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              id:
+                description: |-
+                  ID is the unique identifier of the Konnect entity as assigned by Konnect API.
+                  If it's unset (empty string), it means the Konnect entity hasn't been created yet.
+                type: string
+              networkID:
+                description: NetworkID is the Konnect ID of the Konnect cloud gateway
+                  network this entity is associated with.
+                type: string
+              organizationID:
+                description: OrgID is ID of Konnect Org that this entity has been
+                  created in.
+                type: string
+              serverURL:
+                description: ServerURL is the URL of the Konnect server in which the
+                  entity exists.
+                type: string
+              state:
+                description: State is the state of the transit gateway on Konnect
+                  side.
+                type: string
+            type: object
+        required:
+        - spec
+        type: object
+        x-kubernetes-validations:
+        - message: spec.awsTransitGateway.name is immutable when transit gateway is
+            already Programmed
+          rule: '(!has(self.status) || !self.status.conditions.exists(c, c.type ==
+            ''Programmed'' && c.status == ''True'')) ? true : (!has(self.spec.awsTransitGateway)
+            ? true : oldSelf.spec.awsTransitGateway.name == self.spec.awsTransitGateway.name)'
+        - message: spec.azureTransitGateway.name is immutable when transit gateway
+            is already Programmed
+          rule: '(!has(self.status) || !self.status.conditions.exists(c, c.type ==
+            ''Programmed'' && c.status == ''True'')) ? true : (!has(self.spec.azureTransitGateway)
+            ? true : oldSelf.spec.azureTransitGateway.name == self.spec.azureTransitGateway.name)'
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    kubernetes-configuration.konghq.com/channels: gateway-operator
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: konnectextensions.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -42826,6 +43432,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
                     description: |-
@@ -42975,7 +43582,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: konnectextensions.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -43101,6 +43708,7 @@ spec:
                             description: |-
                               KonnectID is the schema for the KonnectID type.
                               This field is required when the Type is konnectID.
+                            pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                             type: string
                           konnectNamespacedRef:
                             description: |-
@@ -43399,7 +44007,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v1.3.0
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
   name: konnectgatewaycontrolplanes.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -43513,6 +44121,28 @@ spec:
                   type: object
                   x-kubernetes-map-type: atomic
                 type: array
+              mirror:
+                description: |-
+                  Mirror is the Konnect Mirror configuration.
+                  It is only applicable for ControlPlanes that are created as Mirrors.
+                properties:
+                  konnect:
+                    description: |-
+                      Konnect contains the KonnectID of the KonnectGatewayControlPlane that
+                      is mirrored.
+                    properties:
+                      id:
+                        description: |-
+                          ID is the ID of the Konnect entity. It can be set only in case
+                          the ControlPlane type is Mirror.
+                        pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - konnect
+                type: object
               name:
                 description: The name of the control plane.
                 type: string
@@ -43539,8 +44169,13 @@ spec:
                   - protocol
                   type: object
                 type: array
-            required:
-            - name
+              source:
+                default: Origin
+                description: Source represents the source type of the Konnect entity.
+                enum:
+                - Origin
+                - Mirror
+                type: string
             type: object
             x-kubernetes-validations:
             - message: spec.labels must not have more than 40 entries
@@ -43576,6 +44211,18 @@ spec:
             - message: cloud_gateway cannot be set for cluster_type 'CLUSTER_TYPE_K8S_INGRESS_CONTROLLER'
               rule: 'has(self.cluster_type) && self.cluster_type == ''CLUSTER_TYPE_K8S_INGRESS_CONTROLLER''
                 ? !has(self.cloud_gateway) : true'
+            - message: createControlPlaneRequest fields cannot be set for type Mirror
+              rule: 'self.source == ''Mirror'' ? !has(self.name) && !has(self.description)
+                && !has(self.cluster_type) && !has(self.auth_type) && !has(self.cloud_gateway)
+                && !has(self.proxy_urls) && !has(self.labels) : true'
+            - message: spec.source is immutable
+              rule: self.source == oldSelf.source
+            - message: mirror field must be set for type Mirror
+              rule: 'self.source == ''Mirror'' ? has(self.mirror) : true'
+            - message: mirror field cannot be set for type Origin
+              rule: 'self.source == ''Origin'' ? !has(self.mirror) : true'
+            - message: Name must be set for type Origin
+              rule: 'self.source == ''Origin'' ? has(self.name) : true'
           status:
             description: Status defines the observed state of KonnectGatewayControlPlane.
             properties:
@@ -43695,3 +44342,81 @@ spec:
     storage: true
     subresources:
       status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    kubernetes-configuration.konghq.com/channels: gateway-operator
+    kubernetes-configuration.konghq.com/version: v1.4.0-rc.0
+  name: watchnamespacegrants.gateway-operator.konghq.com
+spec:
+  group: gateway-operator.konghq.com
+  names:
+    kind: WatchNamespaceGrant
+    listKind: WatchNamespaceGrantList
+    plural: watchnamespacegrants
+    singular: watchnamespacegrant
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          WatchNamespaceGrant is a grant that allows a trusted namespace to watch
+          resources in the namespace this grant exists in.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec is the desired state of the WatchNamespaceGrant.
+            properties:
+              from:
+                description: |-
+                  From describes the trusted namespaces and kinds that can reference the
+                  namespace this grant exists in.
+                items:
+                  description: WatchNamespaceGrantFrom describes trusted namespaces.
+                  properties:
+                    group:
+                      description: Group is the group of the referent.
+                      enum:
+                      - gateway-operator.konghq.com
+                      type: string
+                    kind:
+                      description: Kind is the kind of the referent.
+                      enum:
+                      - ControlPlane
+                      type: string
+                    namespace:
+                      description: Namespace is the namespace of the referent.
+                      type: string
+                  required:
+                  - group
+                  - kind
+                  - namespace
+                  type: object
+                maxItems: 16
+                minItems: 1
+                type: array
+            required:
+            - from
+            type: object
+        type: object
+    served: true
+    storage: true
