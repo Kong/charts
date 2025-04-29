@@ -8,7 +8,7 @@ maintainers:
 name: gateway-operator
 sources:
   - https://github.com/Kong/charts/tree/main/charts/gateway-operator
-version: 0.5.7
+version: 0.5.8
 appVersion: "1.5"
 annotations:
   artifacthub.io/prerelease: "false"
@@ -25,6 +25,3 @@ dependencies:
   - name: gwapi-experimental-crds
     version: 1.2.1
     condition: gwapi-experimental-crds.enabled
-  - name: kubernetes-configuration-crds
-    version: 1.3.0
-    condition: kubernetes-configuration-crds.enabled
