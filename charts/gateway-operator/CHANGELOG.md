@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.8
+
+### Changed
+
+- Remove the `kubernetes-configuration` subchart. This subchart contained the same CRDs
+  as those that are already shipped with this chart.
+  [#1300](https://github.com/Kong/charts/pull/1300)
+
 ## 0.5.7
 
 ### Added
