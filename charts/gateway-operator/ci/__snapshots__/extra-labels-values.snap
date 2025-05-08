@@ -7,7 +7,7 @@ metadata:
   name: controller-manager
   namespace: default
 ---
-# Source: gateway-operator/templates/cluster-role-1.5.yaml
+# Source: gateway-operator/templates/cluster-role-1.6.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -329,6 +329,13 @@ rules:
   - update
   - watch
 - apiGroups:
+  - gateway-operator.konghq.com
+  resources:
+  - watchnamespacegrants
+  verbs:
+  - list
+  - watch
+- apiGroups:
   - gateway.networking.k8s.io
   resources:
   - backendtlspolicies
@@ -416,6 +423,7 @@ rules:
   - konnectapiauthconfigurations
   - konnectcloudgatewaydataplanegroupconfigurations
   - konnectcloudgatewaynetworks
+  - konnectcloudgatewaytransitgateways
   - konnectextensions
   - konnectgatewaycontrolplanes
   verbs:
@@ -433,6 +441,8 @@ rules:
   - konnectcloudgatewaydataplanegroupconfigurations/status
   - konnectcloudgatewaynetworks/finalizers
   - konnectcloudgatewaynetworks/status
+  - konnectcloudgatewaytransitgateways/finalizers
+  - konnectcloudgatewaytransitgateways/status
   - konnectextensions/finalizers
   - konnectextensions/status
   - konnectgatewaycontrolplanes/finalizers
@@ -486,6 +496,8 @@ rules:
   resources:
   - clusterrolebindings
   - clusterroles
+  - rolebindings
+  - roles
   verbs:
   - create
   - delete
@@ -494,15 +506,6 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-  - rbac.authorization.k8s.io
-  resources:
-  - rolebindings
-  - roles
-  verbs:
-  - create
-  - delete
-  - get
 ---
 # Source: gateway-operator/templates/rbac-resources.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -688,9 +691,9 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: gateway-operator
-    helm.sh/chart: gateway-operator-0.5.8
+    helm.sh/chart: gateway-operator-0.6.0
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "1.5"
+    app.kubernetes.io/version: "1.6"
     a: "b"
     app.kubernetes.io/component: kgo
   name: chartsnap-gateway-operator-controller-manager
@@ -711,13 +714,13 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: gateway-operator
-        helm.sh/chart: gateway-operator-0.5.8
+        helm.sh/chart: gateway-operator-0.6.0
         app.kubernetes.io/instance: "chartsnap"
-        app.kubernetes.io/version: "1.5"
+        app.kubernetes.io/version: "1.6"
         a: "b"
         app.kubernetes.io/component: kgo
         app: chartsnap-gateway-operator
-        version: "1.5"
+        version: "1.6"
     spec:
       containers:
       - name: manager
@@ -732,7 +735,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: "docker.io/kong/gateway-operator:1.5"
+        image: "docker.io/kong/gateway-operator:1.6"
         livenessProbe:
           httpGet:
             path: /healthz

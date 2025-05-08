@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0
+
+### Changes
+
+- Bump the operator's default version to 1.6.0, `kong/kubernetes-configuration` CRDs to 1.4.0 and
+  bump Gateway API CRDs to 1.3.0.
+  [#1307](https://github.com/Kong/charts/pull/1307)
+
 ## 0.5.8
 
 ### Changed
