@@ -629,6 +629,9 @@ ingressController:
     # timeoutSeconds: 10
 
   ingressClass: kong
+  # Check existence and create the `IngressClass` with given name in the cluster.
+  # You can set it to `false` to disable the creation of `IngressClass` if your user to run helm does not have the permission to create `IngressClass`es.
+  createIngressClass: true
   # annotations for IngressClass resource (Kubernetes 1.18+)
   ingressClassAnnotations: {}
 

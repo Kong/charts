@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+
+* Added `ingressController.createIngressClass` to enable/disable
+  creating the `IngressClass` in installing KIC.
+  [#1311](https://github.com/Kong/charts/pull/1311)
+
 ## 2.48.0
 
 ### Fixes
