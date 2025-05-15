@@ -1,0 +1,155 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ template "kong.fullname" . }}-leader-election-role
+  namespace: {{ template "kong.namespace" . }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: {{ template "kong.fullname" . }}-kong-mtls-secret-role
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - create
+      - patch
+      - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "kong.fullname" . }}-metrics-reader
+rules:
+  - nonResourceURLs:
+      - /metrics
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "kong.fullname" . }}-proxy-role
+rules:
+  - apiGroups:
+      - authentication.k8s.io
+    resources:
+      - tokenreviews
+    verbs:
+      - create
+  - apiGroups:
+      - authorization.k8s.io
+    resources:
+      - subjectaccessreviews
+    verbs:
+      - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "kong.fullname" . }}-leader-election-rolebinding
+  namespace: {{ template "kong.namespace" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ template "kong.fullname" . }}-leader-election-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "kong.serviceAccountName" . }}
+    namespace: {{ template "kong.namespace" . }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "kong.fullname" . }}-kong-mtls-secret-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "kong.fullname" . }}-kong-mtls-secret-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "kong.serviceAccountName" . }}
+    namespace: {{ template "kong.namespace" . }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "kong.fullname" . }}-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "kong.fullname" . }}-manager-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "kong.serviceAccountName" . }}
+    namespace: {{ template "kong.namespace" . }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ template "kong.fullname" . }}-proxy-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "kong.fullname" . }}-proxy-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "kong.serviceAccountName" . }}
+    namespace: {{ template "kong.namespace" . }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: {{ template "kong.fullname" . }}-metrics-service
+  namespace: {{ template "kong.namespace" . }}
+spec:
+  ports:
+    - name: https
+      port: 8443
+      protocol: TCP
+{{ if (semverCompare "< 1.5.0" (include "kong.effectiveVersion" .)) }}
+      targetPort: https
+{{- else }}
+      targetPort: metrics
+{{- end }}
+  selector:
+    control-plane: controller-manager
