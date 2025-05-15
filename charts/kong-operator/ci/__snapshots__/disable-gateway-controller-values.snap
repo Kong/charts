@@ -1,0 +1,878 @@
+# chartsnap: snapshot_version=v3
+---
+# Source: kong-operator/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: controller-manager
+  namespace: default
+---
+# Source: kong-operator/templates/cluster-role-1.6.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: chartsnap-kong-operator-manager-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - serviceaccounts
+  - services
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets/finalizers
+  verbs:
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - services/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - validatingwebhookconfigurations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - watch
+- apiGroups:
+  - cert-manager.io
+  resources:
+  - certificates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - ingressclassparameterses
+  - kongclusterplugins
+  - kongcustomentities
+  - kongingresses
+  - konglicenses
+  - kongupstreampolicies
+  - tcpingresses
+  - udpingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongcacertificates
+  - kongcertificates
+  - kongconsumergroups
+  - kongconsumers
+  - kongdataplaneclientcertificates
+  - kongkeys
+  - kongkeysets
+  - kongservices
+  - kongsnis
+  - kongtargets
+  - kongupstreams
+  - kongvaults
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongcacertificates/finalizers
+  - kongcacertificates/status
+  - kongcertificates/finalizers
+  - kongcertificates/status
+  - kongconsumergroups/finalizers
+  - kongconsumers/finalizers
+  - kongcredentialacls/finalizers
+  - kongcredentialacls/status
+  - kongcredentialapikeys/finalizers
+  - kongcredentialapikeys/status
+  - kongcredentialbasicauths/finalizers
+  - kongcredentialbasicauths/status
+  - kongcredentialhmacs/finalizers
+  - kongcredentialhmacs/status
+  - kongcredentialjwts/finalizers
+  - kongcredentialjwts/status
+  - kongdataplaneclientcertificates/finalizers
+  - kongdataplaneclientcertificates/status
+  - kongkeys/finalizers
+  - kongkeys/status
+  - kongkeysets/finalizers
+  - kongkeysets/status
+  - kongpluginbindings/status
+  - kongroutes/finalizers
+  - kongroutes/status
+  - kongservices/finalizers
+  - kongservices/status
+  - kongsnis/finalizers
+  - kongsnis/status
+  - kongtargets/finalizers
+  - kongtargets/status
+  - kongupstreams/finalizers
+  - kongupstreams/status
+  - kongvaults/finalizers
+  verbs:
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongclusterplugins/status
+  - kongconsumergroups/status
+  - kongconsumers/status
+  - kongcustomentities/status
+  - kongingresses/status
+  - konglicenses/status
+  - kongplugins/status
+  - kongupstreampolicies/status
+  - kongvaults/status
+  - tcpingresses/status
+  - udpingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongcredentialacls
+  - kongcredentialapikeys
+  - kongcredentialbasicauths
+  - kongcredentialhmacs
+  - kongcredentialjwts
+  - kongpluginbindings
+  - kongplugins
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - configuration.konghq.com
+  resources:
+  - kongroutes
+  verbs:
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway-operator.konghq.com
+  resources:
+  - aigateways
+  - controlplanes
+  - dataplanes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - gateway-operator.konghq.com
+  resources:
+  - aigateways/finalizers
+  - controlplanes/finalizers
+  - dataplanes/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - gateway-operator.konghq.com
+  resources:
+  - aigateways/status
+  - controlplanes/status
+  - dataplanes/status
+  - kongplugininstallations/status
+  - konnectextensions/finalizers
+  - konnectextensions/status
+  verbs:
+  - patch
+  - update
+- apiGroups:
+  - gateway-operator.konghq.com
+  resources:
+  - controlplane
+  - dataplanemetricsextensions
+  - gatewayconfigurations
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway-operator.konghq.com
+  resources:
+  - kongplugininstallations
+  - konnectextensions
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - gateway-operator.konghq.com
+  resources:
+  - watchnamespacegrants
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - backendtlspolicies
+  - gatewayclasses
+  - grpcroutes
+  - referencegrants
+  - tcproutes
+  - tlsroutes
+  - udproutes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - backendtlspolicies/status
+  verbs:
+  - patch
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - gatewayclasses/status
+  - gateways/status
+  - grpcroutes/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - gateways
+  - httproutes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - gateways/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - httproutes/status
+  - tcproutes/status
+  - tlsroutes/status
+  - udproutes/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - gateway.networking.k8s.io
+  resources:
+  - referencegrants/status
+  verbs:
+  - get
+- apiGroups:
+  - incubator.ingress-controller.konghq.com
+  resources:
+  - kongservicefacades
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - incubator.ingress-controller.konghq.com
+  resources:
+  - kongservicefacades/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - konnect.konghq.com
+  resources:
+  - konnectapiauthconfigurations
+  - konnectcloudgatewaydataplanegroupconfigurations
+  - konnectcloudgatewaynetworks
+  - konnectcloudgatewaytransitgateways
+  - konnectextensions
+  - konnectgatewaycontrolplanes
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - konnect.konghq.com
+  resources:
+  - konnectapiauthconfigurations/finalizers
+  - konnectapiauthconfigurations/status
+  - konnectcloudgatewaydataplanegroupconfigurations/finalizers
+  - konnectcloudgatewaydataplanegroupconfigurations/status
+  - konnectcloudgatewaynetworks/finalizers
+  - konnectcloudgatewaynetworks/status
+  - konnectcloudgatewaytransitgateways/finalizers
+  - konnectcloudgatewaytransitgateways/status
+  - konnectextensions/finalizers
+  - konnectextensions/status
+  - konnectgatewaycontrolplanes/finalizers
+  - konnectgatewaycontrolplanes/status
+  verbs:
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingressclasses
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - networkpolicies
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterrolebindings
+  - clusterroles
+  - rolebindings
+  - roles
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+# Source: kong-operator/templates/rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: chartsnap-kong-operator-kong-mtls-secret-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - create
+  - patch
+  - update
+---
+# Source: kong-operator/templates/rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: chartsnap-kong-operator-metrics-reader
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+# Source: kong-operator/templates/rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: chartsnap-kong-operator-proxy-role
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+# Source: kong-operator/templates/rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: chartsnap-kong-operator-kong-mtls-secret-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: chartsnap-kong-operator-kong-mtls-secret-role
+subjects:
+- kind: ServiceAccount
+  name: controller-manager
+  namespace: default
+---
+# Source: kong-operator/templates/rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: chartsnap-kong-operator-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: chartsnap-kong-operator-manager-role
+subjects:
+- kind: ServiceAccount
+  name: controller-manager
+  namespace: default
+---
+# Source: kong-operator/templates/rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: chartsnap-kong-operator-proxy-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: chartsnap-kong-operator-proxy-role
+subjects:
+- kind: ServiceAccount
+  name: controller-manager
+  namespace: default
+---
+# Source: kong-operator/templates/rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: chartsnap-kong-operator-leader-election-role
+  namespace: default
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+# Source: kong-operator/templates/rbac-resources.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: chartsnap-kong-operator-leader-election-rolebinding
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: chartsnap-kong-operator-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: controller-manager
+  namespace: default
+---
+# Source: kong-operator/templates/rbac-resources.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: chartsnap-kong-operator-metrics-service
+  namespace: default
+spec:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: metrics
+  selector:
+    control-plane: controller-manager
+---
+# Source: kong-operator/templates/services.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: kgo
+  name: chartsnap-kong-operator
+  namespace: default
+spec:
+  ports:
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  selector:
+    app.kubernetes.io/component: kgo
+---
+# Source: kong-operator/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: kong-operator
+    helm.sh/chart: kong-operator-0.0.1
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/version: "2.0.0-alpha.0"
+    app.kubernetes.io/component: kgo
+  name: chartsnap-kong-operator-controller-manager
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kong-operator
+      app.kubernetes.io/component: kgo
+      app.kubernetes.io/instance: "chartsnap"
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: manager
+      labels:
+        control-plane: controller-manager
+        app.kubernetes.io/name: kong-operator
+        helm.sh/chart: kong-operator-0.0.1
+        app.kubernetes.io/instance: "chartsnap"
+        app.kubernetes.io/version: "2.0.0-alpha.0"
+        app.kubernetes.io/component: kgo
+        app: chartsnap-kong-operator
+        version: "2.0.0-alpha.0"
+    spec:
+      containers:
+      - name: manager
+        env:
+        - name: GATEWAY_OPERATOR_ANONYMOUS_REPORTS
+          value: "false"
+        - name: GATEWAY_OPERATOR_ENABLE_GATEWAY_CONTROLLER
+          value: "false"
+        - name: GATEWAY_OPERATOR_HEALTH_PROBE_BIND_ADDRESS
+          value: ":8081"
+        - name: GATEWAY_OPERATOR_METRICS_BIND_ADDRESS
+          value: "0.0.0.0:8080"
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: "docker.io/kong/gateway-operator:1.6"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 10m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
+        ports:
+        - containerPort: 8081
+          name: probe
+          protocol: TCP
+        - containerPort: 8080
+          name: metrics
+          protocol: TCP
+        volumeMounts:
+        - name: chartsnap-kong-operator-certs-dir
+          mountPath: /tmp/k8s-webhook-server/serving-certs
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: controller-manager
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: chartsnap-kong-operator-certs-dir
+        emptyDir:
+          sizeLimit: 256Mi
+---
+# Source: kong-operator/templates/validation-policy-dataplane.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: ports.dataplane.gateway-operator.konghq.com
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - "gateway-operator.konghq.com"
+      apiVersions:
+      - "v1beta1"
+      operations:
+      - "CREATE"
+      - "UPDATE"
+      resources:
+      - "dataplanes"
+  variables:
+  - name: ingressPorts
+    expression: object.spec.network.services.ingress.ports
+  - name: podTemplateSpec
+    expression: object.spec.deployment.podTemplateSpec
+  - name: proxyContainers
+    expression: |
+      variables.podTemplateSpec.spec.containers.filter(c, c.name == 'proxy')
+  - name: proxyContainer
+    expression: |
+      variables.proxyContainers.size() > 0 ?
+        variables.proxyContainers[0] :
+        null
+  - name: envFilteredPortMaps
+    expression: |
+      variables.proxyContainer.env.filter(e, e.name == "KONG_PORT_MAPS")
+  - name: envFilteredProxyListen
+    expression: |
+      variables.proxyContainer.env.filter(e, e.name == "KONG_PROXY_LISTEN")
+  - name: envPortMaps
+    expression: |
+      variables.envFilteredPortMaps.size() > 0 ? variables.envFilteredPortMaps[0].value : null
+  - name: envProxyListen
+    expression: |
+      variables.envFilteredProxyListen.size() > 0 ? variables.envFilteredProxyListen[0].value : null
+  # NOTE: Rules below do not validate the ports from the spec.network.services.ingress.ports
+  # when no KONG_PORT_MAPS or KONG_PROXY_LISTEN env variables are present in the proxy container.
+  # This has been the case before the introduction of validating admission policies so we are keeping
+  # the same behavior.
+
+  # Using string functions from: https://pkg.go.dev/github.com/google/cel-go/ext
+  validations:
+  - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PORT_MAPS env'"
+    expression: |
+      !has(object.spec.network) ||
+      !has(object.spec.network.services) ||
+      !has(object.spec.network.services.ingress) ||
+      !has(object.spec.network.services.ingress.ports) ||
+      !has(variables.proxyContainer.env) ||
+      variables.envPortMaps == null ||
+      (
+        variables.ingressPorts.all(p, variables.envPortMaps.
+                  split(",").
+                  exists(pm,
+                      pm.split(":")[1].trim() == string(p.targetPort)
+                      )
+                  )
+      )
+    reason: Invalid
+  - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PROXY_LISTEN env'"
+    expression: |
+      !has(object.spec.network) ||
+      !has(object.spec.network.services) ||
+      !has(object.spec.network.services.ingress) ||
+      !has(object.spec.network.services.ingress.ports) ||
+      !has(variables.proxyContainer.env) ||
+      variables.envProxyListen == null ||
+      (
+        variables.ingressPorts.all(p, variables.envProxyListen.
+                  split(",").
+                  exists(pm,
+                    pm.trim().split(" ")[0].split(":")[1].trim() == string(p.targetPort)
+                    )
+                  )
+      )
+    reason: Invalid
+---
+# Source: kong-operator/templates/validation-policy-dataplane.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: binding-ports.dataplane.gateway-operator.konghq.com
+spec:
+  policyName: ports.dataplane.gateway-operator.konghq.com
+  validationActions:
+  - Deny
