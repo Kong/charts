@@ -1,0 +1,5 @@
+apiVersion: v2
+name: gwapi-standard-crds
+version: 1.2.1
+appVersion: "1.2.1"
+description: A Helm chart for Kubernetes Gateway API standard channel's CRDs

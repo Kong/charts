@@ -1,0 +1,8 @@
+{{ template "kong.fullname" . }} has been installed. Check its status by running:
+
+  kubectl --namespace {{ template "kong.namespace" . }}  get pods
+
+For more details, please refer to the following documents:
+
+* https://docs.konghq.com/gateway-operator/latest/get-started/kic/create-gateway/
+* https://docs.konghq.com/gateway-operator/latest/get-started/konnect/deploy-data-plane-with-konnectextension/
