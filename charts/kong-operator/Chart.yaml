@@ -12,16 +12,13 @@ version: 0.0.1
 appVersion: "2.0.0-alpha.0"
 annotations:
   artifacthub.io/prerelease: "true"
-
 dependencies:
   - name: kic-crds
-    # This is the kubernetes-configuration repository version as KIC CRDs have been
-    # moved there.
     version: 1.2.0
     condition: kic-crds.enabled
   - name: gwapi-standard-crds
-    version: 1.2.1
+    version: 1.3.0
     condition: gwapi-standard-crds.enabled
   - name: gwapi-experimental-crds
-    version: 1.2.1
+    version: 1.3.0
     condition: gwapi-experimental-crds.enabled

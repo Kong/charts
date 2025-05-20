@@ -4,8 +4,6 @@ This sub-chart contains Gateway API experimental CRDs, allowing users to control
 
 ## How to update
 
-In order to update this with new version CRDs run:
+This sub-chart is generated from the upstream Gateway API project.
 
-```
-kustomize build github.com/kubernetes-sigs/gateway-api/config/crd/experimental\?ref=${VERSION} > crds/gwapi-crds.yaml
-```
+`Makefile` target `manifests.charts.kong-operator.crds.gwapi-experimental` ensures that it's up to date.
