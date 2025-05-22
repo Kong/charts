@@ -20,7 +20,7 @@ permissions:
 env:
   # Specify this here because these tests rely on ktf to run kind for cluster creation.
   # renovate: datasource=github-releases depName=kubernetes-sigs/kind
-  KIND_VERSION: "0.28.0"
+  KIND_VERSION: "0.29.0"
 
 jobs:
   ensure-actions-sha-pin:
