@@ -786,8 +786,10 @@ postgresql:
 certificates:
   enabled: false
 
-  # Set the certificate timers or leave on default 15 days and 90d days
+  # Set the certificate timers or leave on the default value
+  # Default is 15 days
   renewBefore: "360h0m0s"
+  # Default is 90d days
   duration: "2160h0m0s"
   # Set either `issuer` or `clusterIssuer` to the name of the desired cert manager issuer
   # If left blank a built in self-signed issuer will be created and utilized
