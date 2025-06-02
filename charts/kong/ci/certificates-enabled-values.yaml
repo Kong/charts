@@ -1,9 +1,9 @@
+certificates:
+  enabled: true
+
 ingressController:
   env:
     anonymous_reports: "false"
-  image:
-    repository: kong/kubernetes-ingress-controller
-    tag: "3.4"
 
 # NOTE: The purpose of those values below is to:
 # - to speed up, the test
