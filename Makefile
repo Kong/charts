@@ -93,6 +93,7 @@ export GOLDEN_TEST_FAILURE_MSG
 _chartsnap: _chartsnap.deps
 	helm chartsnap -c ./charts/$(CHART) -f ./charts/$(CHART)/ci/ $(CHARTSNAP_ARGS) \
 		-- \
+		--api-versions cert-manager.io/v1 \
 		--api-versions gateway.networking.k8s.io/v1 \
 		--api-versions admissionregistration.k8s.io/v1/ValidatingAdmissionPolicy \
 		--api-versions admissionregistration.k8s.io/v1/ValidatingAdmissionPolicyBinding
