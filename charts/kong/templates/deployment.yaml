@@ -89,6 +89,13 @@ spec:
       {{- range .Values.image.pullSecrets }}
         - name: {{ . }}
       {{- end }}
+      {{- else }}
+      {{- if and .Values.ingressController.enabled .Values.ingressController.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.ingressController.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
       {{- end }}
       {{- if .Values.deployment.kong.enabled }}
       initContainers:
