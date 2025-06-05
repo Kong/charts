@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.49.0
 
 ### Changes
 
