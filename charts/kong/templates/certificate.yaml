@@ -4,6 +4,8 @@
 {{- $_ := set $genericCertificateConfig "fullName" (include "kong.fullname" .) -}}
 {{- $_ := set $genericCertificateConfig "namespace" (include "kong.namespace" .) -}}
 {{- $_ := set $genericCertificateConfig "metaLabels" (include "kong.metaLabels" .) -}}
+{{- $_ := set $genericCertificateConfig "globalRenewBefore" .Values.certificates.renewBefore -}}
+{{- $_ := set $genericCertificateConfig "globalDuration" .Values.certificates.duration -}}
 {{- $_ := set $genericCertificateConfig "globalIssuer" .Values.certificates.issuer -}}
 {{- $_ := set $genericCertificateConfig "globalClusterIssuer" .Values.certificates.clusterIssuer -}}
 {{- $_ := set $genericCertificateConfig "globalSubject" .Values.certificates.subject -}}
@@ -53,8 +55,8 @@ spec:
   {{- range (append .dnsNames .commonName) }}
   - {{ . | quote }}
   {{- end }}
-  renewBefore: 360h0m0s
-  duration: 2160h0m0s
+  renewBefore: {{ .globalRenewBefore }}
+  duration: {{ .globalDuration }}
   {{ if .subject -}}
   subject:
     {{- toYaml .subject | nindent 4 }}

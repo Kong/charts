@@ -1,0 +1,17 @@
+# Enable cert-manager integration with custom timers
+certificates:
+  enabled: true
+  # Test with 7 days
+  renewBefore: "168h0m0s"
+  # Test with 77 days
+  duration: "1848h0m0s"
+
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"
