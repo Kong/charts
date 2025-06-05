@@ -7,7 +7,13 @@
 * Added `ingressController.createIngressClass` to enable/disable
   creating the `IngressClass` in installing KIC.
   [#1311](https://github.com/Kong/charts/pull/1311)
-* Added support for setting `.Values.certificates.renewBefore` and `.Values.certificates.duration` timers to custom values.
+* Added support for setting `.Values.certificates.renewBefore` and
+  `.Values.certificates.duration` timers to custom values.
+  [#1305](https://github.com/Kong/charts/pull/1305)
+* Added `ingressController.image.pullSecrets` to set image pull secrets
+  for the KIC deployment. The value is not effective when the top level
+  `image.pullSecrets` is present.
+  [#1323](https://github.com/Kong/charts/pull/1323)
 
 ## 2.48.0
 
