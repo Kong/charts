@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.20.0
+
+- Bumped dependencies on `kong/kong` chart to `==2.49.0`. Review the [kong chart
+  changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md#2480)
+  for details.
+
+
 ## 0.19.0
 
 - Bumped dependencies on `kong/kong` chart to `==2.48.0`. Review the [kong chart
@@ -98,7 +105,7 @@
 
 - Bumped dependencies on `kong/kong` chart to `>=2.37.1`. This includes a fix for
   controller's status port being scraped by Prometheus unnecessarily.
-  [#1013](
+  [#1013]
 
 ## 0.11.0
 
