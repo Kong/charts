@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+
+- Add support for pod annotations in the gateway-operator chart.
+[#1326](https://github.com/Kong/charts/pull/1326)
+
 ## 0.6.0
 
 ### Changes
