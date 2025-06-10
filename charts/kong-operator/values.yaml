@@ -37,6 +37,9 @@ extraLabels: {}
 # Labels to be added to KGO pods
 podLabels: {}
 
+# Annotations to be added to KGO pods
+podAnnotations: {}
+
 # Install KIC's CRDs
 kic-crds:
   enabled: true

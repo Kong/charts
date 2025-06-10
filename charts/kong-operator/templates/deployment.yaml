@@ -21,6 +21,9 @@ spec:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
+        {{- with .Values.podAnnotations }}
+        {{- include "kong.renderTpl" (dict "value" . "context" $) | nindent 8 }}
+        {{- end }}
       labels:
         control-plane: controller-manager
         {{- include "kong.metaLabels" . | nindent 8 }}
