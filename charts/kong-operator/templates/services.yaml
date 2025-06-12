@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/component: kgo
+    app.kubernetes.io/component: ko
   name: {{ template "kong.fullname" . }}
   namespace:  {{ template "kong.namespace" . }}
 spec:
@@ -12,4 +12,4 @@ spec:
     protocol: TCP
     targetPort: https
   selector:
-    app.kubernetes.io/component: kgo
+    app.kubernetes.io/component: ko

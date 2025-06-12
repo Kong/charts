@@ -673,7 +673,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app.kubernetes.io/component: kgo
+    app.kubernetes.io/component: ko
   name: chartsnap-kong-operator
   namespace: default
 spec:
@@ -683,7 +683,7 @@ spec:
     protocol: TCP
     targetPort: https
   selector:
-    app.kubernetes.io/component: kgo
+    app.kubernetes.io/component: ko
 ---
 # Source: kong-operator/templates/deployment.yaml
 apiVersion: apps/v1
@@ -693,8 +693,8 @@ metadata:
     app.kubernetes.io/name: kong-operator
     helm.sh/chart: kong-operator-0.0.1
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0-alpha.0"
-    app.kubernetes.io/component: kgo
+    app.kubernetes.io/version: "2.0.0-alpha.1"
+    app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-controller-manager
   namespace: default
 spec:
@@ -702,7 +702,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: kong-operator
-      app.kubernetes.io/component: kgo
+      app.kubernetes.io/component: ko
       app.kubernetes.io/instance: "chartsnap"
   strategy:
     type: Recreate
@@ -715,10 +715,10 @@ spec:
         app.kubernetes.io/name: kong-operator
         helm.sh/chart: kong-operator-0.0.1
         app.kubernetes.io/instance: "chartsnap"
-        app.kubernetes.io/version: "2.0.0-alpha.0"
-        app.kubernetes.io/component: kgo
+        app.kubernetes.io/version: "2.0.0-alpha.1"
+        app.kubernetes.io/component: ko
         app: chartsnap-kong-operator
-        version: "2.0.0-alpha.0"
+        version: "2.0.0-alpha.1"
     spec:
       imagePullSecrets:
       - name: myRegistryKeySecretName
@@ -735,7 +735,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: "docker.io/kong/gateway-operator:1.6"
+        image: "docker.io/kong/kong-operator:2.0.0-alpha.1"
         livenessProbe:
           httpGet:
             path: /healthz

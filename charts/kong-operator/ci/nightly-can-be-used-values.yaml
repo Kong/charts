@@ -1,5 +1,5 @@
 image:
-  repository: docker.io/kong/nightly-gateway-operator-oss
+  repository: docker.io/kong/nightly-kong-operator
   # NOTE: this tests that the missing effectiveSemver field is handled correctly.
   tag: "nightly"
 
