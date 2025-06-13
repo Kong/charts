@@ -531,15 +531,9 @@ The name of the Service which will be used by the controller to update the Ingre
   {{- fail "ingressController.gatewayDiscovery.enabled has to be true when ingressController.konnect.enabled"}}
   {{- end }}
 
-  {{- $konnect := .Values.ingressController.konnect -}}
+  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_CONTROL_PLANE_ID" (include "kong.ingress.konnect.controlPlaneID" .) -}}
 
-  {{- if $konnect.controlPlaneID }}
-  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_CONTROL_PLANE_ID" $konnect.controlPlaneID -}}
-  {{- else if $konnect.runtimeGroupID }}
-  {{- $_ = set $autoEnv "CONTROLLER_KONNECT_CONTROL_PLANE_ID" $konnect.runtimeGroupID -}}
-  {{- else }}
-  {{- fail "At least one of konnect.controlPlaneID or konnect.runtimeGroupID must be set." -}}
-  {{- end }}
+  {{- $konnect := .Values.ingressController.konnect -}}
 
   {{- $_ = set $autoEnv "CONTROLLER_KONNECT_SYNC_ENABLED" true -}}
   {{- $_ = set $autoEnv "CONTROLLER_KONNECT_ADDRESS" (printf "https://%s" .Values.ingressController.konnect.apiHostname) -}}
@@ -1310,6 +1304,17 @@ role sets used in the charts. Updating these requires separating out cluster
 resource roles into their separate templates.
 */}}
 {{- define "kong.kubernetesRBACRules" -}}
+{{- if and (.Values.ingressController.konnect.license.enabled) (semverCompare ">= 3.5.0" (include "kong.effectiveVersion" .Values.ingressController.image))}}
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  resourceNames:
+  - konnect-license-{{template "kong.ingress.konnect.controlPlaneID" .}}
+  verbs:
+  - get
+  - update
+{{- end }}
 {{- if (semverCompare ">= 3.4.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
 - apiGroups:
   - ""
@@ -1876,4 +1881,16 @@ envFrom:
 {{- toYaml . | nindent 2 -}}
   {{- else -}}
   {{- end -}}
+{{- end -}}
+
+{{- define "kong.ingress.konnect.controlPlaneID" -}}
+{{- if .Values.ingressController.konnect.enabled -}}
+{{- if .Values.ingressController.konnect.controlPlaneID -}}
+{{ .Values.ingressController.konnect.controlPlaneID }}
+{{- else if .Values.ingressController.konnect.runtimeGroupID -}}
+{{ .Values.ingressController.konnect.runtimeGroupID }}
+{{- else -}}
+{{- fail "At least one of konnect.controlPlaneID or konnect.runtimeGroupID must be set." -}}
+{{- end -}}
+{{- end -}}
 {{- end -}}

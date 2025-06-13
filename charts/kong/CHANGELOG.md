@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+
+* Create `Secret` `konnect-license-<cpID>` and set RBAC permission of `get`
+  and `update` of the KIC deployment when `ingressController.konnect.license.enabled`
+  is set to `true` to enable the synchronization of license with Konnect.
+  [#1331](https://github.com/Kong/charts/pull/1331)
+
 ## 2.49.0
 
 ### Changes
