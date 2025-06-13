@@ -52,7 +52,7 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 
 {{- define "kong.selectorLabels" -}}
 app.kubernetes.io/name: {{ template "kong.name" . }}
-app.kubernetes.io/component: kgo
+app.kubernetes.io/component: ko
 app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end -}}
 

@@ -1,8 +1,6 @@
 image:
-  ## TODO: Use docker.io/kong/kong-operator when that becomes available
-  ## https://github.com/Kong/gateway-operator/issues/1598
-  repository: docker.io/kong/gateway-operator
-  tag: "1.6"
+  repository: docker.io/kong/kong-operator
+  tag: "2.0.0-alpha.1"
   # Optionally set a semantic version for version-gated features. This can normally
   # be left unset. You only need to set this if your tag is not a semver string,
   # such as when you are using a "next" tag. Set this to the effective semantic
@@ -15,47 +13,35 @@ image:
   ##
   # pullSecrets:
   #   - myRegistrKeySecretName
+# Override namespace for gateway-operator chart resources. By default, the chart creates resources in the release namespace.
 
- # Override namespace for gateway-operator chart resources. By default, the chart creates resources in the release namespace.
 # namespace: kong-system
-
 replicaCount: 1
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: controller-manager
-
 test:
   enabled: false
-
 # This section can be used to configure some extra labels that will be added to each Kubernetes object generated.
 extraLabels: {}
-
 # Labels to be added to KGO pods
 podLabels: {}
-
 # Annotations to be added to KGO pods
 podAnnotations: {}
-
 # Install KIC's CRDs
 kic-crds:
   enabled: true
-
 # Install Gateway API standard CRDs
 gwapi-standard-crds:
   enabled: true
-
 # Install Gateway API experimental CRDs
 gwapi-experimental-crds:
   enabled: false
-
 affinity: {}
-
 tolerations: []
-
 # Customize gateway-operator livenessProbe.
 livenessProbe:
   httpGet:
@@ -70,7 +56,6 @@ readinessProbe:
     port: 8081
   initialDelaySeconds: 5
   periodSeconds: 10
-
 # Use this section to customize the requests and limits of gateway-operator
 resources:
   limits:
@@ -79,25 +64,24 @@ resources:
   requests:
     cpu: 10m
     memory: 128Mi
-
 # Use this section to add environment variables to operator's container
 # NOTE: This is mutually exclusive with the args sections.
 # When both an env and a corresponding arg are provided, the arg will take precedence.
 env: {}
-  # # gateway controller
-  # enable_controller_gateway: true
-  # # controlPlane controller
-  # enable_controller_controlplane: true
-  # # dataplane controller. mutually exclusive with dataplane bluegreen controller
-  # enable_controller_dataplane: true
-  # # dataplane bluegreen controller. mutually exclusive with dataplane controller
-  # enable_controller_dataplane_bluegreen: true
-  # # aigateway controller. (experimental)
-  # enable_controller_aigateway: false
-  # # konglicense controller. (EE only)
-  # enable_controller_konglicense: true
-  # # controlplane extensions controller. (EE only)
-  # enable_controller_controlplaneextensions: true
+# # gateway controller
+# enable_controller_gateway: true
+# # controlPlane controller
+# enable_controller_controlplane: true
+# # dataplane controller. mutually exclusive with dataplane bluegreen controller
+# enable_controller_dataplane: true
+# # dataplane bluegreen controller. mutually exclusive with dataplane controller
+# enable_controller_dataplane_bluegreen: true
+# # aigateway controller. (experimental)
+# enable_controller_aigateway: false
+# # konglicense controller.
+# enable_controller_konglicense: true
+# # controlplane extensions controller.
+# enable_controller_controlplaneextensions: true
 
 # This section is any customer specific environments variables that doesn't require CONTROLLER_ prefix.
 # Example as below, uncomment if required and add additional attributes as required.
@@ -109,11 +93,9 @@ env: {}
 # NOTE: This is mutually exclusive with the env and customEnv sections.
 # When both an env and a corresponding arg are provided, the arg will take precedence.
 args: []
-
 # Use this section to change the certs-dir emptyDir size
 certsDir:
   sizeLimit: 256Mi
-
 # Override the default deployment selector labels. This is useful if you don't want
 # to use the defaults or are migrating to this chart and want to use existing labels.
 # selectorLabels: []

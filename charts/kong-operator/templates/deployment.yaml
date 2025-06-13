@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
-    app.kubernetes.io/component: kgo
+    app.kubernetes.io/component: ko
   name: {{ template "kong.fullname" . }}-controller-manager
   namespace:  {{ template "kong.namespace" . }}
 spec:
@@ -27,7 +27,7 @@ spec:
       labels:
         control-plane: controller-manager
         {{- include "kong.metaLabels" . | nindent 8 }}
-        app.kubernetes.io/component: kgo
+        app.kubernetes.io/component: ko
         app: {{ template "kong.fullname" . }}
         version: {{ .Chart.AppVersion | quote }}
         {{- if .Values.podLabels }}
