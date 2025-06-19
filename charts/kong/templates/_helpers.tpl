@@ -1314,6 +1314,12 @@ resource roles into their separate templates.
   verbs:
   - get
   - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
 {{- end }}
 {{- if (semverCompare ">= 3.4.0" (include "kong.effectiveVersion" .Values.ingressController.image)) }}
 - apiGroups:
