@@ -53,7 +53,7 @@ jobs:
       matrix:
         kubernetes-version:
           # renovate: datasource=docker depName=kindest/node
-          - "1.31.9"
+          - "1.33.1"
         chart-name:
           - kong
           - ingress
@@ -98,12 +98,12 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     env:
-      GATEWAY_API_VERSION: v1.0.0
+      GATEWAY_API_VERSION: v1.3.0
     strategy:
       matrix:
         kic-version:
           - "" # default from the chart
-          - "3.3"
+          - "3.4"
         kong-version:
           - "" # default from the chart
         kubernetes-version:
@@ -117,6 +117,8 @@ jobs:
           - "1.31.9"
           # renovate: datasource=docker depName=kindest/node
           - "1.32.5"
+          # renovate: datasource=docker depName=kindest/node
+          - "1.33.1"
         chart-name:
           - kong
           - ingress
