@@ -7,11 +7,11 @@ metadata:
   name: controller-manager
   namespace: default
 ---
-# Source: kong-operator/templates/cluster-role-1.6.yaml
+# Source: kong-operator/templates/cluster-role.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: chartsnap-kong-operator-manager-role
+  name: 'chartsnap-kong-operator-manager-role'
 rules:
 - apiGroups:
   - ""
@@ -494,8 +494,6 @@ rules:
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
-  - clusterrolebindings
-  - clusterroles
   - rolebindings
   - roles
   verbs:
