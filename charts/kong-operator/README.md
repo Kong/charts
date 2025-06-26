@@ -5,7 +5,7 @@ that can manage and configure your Kong Gateway Data Planes when running on Kube
 
 ## Usage
 
-TODO: https://github.com/Kong/gateway-operator/issues/1360 Update instructions
+TODO: https://github.com/kong/kong-operator/issues/1360 Update instructions
 
 
 ```bash
