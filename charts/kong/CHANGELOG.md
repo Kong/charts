@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.50.0
 
 ### Changes
 
@@ -9,6 +9,10 @@
   `ingressController.konnect.license.enabled` is set to `true` that enables
   the synchronization of license with Konnect.
   [#1331](https://github.com/Kong/charts/pull/1331)
+* Generate Gateway API RBAC policy rules by default.
+  Users can disable this by setting `.ingressController.rbac.gatewayAPI.enabled`
+  to `false`.
+  [#1332](https://github.com/Kong/charts/pull/1332)
 
 ## 2.49.0
 

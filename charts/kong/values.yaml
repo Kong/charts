@@ -654,6 +654,10 @@ ingressController:
     # - `KongClusterPlugin`
     # - `KongVault`, `KongLicense` (KIC 3.1 and above)
     enableClusterRoles: true
+    gatewayAPI:
+      # Specifies whether RBAC policy rules for Gateway API resources should
+      # be generated regardless of the presence of Gateway API CRDs in the cluster.
+      enabled: true
 
   # general properties
   livenessProbe:

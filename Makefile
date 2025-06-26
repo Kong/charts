@@ -89,12 +89,16 @@ endef
 export GOLDEN_TEST_FAILURE_MSG
 
 .PHONY: _chartsnap
-.PHONY: _chartsnap
 _chartsnap: _chartsnap.deps
-	helm chartsnap -c ./charts/$(CHART) -f ./charts/$(CHART)/ci/ $(CHARTSNAP_ARGS) \
+	helm chartsnap \
+		-c ./charts/$(CHART) \
+		-f ./charts/$(CHART)/ci/ \
+		$(CHARTSNAP_ARGS) \
 		-- \
 		--api-versions cert-manager.io/v1 \
 		--api-versions gateway.networking.k8s.io/v1 \
+		--api-versions gateway.networking.k8s.io/v1beta1 \
+		--api-versions gateway.networking.k8s.io/v1alpha2 \
 		--api-versions admissionregistration.k8s.io/v1/ValidatingAdmissionPolicy \
 		--api-versions admissionregistration.k8s.io/v1/ValidatingAdmissionPolicyBinding
 
