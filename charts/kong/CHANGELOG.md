@@ -11,7 +11,8 @@
   [#1331](https://github.com/Kong/charts/pull/1331)
 * Generate Gateway API RBAC policy rules by default.
   Users can disable this by setting `.ingressController.rbac.gatewayAPI.enabled`
-  to `false`.
+  to `false` and in that case the rules will only be generated if the
+  Gateway API CRDs are present in the cluster.
   [#1332](https://github.com/Kong/charts/pull/1332)
 
 ## 2.49.0
