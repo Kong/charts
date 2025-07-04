@@ -657,6 +657,8 @@ ingressController:
     gatewayAPI:
       # Specifies whether RBAC policy rules for Gateway API resources should
       # be generated regardless of the presence of Gateway API CRDs in the cluster.
+      # If this is disabled then RBAC policy rules for Gateway API resources will
+      # only be generated if the Gateway API CRDs are present in the cluster.
       enabled: true
 
   # general properties
