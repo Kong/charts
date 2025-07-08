@@ -1,0 +1,60 @@
+image:
+  repository: kong/kong-gateway
+  tag: 3.10.0.2
+
+env:
+  prefix: /kong_prefix/
+  database: "postgres"
+  pg_password: kong
+
+replicaCount: 1
+
+deployment:
+  kong:
+    enabled: true
+
+proxy:
+  enabled: true
+  type: ClusterIP
+
+admin:
+  enabled: false
+
+migrations:
+  preUpgrade: true
+  postUpgrade: true
+  waitContainer:
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+
+enterprise:
+  enabled: true
+  rbac:
+    enabled: false
+
+manager:
+  enabled: false
+
+portal:
+  enabled: false
+
+portalapi:
+  enabled: false
+
+postgresql:
+  enabled: true
+  auth:
+    username: kong
+    password: kong
+    database: kong
+
+ingressController:
+  enabled: false
+  admissionWebhook:
+    enabled: false

@@ -627,6 +627,7 @@ directory.
 | migrations.ttlSecondsAfterFinished | Automatically deletes completed pods after a specified time to clean up resources     |                     |
 | migrations.jobAnnotations          | Additional annotations for migration jobs                                             | `{}`                |
 | migrations.backoffLimit            | Override the system backoffLimit                                                      | `{}`                |
+| migrations.waitContainer.securityContext | Security context configurations for wait-for-postgres migrations init container |                     |
 | waitImage.enabled                  | Spawn init containers that wait for the database before starting Kong                 | `true`              |
 | waitImage.repository               | Image used to wait for database to become ready. Uses the Kong image if none set      |                     |
 | waitImage.tag                      | Tag for image used to wait for database to become ready                               |                     |

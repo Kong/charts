@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+* Added `migrations.waitContainer.securityContext` to allow setting a security context on the migrations wait-for-postgres init container.
+
 ## 2.51.0
 
 ### Changes
