@@ -1,0 +1,1390 @@
+# chartsnap: snapshot_version=v3
+---
+# Source: kong/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: chartsnap-kong
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.51.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.10"
+---
+# Source: kong/charts/postgresql/templates/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: chartsnap-postgresql
+  namespace: "default"
+  labels:
+    app.kubernetes.io/name: postgresql
+    helm.sh/chart: postgresql-11.9.13
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+data:
+  postgres-password: "###DYNAMIC_FIELD###"
+  password: "a29uZw=="
+  # We don't auto-generate LDAP password when it's not provided as we do for other passwords
+---
+# Source: kong/templates/wait-for-postgres-script.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chartsnap-kong-bash-wait-for-postgres
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.51.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.10"
+data:
+  wait.sh: |
+    until timeout 2 bash -c "9<>/dev/tcp/${KONG_PG_HOST}/${KONG_PG_PORT}"
+      do echo "waiting for db - trying ${KONG_PG_HOST}:${KONG_PG_PORT}"
+      sleep 2
+    done
+---
+# Source: kong/charts/postgresql/templates/primary/svc-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: chartsnap-postgresql-hl
+  namespace: "default"
+  labels:
+    app.kubernetes.io/name: postgresql
+    helm.sh/chart: postgresql-11.9.13
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: primary
+    # Use this annotation in addition to the actual publishNotReadyAddresses
+    # field below because the annotation will stop being respected soon but the
+    # field is broken in some versions of Kubernetes:
+    # https://github.com/kubernetes/kubernetes/issues/58662
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  type: ClusterIP
+  clusterIP: None
+  # We want all pods in the StatefulSet to have their addresses published for
+  # the sake of the other Postgresql pods even before they're ready, since they
+  # have to be able to talk to each other in order to become ready.
+  publishNotReadyAddresses: true
+  ports:
+  - name: tcp-postgresql
+    port: 5432
+    targetPort: tcp-postgresql
+  selector:
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/component: primary
+---
+# Source: kong/charts/postgresql/templates/primary/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: chartsnap-postgresql
+  namespace: "default"
+  labels:
+    app.kubernetes.io/name: postgresql
+    helm.sh/chart: postgresql-11.9.13
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: primary
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+  - name: tcp-postgresql
+    port: 5432
+    targetPort: tcp-postgresql
+    nodePort: null
+  selector:
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/component: primary
+---
+# Source: kong/templates/service-kong-proxy.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: chartsnap-kong-proxy
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.51.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.10"
+    enable-metrics: "true"
+spec:
+  type: ClusterIP
+  ports:
+  - name: kong-proxy
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  - name: kong-proxy-tls
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: kong
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: "chartsnap"
+---
+# Source: kong/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chartsnap-kong
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.51.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.10"
+    app.kubernetes.io/component: app
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kong
+      app.kubernetes.io/component: app
+      app.kubernetes.io/instance: "chartsnap"
+  template:
+    metadata:
+      annotations:
+        kuma.io/service-account-token-volume: chartsnap-kong-token
+        kuma.io/gateway: "enabled"
+        traffic.sidecar.istio.io/includeInboundPorts: ""
+      labels:
+        app.kubernetes.io/name: kong
+        helm.sh/chart: kong-2.51.0
+        app.kubernetes.io/instance: "chartsnap"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/version: "3.10"
+        app.kubernetes.io/component: app
+        app: chartsnap-kong
+        version: "3.10"
+    spec:
+      serviceAccountName: chartsnap-kong
+      automountServiceAccountToken: false
+      initContainers:
+      - name: clear-stale-pid
+        image: kong/kong-gateway:3.10.0.2
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        resources: {}
+        command:
+        - "rm"
+        - "-vrf"
+        - "$KONG_PREFIX/pids"
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_LISTEN
+          value: "0.0.0.0:8002, [::]:8002, 0.0.0.0:8445 http2 ssl, [::]:8445 http2 ssl"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_TELEMETRY_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "postgres"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PG_HOST
+          value: "chartsnap-postgresql"
+        - name: KONG_PG_PASSWORD
+          value: "kong"
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORTAL_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_SMTP_MOCK
+          value: "on"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        volumeMounts:
+        - name: chartsnap-kong-prefix-dir
+          mountPath: /kong_prefix/
+        - name: chartsnap-kong-tmp
+          mountPath: /tmp
+      - name: wait-for-db
+        image: kong/kong-gateway:3.10.0.2
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_LISTEN
+          value: "0.0.0.0:8002, [::]:8002, 0.0.0.0:8445 http2 ssl, [::]:8445 http2 ssl"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_TELEMETRY_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "postgres"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PG_HOST
+          value: "chartsnap-postgresql"
+        - name: KONG_PG_PASSWORD
+          value: "kong"
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORTAL_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_SMTP_MOCK
+          value: "on"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        args: ["/bin/bash", "-c", "export KONG_NGINX_DAEMON=on KONG_PREFIX=`mktemp -d` KONG_KEYRING_ENABLED=off; until kong start; do echo 'waiting for db'; sleep 1; done; kong stop"]
+        volumeMounts:
+        - name: chartsnap-kong-prefix-dir
+          mountPath: /kong_prefix/
+        - name: chartsnap-kong-tmp
+          mountPath: /tmp
+        resources: {}
+      containers:
+      - name: "proxy"
+        image: kong/kong-gateway:3.10.0.2
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_LISTEN
+          value: "0.0.0.0:8002, [::]:8002, 0.0.0.0:8445 http2 ssl, [::]:8445 http2 ssl"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_TELEMETRY_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "postgres"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PG_HOST
+          value: "chartsnap-postgresql"
+        - name: KONG_PG_PASSWORD
+          value: "kong"
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORTAL_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_SMTP_MOCK
+          value: "on"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_NGINX_DAEMON
+          value: "off"
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - kong
+              - quit
+              - --wait=15
+        ports:
+        - name: proxy
+          containerPort: 8000
+          protocol: TCP
+        - name: proxy-tls
+          containerPort: 8443
+          protocol: TCP
+        - name: status
+          containerPort: 8100
+          protocol: TCP
+        volumeMounts:
+        - name: chartsnap-kong-prefix-dir
+          mountPath: /kong_prefix/
+        - name: chartsnap-kong-tmp
+          mountPath: /tmp
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /status/ready
+            port: status
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /status
+            port: status
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: chartsnap-kong-prefix-dir
+        emptyDir:
+          sizeLimit: 256Mi
+      - name: chartsnap-kong-tmp
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: chartsnap-kong-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+              - key: ca.crt
+                path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+                path: namespace
+      - name: chartsnap-kong-bash-wait-for-postgres
+        configMap:
+          name: chartsnap-kong-bash-wait-for-postgres
+          defaultMode: 0755
+---
+# Source: kong/charts/postgresql/templates/primary/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: chartsnap-postgresql
+  namespace: "default"
+  labels:
+    app.kubernetes.io/name: postgresql
+    helm.sh/chart: postgresql-11.9.13
+    app.kubernetes.io/instance: chartsnap
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: primary
+  annotations:
+    ignore-check.kube-linter.io/no-read-only-root-fs: writable fs is required
+spec:
+  replicas: 1
+  serviceName: chartsnap-postgresql-hl
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql
+      app.kubernetes.io/instance: chartsnap
+      app.kubernetes.io/component: primary
+  template:
+    metadata:
+      name: chartsnap-postgresql
+      labels:
+        app.kubernetes.io/name: postgresql
+        helm.sh/chart: postgresql-11.9.13
+        app.kubernetes.io/instance: chartsnap
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: primary
+      annotations:
+    spec:
+      serviceAccountName: default
+      affinity:
+        podAffinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: postgresql
+                  app.kubernetes.io/instance: chartsnap
+                  app.kubernetes.io/component: primary
+              namespaces:
+              - "default"
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+        nodeAffinity:
+      securityContext:
+        fsGroup: 1001
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      hostNetwork: false
+      hostIPC: false
+      initContainers:
+      containers:
+      - name: postgresql
+        image: docker.io/bitnami/postgresql:13.11.0-debian-11-r20
+        imagePullPolicy: "IfNotPresent"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1001
+          seccompProfile:
+            type: RuntimeDefault
+        env:
+        - name: BITNAMI_DEBUG
+          value: "false"
+        - name: POSTGRESQL_PORT_NUMBER
+          value: "5432"
+        - name: POSTGRESQL_VOLUME_DIR
+          value: "/bitnami/postgresql"
+        - name: PGDATA
+          value: "/bitnami/postgresql/data"
+        # Authentication
+        - name: POSTGRES_USER
+          value: "kong"
+        - name: POSTGRES_POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: chartsnap-postgresql
+              key: postgres-password
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: chartsnap-postgresql
+              key: password
+        - name: POSTGRES_DB
+          value: "kong"
+        # Replication
+        # Initdb
+        # Standby
+        # LDAP
+        - name: POSTGRESQL_ENABLE_LDAP
+          value: "no"
+        # TLS
+        - name: POSTGRESQL_ENABLE_TLS
+          value: "no"
+        # Audit
+        - name: POSTGRESQL_LOG_HOSTNAME
+          value: "false"
+        - name: POSTGRESQL_LOG_CONNECTIONS
+          value: "false"
+        - name: POSTGRESQL_LOG_DISCONNECTIONS
+          value: "false"
+        - name: POSTGRESQL_PGAUDIT_LOG_CATALOG
+          value: "off"
+        # Others
+        - name: POSTGRESQL_CLIENT_MIN_MESSAGES
+          value: "error"
+        - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
+          value: "pgaudit"
+        ports:
+        - name: tcp-postgresql
+          containerPort: 5432
+        livenessProbe:
+          failureThreshold: 6
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - exec pg_isready -U "kong" -d "dbname=kong" -h 127.0.0.1 -p 5432
+        readinessProbe:
+          failureThreshold: 6
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - -e
+            - |
+              exec pg_isready -U "kong" -d "dbname=kong" -h 127.0.0.1 -p 5432
+              [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized ]
+        resources:
+          limits: {}
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        volumeMounts:
+        - name: dshm
+          mountPath: /dev/shm
+        - name: data
+          mountPath: /bitnami/postgresql
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - "ReadWriteOnce"
+      resources:
+        requests:
+          storage: "8Gi"
+---
+# Source: kong/templates/migrations.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: chartsnap-kong-init-migrations
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.51.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.10"
+    app.kubernetes.io/component: init-migrations
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit:
+  template:
+    metadata:
+      name: kong-init-migrations
+      labels:
+        app.kubernetes.io/name: kong
+        helm.sh/chart: kong-2.51.0
+        app.kubernetes.io/instance: "chartsnap"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/version: "3.10"
+        app.kubernetes.io/component: init-migrations
+      annotations:
+        sidecar.istio.io/inject: "false"
+        kuma.io/service-account-token-volume: chartsnap-kong-token
+    spec:
+      serviceAccountName: chartsnap-kong
+      automountServiceAccountToken: false
+      initContainers:
+      - name: wait-for-postgres
+        image: kong/kong-gateway:3.10.0.2
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_LISTEN
+          value: "0.0.0.0:8002, [::]:8002, 0.0.0.0:8445 http2 ssl, [::]:8445 http2 ssl"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_TELEMETRY_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "postgres"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PG_HOST
+          value: "chartsnap-postgresql"
+        - name: KONG_PG_PASSWORD
+          value: "kong"
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORTAL_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_SMTP_MOCK
+          value: "on"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_NGINX_DAEMON
+          value: "off"
+        command: ["bash", "/wait_postgres/wait.sh"]
+        volumeMounts:
+        - name: chartsnap-kong-bash-wait-for-postgres
+          mountPath: /wait_postgres
+        resources: {}
+      containers:
+      - name: kong-migrations
+        image: kong/kong-gateway:3.10.0.2
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_LISTEN
+          value: "0.0.0.0:8002, [::]:8002, 0.0.0.0:8445 http2 ssl, [::]:8445 http2 ssl"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_TELEMETRY_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "postgres"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PG_HOST
+          value: "chartsnap-postgresql"
+        - name: KONG_PG_PASSWORD
+          value: "kong"
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORTAL_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_SMTP_MOCK
+          value: "on"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_NGINX_DAEMON
+          value: "off"
+        args: ["kong", "migrations", "bootstrap"]
+        volumeMounts:
+        - name: chartsnap-kong-prefix-dir
+          mountPath: /kong_prefix/
+        - name: chartsnap-kong-tmp
+          mountPath: /tmp
+        resources: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      restartPolicy: OnFailure
+      volumes:
+      - name: chartsnap-kong-prefix-dir
+        emptyDir:
+          sizeLimit: 256Mi
+      - name: chartsnap-kong-tmp
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: chartsnap-kong-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+              - key: ca.crt
+                path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+                path: namespace
+      - name: chartsnap-kong-bash-wait-for-postgres
+        configMap:
+          name: chartsnap-kong-bash-wait-for-postgres
+          defaultMode: 0755
+---
+# Source: kong/templates/migrations-post-upgrade.yaml
+# Why is this Job duplicated and not using only helm hooks?
+# See: https://github.com/helm/charts/pull/7362
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: chartsnap-kong-post-upgrade-migrations
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.51.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.10"
+    app.kubernetes.io/component: post-upgrade-migrations
+  annotations:
+    helm.sh/hook: "post-upgrade"
+    helm.sh/hook-delete-policy: "before-hook-creation"
+spec:
+  backoffLimit:
+  template:
+    metadata:
+      name: kong-post-upgrade-migrations
+      labels:
+        app.kubernetes.io/name: kong
+        helm.sh/chart: kong-2.51.0
+        app.kubernetes.io/instance: "chartsnap"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/version: "3.10"
+        app.kubernetes.io/component: post-upgrade-migrations
+      annotations:
+        sidecar.istio.io/inject: "false"
+        kuma.io/service-account-token-volume: chartsnap-kong-token
+    spec:
+      serviceAccountName: chartsnap-kong
+      automountServiceAccountToken: false
+      initContainers:
+      - name: wait-for-postgres
+        image: kong/kong-gateway:3.10.0.2
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_LISTEN
+          value: "0.0.0.0:8002, [::]:8002, 0.0.0.0:8445 http2 ssl, [::]:8445 http2 ssl"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_TELEMETRY_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "postgres"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PG_HOST
+          value: "chartsnap-postgresql"
+        - name: KONG_PG_PASSWORD
+          value: "kong"
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORTAL_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_SMTP_MOCK
+          value: "on"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_NGINX_DAEMON
+          value: "off"
+        command: ["bash", "/wait_postgres/wait.sh"]
+        volumeMounts:
+        - name: chartsnap-kong-bash-wait-for-postgres
+          mountPath: /wait_postgres
+        resources: {}
+      containers:
+      - name: kong-post-upgrade-migrations
+        image: kong/kong-gateway:3.10.0.2
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_LISTEN
+          value: "0.0.0.0:8002, [::]:8002, 0.0.0.0:8445 http2 ssl, [::]:8445 http2 ssl"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_TELEMETRY_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "postgres"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PG_HOST
+          value: "chartsnap-postgresql"
+        - name: KONG_PG_PASSWORD
+          value: "kong"
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORTAL_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_SMTP_MOCK
+          value: "on"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_NGINX_DAEMON
+          value: "off"
+        args: ["kong", "migrations", "finish"]
+        volumeMounts:
+        - name: chartsnap-kong-prefix-dir
+          mountPath: /kong_prefix/
+        - name: chartsnap-kong-tmp
+          mountPath: /tmp
+        resources: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      restartPolicy: OnFailure
+      volumes:
+      - name: chartsnap-kong-prefix-dir
+        emptyDir:
+          sizeLimit: 256Mi
+      - name: chartsnap-kong-tmp
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: chartsnap-kong-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+              - key: ca.crt
+                path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+                path: namespace
+      - name: chartsnap-kong-bash-wait-for-postgres
+        configMap:
+          name: chartsnap-kong-bash-wait-for-postgres
+          defaultMode: 0755
+---
+# Source: kong/templates/migrations-pre-upgrade.yaml
+# Why is this Job duplicated and not using only helm hooks?
+# See: https://github.com/helm/charts/pull/7362
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: chartsnap-kong-pre-upgrade-migrations
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.51.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.10"
+    app.kubernetes.io/component: pre-upgrade-migrations
+  annotations:
+    helm.sh/hook: "pre-upgrade"
+    helm.sh/hook-delete-policy: "before-hook-creation"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit:
+  template:
+    metadata:
+      name: kong-pre-upgrade-migrations
+      labels:
+        app.kubernetes.io/name: kong
+        helm.sh/chart: kong-2.51.0
+        app.kubernetes.io/instance: "chartsnap"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/version: "3.10"
+        app.kubernetes.io/component: pre-upgrade-migrations
+      annotations:
+        sidecar.istio.io/inject: "false"
+        kuma.io/service-account-token-volume: chartsnap-kong-token
+    spec:
+      serviceAccountName: chartsnap-kong
+      automountServiceAccountToken: false
+      initContainers:
+      - name: wait-for-postgres
+        image: kong/kong-gateway:3.10.0.2
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_LISTEN
+          value: "0.0.0.0:8002, [::]:8002, 0.0.0.0:8445 http2 ssl, [::]:8445 http2 ssl"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_TELEMETRY_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "postgres"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PG_HOST
+          value: "chartsnap-postgresql"
+        - name: KONG_PG_PASSWORD
+          value: "kong"
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORTAL_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_SMTP_MOCK
+          value: "on"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_NGINX_DAEMON
+          value: "off"
+        command: ["bash", "/wait_postgres/wait.sh"]
+        volumeMounts:
+        - name: chartsnap-kong-bash-wait-for-postgres
+          mountPath: /wait_postgres
+        resources: {}
+      containers:
+      - name: kong-upgrade-migrations
+        image: kong/kong-gateway:3.10.0.2
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_LISTEN
+          value: "0.0.0.0:8002, [::]:8002, 0.0.0.0:8445 http2 ssl, [::]:8445 http2 ssl"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_TELEMETRY_LISTEN
+          value: "off"
+        - name: KONG_DATABASE
+          value: "postgres"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PG_HOST
+          value: "chartsnap-postgresql"
+        - name: KONG_PG_PASSWORD
+          value: "kong"
+        - name: KONG_PG_PORT
+          value: "5432"
+        - name: KONG_PORTAL_API_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_API_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORTAL_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PORTAL_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROUTER_FLAVOR
+          value: "traditional"
+        - name: KONG_SMTP_MOCK
+          value: "on"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_NGINX_DAEMON
+          value: "off"
+        args: ["kong", "migrations", "up"]
+        volumeMounts:
+        - name: chartsnap-kong-prefix-dir
+          mountPath: /kong_prefix/
+        - name: chartsnap-kong-tmp
+          mountPath: /tmp
+        resources: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      restartPolicy: OnFailure
+      volumes:
+      - name: chartsnap-kong-prefix-dir
+        emptyDir:
+          sizeLimit: 256Mi
+      - name: chartsnap-kong-tmp
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: chartsnap-kong-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+              - key: ca.crt
+                path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+                path: namespace
+      - name: chartsnap-kong-bash-wait-for-postgres
+        configMap:
+          name: chartsnap-kong-bash-wait-for-postgres
+          defaultMode: 0755

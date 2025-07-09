@@ -1261,6 +1261,12 @@ Environment variables are sorted alphabetically
   image: {{ include "kong.getRepoTag" .Values.image }}
 {{- end }}
   imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
+  {{- with .Values.migrations.waitContainer }}
+    {{- if .securityContext }}
+  securityContext:
+    {{- toYaml .securityContext | nindent 6 }}
+    {{- end }}
+  {{- end }}
   env:
   {{- include "kong.no_daemon_env" . | nindent 2 }}
   {{- include "kong.envFrom" .Values.envFrom | nindent 2 }}

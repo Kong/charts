@@ -503,6 +503,16 @@ migrations:
   # sidecarContainers:
   #   - name: sidecar
   #     image: sidecar:latest
+  ## Optionally set securitycontext for the wait-for-postgres migrations init container
+  # waitContainer:
+  #   securityContext:
+  #     allowPrivilegeEscalation: false
+  #     capabilities:
+  #       drop:
+  #       - ALL
+  #     readOnlyRootFilesystem: true
+  #     runAsNonRoot: true
+  #     runAsUser: 1000
 
 # Kong's configuration for DB-less mode
 # Note: Use this section only if you are deploying Kong in DB-less mode
