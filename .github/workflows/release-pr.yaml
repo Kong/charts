@@ -177,6 +177,9 @@ jobs:
       - name: run golden tests
         run: make test.golden
 
+      - name: run golden tests update and check if there are any changes that should be committed
+        run: make test.golden.update verify.diff
+
   # Workaround to allow checking the matrix tests as required tests without adding the individual cases
   # Ref: https://github.com/orgs/community/discussions/26822#discussioncomment-3305794
   passed:

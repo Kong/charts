@@ -45,6 +45,10 @@ download.actionlint: mise ## Download actionlint locally if necessary.
 	@$(MISE) plugin install --yes -q actionlint
 	@$(MISE) install -q actionlint@$(ACTIONLINT_VERSION)
 
+.PHONY: verify.diff
+verify.diff:
+	@$(PROJECT_DIR)/scripts/verify-diff.sh $(PROJECT_DIR)
+
 .PHONY: tools
 tools: kube-linter chartsnap shellcheck
 
