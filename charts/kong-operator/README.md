@@ -1,4 +1,4 @@
-## Kong Operator
+# Kong Operator
 
 [Kong Operator](https://docs.konghq.com/kong-operator/latest/) is a Kubernetes Operator
 that can manage and configure your Kong Gateway Data Planes when running on Kubernetes.
@@ -6,7 +6,6 @@ that can manage and configure your Kong Gateway Data Planes when running on Kube
 ## Usage
 
 TODO: https://github.com/kong/kong-operator/issues/1360 Update instructions
-
 
 ```bash
 helm repo add kong https://charts.konghq.com
