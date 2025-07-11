@@ -8,11 +8,11 @@ This sub-chart contains Kong Ingress Controller (KIC)'s CRDs, allowing users to 
 [kconf]: https://github.com/Kong/kubernetes-configuration
 
 ```bash
-kustomize build https://github.com/kong/kubernetes-configuration/config/crd/ingress-controller\?ref\=${VERSION} > crds/kic-crds.yaml
+kustomize build https://github.com/kong/kubernetes-configuration/v2/config/crd/ingress-controller\?ref\=${VERSION} > crds/kic-crds.yaml
 ```
 
 For example:
 
 ```bash
-kustomize build https://github.com/kong/kubernetes-configuration/config/crd/ingress-controller\?ref\=v1.2.0 > crds/kic-crds.yaml
+kustomize build https://github.com/kong/kubernetes-configuration/v2/config/crd/ingress-controller\?ref\=v2.0.0-alpha.1 > crds/kic-crds.yaml
 ```
