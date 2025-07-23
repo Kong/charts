@@ -54222,6 +54222,9 @@ spec:
       jsonPath: .status.organizationID
       name: OrgID
       type: string
+    deprecated: true
+    deprecationWarning: This API version has been deprecated in favor of v1alpha2
+      and it will be removed in the future.
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -54412,6 +54415,351 @@ spec:
               rule: 'self.source == ''Origin'' ? !has(self.mirror) : true'
             - message: Name must be set for type Origin
               rule: 'self.source == ''Origin'' ? has(self.name) : true'
+          status:
+            description: Status defines the observed state of KonnectGatewayControlPlane.
+            properties:
+              conditions:
+                default:
+                - lastTransitionTime: "1970-01-01T00:00:00Z"
+                  message: Waiting for controller
+                  reason: Pending
+                  status: Unknown
+                  type: Programmed
+                description: |-
+                  Conditions describe the current conditions of the KonnectGatewayControlPlane.
+
+                  Known condition types are:
+
+                  * "Programmed"
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                maxItems: 8
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              id:
+                description: |-
+                  ID is the unique identifier of the Konnect entity as assigned by Konnect API.
+                  If it's unset (empty string), it means the Konnect entity hasn't been created yet.
+                type: string
+              konnectEndpoints:
+                description: |-
+                  Endpoints defines the Konnect endpoints for the control plane.
+                  They are required by the DataPlane to be properly configured in
+                  Konnect and connect to the control plane.
+                properties:
+                  controlPlane:
+                    description: ControlPlaneEndpoint is the endpoint for the control
+                      plane.
+                    type: string
+                  telemetry:
+                    description: TelemetryEndpoint is the endpoint for telemetry.
+                    type: string
+                required:
+                - controlPlane
+                - telemetry
+                type: object
+              organizationID:
+                description: OrgID is ID of Konnect Org that this entity has been
+                  created in.
+                type: string
+              serverURL:
+                description: ServerURL is the URL of the Konnect server in which the
+                  entity exists.
+                type: string
+            type: object
+        type: object
+        x-kubernetes-validations:
+        - message: spec.konnect.authRef is immutable when an entity is already Programmed
+          rule: '!self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
+            == ''True'') ? true : self.spec.konnect.authRef == oldSelf.spec.konnect.authRef'
+        - message: spec.konnect.authRef is immutable when an entity refers to a Valid
+            API Auth Configuration
+          rule: '!self.status.conditions.exists(c, c.type == ''APIAuthValid'' && c.status
+            == ''True'') ? true : self.spec.konnect.authRef == oldSelf.spec.konnect.authRef'
+    served: true
+    storage: false
+    subresources:
+      status: {}
+  - additionalPrinterColumns:
+    - description: The Resource is Programmed on Konnect
+      jsonPath: .status.conditions[?(@.type=='Programmed')].status
+      name: Programmed
+      type: string
+    - description: Konnect ID
+      jsonPath: .status.id
+      name: ID
+      type: string
+    - description: Konnect Organization ID this resource belongs to.
+      jsonPath: .status.organizationID
+      name: OrgID
+      type: string
+    name: v1alpha2
+    schema:
+      openAPIV3Schema:
+        description: KonnectGatewayControlPlane is the Schema for the KonnectGatewayControlplanes
+          API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec defines the desired state of KonnectGatewayControlPlane.
+            properties:
+              createControlPlaneRequest:
+                description: CreateControlPlaneRequest is the request to create a
+                  Konnect Control Plane.
+                properties:
+                  auth_type:
+                    description: The auth type value of the cluster associated with
+                      the Runtime Group.
+                    type: string
+                  cloud_gateway:
+                    description: Whether this control-plane can be used for cloud-gateways.
+                    type: boolean
+                  cluster_type:
+                    description: The ClusterType value of the cluster associated with
+                      the Control Plane.
+                    type: string
+                  description:
+                    description: The description of the control plane in Konnect.
+                    type: string
+                  labels:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Labels store metadata of an entity that can be used for filtering an entity list or for searching across entity types.
+
+                      Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+                    type: object
+                  name:
+                    description: The name of the control plane.
+                    type: string
+                  proxy_urls:
+                    description: Array of proxy URLs associated with reaching the
+                      data-planes connected to a control-plane.
+                    items:
+                      description: ProxyURL - Proxy URL associated with reaching the
+                        data-planes connected to a control-plane.
+                      properties:
+                        host:
+                          description: Hostname of the proxy URL.
+                          type: string
+                        port:
+                          description: Port of the proxy URL.
+                          format: int64
+                          type: integer
+                        protocol:
+                          description: Protocol of the proxy URL.
+                          type: string
+                      required:
+                      - host
+                      - port
+                      - protocol
+                      type: object
+                    type: array
+                required:
+                - name
+                type: object
+              konnect:
+                description: KonnectConfiguration contains the Konnect configuration
+                  for the control plane.
+                properties:
+                  authRef:
+                    description: |-
+                      APIAuthConfigurationRef is the reference to the API Auth Configuration
+                      that should be used for this Konnect Configuration.
+                    properties:
+                      name:
+                        description: Name is the name of the KonnectAPIAuthConfiguration
+                          resource.
+                        type: string
+                    required:
+                    - name
+                    type: object
+                required:
+                - authRef
+                type: object
+              members:
+                description: |-
+                  Members is a list of references to the KonnectGatewayControlPlaneMembers that are part of this control plane group.
+                  Only applicable for ControlPlanes that are created as groups.
+                items:
+                  description: |-
+                    LocalObjectReference contains enough information to let you locate the
+                    referenced object inside the same namespace.
+                  properties:
+                    name:
+                      default: ""
+                      description: |-
+                        Name of the referent.
+                        This field is effectively required, but due to backwards compatibility is
+                        allowed to be empty. Instances of this type with an empty value here are
+                        almost certainly wrong.
+                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                      type: string
+                  type: object
+                  x-kubernetes-map-type: atomic
+                type: array
+              mirror:
+                description: |-
+                  Mirror is the Konnect Mirror configuration.
+                  It is only applicable for ControlPlanes that are created as Mirrors.
+                properties:
+                  konnect:
+                    description: |-
+                      Konnect contains the KonnectID of the KonnectGatewayControlPlane that
+                      is mirrored.
+                    properties:
+                      id:
+                        description: |-
+                          ID is the ID of the Konnect entity. It can be set only in case
+                          the ControlPlane type is Mirror.
+                        pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - konnect
+                type: object
+              source:
+                default: Origin
+                description: Source represents the source type of the Konnect entity.
+                enum:
+                - Origin
+                - Mirror
+                type: string
+            type: object
+            x-kubernetes-validations:
+            - message: spec.createControlPlaneRequest.labels must not have more than
+                40 entries
+              rule: 'has(self.createControlPlaneRequest) && has(self.createControlPlaneRequest.labels)
+                ? size(self.createControlPlaneRequest.labels) <= 40 : true'
+            - message: spec.createControlPlaneRequest.labels keys must be of length
+                1-63 characters
+              rule: 'has(self.createControlPlaneRequest) && has(self.createControlPlaneRequest.labels)
+                ? self.createControlPlaneRequest.labels.all(key, size(key) >= 1 &&
+                size(key) <= 63) : true'
+            - message: spec.createControlPlaneRequest.labels values must be of length
+                1-63 characters
+              rule: 'has(self.createControlPlaneRequest) && has(self.createControlPlaneRequest.labels)
+                ? self.createControlPlaneRequest.labels.all(key, size(self.createControlPlaneRequest.labels[key])
+                >= 1 && size(self.createControlPlaneRequest.labels[key]) <= 63) :
+                true'
+            - message: spec.createControlPlaneRequest.labels keys must not start with
+                'k8s', 'kong', 'konnect', 'mesh', 'kic', 'insomnia' or '_'
+              rule: 'has(self.createControlPlaneRequest) && has(self.createControlPlaneRequest.labels)
+                ? self.createControlPlaneRequest.labels.all(key, !key.startsWith(''k8s'')
+                && !key.startsWith(''kong'') && !key.startsWith(''konnect'') && !key.startsWith(''mesh'')
+                && !key.startsWith(''kic'') && !key.startsWith(''_'') && !key.startsWith(''insomnia''))
+                : true'
+            - message: spec.createControlPlaneRequest.labels keys must satisfy the
+                '^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$' pattern
+              rule: 'has(self.createControlPlaneRequest) && has(self.createControlPlaneRequest.labels)
+                ? self.createControlPlaneRequest.labels.all(key, key.matches(''^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$''))
+                : true'
+            - message: spec.members is only applicable for ControlPlanes that are
+                created as groups
+              rule: '(has(self.createControlPlaneRequest) && has(self.createControlPlaneRequest.cluster_type)
+                && self.createControlPlaneRequest.cluster_type != ''CLUSTER_TYPE_CONTROL_PLANE_GROUP'')
+                ? !has(self.members) : true'
+            - message: when specified, spec.createControlPlaneRequest.cluster_type
+                must be one of 'CLUSTER_TYPE_CONTROL_PLANE_GROUP', 'CLUSTER_TYPE_CONTROL_PLANE'
+                or 'CLUSTER_TYPE_K8S_INGRESS_CONTROLLER'
+              rule: '!has(self.createControlPlaneRequest) || !has(self.createControlPlaneRequest.cluster_type)
+                ? true : [''CLUSTER_TYPE_CONTROL_PLANE_GROUP'', ''CLUSTER_TYPE_CONTROL_PLANE'',
+                ''CLUSTER_TYPE_K8S_INGRESS_CONTROLLER''].exists(ct, ct == self.createControlPlaneRequest.cluster_type)'
+            - message: spec.createControlPlaneRequest.cluster_type is immutable
+              rule: '!has(self.createControlPlaneRequest) && !has(oldSelf.createControlPlaneRequest)
+                ? true : (has(self.createControlPlaneRequest) && has(oldSelf.createControlPlaneRequest)
+                && (!has(self.createControlPlaneRequest.cluster_type) ? !has(oldSelf.createControlPlaneRequest.cluster_type)
+                : self.createControlPlaneRequest.cluster_type == oldSelf.createControlPlaneRequest.cluster_type))'
+            - message: spec.createControlPlaneRequest.cloud_gateway cannot be set
+                for spec.createControlPlaneRequest.cluster_type 'CLUSTER_TYPE_K8S_INGRESS_CONTROLLER'
+              rule: 'has(self.createControlPlaneRequest) && has(self.createControlPlaneRequest.cluster_type)
+                && self.createControlPlaneRequest.cluster_type == ''CLUSTER_TYPE_K8S_INGRESS_CONTROLLER''
+                ? !has(self.createControlPlaneRequest.cloud_gateway) : true'
+            - message: createControlPlaneRequest fields cannot be set for type Mirror
+              rule: 'has(self.source) && self.source == ''Mirror'' ? !has(self.createControlPlaneRequest)
+                : true'
+            - message: spec.source is immutable
+              rule: '!has(self.source) && !has(oldSelf.source) ? true : self.source
+                == oldSelf.source'
+            - message: mirror field must be set for type Mirror
+              rule: 'self.source == ''Mirror'' ? has(self.mirror) : true'
+            - message: mirror field cannot be set for type Origin
+              rule: 'self.source == ''Origin'' ? !has(self.mirror) : true'
+            - message: spec.createControlPlaneRequest must be set for type Origin
+              rule: 'self.source == ''Origin'' ? has(self.createControlPlaneRequest)
+                && has(self.createControlPlaneRequest.name) : true'
           status:
             description: Status defines the observed state of KonnectGatewayControlPlane.
             properties:
