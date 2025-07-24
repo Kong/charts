@@ -8,7 +8,7 @@ maintainers:
 name: kong-operator
 sources:
   - https://github.com/Kong/kong-operator/charts/kong-operator/
-version: 0.0.1
+version: 0.0.2
 appVersion: "2.0.0-alpha.2"
 annotations:
   artifacthub.io/prerelease: "true"

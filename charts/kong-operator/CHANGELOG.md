@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.0.2
+
 ### Changes
 
 - Add support for pod annotations in `PodTemplateSpec` for kong-operator deployments.
