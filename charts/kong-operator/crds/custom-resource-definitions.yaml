@@ -8956,6 +8956,34 @@ spec:
                       If omitted, the default value (5s) is used.
                     type: string
                 type: object
+              configDump:
+                description: ConfigDump defines the options for dumping generated
+                  Kong configuration from a diagnostics server.
+                properties:
+                  dumpSensitive:
+                    default: disabled
+                    description: |-
+                      When DumpSensitive is enabled, the configuration will be dumped unchanged, including sensitive parts like private keys and credentials.
+                      When DumpSensitive is disabled, the sensitive configuration parts like private keys and credentials are redacted.
+                    enum:
+                    - enabled
+                    - disabled
+                    type: string
+                  state:
+                    default: disabled
+                    description: When State is enabled, Operator will dump the translated
+                      Kong configuration by it from a diagnostics server.
+                    enum:
+                    - enabled
+                    - disabled
+                    type: string
+                required:
+                - dumpSensitive
+                - state
+                type: object
+                x-kubernetes-validations:
+                - message: Cannot enable dumpSensitive when state is disabled
+                  rule: self.state == 'enabled' || self.dumpSensitive == 'disabled'
               controllers:
                 description: Controllers defines the controllers that are enabled
                   for this ControlPlane.
@@ -9139,6 +9167,20 @@ spec:
                     - enabled
                     - disabled
                     type: string
+                  fallbackConfiguration:
+                    description: FallbackConfiguration defines the fallback configuration
+                      options for the ControlPlane.
+                    properties:
+                      useLastValidConfig:
+                        default: enabled
+                        description: |-
+                          UseLastValidConfig indicates whether the ControlPlane should use the last valid configuration
+                          when the current configuration is invalid.
+                        enum:
+                        - enabled
+                        - disabled
+                        type: string
+                    type: object
                 type: object
               watchNamespaces:
                 default:
@@ -36747,6 +36789,34 @@ spec:
                           If omitted, the default value (5s) is used.
                         type: string
                     type: object
+                  configDump:
+                    description: ConfigDump defines the options for dumping generated
+                      Kong configuration from a diagnostics server.
+                    properties:
+                      dumpSensitive:
+                        default: disabled
+                        description: |-
+                          When DumpSensitive is enabled, the configuration will be dumped unchanged, including sensitive parts like private keys and credentials.
+                          When DumpSensitive is disabled, the sensitive configuration parts like private keys and credentials are redacted.
+                        enum:
+                        - enabled
+                        - disabled
+                        type: string
+                      state:
+                        default: disabled
+                        description: When State is enabled, Operator will dump the
+                          translated Kong configuration by it from a diagnostics server.
+                        enum:
+                        - enabled
+                        - disabled
+                        type: string
+                    required:
+                    - dumpSensitive
+                    - state
+                    type: object
+                    x-kubernetes-validations:
+                    - message: Cannot enable dumpSensitive when state is disabled
+                      rule: self.state == 'enabled' || self.dumpSensitive == 'disabled'
                   controllers:
                     description: Controllers defines the controllers that are enabled
                       for this ControlPlane.
@@ -36858,6 +36928,20 @@ spec:
                         - enabled
                         - disabled
                         type: string
+                      fallbackConfiguration:
+                        description: FallbackConfiguration defines the fallback configuration
+                          options for the ControlPlane.
+                        properties:
+                          useLastValidConfig:
+                            default: enabled
+                            description: |-
+                              UseLastValidConfig indicates whether the ControlPlane should use the last valid configuration
+                              when the current configuration is invalid.
+                            enum:
+                            - enabled
+                            - disabled
+                            type: string
+                        type: object
                     type: object
                   watchNamespaces:
                     default:
@@ -51414,6 +51498,9 @@ spec:
                           successes:
                             format: int64
                             type: integer
+                        required:
+                        - interval
+                        - successes
                         type: object
                       http_path:
                         type: string
@@ -51443,7 +51530,18 @@ spec:
                           timeouts:
                             format: int64
                             type: integer
+                        required:
+                        - http_failures
+                        - interval
+                        - tcp_failures
+                        - timeouts
                         type: object
+                    required:
+                    - concurrency
+                    - http_path
+                    - https_verify_certificate
+                    - timeout
+                    - type
                     type: object
                   passive:
                     properties:
@@ -51457,6 +51555,8 @@ spec:
                           successes:
                             format: int64
                             type: integer
+                        required:
+                        - successes
                         type: object
                       type:
                         type: string
@@ -51476,10 +51576,18 @@ spec:
                           timeouts:
                             format: int64
                             type: integer
+                        required:
+                        - http_failures
+                        - tcp_failures
+                        - timeouts
                         type: object
+                    required:
+                    - type
                     type: object
                   threshold:
                     type: number
+                required:
+                - threshold
                 type: object
               host_header:
                 description: The hostname to be used as `Host` header when proxying
