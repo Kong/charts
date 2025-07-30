@@ -9167,6 +9167,15 @@ spec:
                     - enabled
                     - disabled
                     type: string
+                  drainSupport:
+                    default: enabled
+                    description: |-
+                      DrainSupport defines the configuration for the ControlPlane to include
+                      terminating endpoints in Kong upstreams with weight=0 for graceful connection draining.
+                    enum:
+                    - enabled
+                    - disabled
+                    type: string
                   fallbackConfiguration:
                     description: FallbackConfiguration defines the fallback configuration
                       options for the ControlPlane.
@@ -36928,6 +36937,15 @@ spec:
                         - enabled
                         - disabled
                         type: string
+                      drainSupport:
+                        default: enabled
+                        description: |-
+                          DrainSupport defines the configuration for the ControlPlane to include
+                          terminating endpoints in Kong upstreams with weight=0 for graceful connection draining.
+                        enum:
+                        - enabled
+                        - disabled
+                        type: string
                       fallbackConfiguration:
                         description: FallbackConfiguration defines the fallback configuration
                           options for the ControlPlane.
@@ -45243,8 +45261,6 @@ spec:
                                         enum:
                                         - BreakBeforePromotion
                                         type: string
-                                    required:
-                                    - strategy
                                     type: object
                                   resources:
                                     default:
@@ -45271,12 +45287,8 @@ spec:
                                             type: string
                                         type: object
                                     type: object
-                                required:
-                                - promotion
                                 type: object
                             type: object
-                        required:
-                        - strategy
                         type: object
                       scaling:
                         description: Scaling defines the scaling options for the deployment.

@@ -681,6 +681,21 @@ spec:
     protocol: TCP
     targetPort: https
   selector:
+    app.kubernetes.io/component: ko---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: ko
+  name: chartsnap-kong-operator
+  namespace: default
+spec:
+  ports:
+  - name: config-dump
+    port: 10256
+    protocol: TCP
+    targetPort: 10256
+  selector:
     app.kubernetes.io/component: ko
 ---
 # Source: kong-operator/templates/deployment.yaml
@@ -718,15 +733,15 @@ spec:
         app: chartsnap-kong-operator
         version: "2.0.0-alpha.2"
     spec:
-      tolerations:
-      - effect: NoSchedule
-        key: example-key
-        operator: Exists
       containers:
       - name: manager
         env:
-        - name: GATEWAY_OPERATOR_ANONYMOUS_REPORTS
-          value: "false"
+        - name: GATEWAY_OPERATOR_ENABLE_CONTROLLER_GATEWAY
+          value: "true"
+        - name: GATEWAY_OPERATOR_CONTROLPLANE_CONFIG_DUMP_BIND_ADDRESS
+          value: ":10256"
+        - name: GATEWAY_OPERATOR_ENABLE_CONTROLPLANE_CONFIG_DUMP
+          value: "true"
         - name: GATEWAY_OPERATOR_HEALTH_PROBE_BIND_ADDRESS
           value: ":8081"
         - name: GATEWAY_OPERATOR_METRICS_BIND_ADDRESS
