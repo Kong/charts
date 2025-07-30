@@ -65,8 +65,25 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 {{- $_ := set $defaultEnv "GATEWAY_OPERATOR_HEALTH_PROBE_BIND_ADDRESS" ":8081" -}}
 {{- $_ := set $defaultEnv "GATEWAY_OPERATOR_METRICS_BIND_ADDRESS" "0.0.0.0:8080" -}}
 
+{{/*
+List of envs that are configured by other variables.
+The template fails if you try to configure the envs controlled by other variables.
+The dict maps raw env variable key to the suggested variable path.
+*/}}
+{{- $envsSetByVars := dict -}}
+{{- $_ := set $envsSetByVars "GATEWAY_OPERATOR_ENABLE_CONTROLPLANE_CONFIG_DUMP" "Values.enableControlplaneConfigDump" -}}
+{{- $_ := set $envsSetByVars "GATEWAY_OPERATOR_CONTROLPLANE_CONFIG_DUMP_BIND_ADDRESS" "Values.controlplaneConfigDumpPort" -}}
+
+{{- if .Values.enableControlplaneConfigDump -}}
+{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_ENABLE_CONTROLPLANE_CONFIG_DUMP" "true" -}}
+{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_CONTROLPLANE_CONFIG_DUMP_BIND_ADDRESS" (print ":" .Values.controlplaneConfigDumpPort) -}}
+{{- end -}}
+
 {{- range $key, $val := .Values.env -}}
   {{- $var := printf "GATEWAY_OPERATOR_%s" ( upper $key ) -}}
+  {{- if hasKey $envsSetByVars $var -}}
+  {{- fail (printf "Do not configure %s in Values.env. Use %s instead." $key (get $envsSetByVars $var)) -}}
+  {{- end -}}
   {{- if hasKey $defaultEnv $var -}}
   {{- $defaultEnv = unset $defaultEnv $var -}}
   {{- end }}
@@ -76,6 +93,9 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 
 {{ range $key, $val := .Values.customEnv }}
   {{- $var := upper $key -}}
+  {{- if hasKey $envsSetByVars $var -}}
+  {{- fail (printf "Do not configure %s in Values.customEnv. Use %s instead." $key (get $envsSetByVars $var)) -}}
+  {{- end -}}
   {{- if hasKey $defaultEnv $var -}}
   {{- $defaultEnv = unset $defaultEnv $var -}}
   {{- end }}
@@ -94,11 +114,19 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 - name: {{ template "kong.fullname" . }}-certs-dir
   emptyDir:
     sizeLimit: {{ .Values.certsDir.sizeLimit }}
+- name: {{ template "kong.fullname" . }}-pod-labels
+  downwardAPI:
+    items:
+    - path: labels
+      fieldRef:
+        fieldPath: metadata.labels
 {{- end }}
 
 {{- define "kong.volumeMounts" -}}
 - name: {{ template "kong.fullname" . }}-certs-dir
   mountPath: /tmp/k8s-webhook-server/serving-certs
+- name: {{ template "kong.fullname" . }}-pod-labels
+  mountPath: /etc/podinfo
 {{- end }}
 
 {{/* effectiveVersion takes the image dict from values.yaml. */}}
