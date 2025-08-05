@@ -541,7 +541,6 @@ spec:
   names:
     categories:
     - kong
-    - all
     kind: ControlPlane
     listKind: ControlPlaneList
     plural: controlplanes
@@ -560,7 +559,7 @@ spec:
       name: Provisioned
       type: string
     deprecated: true
-    deprecationWarning: This API version has been deprecated in favor of v2alpha1
+    deprecationWarning: ControlPlane v1beta1 has been deprecated in favor of v2alpha1
       and it will be removed in the future.
     name: v1beta1
     schema:
@@ -9154,6 +9153,109 @@ spec:
 
                   If omitted, Ingress resources will not be supported by the ControlPlane.
                 type: string
+              konnect:
+                description: Konnect defines the Konnect-related configuration options
+                  for the ControlPlane.
+                properties:
+                  configUploadPeriod:
+                    description: ConfigUploadPeriod is the period for uploading configuration
+                      to Konnect.
+                    type: string
+                  consumersSync:
+                    default: enabled
+                    description: ConsumersSync indicates whether consumer synchronization
+                      with Konnect is enabled.
+                    enum:
+                    - enabled
+                    - disabled
+                    type: string
+                  licensing:
+                    description: Licensing defines the configuration for Konnect licensing.
+                    properties:
+                      initialPollingPeriod:
+                        description: InitialPollingPeriod is the initial polling period
+                          for license checks.
+                        type: string
+                      pollingPeriod:
+                        description: PollingPeriod is the polling period for license
+                          checks.
+                        type: string
+                      state:
+                        default: disabled
+                        description: State indicates whether Konnect licensing is
+                          enabled.
+                        enum:
+                        - enabled
+                        - disabled
+                        type: string
+                      storageState:
+                        default: enabled
+                        description: |-
+                          StorageState indicates whether to store licenses fetched from Konnect
+                          to Secrets locally to use them later when connection to Konnect is broken.
+                          Only effective when State is set to enabled.
+                        enum:
+                        - enabled
+                        - disabled
+                        type: string
+                    type: object
+                    x-kubernetes-validations:
+                    - message: initialPollingPeriod can only be set when licensing
+                        is enabled
+                      rule: '!has(self.initialPollingPeriod) || self.state == ''enabled'''
+                    - message: pollingPeriod can only be set when licensing is enabled
+                      rule: '!has(self.pollingPeriod) || self.state == ''enabled'''
+                    - message: storageState can only be set to enabled when licensing
+                        is enabled
+                      rule: '!has(self.storageState) || self.storageState == ''disabled''
+                        || self.state == ''enabled'''
+                  nodeRefreshPeriod:
+                    description: NodeRefreshPeriod is the period for refreshing the
+                      node information in Konnect.
+                    type: string
+                type: object
+              objectFilters:
+                description: ObjectFilters defines the filters to limit watched objects
+                  by the controllers.
+                properties:
+                  configMaps:
+                    description: ConfigMaps defines the filters for watched config
+                      maps.
+                    properties:
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          MatchLabels defines the labels that the object must match to get reconciled by the controller for the ControlPlane.
+                          For example, if `secrets.matchLabels` is `{"label1":"val1","label2":"val2"}`,
+                          only secrets with labels `label1=val1` and `label2=val2` are reconciled.
+                        maxProperties: 8
+                        type: object
+                        x-kubernetes-validations:
+                        - message: Minimum length of key in matchLabels is 1
+                          rule: self.all(key,key.size() >= 1)
+                        - message: Maximum length of value in matchLabels is 63
+                          rule: self.all(key,self[key].size() <= 63)
+                    type: object
+                  secrets:
+                    description: Secrets defines the filters for watched secrets.
+                    properties:
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          MatchLabels defines the labels that the object must match to get reconciled by the controller for the ControlPlane.
+                          For example, if `secrets.matchLabels` is `{"label1":"val1","label2":"val2"}`,
+                          only secrets with labels `label1=val1` and `label2=val2` are reconciled.
+                        maxProperties: 8
+                        type: object
+                        x-kubernetes-validations:
+                        - message: Minimum length of key in matchLabels is 1
+                          rule: self.all(key,key.size() >= 1)
+                        - message: Maximum length of value in matchLabels is 63
+                          rule: self.all(key,self[key].size() <= 63)
+                    type: object
+                type: object
               translation:
                 description: Translation defines the configuration for translating
                   Kong configuration.
@@ -9369,7 +9471,6 @@ spec:
   names:
     categories:
     - kong
-    - all
     kind: DataPlaneMetricsExtension
     listKind: DataPlaneMetricsExtensionList
     plural: dataplanemetricsextensions
@@ -9519,7 +9620,6 @@ spec:
   names:
     categories:
     - kong
-    - all
     kind: DataPlane
     listKind: DataPlaneList
     plural: dataplanes
@@ -19068,7 +19168,6 @@ spec:
   names:
     categories:
     - kong
-    - all
     kind: GatewayConfiguration
     listKind: GatewayConfigurationList
     plural: gatewayconfigurations
@@ -19078,8 +19177,8 @@ spec:
   scope: Namespaced
   versions:
   - deprecated: true
-    deprecationWarning: This API has been deprecated in favor of v2alpha1 API version
-      and it will be removed in future.
+    deprecationWarning: GatewayConfiguration v1beta1 has been deprecated in favor
+      of v2alpha1 and it will be removed in future.
     name: v1beta1
     schema:
       openAPIV3Schema:
@@ -36924,6 +37023,112 @@ spec:
 
                       If omitted, Ingress resources will not be supported by the ControlPlane.
                     type: string
+                  konnect:
+                    description: Konnect defines the Konnect-related configuration
+                      options for the ControlPlane.
+                    properties:
+                      configUploadPeriod:
+                        description: ConfigUploadPeriod is the period for uploading
+                          configuration to Konnect.
+                        type: string
+                      consumersSync:
+                        default: enabled
+                        description: ConsumersSync indicates whether consumer synchronization
+                          with Konnect is enabled.
+                        enum:
+                        - enabled
+                        - disabled
+                        type: string
+                      licensing:
+                        description: Licensing defines the configuration for Konnect
+                          licensing.
+                        properties:
+                          initialPollingPeriod:
+                            description: InitialPollingPeriod is the initial polling
+                              period for license checks.
+                            type: string
+                          pollingPeriod:
+                            description: PollingPeriod is the polling period for license
+                              checks.
+                            type: string
+                          state:
+                            default: disabled
+                            description: State indicates whether Konnect licensing
+                              is enabled.
+                            enum:
+                            - enabled
+                            - disabled
+                            type: string
+                          storageState:
+                            default: enabled
+                            description: |-
+                              StorageState indicates whether to store licenses fetched from Konnect
+                              to Secrets locally to use them later when connection to Konnect is broken.
+                              Only effective when State is set to enabled.
+                            enum:
+                            - enabled
+                            - disabled
+                            type: string
+                        type: object
+                        x-kubernetes-validations:
+                        - message: initialPollingPeriod can only be set when licensing
+                            is enabled
+                          rule: '!has(self.initialPollingPeriod) || self.state ==
+                            ''enabled'''
+                        - message: pollingPeriod can only be set when licensing is
+                            enabled
+                          rule: '!has(self.pollingPeriod) || self.state == ''enabled'''
+                        - message: storageState can only be set to enabled when licensing
+                            is enabled
+                          rule: '!has(self.storageState) || self.storageState == ''disabled''
+                            || self.state == ''enabled'''
+                      nodeRefreshPeriod:
+                        description: NodeRefreshPeriod is the period for refreshing
+                          the node information in Konnect.
+                        type: string
+                    type: object
+                  objectFilters:
+                    description: ObjectFilters defines the filters to limit watched
+                      objects by the controllers.
+                    properties:
+                      configMaps:
+                        description: ConfigMaps defines the filters for watched config
+                          maps.
+                        properties:
+                          matchLabels:
+                            additionalProperties:
+                              type: string
+                            description: |-
+                              MatchLabels defines the labels that the object must match to get reconciled by the controller for the ControlPlane.
+                              For example, if `secrets.matchLabels` is `{"label1":"val1","label2":"val2"}`,
+                              only secrets with labels `label1=val1` and `label2=val2` are reconciled.
+                            maxProperties: 8
+                            type: object
+                            x-kubernetes-validations:
+                            - message: Minimum length of key in matchLabels is 1
+                              rule: self.all(key,key.size() >= 1)
+                            - message: Maximum length of value in matchLabels is 63
+                              rule: self.all(key,self[key].size() <= 63)
+                        type: object
+                      secrets:
+                        description: Secrets defines the filters for watched secrets.
+                        properties:
+                          matchLabels:
+                            additionalProperties:
+                              type: string
+                            description: |-
+                              MatchLabels defines the labels that the object must match to get reconciled by the controller for the ControlPlane.
+                              For example, if `secrets.matchLabels` is `{"label1":"val1","label2":"val2"}`,
+                              only secrets with labels `label1=val1` and `label2=val2` are reconciled.
+                            maxProperties: 8
+                            type: object
+                            x-kubernetes-validations:
+                            - message: Minimum length of key in matchLabels is 1
+                              rule: self.all(key,key.size() >= 1)
+                            - message: Maximum length of value in matchLabels is 63
+                              rule: self.all(key,self[key].size() <= 63)
+                        type: object
+                    type: object
                   translation:
                     description: Translation defines the configuration for translating
                       Kong configuration.
@@ -49745,7 +49950,6 @@ spec:
   names:
     categories:
     - kong
-    - all
     kind: KongPluginInstallation
     listKind: KongPluginInstallationList
     plural: kongplugininstallations
@@ -52084,6 +52288,7 @@ spec:
   names:
     categories:
     - kong
+    - konnect
     kind: KonnectAPIAuthConfiguration
     listKind: KonnectAPIAuthConfigurationList
     plural: konnectapiauthconfigurations
@@ -52288,6 +52493,7 @@ spec:
   names:
     categories:
     - kong
+    - konnect
     kind: KonnectCloudGatewayDataPlaneGroupConfiguration
     listKind: KonnectCloudGatewayDataPlaneGroupConfigurationList
     plural: konnectcloudgatewaydataplanegroupconfigurations
@@ -52748,6 +52954,7 @@ spec:
   names:
     categories:
     - kong
+    - konnect
     kind: KonnectCloudGatewayNetwork
     listKind: KonnectCloudGatewayNetworkList
     plural: konnectcloudgatewaynetworks
@@ -52987,6 +53194,7 @@ spec:
   names:
     categories:
     - kong
+    - konnect
     kind: KonnectCloudGatewayTransitGateway
     listKind: KonnectCloudGatewayTransitGatewayList
     plural: konnectcloudgatewaytransitgateways
@@ -53582,6 +53790,7 @@ spec:
   names:
     categories:
     - kong
+    - konnect
     kind: KonnectExtension
     listKind: KonnectExtensionList
     plural: konnectextensions
@@ -54351,6 +54560,7 @@ spec:
   names:
     categories:
     - kong
+    - konnect
     kind: KonnectGatewayControlPlane
     listKind: KonnectGatewayControlPlaneList
     plural: konnectgatewaycontrolplanes
