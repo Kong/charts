@@ -62,8 +62,8 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 {{- define "kong.env" -}}
 
 {{- $defaultEnv := dict -}}
-{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_HEALTH_PROBE_BIND_ADDRESS" ":8081" -}}
-{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_METRICS_BIND_ADDRESS" "0.0.0.0:8080" -}}
+{{- $_ := set $defaultEnv "KONG_OPERATOR_HEALTH_PROBE_BIND_ADDRESS" ":8081" -}}
+{{- $_ := set $defaultEnv "KONG_OPERATOR_METRICS_BIND_ADDRESS" "0.0.0.0:8080" -}}
 
 {{/*
 List of envs that are configured by other variables.
@@ -71,16 +71,16 @@ The template fails if you try to configure the envs controlled by other variable
 The dict maps raw env variable key to the suggested variable path.
 */}}
 {{- $envsSetByVars := dict -}}
-{{- $_ := set $envsSetByVars "GATEWAY_OPERATOR_ENABLE_CONTROLPLANE_CONFIG_DUMP" "Values.enableControlplaneConfigDump" -}}
-{{- $_ := set $envsSetByVars "GATEWAY_OPERATOR_CONTROLPLANE_CONFIG_DUMP_BIND_ADDRESS" "Values.controlplaneConfigDumpPort" -}}
+{{- $_ := set $envsSetByVars "KONG_OPERATOR_ENABLE_CONTROLPLANE_CONFIG_DUMP" "Values.enableControlplaneConfigDump" -}}
+{{- $_ := set $envsSetByVars "KONG_OPERATOR_CONTROLPLANE_CONFIG_DUMP_BIND_ADDRESS" "Values.controlplaneConfigDumpPort" -}}
 
 {{- if .Values.enableControlplaneConfigDump -}}
-{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_ENABLE_CONTROLPLANE_CONFIG_DUMP" "true" -}}
-{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_CONTROLPLANE_CONFIG_DUMP_BIND_ADDRESS" (print ":" .Values.controlplaneConfigDumpPort) -}}
+{{- $_ := set $defaultEnv "KONG_OPERATOR_ENABLE_CONTROLPLANE_CONFIG_DUMP" "true" -}}
+{{- $_ := set $defaultEnv "KONG_OPERATOR_CONTROLPLANE_CONFIG_DUMP_BIND_ADDRESS" (print ":" .Values.controlplaneConfigDumpPort) -}}
 {{- end -}}
 
 {{- range $key, $val := .Values.env -}}
-  {{- $var := printf "GATEWAY_OPERATOR_%s" ( upper $key ) -}}
+  {{- $var := printf "KONG_OPERATOR_%s" ( upper $key ) -}}
   {{- if hasKey $envsSetByVars $var -}}
   {{- fail (printf "Do not configure %s in Values.env. Use %s instead." $key (get $envsSetByVars $var)) -}}
   {{- end -}}
@@ -111,9 +111,10 @@ The dict maps raw env variable key to the suggested variable path.
 {{- end -}}
 
 {{- define "kong.volumes" -}}
-- name: {{ template "kong.fullname" . }}-certs-dir
-  emptyDir:
-    sizeLimit: {{ .Values.certsDir.sizeLimit }}
+- name: {{ template "kong.fullname" . }}-webhook-certs
+  secret:
+    defaultMode: 420
+    secretName: webhook-server-cert
 - name: {{ template "kong.fullname" . }}-pod-labels
   downwardAPI:
     items:
@@ -123,7 +124,7 @@ The dict maps raw env variable key to the suggested variable path.
 {{- end }}
 
 {{- define "kong.volumeMounts" -}}
-- name: {{ template "kong.fullname" . }}-certs-dir
+- name: {{ template "kong.fullname" . }}-webhook-certs
   mountPath: /tmp/k8s-webhook-server/serving-certs
 - name: {{ template "kong.fullname" . }}-pod-labels
   mountPath: /etc/podinfo
