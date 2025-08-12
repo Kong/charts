@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: aigateways.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -534,7 +534,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: controlplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -559,7 +559,7 @@ spec:
       name: Provisioned
       type: string
     deprecated: true
-    deprecationWarning: ControlPlane v1beta1 has been deprecated in favor of v2alpha1
+    deprecationWarning: ControlPlane v1beta1 has been deprecated in favor of v2beta1
       and it will be removed in the future.
     name: v1beta1
     schema:
@@ -8920,7 +8920,7 @@ spec:
       jsonPath: .status.conditions[?(@.type=='Ready')].status
       name: Ready
       type: string
-    name: v2alpha1
+    name: v2beta1
     schema:
       openAPIV3Schema:
         description: ControlPlane is the Schema for the controlplanes API
@@ -9464,7 +9464,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: dataplanemetricsextensions.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -9613,7 +9613,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: dataplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -19161,7 +19161,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: gatewayconfigurations.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -19178,7 +19178,7 @@ spec:
   versions:
   - deprecated: true
     deprecationWarning: GatewayConfiguration v1beta1 has been deprecated in favor
-      of v2alpha1 and it will be removed in future.
+      of v2beta1 and it will be removed in future.
     name: v1beta1
     schema:
       openAPIV3Schema:
@@ -36856,7 +36856,7 @@ spec:
     storage: false
     subresources:
       status: {}
-  - name: v2alpha1
+  - name: v2beta1
     schema:
       openAPIV3Schema:
         description: GatewayConfiguration is the Schema for the gatewayconfigurations
@@ -46468,7 +46468,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongcacertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -46719,7 +46719,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -46987,7 +46987,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongconsumergroups.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -47239,7 +47239,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongconsumers.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -47518,7 +47518,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongcredentialacls.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -47708,7 +47708,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongcredentialapikeys.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -47898,7 +47898,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongcredentialbasicauths.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -48092,7 +48092,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongcredentialhmacs.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -48288,7 +48288,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongcredentialjwts.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -48508,7 +48508,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongdataplaneclientcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -48757,7 +48757,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongkeys.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -49083,7 +49083,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongkeysets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -49333,7 +49333,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: konglicenses.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -49533,7 +49533,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongpluginbindings.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -49943,7 +49943,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongplugininstallations.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -50125,7 +50125,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongplugins.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -50427,7 +50427,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongroutes.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -50829,7 +50829,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongservices.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -51141,7 +51141,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongsnis.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -51329,7 +51329,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongtargets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -51523,7 +51523,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongupstreams.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -51990,7 +51990,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller,gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: kongvaults.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -52281,7 +52281,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: konnectapiauthconfigurations.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -52486,7 +52486,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: konnectcloudgatewaydataplanegroupconfigurations.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -52947,7 +52947,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: konnectcloudgatewaynetworks.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -53187,7 +53187,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: konnectcloudgatewaytransitgateways.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -53575,7 +53575,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: konnectextensions.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -53783,7 +53783,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: konnectextensions.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -54553,7 +54553,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: konnectgatewaycontrolplanes.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -55243,7 +55243,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.1
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.3
   name: watchnamespacegrants.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
