@@ -828,7 +828,7 @@ certificates:
     # - "*.apps.example"
     # - "*.kong.example"
 
-  # Set admin.enabled true to issue kong admin api and manager certificate with cert-manager
+  # Set admin.enabled true to issue kong admin api certificate with cert-manager
   admin:
     enabled: true
     # Set `issuer` or `clusterIssuer` to name of alternate cert-manager clusterIssuer to override default
@@ -838,6 +838,20 @@ certificates:
     # Use commonName and dnsNames to set the common name and dns alt names which this
     # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
     commonName: "kong.example"
+    # Remove the "[]" and uncomment/change the examples to add SANs
+    dnsNames: []
+    # - "admin.kong.example"
+
+  # Set manager.enabled true to issue a dedicated Kong Manager (admin GUI) certificate with cert-manager
+  # If disabled, Kong Manager will fall back to using the admin certificate (backward compatible behavior).
+  manager:
+    enabled: false
+    # Set `issuer` or `clusterIssuer` to name of alternate cert-manager issuer to override default
+    issuer: ""
+    clusterIssuer: ""
+    # Use commonName and dnsNames to set the common name and dns alt names which this
+    # certificate is valid for. Wildcard records are supported by the included self-signed issuer.
+    commonName: "manager.kong.example"
     # Remove the "[]" and uncomment/change the examples to add SANs
     dnsNames: []
     # - "manager.kong.example"
