@@ -474,10 +474,15 @@ and set `certificates.clusterIssuer: selfsigned-issuer` for testing. You
 should, however, migrate to an issuer using a CA your clients trust for actual
 usage.
 
-The `proxy`, `admin`, `portal`, and `cluster` subsections under `certificates`
+The `proxy`, `admin`, `manager`, `portal`, and `cluster` subsections under `certificates`
 let you choose hostnames, override issuers, set `subject` or set `privateKey` on a per-certificate basis for the
-proxy, admin API and Manager, Portal and Portal API, and hybrid mode mTLS
+proxy, admin API, Kong Manager (Enterprise only), Portal and Portal API, and hybrid mode mTLS
 services, respectively.
+
+For Kong Enterprise deployments, the `manager` certificate configuration allows you to generate a dedicated
+certificate for Kong Manager (the admin GUI) separate from the admin API certificate. This improves security
+by allowing different hostnames and access patterns for the GUI versus the API. If `certificates.manager.enabled`
+is not set, Kong Manager will fall back to using the admin certificate for backward compatibility.
 
 To use hybrid mode, the control and data plane releases must use the same
 issuer for their cluster certificates.

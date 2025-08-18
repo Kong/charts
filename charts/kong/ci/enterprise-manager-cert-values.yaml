@@ -1,0 +1,55 @@
+# Test Kong Enterprise with separate cert-manager certificates for admin and manager
+enterprise:
+  enabled: true
+
+# Enable cert-manager integration
+certificates:
+  enabled: true
+  # Test admin certificate
+  admin:
+    enabled: true
+    commonName: "kong-admin.example.com"
+    dnsNames:
+      - "admin.kong.example.com"
+      - "api.kong.example.com"
+  # Test the new manager certificate feature
+  manager:
+    enabled: true
+    commonName: "kong-manager.example.com"
+    dnsNames:
+      - "manager.kong.example.com"
+      - "gui.kong.example.com"
+
+# Enable both admin and manager services to test certificate usage
+admin:
+  enabled: true
+  http:
+    enabled: false
+  tls:
+    enabled: true
+
+manager:
+  enabled: true
+  http:
+    enabled: false
+  tls:
+    enabled: true
+
+image:
+  repository: kong/kong-gateway
+  tag: "3.10.0.2"
+
+ingressController:
+  enabled: true
+  env:
+    anonymous_reports: "false"
+
+# NOTE: The purpose of those values below is to:
+# - to speed up the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"
