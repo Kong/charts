@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixes
+
+- Fix config dump service and template issue.
+  [#1382](https://github.com/Kong/charts/pull/1382)
+
 ## 0.0.4
 
 ### Changes
