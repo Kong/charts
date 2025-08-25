@@ -13,25 +13,25 @@ spec:
     targetPort: https
   selector:
     app.kubernetes.io/component: ko
-{{- if .Values.enableControlplaneConfigDump -}}
+{{- if .Values.enableControlplaneConfigDump }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app.kubernetes.io/component: ko
-  name: {{ template "kong.fullname" . }}
+  name: {{ template "kong.fullname" . }}-config-dump
   namespace:  {{ template "kong.namespace" . }}
 spec:
   ports:
   - name: config-dump
-    port: {{.Values.controlplaneConfigDumpPort}}
+    port: {{ .Values.controlplaneConfigDumpPort }}
     protocol: TCP
-    targetPort: {{.Values.controlplaneConfigDumpPort}}
+    targetPort: {{ .Values.controlplaneConfigDumpPort }}
   selector:
     app.kubernetes.io/component: ko
-{{- end -}}
-{{- if .Values.conversionWebhook.enabled -}}
+{{- end }}
+{{- if .Values.conversionWebhook.enabled }}
 ---
 apiVersion: v1
 kind: Service
@@ -47,4 +47,4 @@ spec:
     targetPort: 9443
   selector:
     app.kubernetes.io/component: ko
-{{- end -}}
+{{- end }}

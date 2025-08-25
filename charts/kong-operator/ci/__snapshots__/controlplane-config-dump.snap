@@ -675,13 +675,14 @@ spec:
     protocol: TCP
     targetPort: https
   selector:
-    app.kubernetes.io/component: ko---
+    app.kubernetes.io/component: ko
+---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app.kubernetes.io/component: ko
-  name: chartsnap-kong-operator
+  name: chartsnap-kong-operator-config-dump
   namespace: default
 spec:
   ports:
@@ -690,7 +691,8 @@ spec:
     protocol: TCP
     targetPort: 10256
   selector:
-    app.kubernetes.io/component: ko---
+    app.kubernetes.io/component: ko
+---
 apiVersion: v1
 kind: Service
 metadata:
