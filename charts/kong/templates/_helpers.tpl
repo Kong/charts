@@ -643,6 +643,11 @@ The name of the Service which will be used by the controller to update the Ingre
     secretName: {{ include "kong.fullname" . }}-admin-cert
 {{- end }}
 {{- if .Values.enterprise.enabled }}
+{{- if .Values.certificates.manager.enabled }}
+- name: {{ include "kong.fullname" . }}-manager-cert
+  secret:
+    secretName: {{ include "kong.fullname" . }}-manager-cert
+{{- end }}
 {{- if .Values.certificates.portal.enabled }}
 - name: {{ include "kong.fullname" . }}-portal-cert
   secret:
@@ -765,6 +770,10 @@ The name of the Service which will be used by the controller to update the Ingre
   mountPath: /etc/cert-manager/admin/
 {{- end }}
 {{- if .Values.enterprise.enabled }}
+{{- if .Values.certificates.manager.enabled }}
+- name: {{ include "kong.fullname" . }}-manager-cert
+  mountPath: /etc/cert-manager/manager/
+{{- end }}
 {{- if .Values.certificates.portal.enabled }}
 - name: {{ include "kong.fullname" . }}-portal-cert
   mountPath: /etc/cert-manager/portal/
@@ -1030,7 +1039,13 @@ the template that it itself is using form the above sections.
   {{- if .Values.certificates.admin.enabled -}}
     {{- $_ := set $autoEnv "KONG_ADMIN_SSL_CERT" "/etc/cert-manager/admin/tls.crt" -}}
     {{- $_ := set $autoEnv "KONG_ADMIN_SSL_CERT_KEY" "/etc/cert-manager/admin/tls.key" -}}
-    {{- if .Values.enterprise.enabled }}
+  {{- end -}}
+
+  {{- if .Values.enterprise.enabled -}}
+    {{- if .Values.certificates.manager.enabled -}}
+      {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SSL_CERT" "/etc/cert-manager/manager/tls.crt" -}}
+      {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SSL_CERT_KEY" "/etc/cert-manager/manager/tls.key" -}}
+    {{- else if .Values.certificates.admin.enabled -}}
       {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SSL_CERT" "/etc/cert-manager/admin/tls.crt" -}}
       {{- $_ := set $autoEnv "KONG_ADMIN_GUI_SSL_CERT_KEY" "/etc/cert-manager/admin/tls.key" -}}
     {{- end -}}

@@ -3,6 +3,11 @@
 ## Unreleased
 
 * Added `migrations.waitContainer.securityContext` to allow setting a security context on the migrations wait-for-postgres init container.
+* Added `certificates.manager` configuration to enable separate cert-manager certificate generation for Kong Manager (admin GUI).
+  This allows Kong Manager to use a dedicated certificate instead of sharing the admin API certificate,
+  improving security and flexibility for Enterprise deployments.
+  [#1373](https://github.com/Kong/charts/pull/1373)
+
 
 ## 2.51.0
 
