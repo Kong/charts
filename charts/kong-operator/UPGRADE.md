@@ -14,6 +14,24 @@ Note that not all versions contain breaking changes. If a version is not
 present in the table of contents, it requires no version-specific changes when
 upgrading from a previous version.
 
+## Upgrading from KGO - Kong Gateway Operator chart
+
+If you're upgrading from KGO - Kong Gateway Operator chart you will need to
+update the CRDs manually since [Helm does not manage CRD updates][helm_crd_update].
+
+This can be done by running the following command:
+
+<!--
+TODO: https://github.com/Kong/kong-operator/issues/1960
+Update command below when 1960 is resolved and CRDs have been moved to kong-operator repo
+-->
+
+```
+kustomize build github.com/kong/kubernetes-configuration/config/crd/gateway-operator | kubectl apply --server-side -f -
+```
+
+[helm_crd_update]: https://helm.sh/docs/chart_best_practices/custom_resource_definitions/
+
 ## Updating operator version
 
 The operator version is following [SemVer][semver].

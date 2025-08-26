@@ -19,6 +19,10 @@ spec:
       jsonPath: .status.endpoint
       name: Endpoint
       type: string
+    - description: Age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -8916,6 +8920,10 @@ spec:
     subresources:
       status: {}
   - additionalPrinterColumns:
+    - description: Age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     - description: The Resource is ready
       jsonPath: .status.conditions[?(@.type=='Ready')].status
       name: Ready
@@ -9645,6 +9653,10 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - description: Age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     - description: The Resource is ready
       jsonPath: .status.conditions[?(@.type=='Ready')].status
       name: Ready
@@ -36783,6 +36795,56 @@ spec:
                 maxItems: 1
                 minItems: 0
                 type: array
+              listenersOptions:
+                description: |-
+                  ListenerOptions is the specification for configuration bound to specific listeners in the Gateway.
+                  It will override the default configuration of control plane or data plane for the specified listener.
+                items:
+                  description: |-
+                    GatewayConfigurationListenerOptions specifies configuration overrides of defaults on certain listener of the Gateway.
+                    The name must match the name of a listener in the Gateway
+                    and the options are applied to the configuration of the matching listener.
+                    For example, if the option for listener "http" specified the nodeport number to 30080,
+                    The ingress service will expose the nodeport 30080 for the "http" listener of the Gateway.
+                    For listeners without an item in listener options of GatewayConfiguration, default configuration is used for it.
+                  properties:
+                    name:
+                      description: Name is the name of the Listener.
+                      maxLength: 253
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      type: string
+                    nodePort:
+                      description: |-
+                        The port on each node on which this service is exposed when type is
+                        NodePort or LoadBalancer. Usually assigned by the system. If a value is
+                        specified, in-range, and not in use it will be used, otherwise the
+                        operation will fail. If not specified, a port will be allocated if this
+                        Service requires one. If this field is specified when creating a
+                        Service which does not need it, creation will fail. This field will be
+                        wiped when updating a Service to no longer need it (e.g. changing type
+                        from NodePort to ClusterIP).
+
+                        More info: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+
+                        Can only be specified if type of the dataplane ingress service (specified in `spec.dataplaneOptions.network.services.ingress.type`)
+                        is NodePort or LoadBalancer.
+                      format: int32
+                      maximum: 65535
+                      minimum: 1
+                      type: integer
+                  required:
+                  - name
+                  - nodePort
+                  type: object
+                maxItems: 64
+                type: array
+                x-kubernetes-validations:
+                - message: Listener name must be unique within the Gateway
+                  rule: self.all(l1, self.exists_one(l2, l1.name == l2.name))
+                - message: Nodeport must be unique within the Gateway if specified
+                  rule: self.all(l1, !has(l1.nodePort) || self.exists_one(l2, l1.nodePort
+                    == l2.nodePort))
             type: object
             x-kubernetes-validations:
             - message: KonnectExtension must be set at the Gateway level
@@ -36795,6 +36857,14 @@ spec:
                 ? self.controlPlaneOptions.extensions.all(e, (e.group != ''konnect.konghq.com''
                 && e.group != ''gateway-operator.konghq.com'') || e.kind != ''KonnectExtension'')
                 : true'
+            - message: Can only specify listener's NodePort when the type of service
+                for dataplane to receive ingress traffic ('spec.dataPlaneOptions.network.services.ingress')
+                is NodePort or LoadBalancer
+              rule: '(has(self.dataPlaneOptions) && has(self.dataPlaneOptions.network)
+                && has(self.dataPlaneOptions.network.services) &&  has(self.dataPlaneOptions.network.services.ingress)
+                && (self.dataPlaneOptions.network.services.ingress.type == ''LoadBalancer''
+                || self.dataPlaneOptions.network.services.ingress.type == ''NodePort''))
+                ? true : (!has(self.listenersOptions) || self.listenersOptions.all(l,!has(l.nodePort)))'
           status:
             description: GatewayConfigurationStatus defines the observed state of
               GatewayConfiguration
@@ -36872,7 +36942,12 @@ spec:
     storage: false
     subresources:
       status: {}
-  - name: v2beta1
+  - additionalPrinterColumns:
+    - description: Age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v2beta1
     schema:
       openAPIV3Schema:
         description: GatewayConfiguration is the Schema for the gatewayconfigurations
@@ -45469,6 +45544,8 @@ spec:
                                   for Blue Green Deployments.
                                 properties:
                                   promotion:
+                                    default:
+                                      strategy: BreakBeforePromotion
                                     description: Promotion defines how the operator
                                       handles promotion of resources.
                                     properties:
@@ -45509,7 +45586,11 @@ spec:
                                         type: object
                                     type: object
                                 type: object
+                            required:
+                            - blueGreen
                             type: object
+                        required:
+                        - strategy
                         type: object
                       scaling:
                         description: Scaling defines the scaling options for the deployment.
@@ -46407,7 +46488,66 @@ spec:
                   rule: self.all(e, (e.group == 'konnect.konghq.com' && e.kind ==
                     'KonnectExtension') || (e.group == 'gateway-operator.konghq.com'
                     && e.kind == 'DataPlaneMetricsExtension'))
+              listenersOptions:
+                description: |-
+                  ListenerOptions is the specification for configuration bound to specific listeners in the Gateway.
+                  It will override the default configuration of control plane or data plane for the specified listener.
+                items:
+                  description: |-
+                    GatewayConfigurationListenerOptions specifies configuration overrides of defaults on certain listener of the Gateway.
+                    The name must match the name of a listener in the Gateway
+                    and the options are applied to the configuration of the matching listener.
+                    For example, if the option for listener "http" specified the nodeport number to 30080,
+                    The ingress service will expose the nodeport 30080 for the "http" listener of the Gateway.
+                    For listeners without an item in listener options of GatewayConfiguration, default configuration is used for it.
+                  properties:
+                    name:
+                      description: Name is the name of the Listener.
+                      maxLength: 253
+                      minLength: 1
+                      pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                      type: string
+                    nodePort:
+                      description: |-
+                        The port on each node on which this service is exposed when type is
+                        NodePort or LoadBalancer. Usually assigned by the system. If a value is
+                        specified, in-range, and not in use it will be used, otherwise the
+                        operation will fail. If not specified, a port will be allocated if this
+                        Service requires one. If this field is specified when creating a
+                        Service which does not need it, creation will fail. This field will be
+                        wiped when updating a Service to no longer need it (e.g. changing type
+                        from NodePort to ClusterIP).
+
+                        More info: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+
+                        Can only be specified if type of the dataplane ingress service (specified in `spec.dataplaneOptions.network.services.ingress.type`)
+                        is NodePort or LoadBalancer.
+                      format: int32
+                      maximum: 65535
+                      minimum: 1
+                      type: integer
+                  required:
+                  - name
+                  - nodePort
+                  type: object
+                maxItems: 64
+                type: array
+                x-kubernetes-validations:
+                - message: Listener name must be unique within the Gateway
+                  rule: self.all(l1, self.exists_one(l2, l1.name == l2.name))
+                - message: Nodeport must be unique within the Gateway if specified
+                  rule: self.all(l1, !has(l1.nodePort) || self.exists_one(l2, l1.nodePort
+                    == l2.nodePort))
             type: object
+            x-kubernetes-validations:
+            - message: Can only specify listener's NodePort when the type of service
+                for dataplane to receive ingress traffic ('spec.dataPlaneOptions.network.services.ingress')
+                is NodePort or LoadBalancer
+              rule: '(has(self.dataPlaneOptions) && has(self.dataPlaneOptions.network)
+                && has(self.dataPlaneOptions.network.services) &&  has(self.dataPlaneOptions.network.services.ingress)
+                && (self.dataPlaneOptions.network.services.ingress.type == ''LoadBalancer''
+                || self.dataPlaneOptions.network.services.ingress.type == ''NodePort''))
+                ? true : (!has(self.listenersOptions) || self.listenersOptions.all(l,!has(l.nodePort)))'
           status:
             description: Status defines the observed state of GatewayConfiguration.
             properties:
@@ -52533,6 +52673,10 @@ spec:
       jsonPath: .status.organizationID
       name: OrgID
       type: string
+    - description: Age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -54227,6 +54371,10 @@ spec:
       jsonPath: .status.conditions[?(@.type=='Ready')].status
       name: Ready
       type: string
+    - description: Age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     name: v1alpha2
     schema:
       openAPIV3Schema:
@@ -54921,6 +55069,10 @@ spec:
       jsonPath: .status.organizationID
       name: OrgID
       type: string
+    - description: Age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     name: v1alpha2
     schema:
       openAPIV3Schema:
