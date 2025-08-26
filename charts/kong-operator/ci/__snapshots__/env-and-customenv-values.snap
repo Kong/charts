@@ -675,7 +675,9 @@ spec:
     protocol: TCP
     targetPort: https
   selector:
-    app.kubernetes.io/component: ko---
+    app.kubernetes.io/component: ko
+---
+# Source: kong-operator/templates/services.yaml
 apiVersion: v1
 kind: Service
 metadata:
