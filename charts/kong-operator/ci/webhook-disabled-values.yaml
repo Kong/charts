@@ -1,0 +1,6 @@
+ko-crds:
+  enabled: false
+
+global:
+  conversionWebhook:
+    enabled: false

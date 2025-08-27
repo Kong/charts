@@ -811,7 +811,7 @@ spec:
       - name: chartsnap-kong-operator-webhook-certs
         secret:
           defaultMode: 420
-          secretName: webhook-server-cert
+          secretName: chartsnap-kong-operator-webhook-server-cert
       - name: chartsnap-kong-operator-pod-labels
         downwardAPI:
           items:
@@ -824,45 +824,54 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kong-gateway-operator
-  name: metrics-certs
+    app.kubernetes.io/name: kong-operator
+    helm.sh/chart: kong-operator-0.0.4
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/version: "2.0.0-alpha.3"
+    app.kubernetes.io/component: ko
+  name: chartsnap-kong-operator-webhook-metrics-certs
   namespace: default
 spec:
   dnsNames:
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc.cluster.local
+  - chartsnap-kong-operator-webhook.default.svc
+  - chartsnap-kong-operator-webhook.default.svc.cluster.local
   issuerRef:
     kind: Issuer
-    name: selfsigned-issuer
-  secretName: metrics-server-cert
+    name: chartsnap-kong-operator-webhook-selfsigned-issuer
+  secretName: chartsnap-kong-operator-webhook-metrics-server-cert
 ---
 # Source: kong-operator/templates/cert-manager.yaml
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kong-gateway-operator
-  name: serving-cert
+    app.kubernetes.io/name: kong-operator
+    helm.sh/chart: kong-operator-0.0.4
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/version: "2.0.0-alpha.3"
+    app.kubernetes.io/component: ko
+  name: chartsnap-kong-operator-webhook-serving-cert
   namespace: default
 spec:
   dnsNames:
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc.cluster.local
+  - chartsnap-kong-operator-webhook.default.svc
+  - chartsnap-kong-operator-webhook.default.svc.cluster.local
   issuerRef:
     kind: Issuer
-    name: selfsigned-issuer
-  secretName: webhook-server-cert
+    name: chartsnap-kong-operator-webhook-selfsigned-issuer
+  secretName: chartsnap-kong-operator-webhook-server-cert
 ---
 # Source: kong-operator/templates/cert-manager.yaml
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kong-gateway-operator
-  name: selfsigned-issuer
+    app.kubernetes.io/name: kong-operator
+    helm.sh/chart: kong-operator-0.0.4
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/version: "2.0.0-alpha.3"
+    app.kubernetes.io/component: ko
+  name: chartsnap-kong-operator-webhook-selfsigned-issuer
   namespace: default
 spec:
   selfSigned: {}

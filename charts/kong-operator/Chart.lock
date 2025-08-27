@@ -1,4 +1,7 @@
 dependencies:
+- name: ko-crds
+  repository: ""
+  version: 1.0.0
 - name: kic-crds
   repository: ""
   version: 1.2.0
@@ -8,5 +11,5 @@ dependencies:
 - name: gwapi-experimental-crds
   repository: ""
   version: 1.3.0
-digest: sha256:9c547c49b1dac72fdb9c1dcdad272950ea19950cba321122a0d3aff7ee3159a8
-generated: "2025-05-20T13:33:04.789053+02:00"
+digest: sha256:aa8ccdf41642091ad831c4f2020d4390b0f477dd06ca0979cef136f96a8be427
+generated: "2025-08-27T14:04:29.252376+02:00"

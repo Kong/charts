@@ -1,3 +1,6 @@
+ko-crds:
+  enabled: false
+
 livenessProbe:
   httpGet:
     path: /healthz

@@ -7,6 +7,11 @@
 - Fix config dump service and template issue.
   [#2129](https://github.com/Kong/kong-operator/pull/2129)
 
+### Changes
+
+- Conversion webhook can be deployed with `cert-manager`.
+  [#2135](https://github.com/Kong/kong-operator/pull/2135)
+
 ## 0.0.4
 
 ### Changes

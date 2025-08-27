@@ -31,6 +31,13 @@ extraLabels: {}
 podLabels: {}
 # Annotations to be added to KGO pods
 podAnnotations: {}
+# Install KO's CRDs
+ko-crds:
+  # Installation of CRDs is performed. For multiple installations
+  # of KO in cluster only for one it should be enabled.
+  enabled: true
+  # CRDs are not uninstalled with Chart (it doesn't matter when enabled: false).
+  keep: true
 # Install KIC's CRDs
 kic-crds:
   enabled: true
@@ -103,6 +110,9 @@ certsDir:
 # enable configuration dump for control planes.
 enableControlplaneConfigDump: false
 controlplaneConfigDumpPort: 10256
-conversionWebhook:
-  # Enable the conversion webhook for the operator
-  enabled: true
+global:
+  conversionWebhook:
+    # Some old CRDs pre KO 2.0.0 are deprecated now, conversion webhook ensures
+    # compatibility for those old ones - conversion is handled automatically.
+    # If it's disabled, deprecated CRDs won't be installed and can't be applied.
+    enabled: true

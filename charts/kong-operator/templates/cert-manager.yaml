@@ -1,45 +1,45 @@
-{{- if .Values.conversionWebhook.enabled }}
+{{- if .Values.global.conversionWebhook.enabled }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kong-gateway-operator
-  name: metrics-certs
+    {{- include "kong.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: ko
+  name: {{ template "kong.webhookServiceName" . }}-metrics-certs
   namespace:  {{ template "kong.namespace" . }}
 spec:
   dnsNames:
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc.cluster.local
+  - {{ template "kong.webhookServiceName" . }}.{{ template "kong.namespace" . }}.svc
+  - {{ template "kong.webhookServiceName" . }}.{{ template "kong.namespace" . }}.svc.cluster.local
   issuerRef:
     kind: Issuer
-    name: selfsigned-issuer
-  secretName: metrics-server-cert
+    name: {{ template "kong.webhookServiceName" . }}-selfsigned-issuer
+  secretName: {{ template "kong.webhookServiceName" . }}-metrics-server-cert
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kong-gateway-operator
-  name: serving-cert
+    {{- include "kong.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: ko
+  name: {{ template "kong.webhookServiceName" . }}-serving-cert
   namespace:  {{ template "kong.namespace" . }}
 spec:
   dnsNames:
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc.cluster.local
+  - {{ template "kong.webhookServiceName" . }}.{{ template "kong.namespace" . }}.svc
+  - {{ template "kong.webhookServiceName" . }}.{{ template "kong.namespace" . }}.svc.cluster.local
   issuerRef:
     kind: Issuer
-    name: selfsigned-issuer
-  secretName: webhook-server-cert
+    name: {{ template "kong.webhookServiceName" . }}-selfsigned-issuer
+  secretName: {{ template "kong.webhookServiceName" . }}-server-cert
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kong-gateway-operator
-  name: selfsigned-issuer
+    {{- include "kong.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: ko
+  name: {{ template "kong.webhookServiceName" . }}-selfsigned-issuer
   namespace:  {{ template "kong.namespace" . }}
 spec:
   selfSigned: {}

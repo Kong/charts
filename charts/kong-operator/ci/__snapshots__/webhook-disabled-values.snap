@@ -677,22 +677,6 @@ spec:
   selector:
     app.kubernetes.io/component: ko
 ---
-# Source: kong-operator/templates/services.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: ko
-  name: chartsnap-kong-operator-webhook
-  namespace: default
-spec:
-  ports:
-  - port: 443
-    protocol: TCP
-    targetPort: 9443
-  selector:
-    app.kubernetes.io/component: ko
----
 # Source: kong-operator/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -731,7 +715,8 @@ spec:
       containers:
       - name: manager
         env:
-        - name: KONG_OPERATOR_ANONYMOUS_REPORTS
+        # NOTICE: For now use deprecated GATEWAY_OPERATOR_ prefix, change it during releasing the next KO rc.
+        - name: GATEWAY_OPERATOR_ENABLE_CONVERSION_WEBHOOK
           value: "false"
         - name: KONG_OPERATOR_HEALTH_PROBE_BIND_ADDRESS
           value: ":8081"
@@ -741,19 +726,19 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: "docker.io/kong/nightly-gateway-operator-oss:20250409"
+        image: "docker.io/kong/kong-operator:2.0.0-alpha.3"
         livenessProbe:
           httpGet:
             path: /healthz
             port: 8081
-          initialDelaySeconds: 1
-          periodSeconds: 1
+          initialDelaySeconds: 15
+          periodSeconds: 20
         readinessProbe:
           httpGet:
             path: /readyz
             port: 8081
-          initialDelaySeconds: 1
-          periodSeconds: 1
+          initialDelaySeconds: 5
+          periodSeconds: 10
         resources:
           limits:
             cpu: 500m
@@ -778,8 +763,6 @@ spec:
           name: metrics
           protocol: TCP
         volumeMounts:
-        - name: chartsnap-kong-operator-webhook-certs
-          mountPath: /tmp/k8s-webhook-server/serving-certs
         - name: chartsnap-kong-operator-pod-labels
           mountPath: /etc/podinfo
       securityContext:
@@ -787,64 +770,12 @@ spec:
       serviceAccountName: controller-manager
       terminationGracePeriodSeconds: 10
       volumes:
-      - name: chartsnap-kong-operator-webhook-certs
-        secret:
-          defaultMode: 420
-          secretName: webhook-server-cert
       - name: chartsnap-kong-operator-pod-labels
         downwardAPI:
           items:
           - path: labels
             fieldRef:
               fieldPath: metadata.labels
----
-# Source: kong-operator/templates/cert-manager.yaml
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kong-gateway-operator
-  name: metrics-certs
-  namespace: default
-spec:
-  dnsNames:
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc.cluster.local
-  issuerRef:
-    kind: Issuer
-    name: selfsigned-issuer
-  secretName: metrics-server-cert
----
-# Source: kong-operator/templates/cert-manager.yaml
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kong-gateway-operator
-  name: serving-cert
-  namespace: default
-spec:
-  dnsNames:
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc
-  - SERVICE_NAME.SERVICE_NAMESPACE.svc.cluster.local
-  issuerRef:
-    kind: Issuer
-    name: selfsigned-issuer
-  secretName: webhook-server-cert
----
-# Source: kong-operator/templates/cert-manager.yaml
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  labels:
-    app.kubernetes.io/managed-by: kustomize
-    app.kubernetes.io/name: kong-gateway-operator
-  name: selfsigned-issuer
-  namespace: default
-spec:
-  selfSigned: {}
 ---
 # Source: kong-operator/templates/validation-policy-dataplane.yaml
 apiVersion: admissionregistration.k8s.io/v1

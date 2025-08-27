@@ -93,9 +93,6 @@ spec:
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=0
-        {{- if not .Values.conversionWebhook.enabled }}
-        - --conversion-webhook=false
-        {{- end }}
         image: {{ .Values.kubeRBACProxy.image }}:{{ .Values.kubeRBACProxy.tag }}
         name: kube-rbac-proxy
         ports:
