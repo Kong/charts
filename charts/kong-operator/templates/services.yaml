@@ -31,14 +31,14 @@ spec:
   selector:
     app.kubernetes.io/component: ko
 {{- end }}
-{{- if .Values.conversionWebhook.enabled }}
+{{- if .Values.global.conversionWebhook.enabled }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app.kubernetes.io/component: ko
-  name: {{ template "kong.fullname" . }}-webhook
+  name: {{ template "kong.webhookServiceName" . }}
   namespace:  {{ template "kong.namespace" . }}
 spec:
   ports:

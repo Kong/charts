@@ -17,6 +17,12 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- default (printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-") .Values.fullnameOverride -}}
 {{- end -}}
 
+# kong.webhookServiceName is used in different subcharts and name has to match
+# hence only variadic part of this name is .Release.Name.
+{{- define "kong.webhookServiceName" -}}
+{{- default (printf "%s-kong-operator-webhook" .Release.Name | trunc 63 | trimSuffix "-") -}}
+{{- end -}}
+
 {{/*
 Create the name of the service account to use
 */}}
@@ -62,6 +68,10 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 {{- define "kong.env" -}}
 
 {{- $defaultEnv := dict -}}
+{{- if not .Values.global.conversionWebhook.enabled }}
+# NOTICE: For now use deprecated GATEWAY_OPERATOR_ prefix, change it during releasing the next KO rc.
+{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_ENABLE_CONVERSION_WEBHOOK" "false" -}}
+{{- end }}
 {{- $_ := set $defaultEnv "KONG_OPERATOR_HEALTH_PROBE_BIND_ADDRESS" ":8081" -}}
 {{- $_ := set $defaultEnv "KONG_OPERATOR_METRICS_BIND_ADDRESS" "0.0.0.0:8080" -}}
 
@@ -111,10 +121,12 @@ The dict maps raw env variable key to the suggested variable path.
 {{- end -}}
 
 {{- define "kong.volumes" -}}
+{{ if .Values.global.conversionWebhook.enabled }}
 - name: {{ template "kong.fullname" . }}-webhook-certs
   secret:
     defaultMode: 420
-    secretName: webhook-server-cert
+    secretName: {{ template "kong.webhookServiceName" . }}-server-cert
+{{ end }}
 - name: {{ template "kong.fullname" . }}-pod-labels
   downwardAPI:
     items:
@@ -124,8 +136,10 @@ The dict maps raw env variable key to the suggested variable path.
 {{- end }}
 
 {{- define "kong.volumeMounts" -}}
+{{ if .Values.global.conversionWebhook.enabled }}
 - name: {{ template "kong.fullname" . }}-webhook-certs
   mountPath: /tmp/k8s-webhook-server/serving-certs
+{{ end }}
 - name: {{ template "kong.fullname" . }}-pod-labels
   mountPath: /etc/podinfo
 {{- end }}

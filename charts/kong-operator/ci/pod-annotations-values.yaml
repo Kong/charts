@@ -1,3 +1,6 @@
+ko-crds:
+  enabled: false
+
 podAnnotations:
   key: value
 
