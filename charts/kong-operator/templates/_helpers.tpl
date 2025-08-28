@@ -69,8 +69,7 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 
 {{- $defaultEnv := dict -}}
 {{- if not .Values.global.conversionWebhook.enabled }}
-# NOTICE: For now use deprecated GATEWAY_OPERATOR_ prefix, change it during releasing the next KO rc.
-{{- $_ := set $defaultEnv "GATEWAY_OPERATOR_ENABLE_CONVERSION_WEBHOOK" "false" -}}
+{{- $_ := set $defaultEnv "KONG_OPERATOR_ENABLE_CONVERSION_WEBHOOK" "false" -}}
 {{- end }}
 {{- $_ := set $defaultEnv "KONG_OPERATOR_HEALTH_PROBE_BIND_ADDRESS" ":8081" -}}
 {{- $_ := set $defaultEnv "KONG_OPERATOR_METRICS_BIND_ADDRESS" "0.0.0.0:8080" -}}

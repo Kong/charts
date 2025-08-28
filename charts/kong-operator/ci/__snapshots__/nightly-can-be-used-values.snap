@@ -699,9 +699,9 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-0.0.4
+    helm.sh/chart: kong-operator-0.0.5
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0-alpha.3"
+    app.kubernetes.io/version: "2.0.0-alpha.4"
     app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-controller-manager
   namespace: default
@@ -721,12 +721,12 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: kong-operator
-        helm.sh/chart: kong-operator-0.0.4
+        helm.sh/chart: kong-operator-0.0.5
         app.kubernetes.io/instance: "chartsnap"
-        app.kubernetes.io/version: "2.0.0-alpha.3"
+        app.kubernetes.io/version: "2.0.0-alpha.4"
         app.kubernetes.io/component: ko
         app: chartsnap-kong-operator
-        version: "2.0.0-alpha.3"
+        version: "2.0.0-alpha.4"
     spec:
       containers:
       - name: manager
@@ -804,9 +804,9 @@ kind: Certificate
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-0.0.4
+    helm.sh/chart: kong-operator-0.0.5
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0-alpha.3"
+    app.kubernetes.io/version: "2.0.0-alpha.4"
     app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-webhook-metrics-certs
   namespace: default
@@ -825,9 +825,9 @@ kind: Certificate
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-0.0.4
+    helm.sh/chart: kong-operator-0.0.5
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0-alpha.3"
+    app.kubernetes.io/version: "2.0.0-alpha.4"
     app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-webhook-serving-cert
   namespace: default
@@ -846,9 +846,9 @@ kind: Issuer
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-0.0.4
+    helm.sh/chart: kong-operator-0.0.5
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0-alpha.3"
+    app.kubernetes.io/version: "2.0.0-alpha.4"
     app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-webhook-selfsigned-issuer
   namespace: default
