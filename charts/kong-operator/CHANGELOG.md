@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.0.5
 
 ### Fixes
 
@@ -9,6 +9,8 @@
 
 ### Changes
 
+- Update kong-operator image version to 2.0.0-alpha.4.
+  [#2147](https://github.com/Kong/kong-operator/pull/2147)
 - Conversion webhook can be deployed with `cert-manager`.
   [#2135](https://github.com/Kong/kong-operator/pull/2135)
 
