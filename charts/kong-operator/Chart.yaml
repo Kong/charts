@@ -15,7 +15,6 @@ annotations:
 dependencies:
   - name: ko-crds
     version: 1.0.0
-    condition: ko-crds.enabled
   - name: kic-crds
     version: 1.2.0
     condition: kic-crds.enabled

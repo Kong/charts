@@ -1,0 +1,26 @@
+# It's a configuration file used by helm-chartsnap to ignore dynamically generated fields
+# when comparing the chart's snapshot with the rendered chart.
+# See https://github.com/jlandowner/helm-chartsnap?tab=readme-ov-file#handling-dynamic-values-.
+dynamicFields:
+  - apiVersion: v1
+    kind: Secret
+    name: chartsnap-kong-operator-webhook-server-cert
+    jsonPath:
+      - /stringData/ca.crt
+      - /stringData/tls.crt
+      - /stringData/tls.key
+  - apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    name: controlplanes.gateway-operator.konghq.com
+    jsonPath:
+      - /spec/conversion/webhook/clientConfig/caBundle
+  - apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    name: gatewayconfigurations.gateway-operator.konghq.com
+    jsonPath:
+      - /spec/conversion/webhook/clientConfig/caBundle
+  - apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    name: konnectgatewaycontrolplanes.konnect.konghq.com
+    jsonPath:
+      - /spec/conversion/webhook/clientConfig/caBundle

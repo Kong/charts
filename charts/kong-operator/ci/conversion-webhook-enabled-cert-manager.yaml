@@ -1,0 +1,6 @@
+global:
+  conversionWebhook:
+    enabled: true
+    certManager:
+      enabled: true
+
