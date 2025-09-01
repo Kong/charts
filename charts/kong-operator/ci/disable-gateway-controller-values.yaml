@@ -1,6 +1,3 @@
-ko-crds:
-  enabled: false
-
 env:
   # gateway controller
   enable_gateway_controller: false

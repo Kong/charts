@@ -1,6 +1,3 @@
-ko-crds:
-  enabled: false
-
 tolerations:
 - key: "example-key"
   operator: "Exists"

@@ -1,4 +1,5 @@
 {{- if .Values.global.conversionWebhook.enabled }}
+{{- if .Values.global.conversionWebhook.certManager.enabled }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -43,4 +44,5 @@ metadata:
   namespace:  {{ template "kong.namespace" . }}
 spec:
   selfSigned: {}
+{{- end }}
 {{- end }}
