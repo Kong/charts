@@ -1,4 +1,4 @@
-{{- if (semverCompare ">= 1.5.0" (include "kong.effectiveVersion" .)) }}
+{{- if .Values.global.validatingPolicies.dataplanePorts.enabled }}
 {{- if and (.Capabilities.APIVersions.Has "admissionregistration.k8s.io/v1/ValidatingAdmissionPolicy") (.Capabilities.APIVersions.Has "admissionregistration.k8s.io/v1/ValidatingAdmissionPolicyBinding") -}}
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingAdmissionPolicy

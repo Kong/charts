@@ -1,6 +1,6 @@
 image:
   repository: docker.io/kong/kong-operator
-  tag: "2.0.0-alpha.4"
+  tag: "2.0.0-alpha.5"
   # Optionally set a semantic version for version-gated features. This can normally
   # be left unset. You only need to set this if your tag is not a semver string,
   # such as when you are using a "next" tag. Set this to the effective semantic
@@ -110,7 +110,14 @@ certsDir:
 # enable configuration dump for control planes.
 enableControlplaneConfigDump: false
 controlplaneConfigDumpPort: 10256
+# Global options that configure the operator behavior.
 global:
+  # Options for controlling ValidatingAdmissionPolicy and ValidatingAdmissionPolicyBinding
+  # resources deployed by this chart.
+  validatingPolicies:
+    dataplanePorts:
+      # Enable validation for dataplane ports.
+      enabled: true
   # Enable conversion webhook for CRDs.
   # See note at https://github.com/Kong/kong-operator/blob/main/charts/kong-operator/CHANGELOG.md#%EF%B8%8F-important-notice-about-migration-webhooks
   # for more.

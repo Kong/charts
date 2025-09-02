@@ -39,7 +39,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: aigateways.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -571,7 +571,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: controlplanes.gateway-operator.konghq.com
 spec:
   conversion:
@@ -9043,7 +9043,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: dataplanemetricsextensions.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -9192,7 +9192,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: dataplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -18204,7 +18204,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: gatewayconfigurations.gateway-operator.konghq.com
 spec:
   conversion:
@@ -43822,7 +43822,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongcacertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -44056,7 +44056,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -44308,7 +44308,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongconsumergroups.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -44544,7 +44544,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongconsumers.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -44807,7 +44807,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongcredentialacls.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -44991,7 +44991,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongcredentialapikeys.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -45175,7 +45175,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongcredentialbasicauths.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -45363,7 +45363,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongcredentialhmacs.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -45553,7 +45553,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongcredentialjwts.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -45765,7 +45765,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongdataplaneclientcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -45993,7 +45993,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongkeys.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -46299,7 +46299,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongkeysets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -46532,7 +46532,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: konglicenses.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -46728,7 +46728,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongpluginbindings.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -47105,7 +47105,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongplugininstallations.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -47285,7 +47285,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongplugins.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -47580,7 +47580,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongroutes.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -47923,7 +47923,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongservices.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -48207,7 +48207,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongsnis.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -48388,7 +48388,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongtargets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -48575,7 +48575,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   labels:
     gateway.networking.k8s.io/policy: direct
   name: kongupstreampolicies.configuration.konghq.com
@@ -49231,7 +49231,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongupstreams.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -49649,7 +49649,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: kongvaults.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -49923,7 +49923,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: konnectapiauthconfigurations.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -50118,7 +50118,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: konnectcloudgatewaydataplanegroupconfigurations.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -50545,7 +50545,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: konnectcloudgatewaynetworks.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -50765,7 +50765,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: konnectcloudgatewaytransitgateways.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -51124,7 +51124,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: konnectextensions.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -51836,7 +51836,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: konnectgatewaycontrolplanes.konnect.konghq.com
 spec:
   conversion:
@@ -52464,7 +52464,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.4
   name: watchnamespacegrants.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -53231,7 +53231,7 @@ metadata:
     app.kubernetes.io/name: kong-operator
     helm.sh/chart: kong-operator-0.0.5
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0-alpha.5"
+    app.kubernetes.io/version: "2.0.0-alpha.4"
     app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-controller-manager
   namespace: default
@@ -53253,10 +53253,10 @@ spec:
         app.kubernetes.io/name: kong-operator
         helm.sh/chart: kong-operator-0.0.5
         app.kubernetes.io/instance: "chartsnap"
-        app.kubernetes.io/version: "2.0.0-alpha.5"
+        app.kubernetes.io/version: "2.0.0-alpha.4"
         app.kubernetes.io/component: ko
         app: chartsnap-kong-operator
-        version: "2.0.0-alpha.5"
+        version: "2.0.0-alpha.4"
     spec:
       containers:
       - name: manager
@@ -53271,7 +53271,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: "docker.io/kong/nightly-kong-operator:nightly"
+        image: "docker.io/kong/kong-operator:2.0.0-alpha.4"
         livenessProbe:
           httpGet:
             path: /healthz
@@ -53327,97 +53327,3 @@ spec:
           - path: labels
             fieldRef:
               fieldPath: metadata.labels
----
-# Source: kong-operator/templates/validation-policy-dataplane.yaml
-apiVersion: admissionregistration.k8s.io/v1
-kind: ValidatingAdmissionPolicy
-metadata:
-  name: ports.dataplane.gateway-operator.konghq.com
-spec:
-  matchConstraints:
-    resourceRules:
-    - apiGroups:
-      - "gateway-operator.konghq.com"
-      apiVersions:
-      - "v1beta1"
-      operations:
-      - "CREATE"
-      - "UPDATE"
-      resources:
-      - "dataplanes"
-  variables:
-  - name: ingressPorts
-    expression: object.spec.network.services.ingress.ports
-  - name: podTemplateSpec
-    expression: object.spec.deployment.podTemplateSpec
-  - name: proxyContainers
-    expression: |
-      variables.podTemplateSpec.spec.containers.filter(c, c.name == 'proxy')
-  - name: proxyContainer
-    expression: |
-      variables.proxyContainers.size() > 0 ?
-        variables.proxyContainers[0] :
-        null
-  - name: envFilteredPortMaps
-    expression: |
-      variables.proxyContainer.env.filter(e, e.name == "KONG_PORT_MAPS")
-  - name: envFilteredProxyListen
-    expression: |
-      variables.proxyContainer.env.filter(e, e.name == "KONG_PROXY_LISTEN")
-  - name: envPortMaps
-    expression: |
-      variables.envFilteredPortMaps.size() > 0 ? variables.envFilteredPortMaps[0].value : null
-  - name: envProxyListen
-    expression: |
-      variables.envFilteredProxyListen.size() > 0 ? variables.envFilteredProxyListen[0].value : null
-  # NOTE: Rules below do not validate the ports from the spec.network.services.ingress.ports
-  # when no KONG_PORT_MAPS or KONG_PROXY_LISTEN env variables are present in the proxy container.
-  # This has been the case before the introduction of validating admission policies so we are keeping
-  # the same behavior.
-
-  # Using string functions from: https://pkg.go.dev/github.com/google/cel-go/ext
-  validations:
-  - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PORT_MAPS env'"
-    expression: |
-      !has(object.spec.network) ||
-      !has(object.spec.network.services) ||
-      !has(object.spec.network.services.ingress) ||
-      !has(object.spec.network.services.ingress.ports) ||
-      !has(variables.proxyContainer.env) ||
-      variables.envPortMaps == null ||
-      (
-        variables.ingressPorts.all(p, variables.envPortMaps.
-                  split(",").
-                  exists(pm,
-                      pm.split(":")[1].trim() == string(p.targetPort)
-                      )
-                  )
-      )
-    reason: Invalid
-  - messageExpression: "'Each port from spec.network.services.ingress.ports has to have an accompanying port in KONG_PROXY_LISTEN env'"
-    expression: |
-      !has(object.spec.network) ||
-      !has(object.spec.network.services) ||
-      !has(object.spec.network.services.ingress) ||
-      !has(object.spec.network.services.ingress.ports) ||
-      !has(variables.proxyContainer.env) ||
-      variables.envProxyListen == null ||
-      (
-        variables.ingressPorts.all(p, variables.envProxyListen.
-                  split(",").
-                  exists(pm,
-                    pm.trim().split(" ")[0].split(":")[1].trim() == string(p.targetPort)
-                    )
-                  )
-      )
-    reason: Invalid
----
-# Source: kong-operator/templates/validation-policy-dataplane.yaml
-apiVersion: admissionregistration.k8s.io/v1
-kind: ValidatingAdmissionPolicyBinding
-metadata:
-  name: binding-ports.dataplane.gateway-operator.konghq.com
-spec:
-  policyName: ports.dataplane.gateway-operator.konghq.com
-  validationActions:
-  - Deny
