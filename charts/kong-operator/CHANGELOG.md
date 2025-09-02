@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.0.6
 
 ### ⚠️ **IMPORTANT NOTICE ABOUT MIGRATION WEBHOOKS:**
 
@@ -18,6 +18,8 @@ The operator deployment that has been installed as first, will handle the conver
 
 ### Changes
 
+- Update kong-operator image version to 2.0.0-alpha.5.
+  [#2175](https://github.com/Kong/kong-operator/pull/2175)
 - Add support for helm generated self signed certs for conversion webhook
   [#2141](https://github.com/Kong/kong-operator/pull/2141)
 - Add support for cert-manager certificate generation for conversion webhook
