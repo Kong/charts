@@ -9,7 +9,7 @@ name: kong-operator
 sources:
   - https://github.com/Kong/kong-operator/charts/kong-operator/
 version: 0.0.5
-appVersion: "2.0.0-alpha.4"
+appVersion: "2.0.0-alpha.5"
 annotations:
   artifacthub.io/prerelease: "true"
 dependencies:
