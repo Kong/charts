@@ -17,6 +17,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- default (printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-") .Values.fullnameOverride -}}
 {{- end -}}
 
+{{- define "kong.fullnamespacedname" -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- default (printf "%s-%s-%s" .Release.Namespace .Release.Name $name | trunc 63 | trimSuffix "-") .Values.fullnameOverride -}}
+{{- end -}}
+
 # kong.webhookServiceName is used in different subcharts and name has to match
 # hence only variadic part of this name is .Release.Name.
 {{- define "kong.webhookServiceName" -}}
@@ -68,8 +73,11 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 {{- define "kong.env" -}}
 
 {{- $defaultEnv := dict -}}
-{{- if not .Values.global.conversionWebhook.enabled }}
+{{- if not .Values.global.webhooks.conversion.enabled }}
 {{- $_ := set $defaultEnv "KONG_OPERATOR_ENABLE_CONVERSION_WEBHOOK" "false" -}}
+{{- end }}
+{{- if not .Values.global.webhooks.validating.enabled }}
+{{- $_ := set $defaultEnv "KONG_OPERATOR_ENABLE_VALIDATING_WEBHOOK" "false" -}}
 {{- end }}
 {{- $_ := set $defaultEnv "KONG_OPERATOR_HEALTH_PROBE_BIND_ADDRESS" ":8081" -}}
 {{- $_ := set $defaultEnv "KONG_OPERATOR_METRICS_BIND_ADDRESS" "0.0.0.0:8080" -}}
@@ -124,7 +132,7 @@ The dict maps raw env variable key to the suggested variable path.
 {{- end -}}
 
 {{- define "kong.volumes" -}}
-{{ if .Values.global.conversionWebhook.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
 {{- /* This volume is conditional on ko-crds being enabled because the certificate */ -}}
 {{- /* Secret is placed in that subchart. The reason for this is explained in */ -}}
 {{- /* https://github.com/Kong/kong-operator/blob/e555dbc0b6e57beecbb72cf79018ef8fdbe11ffa/hack/generators/conversion-webhook/main.go#L88-L95 */ -}}
@@ -145,7 +153,7 @@ The dict maps raw env variable key to the suggested variable path.
 {{- end }}
 
 {{- define "kong.volumeMounts" -}}
-{{ if .Values.global.conversionWebhook.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
 {{- /* This mount is conditional on ko-crds being enabled because the certificate */ -}}
 {{- /* Secret is placed in that subchart. The reason for this is explained in */ -}}
 {{- /* https://github.com/Kong/kong-operator/blob/e555dbc0b6e57beecbb72cf79018ef8fdbe11ffa/hack/generators/conversion-webhook/main.go#L88-L95 */ -}}

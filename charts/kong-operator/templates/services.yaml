@@ -4,7 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/component: ko
   name: {{ template "kong.fullname" . }}
-  namespace:  {{ template "kong.namespace" . }}
+  namespace: {{ template "kong.namespace" . }}
 spec:
   ports:
   - name: https
@@ -21,7 +21,7 @@ metadata:
   labels:
     app.kubernetes.io/component: ko
   name: {{ template "kong.fullname" . }}-config-dump
-  namespace:  {{ template "kong.namespace" . }}
+  namespace: {{ template "kong.namespace" . }}
 spec:
   ports:
   - name: config-dump
@@ -31,7 +31,7 @@ spec:
   selector:
     app.kubernetes.io/component: ko
 {{- end }}
-{{- if .Values.global.conversionWebhook.enabled }}
+{{- if (or .Values.global.webhooks.conversion.enabled .Values.global.webhooks.validating.enabled) }}
 ---
 apiVersion: v1
 kind: Service
@@ -39,12 +39,39 @@ metadata:
   labels:
     app.kubernetes.io/component: ko
   name: {{ template "kong.webhookServiceName" . }}
-  namespace:  {{ template "kong.namespace" . }}
+  namespace: {{ template "kong.namespace" . }}
 spec:
   ports:
-  - port: 443
+{{- if .Values.global.webhooks.conversion.enabled }}
+  - name: conversion
+    port: 443
     protocol: TCP
     targetPort: 9443
+{{- end }}
+{{- if .Values.global.webhooks.validating.enabled }}
+  - name: admission
+    port: 5443
+    protocol: TCP
+    targetPort: 5443
+{{- end }}
   selector:
     app.kubernetes.io/component: ko
 {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    control-plane: controller-manager
+    app.kubernetes.io/component: ko
+  name: {{ template "kong.fullname" . }}-metrics-service
+  namespace: {{ template "kong.namespace" . }}
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: metrics
+  selector:
+    control-plane: controller-manager
+    app.kubernetes.io/component: ko
