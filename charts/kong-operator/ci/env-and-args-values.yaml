@@ -4,14 +4,13 @@ livenessProbe:
     port: 8081
   initialDelaySeconds: 1
   periodSeconds: 1
-
 readinessProbe:
   initialDelaySeconds: 1
   periodSeconds: 1
-
 env:
   # gateway controller
   enable_controller_gateway: false
-
+  anonymous_reports: "false"
+  no_leader_election: "true"
 args:
   - --zap-log-level=debug

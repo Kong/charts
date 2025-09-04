@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.0.6
+## Unreleased
 
 ### ⚠️ **IMPORTANT NOTICE ABOUT MIGRATION WEBHOOKS:**
 
@@ -8,13 +8,21 @@ Since migration webhooks are bound to a CRD definition, installing more than 1
 helm release has to be done with caution to avoid conflicts.
 
 Users can use `ko-crds.enabled` to install and manage operator's CRDs.
-`global.conversionWebhook.enabled` can be set to `true` to enable the conversion webhook.
+`global.webhooks.conversion.enabled` can be set to `true` to enable the conversion webhook.
 Any subsequent helm release after the first one that enables these options,
 must not set either of these to `true` to prevent ownership conflicts.
 
 Moreover, `env.enable_conversion_webhook` must be set to `false` in all
 releases except the first one that enables it, otherwise operator deployments may fail.
 The operator deployment that has been installed as first, will handle the conversions.
+
+### Changes
+
+- Updated conversion webhook configuration to use `global.webhooks.conversion.enabled`.
+  Add options for validating webhook configuration under `global.webhooks.validating`.
+  Move cert-manager integration options under `global.webhooks.options.certManager`.
+
+## 0.0.6
 
 ### Changes
 

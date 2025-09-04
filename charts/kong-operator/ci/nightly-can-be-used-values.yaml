@@ -2,17 +2,15 @@ image:
   repository: docker.io/kong/nightly-kong-operator
   # NOTE: this tests that the missing effectiveSemver field is handled correctly.
   tag: "nightly"
-
 livenessProbe:
   httpGet:
     path: /healthz
     port: 8081
   initialDelaySeconds: 1
   periodSeconds: 1
-
 readinessProbe:
   initialDelaySeconds: 1
   periodSeconds: 1
-
 env:
   anonymous_reports: "false"
+  no_leader_election: "true"

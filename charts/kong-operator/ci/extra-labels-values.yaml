@@ -1,13 +1,11 @@
 extraLabels:
   a: b
-
 livenessProbe:
   initialDelaySeconds: 1
   periodSeconds: 1
-
 readinessProbe:
   initialDelaySeconds: 1
   periodSeconds: 1
-
 env:
   anonymous_reports: "false"
+  no_leader_election: "true"

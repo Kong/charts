@@ -40,7 +40,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: {{ template "kong.fullname" . }}-kong-mtls-secret-role
+  name: {{ template "kong.fullnamespacedname" . }}-kong-mtls-secret-role
 rules:
   - apiGroups:
       - ""
@@ -56,7 +56,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "kong.fullname" . }}-metrics-reader
+  name: {{ template "kong.fullnamespacedname" . }}-metrics-reader
 rules:
   - nonResourceURLs:
       - /metrics
@@ -66,7 +66,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "kong.fullname" . }}-proxy-role
+  name: {{ template "kong.fullnamespacedname" . }}-proxy-role
 rules:
   - apiGroups:
       - authentication.k8s.io
@@ -98,11 +98,11 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "kong.fullname" . }}-kong-mtls-secret-rolebinding
+  name: {{ template "kong.fullnamespacedname" . }}-kong-mtls-secret-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "kong.fullname" . }}-kong-mtls-secret-role
+  name: {{ template "kong.fullnamespacedname" . }}-kong-mtls-secret-role
 subjects:
   - kind: ServiceAccount
     name: {{ template "kong.serviceAccountName" . }}
@@ -111,11 +111,11 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "kong.fullname" . }}-manager-rolebinding
+  name: {{ template "kong.fullnamespacedname" . }}-manager-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "kong.fullname" . }}-manager-role
+  name: {{ template "kong.fullnamespacedname" . }}-manager-role
 subjects:
   - kind: ServiceAccount
     name: {{ template "kong.serviceAccountName" . }}
@@ -124,32 +124,12 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ template "kong.fullname" . }}-proxy-rolebinding
+  name: {{ template "kong.fullnamespacedname" . }}-proxy-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ template "kong.fullname" . }}-proxy-role
+  name: {{ template "kong.fullnamespacedname" . }}-proxy-role
 subjects:
   - kind: ServiceAccount
     name: {{ template "kong.serviceAccountName" . }}
     namespace: {{ template "kong.namespace" . }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    control-plane: controller-manager
-  name: {{ template "kong.fullname" . }}-metrics-service
-  namespace: {{ template "kong.namespace" . }}
-spec:
-  ports:
-    - name: https
-      port: 8443
-      protocol: TCP
-{{ if (semverCompare "< 1.5.0" (include "kong.effectiveVersion" .)) }}
-      targetPort: https
-{{- else }}
-      targetPort: metrics
-{{- end }}
-  selector:
-    control-plane: controller-manager

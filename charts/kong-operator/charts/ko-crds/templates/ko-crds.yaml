@@ -19,8 +19,8 @@
 {{ $caCert = (index $secret.data "ca.crt" ) | b64dec }}
 {{- end }}
 
-{{- if .Values.global.conversionWebhook.enabled }}
-{{- if ( not .Values.global.conversionWebhook.certManager.enabled ) }}
+{{- if .Values.global.webhooks.conversion.enabled }}
+{{- if ( not .Values.global.webhooks.options.certManager.enabled ) }}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -588,8 +588,8 @@ metadata:
 {{ if .Values.keep }}
     helm.sh/resource-policy: keep
 {{ end }}
-{{ if .Values.global.conversionWebhook.enabled }}
-{{ if .Values.global.conversionWebhook.certManager.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
+{{ if .Values.global.webhooks.options.certManager.enabled }}
     cert-manager.io/inject-ca-from: {{ template "kong.namespace" . }}/{{ template "kong.webhookServiceName" . }}-serving-cert
 {{ end }}
 {{ end }}
@@ -597,7 +597,7 @@ metadata:
     kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
   name: controlplanes.gateway-operator.konghq.com
 spec:
-{{ if .Values.global.conversionWebhook.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
   conversion:
     strategy: Webhook
     webhook:
@@ -606,7 +606,7 @@ spec:
           name: {{ template "kong.webhookServiceName" . }}
           namespace: {{ template "kong.namespace" . }}
           path: /convert
-{{if not .Values.global.conversionWebhook.certManager.enabled }}
+{{if not .Values.global.webhooks.options.certManager.enabled }}
         caBundle: |
           {{ $caCert | b64enc }}
 {{ end }}
@@ -625,7 +625,7 @@ spec:
     singular: controlplane
   scope: Namespaced
   versions:
-{{ if .Values.global.conversionWebhook.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
   - additionalPrinterColumns:
     - description: The Resource is ready
       jsonPath: .status.conditions[?(@.type=='Ready')].status
@@ -19271,8 +19271,8 @@ metadata:
 {{ if .Values.keep }}
     helm.sh/resource-policy: keep
 {{ end }}
-{{ if .Values.global.conversionWebhook.enabled }}
-{{ if .Values.global.conversionWebhook.certManager.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
+{{ if .Values.global.webhooks.options.certManager.enabled }}
     cert-manager.io/inject-ca-from: {{ template "kong.namespace" . }}/{{ template "kong.webhookServiceName" . }}-serving-cert
 {{ end }}
 {{ end }}
@@ -19280,7 +19280,7 @@ metadata:
     kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
   name: gatewayconfigurations.gateway-operator.konghq.com
 spec:
-{{ if .Values.global.conversionWebhook.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
   conversion:
     strategy: Webhook
     webhook:
@@ -19289,7 +19289,7 @@ spec:
           name: {{ template "kong.webhookServiceName" . }}
           namespace: {{ template "kong.namespace" . }}
           path: /convert
-{{if not .Values.global.conversionWebhook.certManager.enabled }}
+{{if not .Values.global.webhooks.options.certManager.enabled }}
         caBundle: |
           {{ $caCert | b64enc }}
 {{ end }}
@@ -19308,7 +19308,7 @@ spec:
     singular: gatewayconfiguration
   scope: Namespaced
   versions:
-{{ if .Values.global.conversionWebhook.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
   - deprecated: true
     deprecationWarning: GatewayConfiguration v1beta1 has been deprecated in favor
       of v2beta1 and it will be removed in future.
@@ -54661,7 +54661,7 @@ spec:
     singular: konnectextension
   scope: Namespaced
   versions:
-{{ if .Values.global.conversionWebhook.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
   - additionalPrinterColumns:
     - description: The Resource is Ready to be used
       jsonPath: .status.conditions[?(@.type=='Ready')].status
@@ -55425,8 +55425,8 @@ metadata:
 {{ if .Values.keep }}
     helm.sh/resource-policy: keep
 {{ end }}
-{{ if .Values.global.conversionWebhook.enabled }}
-{{ if .Values.global.conversionWebhook.certManager.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
+{{ if .Values.global.webhooks.options.certManager.enabled }}
     cert-manager.io/inject-ca-from: {{ template "kong.namespace" . }}/{{ template "kong.webhookServiceName" . }}-serving-cert
 {{ end }}
 {{ end }}
@@ -55434,7 +55434,7 @@ metadata:
     kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
   name: konnectgatewaycontrolplanes.konnect.konghq.com
 spec:
-{{ if .Values.global.conversionWebhook.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
   conversion:
     strategy: Webhook
     webhook:
@@ -55443,7 +55443,7 @@ spec:
           name: {{ template "kong.webhookServiceName" . }}
           namespace: {{ template "kong.namespace" . }}
           path: /convert
-{{if not .Values.global.conversionWebhook.certManager.enabled }}
+{{if not .Values.global.webhooks.options.certManager.enabled }}
         caBundle: |
           {{ $caCert | b64enc }}
 {{ end }}
@@ -55461,7 +55461,7 @@ spec:
     singular: konnectgatewaycontrolplane
   scope: Namespaced
   versions:
-{{ if .Values.global.conversionWebhook.enabled }}
+{{ if .Values.global.webhooks.conversion.enabled }}
   - additionalPrinterColumns:
     - description: The Resource is Programmed on Konnect
       jsonPath: .status.conditions[?(@.type=='Programmed')].status

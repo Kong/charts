@@ -1,3 +1,0 @@
-global:
-  conversionWebhook:
-    enabled: false

@@ -1,22 +1,5 @@
-{{- if .Values.global.conversionWebhook.enabled }}
-{{- if .Values.global.conversionWebhook.certManager.enabled }}
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  labels:
-    {{- include "kong.metaLabels" . | nindent 4 }}
-    app.kubernetes.io/component: ko
-  name: {{ template "kong.webhookServiceName" . }}-metrics-certs
-  namespace:  {{ template "kong.namespace" . }}
-spec:
-  dnsNames:
-  - {{ template "kong.webhookServiceName" . }}.{{ template "kong.namespace" . }}.svc
-  - {{ template "kong.webhookServiceName" . }}.{{ template "kong.namespace" . }}.svc.cluster.local
-  issuerRef:
-    kind: Issuer
-    name: {{ template "kong.webhookServiceName" . }}-selfsigned-issuer
-  secretName: {{ template "kong.webhookServiceName" . }}-metrics-server-cert
----
+{{- if .Values.global.webhooks.conversion.enabled }}
+{{- if .Values.global.webhooks.options.certManager.enabled }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:

@@ -1,6 +1,10 @@
 global:
-  conversionWebhook:
-    enabled: true
-    certManager:
+  webhooks:
+    options:
+      certManager:
+        enabled: true
+    conversion:
       enabled: true
-
+env:
+  anonymous_reports: "false"
+  no_leader_election: "true"
