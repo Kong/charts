@@ -17,15 +17,13 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- default (printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-") .Values.fullnameOverride -}}
 {{- end -}}
 
+{{- define "kong.deploymentname" -}}
+{{- printf "%s-controller-manager" (include "kong.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{- define "kong.fullnamespacedname" -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- default (printf "%s-%s-%s" .Release.Namespace .Release.Name $name | trunc 63 | trimSuffix "-") .Values.fullnameOverride -}}
-{{- end -}}
-
-# kong.webhookServiceName is used in different subcharts and name has to match
-# hence only variadic part of this name is .Release.Name.
-{{- define "kong.webhookServiceName" -}}
-{{- default (printf "%s-kong-operator-webhook" .Release.Name | trunc 63 | trimSuffix "-") -}}
 {{- end -}}
 
 {{/*
@@ -127,8 +125,18 @@ The dict maps raw env variable key to the suggested variable path.
 
 {{- end -}}
 
+# kong.webhookServiceName is used in different subcharts and name has to match
+# hence only variadic part of this name is .Release.Name.
+{{- define "kong.webhookServiceName" -}}
+{{- default (printf "%s-kong-operator-webhook" .Release.Name | trunc 63 | trimSuffix "-") -}}
+{{- end -}}
+
 {{- define "kong.webhookCertSecretName" -}}
 {{ template "kong.webhookServiceName" . }}-server-cert
+{{- end -}}
+
+{{- define "kong.webhookValidatingCertSecretName" -}}
+{{ template "kong.webhookServiceName" . }}-validating-server-cert
 {{- end -}}
 
 {{- define "kong.volumes" -}}
@@ -138,13 +146,19 @@ The dict maps raw env variable key to the suggested variable path.
 {{- /* https://github.com/Kong/kong-operator/blob/e555dbc0b6e57beecbb72cf79018ef8fdbe11ffa/hack/generators/conversion-webhook/main.go#L88-L95 */ -}}
 {{ $kocrds := (index .Values "ko-crds") }}
 {{ if $kocrds.enabled }}
-- name: {{ template "kong.fullname" . }}-webhook-certs
+- name: webhook-certs
   secret:
     defaultMode: 420
     secretName: {{ template "kong.webhookCertSecretName" . }}
 {{ end }}
 {{ end }}
-- name: {{ template "kong.fullname" . }}-pod-labels
+{{ if .Values.global.webhooks.validating.enabled }}
+- name: validating-webhook-certs
+  secret:
+    defaultMode: 420
+    secretName: {{ template "kong.webhookValidatingCertSecretName" . }}
+{{ end }}
+- name: pod-labels
   downwardAPI:
     items:
     - path: labels
@@ -159,11 +173,17 @@ The dict maps raw env variable key to the suggested variable path.
 {{- /* https://github.com/Kong/kong-operator/blob/e555dbc0b6e57beecbb72cf79018ef8fdbe11ffa/hack/generators/conversion-webhook/main.go#L88-L95 */ -}}
 {{ $kocrds := (index .Values "ko-crds") }}
 {{ if $kocrds.enabled }}
-- name: {{ template "kong.fullname" . }}-webhook-certs
+- name: webhook-certs
   mountPath: /tmp/k8s-webhook-server/serving-certs
+  readOnly: true
 {{ end }}
 {{ end }}
-- name: {{ template "kong.fullname" . }}-pod-labels
+{{ if .Values.global.webhooks.validating.enabled }}
+- name: validating-webhook-certs
+  mountPath: /tmp/k8s-webhook-server/serving-certs/validating-admission-webhook
+  readOnly: true
+{{ end }}
+- name: pod-labels
   mountPath: /etc/podinfo
 {{- end }}
 

@@ -4,7 +4,7 @@ metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: ko
-  name: {{ template "kong.fullname" . }}-controller-manager
+  name: {{ template "kong.deploymentname" . }}
   namespace:  {{ template "kong.namespace" . }}
 spec:
   replicas: {{ .Values.replicaCount }}

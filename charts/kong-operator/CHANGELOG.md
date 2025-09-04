@@ -1,10 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.0.7
 
-### ⚠️ **IMPORTANT NOTICE ABOUT MIGRATION WEBHOOKS:**
+### ⚠️ **IMPORTANT NOTICE ABOUT CONVERSION WEBHOOKS:**
 
-Since migration webhooks are bound to a CRD definition, installing more than 1
+Since conversion webhooks are bound to a CRD definition, installing more than 1
 helm release has to be done with caution to avoid conflicts.
 
 Users can use `ko-crds.enabled` to install and manage operator's CRDs.
@@ -19,8 +19,9 @@ The operator deployment that has been installed as first, will handle the conver
 ### Changes
 
 - Updated conversion webhook configuration to use `global.webhooks.conversion.enabled`.
-  Add options for validating webhook configuration under `global.webhooks.validating`.
   Move cert-manager integration options under `global.webhooks.options.certManager`.
+- Add support for operator's validating admission webhook via `global.webhooks.validating`.
+  [#2201](https://github.com/Kong/kong-operator/pull/2201)
 
 ## 0.0.6
 

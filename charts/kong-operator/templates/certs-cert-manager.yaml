@@ -1,5 +1,5 @@
-{{- if .Values.global.webhooks.conversion.enabled }}
 {{- if .Values.global.webhooks.options.certManager.enabled }}
+{{- if .Values.global.webhooks.conversion.enabled }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -7,7 +7,7 @@ metadata:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: ko
   name: {{ template "kong.webhookServiceName" . }}-serving-cert
-  namespace:  {{ template "kong.namespace" . }}
+  namespace: {{ template "kong.namespace" . }}
 spec:
   dnsNames:
   - {{ template "kong.webhookServiceName" . }}.{{ template "kong.namespace" . }}.svc
@@ -15,8 +15,29 @@ spec:
   issuerRef:
     kind: Issuer
     name: {{ template "kong.webhookServiceName" . }}-selfsigned-issuer
-  secretName: {{ template "kong.webhookServiceName" . }}-server-cert
+  secretName: {{ template "kong.webhookCertSecretName" . }}
 ---
+{{- end }}
+{{- if .Values.global.webhooks.validating.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: ko
+  name: {{ template "kong.webhookServiceName" . }}-validating-serving-cert
+  namespace: {{ template "kong.namespace" . }}
+spec:
+  dnsNames:
+  - {{ template "kong.webhookServiceName" . }}.{{ template "kong.namespace" . }}.svc
+  - {{ template "kong.webhookServiceName" . }}.{{ template "kong.namespace" . }}.svc.cluster.local
+  issuerRef:
+    kind: Issuer
+    name: {{ template "kong.webhookServiceName" . }}-selfsigned-issuer
+  secretName: {{ template "kong.webhookValidatingCertSecretName" . }}
+---
+{{- end }}
+{{- if or .Values.global.webhooks.conversion.enabled .Values.global.webhooks.validating.enabled }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -24,7 +45,7 @@ metadata:
     {{- include "kong.metaLabels" . | nindent 4 }}
     app.kubernetes.io/component: ko
   name: {{ template "kong.webhookServiceName" . }}-selfsigned-issuer
-  namespace:  {{ template "kong.namespace" . }}
+  namespace: {{ template "kong.namespace" . }}
 spec:
   selfSigned: {}
 {{- end }}
