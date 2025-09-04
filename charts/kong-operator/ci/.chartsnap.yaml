@@ -9,6 +9,13 @@ dynamicFields:
       - /stringData/ca.crt
       - /stringData/tls.crt
       - /stringData/tls.key
+  - apiVersion: v1
+    kind: Secret
+    name: chartsnap-kong-operator-webhook-validating-server-cert
+    jsonPath:
+      - /stringData/ca.crt
+      - /stringData/tls.crt
+      - /stringData/tls.key
   - apiVersion: apiextensions.k8s.io/v1
     kind: CustomResourceDefinition
     name: controlplanes.gateway-operator.konghq.com
@@ -24,3 +31,11 @@ dynamicFields:
     name: konnectgatewaycontrolplanes.konnect.konghq.com
     jsonPath:
       - /spec/conversion/webhook/clientConfig/caBundle
+
+  - apiVersion: admissionregistration.k8s.io/v1
+    kind: ValidatingWebhookConfiguration
+    name: controlplane-configuration-validations
+    jsonPath:
+      - /webhooks/0/clientConfig/caBundle
+      - /webhooks/1/clientConfig/caBundle
+      - /webhooks/2/clientConfig/caBundle
