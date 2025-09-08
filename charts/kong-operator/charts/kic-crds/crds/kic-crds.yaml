@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0
   name: ingressclassparameterses.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -61,7 +61,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0
   name: kongclusterplugins.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -369,7 +369,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     kubernetes-configuration.konghq.com/channels: ingress-controller
-    kubernetes-configuration.konghq.com/version: v2.0.0-alpha.5
+    kubernetes-configuration.konghq.com/version: v2.0.0
   name: kongcustomentities.configuration.konghq.com
 spec:
   group: configuration.konghq.com
