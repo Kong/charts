@@ -21,13 +21,9 @@ update the CRDs manually since [Helm does not manage CRD updates][helm_crd_updat
 
 This can be done by running the following command:
 
-<!--
-TODO: https://github.com/Kong/kong-operator/issues/1960
-Update command below when 1960 is resolved and CRDs have been moved to kong-operator repo
--->
 
 ```
-kustomize build github.com/kong/kubernetes-configuration/config/crd/gateway-operator | kubectl apply --server-side -f -
+kustomize build github.com/kong/kong-operator/config/crd/gateway-operator | kubectl apply --server-side -f -
 ```
 
 [helm_crd_update]: https://helm.sh/docs/chart_best_practices/custom_resource_definitions/
@@ -51,23 +47,17 @@ them before upgrading your release.
 
 [hip0011]: https://github.com/helm/community/blob/main/hips/hip-0011.md
 
-For example, upgrading Kong's [kubernetes-configuration][kcfg] CRDs to v0.0.45 requires
+For example, upgrading Kong Operator CRDs to v2.0.1 requires
 running:
 
+```sh
+kustomize build github.com/Kong/kong-operator/config/crd/gateway-operator?ref=v2.0.1 | kubectl apply -f -
 ```
-kustomize build github.com/Kong/kubernetes-configuration/config/crd/gateway-operator?ref=v0.0.45 | kubectl apply -f -
-```
-
-[kcfg]: https://github.com/Kong/kubernetes-configuration
 
 Upgrading [Gateway API][gwapi] to v1.2.0 requires running:
 
-```
+```sh
 kustomize build github.com/kubernetes-sigs/gateway-api/config/crd\?ref=v1.2.0 | kubectl apply -f -
 ```
 
 [gwapi]: https://github.com/kubernetes-sigs/gateway-api/
-
-## Relevant changes by chart version
-
-TODO

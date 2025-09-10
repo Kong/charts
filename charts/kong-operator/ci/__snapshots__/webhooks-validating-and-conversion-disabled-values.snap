@@ -28077,9 +28077,9 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-0.0.7
+    helm.sh/chart: kong-operator-1.0.0
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0-alpha.5"
+    app.kubernetes.io/version: "2.0.0"
     app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-controller-manager
   namespace: default
@@ -28099,12 +28099,12 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: kong-operator
-        helm.sh/chart: kong-operator-0.0.7
+        helm.sh/chart: kong-operator-1.0.0
         app.kubernetes.io/instance: "chartsnap"
-        app.kubernetes.io/version: "2.0.0-alpha.5"
+        app.kubernetes.io/version: "2.0.0"
         app.kubernetes.io/component: ko
         app: chartsnap-kong-operator
-        version: "2.0.0-alpha.5"
+        version: "2.0.0"
     spec:
       containers:
       - name: manager
@@ -28125,7 +28125,11 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: "docker.io/kong/kong-operator:2.0.0-alpha.5"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        image: "docker.io/kong/kong-operator:2.0.0"
         livenessProbe:
           httpGet:
             path: /healthz
