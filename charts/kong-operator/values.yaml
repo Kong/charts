@@ -118,6 +118,9 @@ global:
     dataplanePorts:
       # Enable validation for dataplane ports.
       enabled: true
+    konnectDataplaneAutoscale:
+      # Enable validation for konnectclouddataplanegroupconfig autoscale type.
+      enabled: true
   webhooks:
     options:
       certManager:
