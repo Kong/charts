@@ -8,7 +8,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -21,7 +21,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -38,7 +38,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -53,7 +53,7 @@ kind: ClusterRole
 metadata:
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -503,7 +503,7 @@ metadata:
   name: chartsnap-kong
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -524,7 +524,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -594,7 +594,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -615,7 +615,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -627,7 +627,7 @@ spec:
     targetPort: webhook
   selector:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -641,7 +641,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -657,7 +657,7 @@ spec:
     targetPort: cstatus
   selector:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -671,7 +671,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -695,7 +695,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -719,7 +719,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -747,7 +747,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -775,7 +775,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -804,7 +804,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -825,7 +825,7 @@ spec:
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         app.kubernetes.io/name: kong
-        helm.sh/chart: kong-2.51.0
+        helm.sh/chart: kong-2.52.0
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/managed-by: "Helm"
         app.kubernetes.io/version: "3.10"
@@ -1253,7 +1253,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -1275,7 +1275,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -1295,7 +1295,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -1317,7 +1317,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -1337,7 +1337,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
@@ -1356,7 +1356,7 @@ metadata:
   name: chartsnap-kong-default-validations
   labels:
     app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.51.0
+    helm.sh/chart: kong-2.52.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "3.10"
