@@ -5065,6 +5065,48 @@ entries:
     version: 0.36.5
   kong-operator:
   - annotations:
+      artifacthub.io/category: networking
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://developer.konghq.com/operator/
+        - name: Repository
+          url: https://github.com/Kong/kong-operator
+      artifacthub.io/operator: "true"
+      artifacthub.io/operatorCapabilities: Seamless Upgrades
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: "2.0"
+    created: "2025-09-18T10:44:30.240324834Z"
+    dependencies:
+    - name: ko-crds
+      repository: ""
+      version: 1.0.0
+    - condition: kic-crds.enabled
+      name: kic-crds
+      repository: ""
+      version: 1.2.0
+    - condition: gwapi-standard-crds.enabled
+      name: gwapi-standard-crds
+      repository: ""
+      version: 1.3.0
+    - condition: gwapi-experimental-crds.enabled
+      name: gwapi-experimental-crds
+      repository: ""
+      version: 1.3.0
+    description: Deploy Kong Operator
+    digest: 1256f886de43b71fd2588ba75121a982e6e079bc8efd5d1ae95e596210e44a7b
+    home: https://konghq.com/
+    icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
+    maintainers:
+    - email: team-k8s@konghq.com
+      name: team-k8s-bot
+    name: kong-operator
+    sources:
+    - https://github.com/Kong/kong-operator/charts/kong-operator/
+    urls:
+    - https://github.com/Kong/charts/releases/download/kong-operator-1.0.1/kong-operator-1.0.1.tgz
+    version: 1.0.1
+  - annotations:
       artifacthub.io/prerelease: "true"
     apiVersion: v2
     appVersion: 2.0.0
@@ -5325,4 +5367,4 @@ entries:
     urls:
     - https://github.com/Kong/charts/releases/download/kong-operator-0.0.1/kong-operator-0.0.1.tgz
     version: 0.0.1
-generated: "2025-09-18T10:30:56.564308423Z"
+generated: "2025-09-18T10:44:30.240660394Z"
