@@ -53250,9 +53250,9 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.0.0
+    helm.sh/chart: kong-operator-1.0.1
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0"
+    app.kubernetes.io/version: "2.0"
     app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-controller-manager
   namespace: default
@@ -53272,12 +53272,12 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: kong-operator
-        helm.sh/chart: kong-operator-1.0.0
+        helm.sh/chart: kong-operator-1.0.1
         app.kubernetes.io/instance: "chartsnap"
-        app.kubernetes.io/version: "2.0.0"
+        app.kubernetes.io/version: "2.0"
         app.kubernetes.io/component: ko
         app: chartsnap-kong-operator
-        version: "2.0.0"
+        version: "2.0"
     spec:
       containers:
       - name: manager
@@ -53298,7 +53298,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        image: "docker.io/kong/kong-operator:2.0.0"
+        image: docker.io/kong/kong-operator:2.0
         livenessProbe:
           httpGet:
             path: /healthz
@@ -53375,9 +53375,9 @@ kind: Certificate
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.0.0
+    helm.sh/chart: kong-operator-1.0.1
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0"
+    app.kubernetes.io/version: "2.0"
     app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-webhook-serving-cert
   namespace: default
@@ -53396,9 +53396,9 @@ kind: Certificate
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.0.0
+    helm.sh/chart: kong-operator-1.0.1
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0"
+    app.kubernetes.io/version: "2.0"
     app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-webhook-validating-serving-cert
   namespace: default
@@ -53417,9 +53417,9 @@ kind: Issuer
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.0.0
+    helm.sh/chart: kong-operator-1.0.1
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0"
+    app.kubernetes.io/version: "2.0"
     app.kubernetes.io/component: ko
   name: chartsnap-kong-operator-webhook-selfsigned-issuer
   namespace: default
@@ -53510,6 +53510,32 @@ spec:
       )
     reason: Invalid
 ---
+# Source: kong-operator/templates/validation-policy-konnect.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: "autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - "konnect.konghq.com"
+      apiVersions:
+      - "v1alpha1"
+      operations:
+      - "CREATE"
+      - "UPDATE"
+      resources:
+      - "konnectcloudgatewaydataplanegroupconfigurations"
+      # NOTE: field-level deprecations via Kubebuilder annotations do not generate any warning to the
+      # users when the deprecated field is used.
+      # Until this is not fixed we need a ValidatingAdmissionPolicy to emit the warning.
+      # Upstream issue: https://github.com/kubernetes/kubernetes/issues/131817
+  validations:
+  - expression: object.spec.dataplane_groups.all(d, d.autoscale.type != "static")
+    message: '''Value "static" in spec.dataplane_groups.autoscale.type is deprecated, use "automatic" instead.'''
+---
 # Source: kong-operator/templates/validation-policy-dataplane.yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingAdmissionPolicyBinding
@@ -53520,6 +53546,15 @@ spec:
   validationActions:
   - Deny
 ---
+# Source: kong-operator/templates/validation-policy-konnect.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: "biding-autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
+spec:
+  policyName: "autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
+  validationActions: [Warn, Audit]
+---
 # Source: kong-operator/templates/validating-webhook.yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
@@ -53529,9 +53564,9 @@ metadata:
     cert-manager.io/secret-template: '{ "labels": { "konghq.com/secret" : "true" } }'
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.0.0
+    helm.sh/chart: kong-operator-1.0.1
     app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/version: "2.0.0"
+    app.kubernetes.io/version: "2.0"
     app.kubernetes.io/component: ko
   name: controlplane-configuration-validations
 webhooks:

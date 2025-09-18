@@ -66,7 +66,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        image: {{ template "kong.image" . }}
         livenessProbe:
           {{- toYaml .Values.livenessProbe | nindent 10 }}
         readinessProbe:
@@ -101,23 +101,6 @@ spec:
 {{- end }}
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 8 }}
-{{- if (semverCompare "< 1.5.0" (include "kong.effectiveVersion" .)) }}
-      - args:
-        - --secure-listen-address=0.0.0.0:8443
-        - --upstream=http://127.0.0.1:8080/
-        - --logtostderr=true
-        - --v=0
-        image: {{ .Values.kubeRBACProxy.image }}:{{ .Values.kubeRBACProxy.tag }}
-        name: kube-rbac-proxy
-        ports:
-        - containerPort: 8443
-          name: https
-          protocol: TCP
-        securityContext:
-          readOnlyRootFilesystem: true
-        resources:
-{{ toYaml .Values.kubeRBACProxy.resources | indent 10 }}
-{{- end }}
       securityContext:
         runAsNonRoot: true
       serviceAccountName: {{ template "kong.serviceAccountName" . }}

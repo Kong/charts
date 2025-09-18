@@ -8,10 +8,18 @@ maintainers:
 name: kong-operator
 sources:
   - https://github.com/Kong/kong-operator/charts/kong-operator/
-version: 1.0.0
-appVersion: "2.0.0"
+version: 1.0.1
+appVersion: "2.0"
 annotations:
-  artifacthub.io/prerelease: "true"
+  artifacthub.io/category: networking
+  artifacthub.io/prerelease: "false"
+  artifacthub.io/operator: "true"
+  artifacthub.io/operatorCapabilities: Seamless Upgrades
+  artifacthub.io/links: |
+    - name: Documentation
+      url: https://developer.konghq.com/operator/
+    - name: Repository
+      url: https://github.com/Kong/kong-operator
 dependencies:
   - name: ko-crds
     version: 1.0.0

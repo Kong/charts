@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1
+
+### Added
+
+- Support for specifying image digest via `image.digest` in `values.yaml`
+  [#2311](https://github.com/Kong/kong-operator/pull/2311)
+
 ## 1.0.0
 
 This is the first release of the new Helm Chart dedicated to install
