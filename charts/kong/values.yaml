@@ -747,8 +747,7 @@ ingressController:
 # Postgres sub-chart parameters
 # -----------------------------------------------------------------------------
 
-# Kong can run without a database or use either Postgres or Cassandra
-# as a backend datatstore for it's configuration.
+# Kong can run without a database or use Postgres as a backend datatstore for it's configuration.
 # By default, this chart installs Kong without a database.
 
 # If you would like to use a database, there are two options:
@@ -772,10 +771,14 @@ postgresql:
   auth:
     username: kong
     database: kong
+  # Default bitnami/postgres image is not available anymore, see:
+  # https://github.com/bitnami/containers/issues/83267 for details.
+  # If you want to use a DB backed Kong installation with Postgres,
+  # provide your own image here.
   image:
-    # use postgres < 14 until is https://github.com/Kong/kong/issues/8533 resolved and released
-    # enterprise (kong-gateway) supports postgres 14
-    tag: 13.11.0-debian-11-r20
+    registry: ""
+    repository: ""
+    tag: ""
   service:
     ports:
       postgresql: "5432"
