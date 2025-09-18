@@ -1,0 +1,36 @@
+{{- if .Values.global.validatingPolicies.konnectDataplaneAutoscale.enabled }}
+{{- if and (.Capabilities.APIVersions.Has "admissionregistration.k8s.io/v1/ValidatingAdmissionPolicy") (.Capabilities.APIVersions.Has "admissionregistration.k8s.io/v1/ValidatingAdmissionPolicyBinding") -}}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: "autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+        - "konnect.konghq.com"
+      apiVersions:
+        - "v1alpha1"
+      operations:
+        - "CREATE"
+        - "UPDATE"
+      resources:
+        - "konnectcloudgatewaydataplanegroupconfigurations"
+# NOTE: field-level deprecations via Kubebuilder annotations do not generate any warning to the
+# users when the deprecated field is used.
+# Until this is not fixed we need a ValidatingAdmissionPolicy to emit the warning.
+# Upstream issue: https://github.com/kubernetes/kubernetes/issues/131817
+  validations:
+  - expression: object.spec.dataplane_groups.all(d, d.autoscale.type != "static")
+    message: '''Value "static" in spec.dataplane_groups.autoscale.type is deprecated, use "automatic" instead.'''
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: "biding-autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
+spec:
+  policyName: "autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
+  validationActions: [Warn,Audit]
+{{- end -}}
+{{- end -}}

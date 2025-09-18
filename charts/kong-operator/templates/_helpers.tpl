@@ -206,3 +206,13 @@ The dict maps raw env variable key to the suggested variable path.
   {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "kong.image" -}}
+{{- if and ( .Values.image.digest) (.Values.image.tag ) -}}
+{{- printf "%s:%s@%s" .Values.image.repository .Values.image.tag .Values.image.digest -}}
+{{- else if .Values.image.digest -}}
+{{- printf "%s@%s" .Values.image.repository .Values.image.digest -}}
+{{- else -}}
+{{- printf "%s:%s" .Values.image.repository .Values.image.tag -}}
+{{- end -}}
+{{- end -}}
