@@ -16,10 +16,13 @@ helm repo update
 - [`kong/ingress`][#kongingress]: An umbrella chart for Kong Gateway and [Kong Ingress Controller][kic_gh].
 - [`kong/kong`][#kongkong]: A flexible building block for supporting a wide variety of environment configurations.
 - [`kong/gateway-operator`][#konggateway-operator]: Installs [Kong Gateway Operator][kgo_gh].
+  - NOTE: This chart has been replaced by `kong/kong-operator` which installs [Kong Operator][ko_gh].
+- [`kong/kong-operator`][#kong-operator]: Installs [Kong Operator][ko_gh].
 
 [#kongingress]: #kongingress
 [#kongkong]: #kongkong
 [#konggateway-operator]: #konggateway-operator
+[#kong-operator]: #kongkong-operator
 [kic_gh]: https://github.com/Kong/kubernetes-ingress-controller
 
 ### `kong/ingress`
@@ -57,6 +60,8 @@ of the `kong/kong` documentation's table of contents.
 
 ### `kong/gateway-operator`
 
+> NOTE: This chart has been replaced by `kong/kong-operator` which installs [Kong Operator][ko_gh].
+
 `kong/gateway-operator` installs [Kong Gateway Operator][kgo_gh].
 
 To use it:
@@ -67,6 +72,21 @@ helm install kong/gateway-operator --generate-name
 
 [kgo_gh]: https://github.com/Kong/gateway-operator
 
+### `kong/kong-operator`
+
+`kong/kong-operator` installs [Kong Operator][ko_gh].
+
+To use it:
+
+```bash
+helm install kong/kong-operator --generate-name
+```
+
+For more information about Kong Operator, see the [Kong Operator documentation][ko_docs].
+
+[ko_gh]: https://github.com/Kong/kong-operator
+[ko_docs]: https://developer.konghq.com/operator/
+
 ## Documentation
 
 The documentation for Kong's Helm Charts is available on GitHub:
@@ -74,6 +94,7 @@ The documentation for Kong's Helm Charts is available on GitHub:
 - [kong/ingress](https://github.com/Kong/charts/blob/main/charts/ingress/README.md)
 - [kong/kong](https://github.com/Kong/charts/blob/main/charts/kong/README.md)
 - [kong/gateway-operator](https://github.com/Kong/charts/blob/main/charts/gateway-operator/README.md)
+- [kong/kong-operator](https://github.com/Kong/charts/blob/main/charts/kong-operator/README.md)
 
 ## Seeking help
 
