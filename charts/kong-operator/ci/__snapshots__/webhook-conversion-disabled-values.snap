@@ -39,7 +39,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: aigateways.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -571,7 +571,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: controlplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -1127,7 +1127,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: dataplanemetricsextensions.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -1276,7 +1276,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: dataplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -10288,7 +10288,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: gatewayconfigurations.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -19340,8 +19340,67 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     helm.sh/resource-policy: keep
+    kubernetes-configuration.konghq.com/channels: ingress-controller
+    kubernetes-configuration.konghq.com/version: v2.0.1
+  name: ingressclassparameterses.configuration.konghq.com
+spec:
+  group: configuration.konghq.com
+  names:
+    kind: IngressClassParameters
+    listKind: IngressClassParametersList
+    plural: ingressclassparameterses
+    singular: ingressclassparameters
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: IngressClassParameters is the Schema for the IngressClassParameters API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: Spec is the IngressClassParameters specification.
+            properties:
+              enableLegacyRegexDetection:
+                default: false
+                description: |-
+                  EnableLegacyRegexDetection automatically detects if ImplementationSpecific Ingress paths are regular expression
+                  paths using the legacy 2.x heuristic. The controller adds the "~" prefix to those paths if the Kong version is
+                  3.0 or higher.
+                type: boolean
+              serviceUpstream:
+                default: false
+                description: Offload load-balancing to kube-proxy or sidecar.
+                type: boolean
+            type: object
+        type: object
+    served: true
+    storage: true
+---
+# Source: kong-operator/charts/ko-crds/templates/ko-crds.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongcacertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -19575,7 +19634,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -19826,8 +19885,310 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     helm.sh/resource-policy: keep
+    kubernetes-configuration.konghq.com/channels: ingress-controller
+    kubernetes-configuration.konghq.com/version: v2.0.1
+  name: kongclusterplugins.configuration.konghq.com
+spec:
+  group: configuration.konghq.com
+  names:
+    categories:
+    - kong-ingress-controller
+    - kong
+    kind: KongClusterPlugin
+    listKind: KongClusterPluginList
+    plural: kongclusterplugins
+    shortNames:
+    - kcp
+    singular: kongclusterplugin
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - description: Name of the plugin
+      jsonPath: .plugin
+      name: Plugin-Type
+      type: string
+    - description: Age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - description: Indicates if the plugin is disabled
+      jsonPath: .disabled
+      name: Disabled
+      priority: 1
+      type: boolean
+    - description: Configuration of the plugin
+      jsonPath: .config
+      name: Config
+      priority: 1
+      type: string
+    - jsonPath: .status.conditions[?(@.type=="Programmed")].status
+      name: Programmed
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: KongClusterPlugin is the Schema for the kongclusterplugins API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          config:
+            description: |-
+              Config contains the plugin configuration. It's a list of keys and values
+              required to configure the plugin.
+              Please read the documentation of the plugin being configured to set values
+              in here. For any plugin in Kong, anything that goes in the `config` JSON
+              key in the Admin API request, goes into this property.
+              Only one of `config` or `configFrom` may be used in a KongClusterPlugin, not both at once.
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          configFrom:
+            description: |-
+              ConfigFrom references a secret containing the plugin configuration.
+              This should be used when the plugin configuration contains sensitive information,
+              such as AWS credentials in the Lambda plugin or the client secret in the OIDC plugin.
+              Only one of `config` or `configFrom` may be used in a KongClusterPlugin, not both at once.
+            properties:
+              secretKeyRef:
+                description: Specifies a name, a namespace, and a key of a secret to refer to.
+                properties:
+                  key:
+                    description: The key containing the value.
+                    type: string
+                  name:
+                    description: The secret containing the key.
+                    type: string
+                  namespace:
+                    description: The namespace containing the secret.
+                    type: string
+                required:
+                - key
+                - name
+                - namespace
+                type: object
+            required:
+            - secretKeyRef
+            type: object
+          configPatches:
+            description: |-
+              ConfigPatches represents JSON patches to the configuration of the plugin.
+              Each item means a JSON patch to add something in the configuration,
+              where path is specified in `path` and value is in `valueFrom` referencing
+              a key in a secret.
+              When Config is specified, patches will be applied to the configuration in Config.
+              Otherwise, patches will be applied to an empty object.
+            items:
+              description: |-
+                NamespacedConfigPatch is a JSON patch to add values from secrets to KongClusterPlugin
+                to the generated configuration of plugin in Kong.
+              properties:
+                path:
+                  description: Path is the JSON path to add the patch.
+                  type: string
+                valueFrom:
+                  description: ValueFrom is the reference to a key of a secret where the patched value comes from.
+                  properties:
+                    secretKeyRef:
+                      description: Specifies a name, a namespace, and a key of a secret to refer to.
+                      properties:
+                        key:
+                          description: The key containing the value.
+                          type: string
+                        name:
+                          description: The secret containing the key.
+                          type: string
+                        namespace:
+                          description: The namespace containing the secret.
+                          type: string
+                      required:
+                      - key
+                      - name
+                      - namespace
+                      type: object
+                  required:
+                  - secretKeyRef
+                  type: object
+              required:
+              - path
+              - valueFrom
+              type: object
+            type: array
+          consumerRef:
+            description: ConsumerRef is a reference to a particular consumer.
+            type: string
+          disabled:
+            description: Disabled set if the plugin is disabled or not.
+            type: boolean
+          instance_name:
+            description: |-
+              InstanceName is an optional custom name to identify an instance of the plugin. This is useful when running the
+              same plugin in multiple contexts, for example, on multiple services.
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          ordering:
+            description: |-
+              Ordering overrides the normal plugin execution order. It's only available on Kong Enterprise.
+              `<phase>` is a request processing phase (for example, `access` or `body_filter`) and
+              `<plugin>` is the name of the plugin that will run before or after the KongPlugin.
+              For example, a KongPlugin with `plugin: rate-limiting` and `before.access: ["key-auth"]`
+              will create a rate limiting plugin that limits requests _before_ they are authenticated.
+            properties:
+              after:
+                additionalProperties:
+                  items:
+                    type: string
+                  type: array
+                description: PluginOrderingPhase indicates which plugins in a phase should affect the target plugin's order
+                type: object
+              before:
+                additionalProperties:
+                  items:
+                    type: string
+                  type: array
+                description: PluginOrderingPhase indicates which plugins in a phase should affect the target plugin's order
+                type: object
+            type: object
+          plugin:
+            description: PluginName is the name of the plugin to which to apply the config.
+            type: string
+          protocols:
+            description: |-
+              Protocols configures plugin to run on requests received on specific
+              protocols.
+            items:
+              description: |-
+                KongProtocol is a valid Kong protocol.
+                This alias is necessary to deal with https://github.com/kubernetes-sigs/controller-tools/issues/342
+              enum:
+              - http
+              - https
+              - grpc
+              - grpcs
+              - tcp
+              - tls
+              - udp
+              type: string
+            type: array
+          run_on:
+            description: |-
+              RunOn configures the plugin to run on the first or the second or both
+              nodes in case of a service mesh deployment.
+            enum:
+            - first
+            - second
+            - all
+            type: string
+          status:
+            description: Status represents the current status of the KongClusterPlugin resource.
+            properties:
+              conditions:
+                default:
+                - lastTransitionTime: "1970-01-01T00:00:00Z"
+                  message: Waiting for controller
+                  reason: Pending
+                  status: Unknown
+                  type: Programmed
+                description: |-
+                  Conditions describe the current conditions of the KongClusterPluginStatus.
+
+                  Known condition types are:
+
+                  * "Programmed"
+                items:
+                  description: Condition contains details for one aspect of the current state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                maxItems: 8
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+            type: object
+        required:
+        - plugin
+        type: object
+        x-kubernetes-validations:
+        - message: Using both config and configFrom fields is not allowed.
+          rule: '!(has(self.config) && has(self.configFrom))'
+        - message: Using both configFrom and configPatches fields is not allowed.
+          rule: '!(has(self.configFrom) && has(self.configPatches))'
+        - message: The plugin field is immutable
+          rule: self.plugin == oldSelf.plugin
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+# Source: kong-operator/charts/ko-crds/templates/ko-crds.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongconsumergroups.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -20063,7 +20424,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongconsumers.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -20326,7 +20687,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongcredentialacls.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -20510,7 +20871,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongcredentialapikeys.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -20694,7 +21055,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongcredentialbasicauths.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -20882,7 +21243,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongcredentialhmacs.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -21072,7 +21433,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongcredentialjwts.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -21283,8 +21644,197 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     helm.sh/resource-policy: keep
+    kubernetes-configuration.konghq.com/channels: ingress-controller
+    kubernetes-configuration.konghq.com/version: v2.0.1
+  name: kongcustomentities.configuration.konghq.com
+spec:
+  group: configuration.konghq.com
+  names:
+    categories:
+    - kong-ingress-controller
+    - kong
+    kind: KongCustomEntity
+    listKind: KongCustomEntityList
+    plural: kongcustomentities
+    shortNames:
+    - kce
+    singular: kongcustomentity
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: type of the Kong entity
+      jsonPath: .spec.type
+      name: Entity Type
+      type: string
+    - description: Age
+      jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - jsonPath: .status.conditions[?(@.type=="Programmed")].status
+      name: Programmed
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KongCustomEntity defines a "custom" Kong entity that KIC cannot support the entity type directly.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KongCustomEntitySpec defines the specification of the KongCustomEntity.
+            properties:
+              controllerName:
+                description: ControllerName specifies the controller that should reconcile it, like ingress class.
+                type: string
+              fields:
+                description: Fields defines the fields of the Kong entity itself.
+                x-kubernetes-preserve-unknown-fields: true
+              parentRef:
+                description: |-
+                  ParentRef references the kubernetes resource it attached to when its scope is "attached".
+                  Currently only KongPlugin/KongClusterPlugin allowed. This will make the custom entity to be attached
+                  to the entity(service/route/consumer) where the plugin is attached.
+                properties:
+                  group:
+                    description: Group defines the API group of the referred object.
+                    type: string
+                  kind:
+                    description: Kind defines the kind of the referred object.
+                    enum:
+                    - KongPlugin
+                    - KongClusterPlugin
+                    type: string
+                  name:
+                    description: Name defines the name of the referred object.
+                    type: string
+                  namespace:
+                    description: Empty namespace means the same namespace of the owning object.
+                    type: string
+                required:
+                - name
+                type: object
+              type:
+                description: EntityType is the type of the Kong entity. The type is used in generating declarative configuration.
+                type: string
+            required:
+            - controllerName
+            - fields
+            - type
+            type: object
+            x-kubernetes-validations:
+            - message: The type field cannot be one of the known Kong entity types
+              rule: '!(self.type in [''services'',''routes'',''upstreams'',''targets'',''plugins'',''consumers'',''consumer_groups''])'
+          status:
+            description: Status stores the reconciling status of the resource.
+            properties:
+              conditions:
+                default:
+                - lastTransitionTime: "1970-01-01T00:00:00Z"
+                  message: Waiting for controller
+                  reason: Pending
+                  status: Unknown
+                  type: Programmed
+                description: |-
+                  Conditions describe the current conditions of the KongCustomEntityStatus.
+
+                  Known condition types are:
+
+                  * "Programmed"
+                items:
+                  description: Condition contains details for one aspect of the current state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                maxItems: 8
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+            required:
+            - conditions
+            type: object
+        required:
+        - spec
+        type: object
+        x-kubernetes-validations:
+        - message: The spec.type field is immutable
+          rule: self.spec.type == oldSelf.spec.type
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+# Source: kong-operator/charts/ko-crds/templates/ko-crds.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongdataplaneclientcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -21512,7 +22062,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongkeys.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -21818,7 +22368,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongkeysets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -22051,7 +22601,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: konglicenses.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -22247,7 +22797,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongpluginbindings.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -22624,7 +23174,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongplugininstallations.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -22804,7 +23354,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongplugins.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -23099,7 +23649,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongroutes.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -23453,7 +24003,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongservices.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -23737,7 +24287,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongsnis.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -23918,7 +24468,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongtargets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -24105,7 +24655,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   labels:
     gateway.networking.k8s.io/policy: direct
   name: kongupstreampolicies.configuration.konghq.com
@@ -24761,7 +25311,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongupstreams.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -24904,6 +25454,7 @@ spec:
                 description: The name of the route URI capture to take the value from as hash input. Only required when `hash_on` is set to `uri_capture`.
                 type: string
               healthchecks:
+                description: Healthchecks - The array of healthchecks.
                 properties:
                   active:
                     properties:
@@ -25185,7 +25736,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: kongvaults.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -25459,7 +26010,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: konnectapiauthconfigurations.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -25654,7 +26205,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: konnectcloudgatewaydataplanegroupconfigurations.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -26081,7 +26632,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: konnectcloudgatewaynetworks.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -26301,7 +26852,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: konnectcloudgatewaytransitgateways.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -26660,7 +27211,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: konnectextensions.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -27002,7 +27553,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: konnectgatewaycontrolplanes.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -27329,7 +27880,7 @@ metadata:
   annotations:
     helm.sh/resource-policy: keep
     kubernetes-configuration.konghq.com/channels: gateway-operator
-    kubernetes-configuration.konghq.com/version: v2.0.0
+    kubernetes-configuration.konghq.com/version: v2.0.1
   name: watchnamespacegrants.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
