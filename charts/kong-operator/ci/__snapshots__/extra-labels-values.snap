@@ -52941,6 +52941,12 @@ spec:
           status:
             description: Status defines the observed state of KonnectGatewayControlPlane.
             properties:
+              clusterType:
+                description: |-
+                  ClusterType is the cluster type of the Konnect control plane.
+                  When the KonnectGatewayControlPlane is attached to a control plane in Konnect,
+                  ClusterType is filled with the cluster type of the control plane.
+                type: string
               conditions:
                 default:
                 - lastTransitionTime: "1970-01-01T00:00:00Z"
