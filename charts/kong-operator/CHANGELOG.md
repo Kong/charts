@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixes
+
+- Use proper certificate for validating webhook when `cert-manager` is used.
+  [#2356](https://github.com/Kong/kong-operator/pull/2356)
+
 ## 1.0.1
 
 ### Added
