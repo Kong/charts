@@ -54,18 +54,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          NEW_VERSION=$(grep -E '^version:' charts/kong-operator/Chart.yaml | awk '{print $2}')
-          if git show ${{ github.event.before }}:charts/kong-operator/Chart.yaml >/dev/null 2>&1; then
-            OLD_VERSION=$(git show ${{ github.event.before }}:charts/kong-operator/Chart.yaml | grep -E '^version:' | awk '{print $2}')
+          NEW_VERSION=$(grep -E '^version:' "charts/kong-operator/Chart.yaml" | awk '{print $2}')
+          SHA="${{ github.event.before }}"
+          if git show "$SHA:charts/kong-operator/Chart.yaml" >/dev/null 2>&1; then
+            OLD_VERSION=$(git show "$SHA:charts/kong-operator/Chart.yaml" | grep -E '^version:' | awk '{print $2}')
           else
             OLD_VERSION=""
           fi
           echo "new=${NEW_VERSION} old=${OLD_VERSION}"
           if [ -n "${NEW_VERSION}" ] && [ "${NEW_VERSION}" != "${OLD_VERSION}" ]; then
-            echo "publish_oci=true" >> $GITHUB_OUTPUT
-            echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+            echo "publish_oci=true" >> "$GITHUB_OUTPUT"
+            echo "version=${NEW_VERSION}" >> "$GITHUB_OUTPUT"
           else
-            echo "publish_oci=false" >> $GITHUB_OUTPUT
+            echo "publish_oci=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Login to DockerHub (OCI)
@@ -79,6 +80,6 @@ jobs:
       - name: Push kong-operator chart to DockerHub (OCI)
         if: ${{ steps.kong_operator_oci.outputs.publish_oci == 'true' && env.DOCKERHUB_USERNAME != '' && env.DOCKERHUB_TOKEN != '' }}
         run: |
-          # Save and push the chart explicitly to kong/kong-operator-chart
+          # Save and push the chart explicitly to kong/kong-operator on DockerHub
           helm package charts/kong-operator
           helm push kong-operator-${{ steps.kong_operator_oci.outputs.version }}.tgz oci://registry-1.docker.io/kong
