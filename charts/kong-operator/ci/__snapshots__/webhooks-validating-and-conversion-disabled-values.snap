@@ -28634,7 +28634,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.0.1
+    helm.sh/chart: kong-operator-1.0.2
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "2.0"
     app.kubernetes.io/component: ko
@@ -28656,7 +28656,7 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: kong-operator
-        helm.sh/chart: kong-operator-1.0.1
+        helm.sh/chart: kong-operator-1.0.2
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/version: "2.0"
         app.kubernetes.io/component: ko
