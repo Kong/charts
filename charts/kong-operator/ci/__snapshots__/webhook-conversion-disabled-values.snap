@@ -694,6 +694,7 @@ spec:
                     properties:
                       name:
                         description: Ref is the name of the DataPlane to configure.
+                        minLength: 1
                         type: string
                     required:
                     - name
@@ -743,6 +744,7 @@ spec:
                       type: string
                     kind:
                       description: Kind is kind of the extension resource.
+                      minLength: 1
                       type: string
                     name:
                       description: Name is the name of the referred resource.
@@ -9710,6 +9712,7 @@ spec:
                       type: string
                     kind:
                       description: Kind is kind of the extension resource.
+                      minLength: 1
                       type: string
                     name:
                       description: Name is the name of the referred resource.
@@ -19182,6 +19185,7 @@ spec:
                       type: string
                     kind:
                       description: Kind is kind of the extension resource.
+                      minLength: 1
                       type: string
                     name:
                       description: Name is the name of the referred resource.
@@ -19463,6 +19467,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -19704,6 +19709,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -20254,6 +20260,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -20515,6 +20522,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -21898,6 +21906,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -22122,6 +22131,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -22428,6 +22438,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -22865,6 +22876,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -23712,6 +23724,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -24075,6 +24088,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -25380,6 +25394,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -25828,6 +25843,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -26292,6 +26308,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        minLength: 1
                         type: string
                       namespace:
                         description: |-
@@ -26711,6 +26728,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the KonnectAPIAuthConfiguration resource.
+                        minLength: 1
                         type: string
                     required:
                     - name
@@ -26922,9 +26940,11 @@ spec:
                     properties:
                       ram_share_arn:
                         description: RAMShareArn is the resource share ARN to verify request to create transit gateway attachment.
+                        minLength: 1
                         type: string
                       transit_gateway_id:
                         description: TransitGatewayID is the AWS transit gateway ID to create attachment to.
+                        minLength: 1
                         type: string
                     required:
                     - ram_share_arn
@@ -26978,15 +26998,19 @@ spec:
                     properties:
                       resource_group_name:
                         description: ResourceGroupName is the resource group name for the Azure VNET Peering attachment.
+                        minLength: 1
                         type: string
                       subscription_id:
                         description: SubscriptionID is the subscription ID for the Azure VNET Peering attachment.
+                        minLength: 1
                         type: string
                       tenant_id:
                         description: TenantID is the tenant ID for the Azure VNET Peering attachment.
+                        minLength: 1
                         type: string
                       vnet_name:
                         description: VnetName is the VNET Name for the Azure VNET Peering attachment.
+                        minLength: 1
                         type: string
                     required:
                     - resource_group_name
@@ -27317,6 +27341,7 @@ spec:
                             properties:
                               name:
                                 description: Name is the name of the Konnect Control Plane.
+                                minLength: 1
                                 type: string
                               namespace:
                                 description: |-
@@ -27517,15 +27542,18 @@ spec:
                     type: string
                   controlPlaneID:
                     description: ControlPlaneID is the Konnect ID of the ControlPlane this KonnectExtension is associated with.
+                    minLength: 1
                     type: string
                   endpoints:
                     description: Endpoints defines the Konnect endpoints for the control plane.
                     properties:
                       controlPlane:
                         description: ControlPlaneEndpoint is the endpoint for the control plane.
+                        minLength: 1
                         type: string
                       telemetry:
                         description: TelemetryEndpoint is the endpoint for telemetry.
+                        minLength: 1
                         type: string
                     required:
                     - controlPlane
@@ -27669,6 +27697,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the KonnectAPIAuthConfiguration resource.
+                        minLength: 1
                         type: string
                     required:
                     - name
@@ -27849,9 +27878,11 @@ spec:
                 properties:
                   controlPlane:
                     description: ControlPlaneEndpoint is the endpoint for the control plane.
+                    minLength: 1
                     type: string
                   telemetry:
                     description: TelemetryEndpoint is the endpoint for telemetry.
+                    minLength: 1
                     type: string
                 required:
                 - controlPlane
