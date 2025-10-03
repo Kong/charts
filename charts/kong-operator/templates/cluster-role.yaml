@@ -159,10 +159,7 @@ rules:
       - kongdataplaneclientcertificates
       - kongkeys
       - kongkeysets
-      - kongservices
       - kongsnis
-      - kongtargets
-      - kongupstreams
       - kongvaults
     verbs:
       - get
@@ -195,17 +192,12 @@ rules:
       - kongkeys/status
       - kongkeysets/finalizers
       - kongkeysets/status
-      - kongpluginbindings/status
       - kongroutes/finalizers
-      - kongroutes/status
       - kongservices/finalizers
-      - kongservices/status
       - kongsnis/finalizers
       - kongsnis/status
       - kongtargets/finalizers
-      - kongtargets/status
       - kongupstreams/finalizers
-      - kongupstreams/status
       - kongvaults/finalizers
     verbs:
       - patch
@@ -218,8 +210,13 @@ rules:
       - kongconsumers/status
       - kongcustomentities/status
       - konglicenses/status
+      - kongpluginbindings/status
       - kongplugins/status
+      - kongroutes/status
+      - kongservices/status
+      - kongtargets/status
       - kongupstreampolicies/status
+      - kongupstreams/status
       - kongvaults/status
     verbs:
       - get
@@ -235,19 +232,12 @@ rules:
       - kongcredentialjwts
       - kongpluginbindings
       - kongplugins
+      - kongroutes
+      - kongservices
+      - kongtargets
+      - kongupstreams
     verbs:
       - create
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - configuration.konghq.com
-    resources:
-      - kongroutes
-    verbs:
       - delete
       - get
       - list
