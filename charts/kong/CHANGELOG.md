@@ -1,6 +1,18 @@
 # Changelog
 
+## 3.0.0
+
+### Changes
+
+* Default Postgres repository, image name and tag are set to `""`.
+  This requires users that use the db backed installations to specify these.
+  The default Bitnami Postgres image is not available anymore, for more details
+  please see: <https://github.com/bitnami/containers/issues/83267>.
+  [#1373](https://github.com/Kong/charts/pull/1373)
+
 ## 2.52.0
+
+### Changes
 
 * Added `migrations.waitContainer.securityContext` to allow setting a security context on the migrations wait-for-postgres init container.
 * Added `certificates.manager` configuration to enable separate cert-manager certificate generation for Kong Manager (admin GUI).
