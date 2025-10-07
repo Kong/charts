@@ -19192,105 +19192,54 @@ spec:
                   If this field is set, the operator will provision a Gateway that is
                   connected to a Konnect Control Plane.
                 properties:
-                  apiAuthConfigurationSpec:
+                  authRef:
                     description: |-
-                      APIAuthConfigurationSpec contains the Konnect API authentication configuration.
+                      APIAuthConfigurationRef contains the Konnect API authentication configuration.
                       If this field is not set, the operator will not be able to connect
                       the Gateway to Konnect.
                     properties:
-                      secretRef:
-                        description: |-
-                          SecretRef is a reference to a Kubernetes Secret containing the Konnect token.
-                          This secret is required to have the konghq.com/credential label set to "konnect".
-                        properties:
-                          name:
-                            description: name is unique within a namespace to reference a secret resource.
-                            type: string
-                          namespace:
-                            description: namespace defines the space within which the secret name must be unique.
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
-                      serverURL:
-                        description: |-
-                          ServerURL is the URL of the Konnect server.
-                          It can be either a full URL with an HTTPs scheme or just a hostname.
-                          Please refer to https://docs.konghq.com/konnect/network/ for the list of supported hostnames.
-                        type: string
-                        x-kubernetes-validations:
-                        - message: Server URL is required
-                          rule: size(self) > 0
-                        - message: Server URL is immutable
-                          rule: self == oldSelf
-                        - message: Server URL must use HTTPs if specifying scheme
-                          rule: 'isURL(self) ? url(self).getScheme() == ''https'' : true'
-                        - message: Server URL must satisfy hostname (RFC 1123) regex if not a valid absolute URL
-                          rule: 'size(self) > 0 && !isURL(self) ? self.matches(''^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]).)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9])$'') : true'
-                      token:
-                        description: Token is the Konnect token used to authenticate with the Konnect API.
-                        type: string
-                      type:
-                        description: KonnectAPIAuthType is the type of authentication used to authenticate with the Konnect API.
-                        enum:
-                        - token
-                        - secretRef
+                      name:
+                        description: Name is the name of the KonnectAPIAuthConfiguration resource.
+                        minLength: 1
                         type: string
                     required:
-                    - serverURL
-                    - type
+                    - name
                     type: object
-                    x-kubernetes-validations:
-                    - message: spec.token is required if auth type is set to token
-                      rule: 'self.type == ''token'' ? size(self.token) > 0 : true'
-                    - message: spec.secretRef is required if auth type is set to secretRef
-                      rule: 'self.type == ''secretRef'' ? has(self.secretRef) : true'
-                    - message: spec.token and spec.secretRef cannot be set at the same time
-                      rule: '!(has(self.token) && has(self.secretRef))'
-                  gatewayControlPlaneOptions:
+                  mirror:
                     description: |-
-                      GatewayControlPlaneOptions contains the options for configuring
-                      ControlPlane resources that will be managed as part of the Gateway
-                      when using Konnect.
+                      Mirror is the Konnect Mirror configuration.
+                      It is only applicable for ControlPlanes that are created as Mirrors.
                     properties:
-                      mirror:
+                      konnect:
                         description: |-
-                          Mirror is the Konnect Mirror configuration.
-                          It is only applicable for ControlPlanes that are created as Mirrors.
+                          Konnect contains the KonnectID of the KonnectGatewayControlPlane that
+                          is mirrored.
                         properties:
-                          konnect:
+                          id:
                             description: |-
-                              Konnect contains the KonnectID of the KonnectGatewayControlPlane that
-                              is mirrored.
-                            properties:
-                              id:
-                                description: |-
-                                  ID is the ID of the Konnect entity. It can be set only in case
-                                  the ControlPlane type is Mirror.
-                                pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
-                                type: string
-                            required:
-                            - id
-                            type: object
+                              ID is the ID of the Konnect entity. It can be set only in case
+                              the ControlPlane type is Mirror.
+                            pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
+                            type: string
                         required:
-                        - konnect
+                        - id
                         type: object
-                      source:
-                        default: Origin
-                        description: Source represents the source type of the Konnect entity.
-                        enum:
-                        - Origin
-                        - Mirror
-                        type: string
+                    required:
+                    - konnect
                     type: object
-                    x-kubernetes-validations:
-                    - message: mirror field must be set for type Mirror
-                      rule: 'self.source == ''Mirror'' ? has(self.mirror) : true'
-                    - message: mirror field cannot be set for type Origin
-                      rule: 'self.source == ''Origin'' ? !has(self.mirror) : true'
+                  source:
+                    default: Origin
+                    description: Source represents the source type of the Konnect entity.
+                    enum:
+                    - Origin
+                    - Mirror
+                    type: string
                 type: object
                 x-kubernetes-validations:
-                - message: GatewayControlPlaneOptions can only be specified when APIAuthConfigurationSpec is specified
-                  rule: 'has(self.gatewayControlPlaneOptions) ? has(self.apiAuthConfigurationSpec) : true'
+                - message: mirror field must be set for type Mirror
+                  rule: 'self.source == ''Mirror'' ? has(self.mirror) : true'
+                - message: mirror field cannot be set for type Origin
+                  rule: 'self.source == ''Origin'' ? !has(self.mirror) : true'
               listenersOptions:
                 description: |-
                   ListenerOptions is the specification for configuration bound to specific listeners in the Gateway.
