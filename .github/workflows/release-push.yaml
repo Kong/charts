@@ -17,7 +17,7 @@ jobs:
       contents: write
     env:
       DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_PUSH_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_PUSH_TOKEN_KO }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_PUSH_TOKEN_KO_CHART }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
@@ -77,9 +77,17 @@ jobs:
         run: |
           helm registry login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_TOKEN" registry-1.docker.io
 
-      - name: Push kong-operator chart to DockerHub (OCI)
+      - name: Prepare and push kong-operator-chart to DockerHub (OCI)
         if: ${{ steps.kong_operator_oci.outputs.publish_oci == 'true' && env.DOCKERHUB_USERNAME != '' && env.DOCKERHUB_TOKEN != '' }}
+        shell: bash
         run: |
-          # Save and push the chart explicitly to kong/kong-operator on DockerHub
-          helm package charts/kong-operator
-          helm push kong-operator-${{ steps.kong_operator_oci.outputs.version }}.tgz oci://registry-1.docker.io/kong
+          set -euo pipefail
+          WORKDIR="$(mktemp -d)"
+          cp -a charts/kong-operator "${WORKDIR}/kong-operator-chart"
+          # Rename chart to kong-operator-chart (only top-level name)
+          sed -i -E 's/^name:[[:space:]]*kong-operator$/name: kong-operator-chart/' "${WORKDIR}/kong-operator-chart/Chart.yaml"
+          echo "Prepared chart at: ${WORKDIR}/kong-operator-chart"
+          grep -E '^name:' "${WORKDIR}/kong-operator-chart/Chart.yaml"
+          # Package and push to kong/kong-operator-chart
+          helm package "${WORKDIR}/kong-operator-chart"
+          helm push "kong-operator-chart-${{ steps.kong_operator_oci.outputs.version }}.tgz" oci://registry-1.docker.io/kong
