@@ -46903,6 +46903,40 @@ spec:
             description: KongCACertificateSpec contains the specification for the
               KongCACertificate.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a CA certificate from
+                  an existing CA certificate in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               cert:
                 description: Cert is the PEM-encoded CA certificate.
                 type: string
@@ -46994,6 +47028,12 @@ spec:
             - message: KIC is not supported as control plane
               rule: '!has(self.controlPlaneRef) ? true : self.controlPlaneRef.type
                 != ''kic'''
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -47157,6 +47197,40 @@ spec:
           spec:
             description: KongCertificateSpec contains the specification for the KongCertificate.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a certificate from
+                  an existing certificate in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               cert:
                 description: Cert is the PEM-encoded certificate.
                 type: string
@@ -47266,6 +47340,12 @@ spec:
             - message: KIC is not supported as control plane
               rule: '!has(self.controlPlaneRef) ? true : self.controlPlaneRef.type
                 != ''kic'''
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -47745,6 +47825,40 @@ spec:
           spec:
             description: KongConsumerGroupSpec defines the desired state of KongConsumerGroup.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a consumer group from
+                  an existing consumer group in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               controlPlaneRef:
                 description: ControlPlaneRef is a reference to a ControlPlane this
                   ConsumerGroup is associated with.
@@ -47829,6 +47943,13 @@ spec:
                 - message: tags entries must not be longer than 128 characters
                   rule: self.all(tag, size(tag) >= 1 && size(tag) <= 128)
             type: object
+            x-kubernetes-validations:
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -48026,6 +48147,40 @@ spec:
           spec:
             description: KongConsumerSpec defines the specification of the KongConsumer.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a consumer from an
+                  existing consumer in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               controlPlaneRef:
                 description: ControlPlaneRef is a reference to a ControlPlane this
                   Consumer is associated with.
@@ -48107,6 +48262,13 @@ spec:
                 - message: tags entries must not be longer than 128 characters
                   rule: self.all(tag, size(tag) >= 1 && size(tag) <= 128)
             type: object
+            x-kubernetes-validations:
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -48279,6 +48441,40 @@ spec:
           spec:
             description: Spec contains the ACL credential specification.
             properties:
+              adopt:
+                description: Adopt is the options for adopting an ACL from an existing
+                  ACL in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               consumerRef:
                 description: ConsumerRef is a reference to a Consumer this KongCredentialACL
                   is associated with.
@@ -48310,6 +48506,10 @@ spec:
             - consumerRef
             - group
             type: object
+            x-kubernetes-validations:
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -48472,6 +48672,40 @@ spec:
           spec:
             description: Spec contains the API Key credential specification.
             properties:
+              adopt:
+                description: Adopt is the options for adopting an API key credential
+                  from an existing API key in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               consumerRef:
                 description: ConsumerRef is a reference to a Consumer this KongCredentialAPIKey
                   is associated with.
@@ -48503,6 +48737,10 @@ spec:
             - consumerRef
             - key
             type: object
+            x-kubernetes-validations:
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -48665,6 +48903,40 @@ spec:
           spec:
             description: Spec contains the BasicAuth credential specification.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a BasicAuth credential
+                  from an existing BasicAuth credential in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               consumerRef:
                 description: ConsumerRef is a reference to a Consumer this CredentialBasicAuth
                   is associated with.
@@ -48700,6 +48972,10 @@ spec:
             - password
             - username
             type: object
+            x-kubernetes-validations:
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -48862,6 +49138,40 @@ spec:
           spec:
             description: Spec contains the HMAC credential specification.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a HMAC credential from
+                  an existing HMAC credential in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               consumerRef:
                 description: ConsumerRef is a reference to a Consumer this KongCredentialHMAC
                   is associated with.
@@ -48899,6 +49209,10 @@ spec:
             - consumerRef
             - username
             type: object
+            x-kubernetes-validations:
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -49061,6 +49375,40 @@ spec:
           spec:
             description: Spec contains the JWT credential specification.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a JWT credential from
+                  an existing JWT credential in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               algorithm:
                 default: HS256
                 description: Algorithm is the algorithm used to sign the JWT token.
@@ -49118,6 +49466,10 @@ spec:
             required:
             - consumerRef
             type: object
+            x-kubernetes-validations:
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -49732,6 +50084,40 @@ spec:
           spec:
             description: KongKeySpec defines the spec for a KongKey.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a key from an existing
+                  key in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               controlPlaneRef:
                 description: ControlPlaneRef is a reference to a Konnect ControlPlane
                   this KongKey is associated with.
@@ -49893,6 +50279,12 @@ spec:
             - message: KIC is not supported as control plane
               rule: '!has(self.controlPlaneRef) ? true : self.controlPlaneRef.type
                 != ''kic'''
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
             - message: Either 'jwk' or 'pem' must be set
               rule: has(self.jwk) || has(self.pem)
           status:
@@ -50062,6 +50454,40 @@ spec:
           spec:
             description: KongKeySetSpec defines the spec for a KongKeySet.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a key set from an existing
+                  key set in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               controlPlaneRef:
                 description: ControlPlaneRef is a reference to a Konnect ControlPlane
                   with which KongKeySet is associated.
@@ -50155,6 +50581,12 @@ spec:
             - message: KIC is not supported as control plane
               rule: '!has(self.controlPlaneRef) ? true : self.controlPlaneRef.type
                 != ''kic'''
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -50527,6 +50959,40 @@ spec:
           spec:
             description: KongPluginBindingSpec defines specification of a KongPluginBinding.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a plugin instance from
+                  an existing plugin in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               controlPlaneRef:
                 description: ControlPlaneRef is a reference to a ControlPlane this
                   KongPluginBinding is associated with.
@@ -50769,6 +51235,12 @@ spec:
             - message: No targets must be set when scope is 'GlobalInControlPlane'
               rule: 'self.scope == ''GlobalInControlPlane'' ? !has(self.targets) :
                 true'
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -51422,6 +51894,40 @@ spec:
           spec:
             description: KongRouteSpec defines spec of a Kong Route.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a route from an existing
+                  route in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               controlPlaneRef:
                 description: |-
                   ControlPlaneRef is a reference to a ControlPlane this KongRoute is associated with.
@@ -51670,6 +52176,13 @@ spec:
             - message: KIC is not supported as control plane
               rule: '!has(self.controlPlaneRef) ? true : self.controlPlaneRef.type
                 != ''kic'''
+            - message: spec.adopt is allowed only when serviceRef exists or controlPlaneRef
+                is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.serviceRef) || (has(self.controlPlaneRef)
+                && self.controlPlaneRef.type == ''konnectNamespacedRef''))'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -51853,6 +52366,40 @@ spec:
           spec:
             description: KongServiceSpec defines specification of a Kong Service.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a service from an existing
+                  service in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               connect_timeout:
                 description: The timeout in milliseconds for establishing a connection
                   to the upstream server.
@@ -51996,6 +52543,12 @@ spec:
             - message: KIC is not supported as control plane
               rule: '!has(self.controlPlaneRef) ? true : self.controlPlaneRef.type
                 != ''kic'''
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -52160,6 +52713,40 @@ spec:
           spec:
             description: KongSNISpec defines specification of a Kong SNI.
             properties:
+              adopt:
+                description: Adopt is the options for adopting an SNI from an existing
+                  SNI in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               certificateRef:
                 description: CertificateRef is the reference to the certificate to
                   which the KongSNI is attached.
@@ -52190,6 +52777,10 @@ spec:
             - certificateRef
             - name
             type: object
+            x-kubernetes-validations:
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -52352,6 +52943,40 @@ spec:
           spec:
             description: KongTargetSpec defines the spec of KongTarget.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a target from an existing
+                  target in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               tags:
                 description: Tags is an optional set of strings associated with the
                   Target for grouping and filtering.
@@ -52388,6 +53013,10 @@ spec:
             - upstreamRef
             - weight
             type: object
+            x-kubernetes-validations:
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -53274,6 +53903,40 @@ spec:
           spec:
             description: KongUpstreamSpec defines the spec of Kong Upstream.
             properties:
+              adopt:
+                description: Adopt is the options for adopting an upstream from an
+                  existing upstream in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               algorithm:
                 description: Which load balancing algorithm to use.
                 type: string
@@ -53591,6 +54254,12 @@ spec:
               rule: '!has(self.hash_on) || (self.hash_on != ''query_arg'' || has(self.hash_on_query_arg))'
             - message: hash_on_uri_capture is required when `hash_on` is set to `uri_capture`.
               rule: '!has(self.hash_on) || (self.hash_on != ''uri_capture'' || has(self.hash_on_uri_capture))'
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             default:
               conditions:
@@ -53776,6 +54445,40 @@ spec:
           spec:
             description: KongVaultSpec defines specification of a custom Kong vault.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a vault from an existing
+                  vault in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               backend:
                 description: |-
                   Backend is the type of the backend storing the secrets in the vault.
@@ -53881,6 +54584,13 @@ spec:
             - backend
             - prefix
             type: object
+            x-kubernetes-validations:
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             description: KongVaultStatus represents the current status of the KongVault
               resource.
@@ -54275,6 +54985,41 @@ spec:
           spec:
             description: Spec defines the desired state of KonnectCloudGatewayDataPlaneGroupConfiguration.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a cloud gateway dataplane
+                  group configuration from an existing transit dataplane group configuration
+                  in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               api_access:
                 default: private+public
                 description: APIAccess is the desired type of API access for data-plane
@@ -54530,6 +55275,13 @@ spec:
             - controlPlaneRef
             - version
             type: object
+            x-kubernetes-validations:
+            - message: spec.adopt is allowed only when controlPlaneRef is konnectNamespacedRef
+              rule: '!has(self.adopt) ? true : (has(self.controlPlaneRef) && self.controlPlaneRef.type
+                == ''konnectNamespacedRef'')'
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             description: Status defines the observed state of KonnectCloudGatewayDataPlaneGroupConfiguration.
             properties:
@@ -54740,6 +55492,40 @@ spec:
           spec:
             description: Spec defines the desired state of KonnectCloudGatewayNetwork.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a cloud gateway network
+                  from an existing network in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               availability_zones:
                 description: List of availability zones that the network is attached
                   to.
@@ -54791,6 +55577,10 @@ spec:
             - name
             - region
             type: object
+            x-kubernetes-validations:
+            - message: Cannot set or unset spec.adopt in updates
+              rule: (has(oldSelf.adopt) && has(self.adopt)) || (!has(oldSelf.adopt)
+                && !has(self.adopt))
           status:
             description: Status defines the observed state of KonnectCloudGatewayNetwork.
             properties:
@@ -54988,6 +55778,40 @@ spec:
           spec:
             description: Spec defines the desired state of KonnectCloudGatewayTransitGateway.
             properties:
+              adopt:
+                description: Adopt is the options for adopting a cloud gateway transit
+                  gateway from an existing transit gateway in Konnect.
+                properties:
+                  from:
+                    description: |-
+                      From is the source of the entity to adopt from.
+                      Now 'konnect' is supported.
+                    enum:
+                    - konnect
+                    type: string
+                  konnect:
+                    description: |-
+                      Konnect is the options for adopting the entity from Konnect.
+                      Required when from == 'konnect'.
+                    properties:
+                      id:
+                        description: ID is the Konnect ID of the entity.
+                        minLength: 1
+                        type: string
+                    required:
+                    - id
+                    type: object
+                required:
+                - from
+                type: object
+                x-kubernetes-validations:
+                - message: '''from''(adopt source) is immutable'
+                  rule: self.from == oldSelf.from
+                - message: Must specify Konnect options when from='konnect'
+                  rule: 'self.from == ''konnect'' ? has(self.konnect) : true'
+                - message: konnect.id is immutable
+                  rule: 'has(self.konnect) ? (self.konnect.id == oldSelf.konnect.id)
+                    : true'
               awsTransitGateway:
                 description: |-
                   AWSTransitGateway is the configuration of an AWS transit gateway.
