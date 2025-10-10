@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_PUSH_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_PUSH_TOKEN_KO_CHART }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
@@ -44,3 +47,47 @@ jobs:
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CR_SKIP_EXISTING: true
+
+      # Publish kong-operator chart to DockerHub (OCI) when its version changes
+      - name: Determine if kong-operator chart version changed
+        id: kong_operator_oci
+        shell: bash
+        run: |
+          set -euo pipefail
+          NEW_VERSION=$(grep -E '^version:' "charts/kong-operator/Chart.yaml" | awk '{print $2}')
+          SHA="${{ github.event.before }}"
+          if git show "$SHA:charts/kong-operator/Chart.yaml" >/dev/null 2>&1; then
+            OLD_VERSION=$(git show "$SHA:charts/kong-operator/Chart.yaml" | grep -E '^version:' | awk '{print $2}')
+          else
+            OLD_VERSION=""
+          fi
+          echo "new=${NEW_VERSION} old=${OLD_VERSION}"
+          if [ -n "${NEW_VERSION}" ] && [ "${NEW_VERSION}" != "${OLD_VERSION}" ]; then
+            echo "publish_oci=true" >> "$GITHUB_OUTPUT"
+            echo "version=${NEW_VERSION}" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish_oci=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Login to DockerHub (OCI)
+        if: ${{ steps.kong_operator_oci.outputs.publish_oci == 'true' && env.DOCKERHUB_USERNAME != '' && env.DOCKERHUB_TOKEN != '' }}
+        env:
+          DOCKERHUB_USERNAME: ${{ env.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ env.DOCKERHUB_TOKEN }}
+        run: |
+          helm registry login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_TOKEN" registry-1.docker.io
+
+      - name: Prepare and push kong-operator-chart to DockerHub (OCI)
+        if: ${{ steps.kong_operator_oci.outputs.publish_oci == 'true' && env.DOCKERHUB_USERNAME != '' && env.DOCKERHUB_TOKEN != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORKDIR="$(mktemp -d)"
+          cp -a charts/kong-operator "${WORKDIR}/kong-operator-chart"
+          # Rename chart to kong-operator-chart (only top-level name)
+          sed -i -E 's/^name:[[:space:]]*kong-operator$/name: kong-operator-chart/' "${WORKDIR}/kong-operator-chart/Chart.yaml"
+          echo "Prepared chart at: ${WORKDIR}/kong-operator-chart"
+          grep -E '^name:' "${WORKDIR}/kong-operator-chart/Chart.yaml"
+          # Package and push to kong/kong-operator-chart
+          helm package "${WORKDIR}/kong-operator-chart"
+          helm push "kong-operator-chart-${{ steps.kong_operator_oci.outputs.version }}.tgz" oci://registry-1.docker.io/kong
