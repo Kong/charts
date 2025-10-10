@@ -19498,6 +19498,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -19769,6 +19790,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -20366,6 +20408,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -20665,6 +20728,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -20935,6 +21019,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -21154,6 +21259,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -21373,6 +21499,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -21596,6 +21743,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -21821,6 +21989,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -22486,6 +22675,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -22829,6 +23039,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -23303,6 +23534,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -24184,6 +24436,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -24583,6 +24856,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -24896,6 +25190,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -25112,6 +25427,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -25990,6 +26326,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -26474,6 +26831,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -26976,6 +27354,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -27437,6 +27836,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
@@ -27697,6 +28117,27 @@ spec:
                     required:
                     - id
                     type: object
+                  mode:
+                    description: |-
+                      Mode selects how the operator adopts an already-existing entity (for example,
+                      a Konnect resource) instead of creating a new one.
+
+                      Supported values:
+                      - "match": the operator retrieves the remote entity referenced by the
+                        corresponding Adopt* options (for example, adopt.konnect.id) and performs a
+                        field-by-field comparison against this CR's spec (ignoring server-assigned
+                        metadata). If the specification matches the remote state, the operator
+                        adopts the entity: it sets the status identifier and marks the resource as
+                        ready/programmed without issuing any write operation to the remote system.
+                        If the specification does not match the remote state, adoption fails: the
+                        operator does not modify the remote entity and surfaces a failure
+                        condition, allowing the user to align the spec with the existing entity if
+                        adoption is desired.
+
+                      Default: when unset, "match" is assumed.
+                    enum:
+                    - match
+                    type: string
                 required:
                 - from
                 type: object
