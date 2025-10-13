@@ -19540,9 +19540,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -19832,9 +19837,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -20450,9 +20460,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -20770,9 +20785,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -21061,9 +21081,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -21301,9 +21326,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -21541,9 +21571,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -21785,9 +21820,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -22031,9 +22071,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -22717,9 +22762,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -23081,9 +23131,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -23576,9 +23631,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -24478,9 +24538,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -24898,9 +24963,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -25232,9 +25302,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -25469,9 +25544,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -26368,9 +26448,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -26873,9 +26958,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -27396,9 +27486,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -27878,9 +27973,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -28159,9 +28259,14 @@ spec:
                         condition, allowing the user to align the spec with the existing entity if
                         adoption is desired.
 
-                      Default: when unset, "match" is assumed.
+                      - "override": the operator overrides the remote entity by the CR's spec.
+                        If the entity with the ID and type exists, and it is not managed
+                        by another CR (matching by the metadata.uid of the CR and the "k8s-uid"
+                        label or tag of the Konnect entity), the operator updates the remote entity
+                        by the CR's spec.
                     enum:
                     - match
+                    - override
                     type: string
                 required:
                 - from
@@ -28777,6 +28882,18 @@ spec:
               konnect:
                 description: Konnect contains the status information related to the Konnect Control Plane.
                 properties:
+                  authRef:
+                    description: |-
+                      AuthRef is the reference to the KonnectAPIAuthConfiguration used to authenticate with Konnect.
+                      For particular KonnectExtension and ControlPlane combination.
+                    properties:
+                      name:
+                        description: Name is the name of the KonnectAPIAuthConfiguration resource.
+                        minLength: 1
+                        type: string
+                    required:
+                    - name
+                    type: object
                   clusterType:
                     description: ClusterType is the type of the Konnect Control Plane.
                     enum:

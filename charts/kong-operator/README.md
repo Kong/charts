@@ -1,6 +1,6 @@
 # Kong Operator
 
-[Kong Operator](https://docs.konghq.com/kong-operator/latest/) is a Kubernetes Operator
+[Kong Operator](https://developer.konghq.com/operator/) is a Kubernetes Operator
 that can manage and configure your Kong Gateway Data Planes when running on Kubernetes.
 
 ## Usage
