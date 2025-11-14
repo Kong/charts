@@ -9058,6 +9058,8 @@ spec:
                 - name
                 x-kubernetes-list-type: map
             type: object
+        required:
+        - spec
         type: object
     served: true
     storage: true
@@ -51879,6 +51881,8 @@ spec:
                 description: ServerURL is configured server URL.
                 type: string
             type: object
+        required:
+        - spec
         type: object
         x-kubernetes-validations:
         - message: Konnect tokens have to start with spat_ or kpat_
@@ -53469,6 +53473,8 @@ spec:
                 - endpoints
                 type: object
             type: object
+        required:
+        - spec
         type: object
         x-kubernetes-validations:
         - message: spec.konnect.controlPlane.ref is immutable.
@@ -53809,6 +53815,8 @@ spec:
                 - endpoints
                 type: object
             type: object
+        required:
+        - spec
         type: object
         x-kubernetes-validations:
         - message: spec.konnect.controlPlane.ref is immutable.
@@ -54447,6 +54455,8 @@ spec:
                 description: ServerURL is the URL of the Konnect server in which the entity exists.
                 type: string
             type: object
+        required:
+        - spec
         type: object
         x-kubernetes-validations:
         - message: spec.konnect.authRef is immutable when an entity is already Programmed
