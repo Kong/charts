@@ -9058,6 +9058,8 @@ spec:
                 - name
                 x-kubernetes-list-type: map
             type: object
+        required:
+        - spec
         type: object
     served: true
     storage: true
@@ -51879,6 +51881,8 @@ spec:
                 description: ServerURL is configured server URL.
                 type: string
             type: object
+        required:
+        - spec
         type: object
         x-kubernetes-validations:
         - message: Konnect tokens have to start with spat_ or kpat_
@@ -53469,6 +53473,8 @@ spec:
                 - endpoints
                 type: object
             type: object
+        required:
+        - spec
         type: object
         x-kubernetes-validations:
         - message: spec.konnect.controlPlane.ref is immutable.
@@ -53809,6 +53815,8 @@ spec:
                 - endpoints
                 type: object
             type: object
+        required:
+        - spec
         type: object
         x-kubernetes-validations:
         - message: spec.konnect.controlPlane.ref is immutable.
@@ -54447,6 +54455,8 @@ spec:
                 description: ServerURL is the URL of the Konnect server in which the entity exists.
                 type: string
             type: object
+        required:
+        - spec
         type: object
         x-kubernetes-validations:
         - message: spec.konnect.authRef is immutable when an entity is already Programmed
@@ -55379,41 +55389,6 @@ spec:
             fieldRef:
               fieldPath: metadata.labels
 ---
-# Source: kong-operator/templates/validation-policy-konnect.yaml
-apiVersion: admissionregistration.k8s.io/v1
-kind: ValidatingAdmissionPolicy
-metadata:
-  name: "autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
-spec:
-  failurePolicy: Fail
-  matchConstraints:
-    resourceRules:
-    - apiGroups:
-      - "konnect.konghq.com"
-      apiVersions:
-      - "v1alpha1"
-      operations:
-      - "CREATE"
-      - "UPDATE"
-      resources:
-      - "konnectcloudgatewaydataplanegroupconfigurations"
-      # NOTE: field-level deprecations via Kubebuilder annotations do not generate any warning to the
-      # users when the deprecated field is used.
-      # Until this is not fixed we need a ValidatingAdmissionPolicy to emit the warning.
-      # Upstream issue: https://github.com/kubernetes/kubernetes/issues/131817
-  validations:
-  - expression: object.spec.dataplane_groups.all(d, d.autoscale.type != "static")
-    message: '''Value "static" in spec.dataplane_groups.autoscale.type is deprecated, use "automatic" instead.'''
----
-# Source: kong-operator/templates/validation-policy-konnect.yaml
-apiVersion: admissionregistration.k8s.io/v1
-kind: ValidatingAdmissionPolicyBinding
-metadata:
-  name: "biding-autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
-spec:
-  policyName: "autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
-  validationActions: [Warn, Audit]
----
 # Source: kong-operator/templates/validating-webhook.yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
@@ -55532,3 +55507,38 @@ webhooks:
     scope: '*'
   sideEffects: None
   timeoutSeconds: 10
+---
+# Source: kong-operator/templates/validation-policy-konnect.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: "autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - "konnect.konghq.com"
+      apiVersions:
+      - "v1alpha1"
+      operations:
+      - "CREATE"
+      - "UPDATE"
+      resources:
+      - "konnectcloudgatewaydataplanegroupconfigurations"
+      # NOTE: field-level deprecations via Kubebuilder annotations do not generate any warning to the
+      # users when the deprecated field is used.
+      # Until this is not fixed we need a ValidatingAdmissionPolicy to emit the warning.
+      # Upstream issue: https://github.com/kubernetes/kubernetes/issues/131817
+  validations:
+  - expression: object.spec.dataplane_groups.all(d, d.autoscale.type != "static")
+    message: '''Value "static" in spec.dataplane_groups.autoscale.type is deprecated, use "automatic" instead.'''
+---
+# Source: kong-operator/templates/validation-policy-konnect.yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: "biding-autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
+spec:
+  policyName: "autoscale.dataplanegroups.konnectclouddataplanegroupconfig.konnect.konghq.com"
+  validationActions: [Warn, Audit]
