@@ -907,6 +907,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | podAnnotations                     | Annotations to add to each pod                                                        |  see `values.yaml`  |
 | podLabels                          | Labels to add to each pod                                                             | `{}`                |
 | resources                          | Pod resource requests & limits                                                        | `{}`                |
+| initContainerResources             | Init container resource requests & limits                                                        | `{}`                |
 | tolerations                        | List of node taints to tolerate                                                       | `[]`                |
 | dnsPolicy                          | Pod dnsPolicy                                                                         |                     |
 | dnsConfig                          | Pod dnsConfig                                                                         |                     |

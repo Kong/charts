@@ -914,6 +914,16 @@ resources: {}
   #  cpu: 1
   #  memory: 2G
 
+# Resources for initContainers (clear-stale-pid)
+# If not specified, defaults to the main container resources defined above
+initContainerResources: {}
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 50m
+  #  memory: 64Mi
+
 # readinessProbe for Kong pods
 readinessProbe:
   httpGet:
