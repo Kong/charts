@@ -105,7 +105,7 @@ spec:
         securityContext:
         {{ toYaml .Values.containerSecurityContext | nindent 10 }}
         resources:
-{{ toYaml .Values.resources | indent 10 }}
+{{ toYaml (default .Values.resources .Values.initContainerResources) | indent 10 }}
         command:
         - "rm"
         - "-vrf"
