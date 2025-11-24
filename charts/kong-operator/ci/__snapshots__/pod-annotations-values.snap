@@ -8373,9 +8373,11 @@ spec:
                     group:
                       default: gateway-operator.konghq.com
                       description: Group is the group of the extension resource.
+                      maxLength: 253
                       type: string
                     kind:
                       description: Kind is kind of the extension resource.
+                      maxLength: 253
                       minLength: 1
                       type: string
                     name:
@@ -8391,6 +8393,7 @@ spec:
                         namespace of the parent object MUST be used.
 
                         This field MUST not be set when referring to cluster-scoped resources.
+                      maxLength: 253
                       type: string
                   required:
                   - kind
@@ -8687,9 +8690,11 @@ spec:
                     group:
                       default: gateway-operator.konghq.com
                       description: Group is the group of the extension resource.
+                      maxLength: 253
                       type: string
                     kind:
                       description: Kind is kind of the extension resource.
+                      maxLength: 253
                       minLength: 1
                       type: string
                     name:
@@ -8705,6 +8710,7 @@ spec:
                         namespace of the parent object MUST be used.
 
                         This field MUST not be set when referring to cluster-scoped resources.
+                      maxLength: 253
                       type: string
                   required:
                   - kind
@@ -9204,6 +9210,7 @@ spec:
                       namespace of the parent object MUST be used.
 
                       This field MUST not be set when referring to cluster-scoped resources.
+                    maxLength: 253
                     type: string
                 required:
                 - name
@@ -17653,9 +17660,11 @@ spec:
                     group:
                       default: gateway-operator.konghq.com
                       description: Group is the group of the extension resource.
+                      maxLength: 253
                       type: string
                     kind:
                       description: Kind is kind of the extension resource.
+                      maxLength: 253
                       minLength: 1
                       type: string
                     name:
@@ -17671,6 +17680,7 @@ spec:
                         namespace of the parent object MUST be used.
 
                         This field MUST not be set when referring to cluster-scoped resources.
+                      maxLength: 253
                       type: string
                   required:
                   - kind
@@ -26008,9 +26018,11 @@ spec:
                         group:
                           default: gateway-operator.konghq.com
                           description: Group is the group of the extension resource.
+                          maxLength: 253
                           type: string
                         kind:
                           description: Kind is kind of the extension resource.
+                          maxLength: 253
                           minLength: 1
                           type: string
                         name:
@@ -26026,6 +26038,7 @@ spec:
                             namespace of the parent object MUST be used.
 
                             This field MUST not be set when referring to cluster-scoped resources.
+                          maxLength: 253
                           type: string
                       required:
                       - kind
@@ -34454,9 +34467,11 @@ spec:
                         group:
                           default: gateway-operator.konghq.com
                           description: Group is the group of the extension resource.
+                          maxLength: 253
                           type: string
                         kind:
                           description: Kind is kind of the extension resource.
+                          maxLength: 253
                           minLength: 1
                           type: string
                         name:
@@ -34472,6 +34487,7 @@ spec:
                             namespace of the parent object MUST be used.
 
                             This field MUST not be set when referring to cluster-scoped resources.
+                          maxLength: 253
                           type: string
                       required:
                       - kind
@@ -34667,9 +34683,11 @@ spec:
                     group:
                       default: gateway-operator.konghq.com
                       description: Group is the group of the extension resource.
+                      maxLength: 253
                       type: string
                     kind:
                       description: Kind is kind of the extension resource.
+                      maxLength: 253
                       minLength: 1
                       type: string
                     name:
@@ -34685,6 +34703,7 @@ spec:
                         namespace of the parent object MUST be used.
 
                         This field MUST not be set when referring to cluster-scoped resources.
+                      maxLength: 253
                       type: string
                   required:
                   - kind
@@ -43605,6 +43624,7 @@ spec:
                       properties:
                         name:
                           description: Name is the name of the resource.
+                          minLength: 1
                           type: string
                         namespace:
                           description: Namespace is the namespace of the resource.
@@ -43698,9 +43718,11 @@ spec:
                     group:
                       default: gateway-operator.konghq.com
                       description: Group is the group of the extension resource.
+                      maxLength: 253
                       type: string
                     kind:
                       description: Kind is kind of the extension resource.
+                      maxLength: 253
                       minLength: 1
                       type: string
                     name:
@@ -43716,6 +43738,7 @@ spec:
                         namespace of the parent object MUST be used.
 
                         This field MUST not be set when referring to cluster-scoped resources.
+                      maxLength: 253
                       type: string
                   required:
                   - kind
@@ -43760,6 +43783,7 @@ spec:
                             description: |-
                               ID is the ID of the Konnect entity. It can be set only in case
                               the ControlPlane type is Mirror.
+                            maxLength: 36
                             pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                             type: string
                         required:
@@ -44030,6 +44054,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -44081,6 +44106,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -44091,12 +44117,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -44327,6 +44355,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -44385,6 +44414,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -44395,12 +44425,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -44950,6 +44982,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -44998,6 +45031,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -45008,12 +45042,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -45275,6 +45311,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -45323,6 +45360,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -45333,12 +45371,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -45571,6 +45611,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -45816,6 +45857,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -46061,6 +46103,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -46310,6 +46353,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -46561,6 +46605,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -47017,6 +47062,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -47027,12 +47073,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -47252,6 +47300,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -47300,6 +47349,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -47310,12 +47360,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -47377,6 +47429,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the entity.
+                        maxLength: 253
                         minLength: 1
                         type: string
                     required:
@@ -47621,6 +47674,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -47669,6 +47723,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -47679,12 +47734,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -48121,6 +48178,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -48169,6 +48227,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -48179,12 +48238,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -48989,7 +49050,9 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: KongRoute is the schema for Routes API which defines a Kong Route.
+        description: |-
+          KongRoute is the schema for Routes API which defines a Kong Route.
+          Currently, KongRoute supports only the JSON flavor of Route configuration.
         properties:
           apiVersion:
             description: |-
@@ -49028,6 +49091,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -49079,6 +49143,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -49089,12 +49154,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -49144,9 +49211,6 @@ spec:
                       description: An integer representing a port number between 0 and 65535, inclusive.
                       format: int64
                       type: integer
-                  required:
-                  - ip
-                  - port
                   type: object
                 type: array
               headers:
@@ -49211,6 +49275,7 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the entity.
+                        maxLength: 253
                         minLength: 1
                         type: string
                     required:
@@ -49243,9 +49308,6 @@ spec:
                       description: An integer representing a port number between 0 and 65535, inclusive.
                       format: int64
                       type: integer
-                  required:
-                  - ip
-                  - port
                   type: object
                 type: array
               strip_path:
@@ -49453,6 +49515,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -49505,6 +49568,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -49515,12 +49579,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -49792,6 +49858,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -49838,6 +49905,7 @@ spec:
                 properties:
                   name:
                     description: Name is the name of the entity.
+                    maxLength: 253
                     minLength: 1
                     type: string
                 required:
@@ -50034,6 +50102,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -50092,6 +50161,7 @@ spec:
                 properties:
                   name:
                     description: Name is the name of the entity.
+                    maxLength: 253
                     minLength: 1
                     type: string
                 required:
@@ -50516,8 +50586,10 @@ spec:
                     type: object
                   threshold:
                     description: |-
-                      Threshold is the minimum percentage of the upstream’s targets’ weight that must be available for the whole
-                      upstream to be considered healthy.
+                      Threshold is the minimum percentage of the upstream’s targets’ weight that
+                      must be available for the whole upstream to be considered healthy.
+                    maximum: 100
+                    minimum: 0
                     type: integer
                 type: object
               slots:
@@ -50938,6 +51010,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -50995,6 +51068,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -51005,12 +51079,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -51080,7 +51156,7 @@ spec:
                 description: The name of the route URI capture to take the value from as hash input. Only required when `hash_on` is set to `uri_capture`.
                 type: string
               healthchecks:
-                description: Healthchecks - The array of healthchecks.
+                description: Healthchecks is the configuration of upstream's healthchecks.
                 properties:
                   active:
                     properties:
@@ -51149,7 +51225,6 @@ spec:
                     required:
                     - concurrency
                     - http_path
-                    - https_sni
                     - https_verify_certificate
                     - timeout
                     - type
@@ -51200,6 +51275,9 @@ spec:
                 required:
                 - threshold
                 type: object
+                x-kubernetes-validations:
+                - message: healthcheck threshold must be between 0 and 100
+                  rule: self.threshold >= 0 && self.threshold <= 100
               host_header:
                 description: The hostname to be used as `Host` header when proxying requests through Kong.
                 type: string
@@ -51448,6 +51526,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -51506,6 +51585,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -51516,12 +51596,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -51978,6 +52060,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -52036,6 +52119,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                     type: string
                   konnectNamespacedRef:
@@ -52046,12 +52130,14 @@ spec:
                     properties:
                       name:
                         description: Name is the name of the Konnect Control Plane.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace where the Konnect Control Plane is in.
                           Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -52180,6 +52266,7 @@ spec:
                           description: |-
                             KonnectID is the schema for the KonnectID type.
                             This field is required when the Type is konnectID.
+                          maxLength: 36
                           type: string
                         namespacedRef:
                           description: |-
@@ -52199,6 +52286,7 @@ spec:
                                 namespace of the parent object MUST be used.
 
                                 This field MUST not be set when referring to cluster-scoped resources.
+                              maxLength: 253
                               type: string
                           required:
                           - name
@@ -52465,6 +52553,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -52751,6 +52840,7 @@ spec:
                     properties:
                       id:
                         description: ID is the Konnect ID of the entity.
+                        maxLength: 36
                         minLength: 1
                         type: string
                     required:
@@ -52917,6 +53007,7 @@ spec:
                     description: |-
                       KonnectID is the schema for the KonnectID type.
                       This field is required when the Type is konnectID.
+                    maxLength: 36
                     type: string
                   namespacedRef:
                     description: |-
@@ -52936,6 +53027,7 @@ spec:
                           namespace of the parent object MUST be used.
 
                           This field MUST not be set when referring to cluster-scoped resources.
+                        maxLength: 253
                         type: string
                     required:
                     - name
@@ -53218,6 +53310,7 @@ spec:
                             description: |-
                               KonnectID is the schema for the KonnectID type.
                               This field is required when the Type is konnectID.
+                            maxLength: 36
                             pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                             type: string
                           konnectNamespacedRef:
@@ -53228,12 +53321,14 @@ spec:
                             properties:
                               name:
                                 description: Name is the name of the Konnect Control Plane.
+                                maxLength: 253
                                 minLength: 1
                                 type: string
                               namespace:
                                 description: |-
                                   Namespace is the namespace where the Konnect Control Plane is in.
                                   Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                                maxLength: 253
                                 type: string
                             required:
                             - name
@@ -53394,6 +53489,7 @@ spec:
                         namespace of the parent object MUST be used.
 
                         This field MUST not be set when referring to cluster-scoped resources.
+                      maxLength: 253
                       type: string
                   required:
                   - name
@@ -53434,6 +53530,7 @@ spec:
                         namespace of the parent object MUST be used.
 
                         This field MUST not be set when referring to cluster-scoped resources.
+                      maxLength: 253
                       type: string
                   required:
                   - name
@@ -53579,12 +53676,14 @@ spec:
                             properties:
                               name:
                                 description: Name is the name of the Konnect Control Plane.
+                                maxLength: 253
                                 minLength: 1
                                 type: string
                               namespace:
                                 description: |-
                                   Namespace is the namespace where the Konnect Control Plane is in.
                                   Currently only cluster scoped resources (KongVault) are allowed to set `konnectNamespacedRef.namespace`.
+                                maxLength: 253
                                 type: string
                             required:
                             - name
@@ -53723,6 +53822,7 @@ spec:
                         namespace of the parent object MUST be used.
 
                         This field MUST not be set when referring to cluster-scoped resources.
+                      maxLength: 253
                       type: string
                   required:
                   - name
@@ -53763,6 +53863,7 @@ spec:
                         namespace of the parent object MUST be used.
 
                         This field MUST not be set when referring to cluster-scoped resources.
+                      maxLength: 253
                       type: string
                   required:
                   - name
@@ -53972,6 +54073,7 @@ spec:
                         description: |-
                           ID is the ID of the Konnect entity. It can be set only in case
                           the ControlPlane type is Mirror.
+                        maxLength: 36
                         pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                         type: string
                     required:
@@ -54300,6 +54402,7 @@ spec:
                         description: |-
                           ID is the ID of the Konnect entity. It can be set only in case
                           the ControlPlane type is Mirror.
+                        maxLength: 36
                         pattern: ^[0-9a-f]{8}(?:\-[0-9a-f]{4}){3}-[0-9a-f]{12}$
                         type: string
                     required:
