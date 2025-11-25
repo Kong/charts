@@ -34,7 +34,7 @@ jobs:
           kustomize build /tmp/kubernetes-configuration > charts/gateway-operator/charts/kubernetes-configuration-crds/crds/kubernetes-configuration-crds.yaml
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e
+        uses: peter-evans/create-pull-request@84ae59a2cdc2258d6fa0732dd66352dddae2a412
         with:
           token: ${{ secrets.K8S_TEAM_BOT_GH_PAT }}
           title: Sync kubernetes-configuration CRDs to ${{ github.event.inputs.version }}
