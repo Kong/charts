@@ -21,6 +21,8 @@ env:
   # Specify this here because these tests rely on ktf to run kind for cluster creation.
   # renovate: datasource=github-releases depName=kubernetes-sigs/kind
   KIND_VERSION: "0.30.0"
+  MISE_VERBOSE: 1
+  MISE_DEBUG: 1
 
 jobs:
   ensure-actions-sha-pin:
@@ -49,9 +51,6 @@ jobs:
           install: false
 
       - name: Run linters
-        env:
-          MISE_VERBOSE: 1
-          MISE_DEBUG: 1
         run: make lint
 
   lint-test:

@@ -2,6 +2,7 @@ PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 TOOLS_VERSIONS_FILE = .tools_versions.yaml
 
 MISE := $(shell which mise)
+MISE_FILE := .mise.toml
 .PHONY: mise
 mise:
 	@mise -V >/dev/null || (echo "mise - https://github.com/jdx/mise - not found. Please install it." && exit 1)
@@ -20,16 +21,16 @@ mise-install: mise
 	@$(MISE) install -q $(DEP_VER)
 
 KUBE_LINTER_VERSION = $(shell yq -ojson -r '.kube-linter' < $(TOOLS_VERSIONS_FILE))
-KUBE_LINTER = $(PROJECT_DIR)/bin/installs/kube-linter/v$(KUBE_LINTER_VERSION)/bin/kube-linter
+KUBE_LINTER = $(PROJECT_DIR)/bin/installs/kube-linter/$(KUBE_LINTER_VERSION)/bin/kube-linter
 .PHONY: kube-linter
 kube-linter: mise
 	@$(MAKE) mise-plugin-install DEP=kube-linter
-	@$(MAKE) mise-install DEP_VER=kube-linter@v$(KUBE_LINTER_VERSION)
+	@$(MAKE) mise-install DEP_VER=kube-linter@$(KUBE_LINTER_VERSION)
 
 CHARTSNAP_VERSION = $(shell yq -ojson -r '.chartsnap' < $(TOOLS_VERSIONS_FILE))
 .PHONY: chartsnap
-chartsnap:
-	CHARTSNAP_VERSION=${CHARTSNAP_VERSION} ./scripts/install-chartsnap.sh
+chartsnap: download.helm
+	HELM=$(HELM) CHARTSNAP_VERSION=${CHARTSNAP_VERSION} ./scripts/install-chartsnap.sh
 
 SHELLCHECK_VERSION = $(shell yq -ojson -r '.shellcheck' < $(TOOLS_VERSIONS_FILE))
 SHELLCHECK = $(PROJECT_DIR)/bin/installs/shellcheck/$(SHELLCHECK_VERSION)/bin/shellcheck
@@ -44,6 +45,12 @@ ACTIONLINT = $(PROJECT_DIR)/bin/installs/actionlint/$(ACTIONLINT_VERSION)/bin/ac
 download.actionlint: mise ## Download actionlint locally if necessary.
 	@$(MISE) plugin install --yes -q actionlint
 	@$(MISE) install -q actionlint@$(ACTIONLINT_VERSION)
+
+HELM_VERSION = $(shell yq -p toml -o yaml '.tools["http:helm"].version' < $(MISE_FILE))
+HELM = $(PROJECT_DIR)/bin/installs/http-helm/$(HELM_VERSION)/helm
+.PHONY: download.helm
+download.helm: mise ## Download helm locally if necessary.
+	$(MAKE) mise-install DEP_VER=http:helm
 
 .PHONY: verify.diff
 verify.diff:
@@ -79,8 +86,8 @@ test.golden:
 	(echo "$$GOLDEN_TEST_FAILURE_MSG" && exit 1)
 
 .PHONY: test.golden.update
-test.golden.update:
-	helm repo update kong
+test.golden.update: download.helm
+	$(HELM) repo update kong
 	@ $(MAKE) _chartsnap CHART=kong CHARTSNAP_ARGS="-u"
 	@ $(MAKE) _chartsnap CHART=ingress CHARTSNAP_ARGS="-u"
 	@ $(MAKE) _chartsnap CHART=gateway-operator CHARTSNAP_ARGS="-u"
@@ -94,7 +101,7 @@ export GOLDEN_TEST_FAILURE_MSG
 
 .PHONY: _chartsnap
 _chartsnap: _chartsnap.deps
-	helm chartsnap \
+	$(HELM) chartsnap \
 		-c ./charts/$(CHART) \
 		-f ./charts/$(CHART)/ci/ \
 		$(CHARTSNAP_ARGS) \
@@ -107,7 +114,7 @@ _chartsnap: _chartsnap.deps
 		--api-versions admissionregistration.k8s.io/v1/ValidatingAdmissionPolicyBinding
 
 .PHONY: _chartsnap.deps
-_chartsnap.deps: chartsnap
+_chartsnap.deps: download.helm chartsnap
 	@ if [ "$(CHART)" = "kong" ]; then \
-		helm dependencies update charts/ingress; \
+		$(HELM) dependencies update charts/ingress; \
 	fi

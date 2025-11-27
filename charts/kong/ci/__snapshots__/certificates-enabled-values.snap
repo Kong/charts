@@ -1093,66 +1093,6 @@ spec:
         secret:
           secretName: chartsnap-kong-validation-webhook-keypair
 ---
-# Source: kong/templates/certificate.yaml
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: chartsnap-kong-admin
-  namespace: default
-  labels:
-    app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.52.0
-    app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.9"
-spec:
-  secretName: chartsnap-kong-admin-cert
-  commonName: kong.example
-  dnsNames:
-  - "kong.example"
-  renewBefore: 360h0m0s
-  duration: 2160h0m0s
----
-# Source: kong/templates/certificate.yaml
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: chartsnap-kong-proxy
-  namespace: default
-  labels:
-    app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.52.0
-    app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.9"
-spec:
-  secretName: chartsnap-kong-proxy-cert
-  commonName: app.example
-  dnsNames:
-  - "app.example"
-  renewBefore: 360h0m0s
-  duration: 2160h0m0s
----
-# Source: kong/templates/certificate.yaml
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: chartsnap-kong-cluster
-  namespace: default
-  labels:
-    app.kubernetes.io/name: kong
-    helm.sh/chart: kong-2.52.0
-    app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.9"
-spec:
-  secretName: chartsnap-kong-cluster-cert
-  commonName: kong_clustering
-  dnsNames:
-  - "kong_clustering"
-  renewBefore: 360h0m0s
-  duration: 2160h0m0s
----
 # Source: kong/templates/admission-webhook.yaml
 kind: ValidatingWebhookConfiguration
 apiVersion: admissionregistration.k8s.io/v1
@@ -1284,3 +1224,63 @@ webhooks:
     service:
       name: chartsnap-kong-validation-webhook
       namespace: default
+---
+# Source: kong/templates/certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: chartsnap-kong-admin
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.52.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+spec:
+  secretName: chartsnap-kong-admin-cert
+  commonName: kong.example
+  dnsNames:
+  - "kong.example"
+  renewBefore: 360h0m0s
+  duration: 2160h0m0s
+---
+# Source: kong/templates/certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: chartsnap-kong-proxy
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.52.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+spec:
+  secretName: chartsnap-kong-proxy-cert
+  commonName: app.example
+  dnsNames:
+  - "app.example"
+  renewBefore: 360h0m0s
+  duration: 2160h0m0s
+---
+# Source: kong/templates/certificate.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: chartsnap-kong-cluster
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong
+    helm.sh/chart: kong-2.52.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "3.9"
+spec:
+  secretName: chartsnap-kong-cluster-cert
+  commonName: kong_clustering
+  dnsNames:
+  - "kong_clustering"
+  renewBefore: 360h0m0s
+  duration: 2160h0m0s

@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+env:
+  MISE_VERBOSE: 1
+  MISE_DEBUG: 1
+
 jobs:
   release:
     timeout-minutes: 10

@@ -59,8 +59,12 @@ then
 
   echo "INFO: installing chart as release ${RELEASE_NAME} ${TAG_MESSAGE}to namespace ${RELEASE_NAMESPACE}"
   set -x
+  # TODO: remove --force-conflicts below
+
   # shellcheck disable=SC2048,SC2086
-  helm install --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
+  helm install \
+      --force-conflicts \
+      --create-namespace --namespace "${RELEASE_NAMESPACE}" "${RELEASE_NAME}" \
       --set test.enabled=true \
       ${ADDITIONAL_FLAGS[*]} \
       "charts/${CHART_NAME}"
