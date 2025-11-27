@@ -102,7 +102,11 @@ jobs:
       - name: Run chart-testing (install)
         run: |
           kubectl create ns kong-test
-          ct install --target-branch main --charts charts/${{ matrix.chart-name}} --namespace kong-test
+          ct install --target-branch main \
+            --helm-extra-args "--wait" \
+            --helm-extra-args "--timeout=3m" \
+            --charts charts/${{ matrix.chart-name}} \
+            --namespace kong-test
           # No need to delete the ns the cluster is scrapped after the job anyway.
 
   integration-test:
