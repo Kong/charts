@@ -90,9 +90,6 @@ ktf 1>/dev/null
 if [[ "${CHART_NAME}" == "gateway-operator" ]]
 then
   ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --kubernetes-version "${KUBERNETES_VERSION}"
-  GATEWAY_API_VERSION="v1.0.0"
-  # Install Kong specific CRDs
-  kubectl apply -k https://github.com/Kong/kubernetes-ingress-controller/config/crd
 else
   ktf environments create --name "${TEST_ENV_NAME}" --addon metallb --addon kuma --kubernetes-version "${KUBERNETES_VERSION}"
 fi
