@@ -50,7 +50,11 @@ HELM_VERSION = $(shell yq -p toml -o yaml '.tools["http:helm"].version' < $(MISE
 HELM = $(PROJECT_DIR)/bin/installs/http-helm/$(HELM_VERSION)/helm
 .PHONY: download.helm
 download.helm: mise ## Download helm locally if necessary.
-	$(MAKE) mise-install DEP_VER=http:helm
+	@$(MAKE) mise-install DEP_VER=http:helm
+
+.PHONY: print.helm
+print.helm: download.helm
+	@echo "$(HELM)"
 
 .PHONY: verify.diff
 verify.diff:

@@ -4,7 +4,7 @@ MISE_DATA_DIR='bin/'
 
 [tools."http:helm"]
 # renovate: datasource=github-releases depName=helm/helm
-version = "4.0.1"
+version = "3.19.2"
 
 [tools."http:helm".platforms]
 linux-x64 = { url = "https://get.helm.sh/helm-v{version}-linux-amd64.tar.gz" }
