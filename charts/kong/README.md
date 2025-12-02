@@ -178,6 +178,10 @@ after updating externally supplied ConfigMap content.
 
 #### Using the Postgres sub-chart
 
+> **NOTE**: Due to Bitnami images not being maintained anymore, starting with
+> Kong chart 3.0 users have to specify the Postgres image themselves via
+> `postgresql.image.registry`, `postgresql.image.repository` and `postgresql.image.tag`.
+
 The chart can optionally spawn a Postgres instance using [Bitnami's Postgres
 chart](https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md)
 as a sub-chart. Set `postgresql.enabled=true` to enable the sub-chart. Enabling
@@ -187,6 +191,8 @@ The Postgres sub-chart is best used to quickly provision temporary environments
 without installing and configuring your database separately. For longer-lived
 environments, we recommend you manage your database outside the Kong Helm
 release.
+You can find a guide for using Cloud Native PostgreSQL with Kong
+[on our documentation site](https://developer.konghq.com/gateway/install/kubernetes/on-prem/).
 
 ##### Postgres sub-chart considerations for OpenShift
 
