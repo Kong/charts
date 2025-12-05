@@ -35,6 +35,28 @@ jobs:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
     - uses: zgosalvez/github-actions-ensure-sha-pinned-actions@9e9574ef04ea69da568d6249bd69539ccc704e74 # v4.0.0
 
+  matrix_k8s_node_versions:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      latest: ${{ steps.set-latest.outputs.latest }}
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - id: set-matrix
+        run: |
+          (
+            echo 'matrix<<EOF'
+            yq eval -o=json '.' .github/supported_k8s_node_versions.yaml
+            echo 'EOF'
+          ) >> "${GITHUB_OUTPUT}"
+      - id: set-latest
+        run: |
+          (
+            echo 'latest<<EOF'
+            yq eval -r -o=json '. | sort | reverse | .[0]' .github/supported_k8s_node_versions.yaml
+            echo 'EOF'
+          ) >> "${GITHUB_OUTPUT}"
+
   lint:
     timeout-minutes: 30
     runs-on: ubuntu-latest
@@ -56,11 +78,12 @@ jobs:
   lint-test:
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    needs:
+      - matrix_k8s_node_versions
     strategy:
       matrix:
         kubernetes-version:
-          # renovate: datasource=docker depName=kindest/node
-          - "1.33.4"
+          - ${{ needs.matrix_k8s_node_versions.outputs.latest }}
         chart-name:
           - kong
           - ingress
@@ -114,6 +137,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GATEWAY_API_VERSION: v1.3.0
+    needs:
+      - matrix_k8s_node_versions
     strategy:
       matrix:
         kic-version:
@@ -121,19 +146,7 @@ jobs:
           - "3.4"
         kong-version:
           - "" # default from the chart
-        kubernetes-version:
-          # renovate: datasource=docker depName=kindest/node
-          - "1.28.15"
-          # renovate: datasource=docker depName=kindest/node
-          - "1.29.14"
-          # renovate: datasource=docker depName=kindest/node
-          - "1.30.13"
-          # renovate: datasource=docker depName=kindest/node
-          - "1.31.12"
-          # renovate: datasource=docker depName=kindest/node
-          - "1.32.8"
-          # renovate: datasource=docker depName=kindest/node
-          - "1.33.4"
+        kubernetes-version: ${{ fromJson(needs.matrix_k8s_node_versions.outputs.matrix) }}
         chart-name:
           - kong
           - ingress

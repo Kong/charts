@@ -43,6 +43,16 @@
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( registryUrl=(?<registryUrl>.*?))?\\n.+\"v(?<currentValue>.*?)\""
       ]
+    },
+    {
+      "description": "Match dependencies in .github/supported_k8s_node_versions.yaml that are properly annotated with `# renovate: datasource={} depName={}.`",
+      "customType": "regex",
+      "fileMatch": [
+        "\\.github/supported_k8s_node_versions.yaml$"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.*?)\\s+(packageName=(?<packageName>.*))\\s+depName=(?<depName>.*?)\\n.+v?(?<currentValue>[0-9]+\\.[0-9.]+\\.[0-9]+)\\n"
+      ]
     }
   ],
   "packageRules": [
