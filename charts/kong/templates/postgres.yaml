@@ -1,0 +1,7 @@
+{{- $postgresql := .Values.postgresql -}}
+{{- if $postgresql.enabled -}}
+{{- $image := $postgresql.image -}}
+{{- if or (eq $image.repository "") (eq $image.repository "") (eq $image.tag "") -}}
+{{ fail "When postgresql.enabled is true, both postgresql.image.repository and postgresql.image.tag must be set." -}}
+{{- end -}}
+{{- end -}}

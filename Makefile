@@ -3,11 +3,11 @@ TOOLS_VERSIONS_FILE = .tools_versions.yaml
 
 MISE := $(shell which mise)
 MISE_FILE := .mise.toml
+MISE_DATA_DIR := $(PROJECT_DIR)/bin
+
 .PHONY: mise
 mise:
 	@mise -V >/dev/null || (echo "mise - https://github.com/jdx/mise - not found. Please install it." && exit 1)
-
-export MISE_DATA_DIR = $(PROJECT_DIR)/bin/
 
 # NOTE: mise targets use -q to silence the output.
 # Users can use MISE_VERBOSE=1 MISE_DEBUG=1 to get more verbose output.
@@ -21,35 +21,32 @@ mise-install: mise
 	@$(MISE) install -q $(DEP_VER)
 
 KUBE_LINTER_VERSION = $(shell yq -ojson -r '.kube-linter' < $(TOOLS_VERSIONS_FILE))
-KUBE_LINTER = $(PROJECT_DIR)/bin/installs/kube-linter/$(KUBE_LINTER_VERSION)/bin/kube-linter
+KUBE_LINTER = $(PROJECT_DIR)/bin/installs/github-stackrox-kube-linter/$(KUBE_LINTER_VERSION)/kube-linter
 .PHONY: kube-linter
-kube-linter: mise
-	@$(MAKE) mise-plugin-install DEP=kube-linter
-	@$(MAKE) mise-install DEP_VER=kube-linter@$(KUBE_LINTER_VERSION)
+kube-linter:
+	MISE_DATA_DIR=$(MISE_DATA_DIR) $(MAKE) mise-install DEP_VER=github:stackrox/kube-linter@$(KUBE_LINTER_VERSION)
 
 CHARTSNAP_VERSION = $(shell yq -ojson -r '.chartsnap' < $(TOOLS_VERSIONS_FILE))
 .PHONY: chartsnap
 chartsnap: download.helm
-	HELM=$(HELM) CHARTSNAP_VERSION=${CHARTSNAP_VERSION} ./scripts/install-chartsnap.sh
+	HELM=$(HELM) CHARTSNAP_VERSION=$(CHARTSNAP_VERSION) ./scripts/install-chartsnap.sh
 
 SHELLCHECK_VERSION = $(shell yq -ojson -r '.shellcheck' < $(TOOLS_VERSIONS_FILE))
-SHELLCHECK = $(PROJECT_DIR)/bin/installs/shellcheck/$(SHELLCHECK_VERSION)/bin/shellcheck
-.PHONY: shellcheck
-shellcheck: mise
-	@$(MAKE) mise-plugin-install DEP=shellcheck
-	@$(MAKE) mise-install DEP_VER=shellcheck@$(SHELLCHECK_VERSION)
+SHELLCHECK = $(PROJECT_DIR)/bin/installs/github-koalaman-shellcheck/$(SHELLCHECK_VERSION)/shellcheck
+.PHONY: download.shellcheck
+download.shellcheck:
+	MISE_DATA_DIR=$(MISE_DATA_DIR) $(MAKE) mise-install DEP_VER=github:koalaman/shellcheck@$(SHELLCHECK_VERSION)
 
 ACTIONLINT_VERSION = $(shell yq -r '.actionlint' < $(TOOLS_VERSIONS_FILE))
-ACTIONLINT = $(PROJECT_DIR)/bin/installs/actionlint/$(ACTIONLINT_VERSION)/bin/actionlint
+ACTIONLINT = $(PROJECT_DIR)/bin/installs/github-rhysd-actionlint/$(ACTIONLINT_VERSION)/actionlint
 .PHONY: download.actionlint
-download.actionlint: mise ## Download actionlint locally if necessary.
-	@$(MISE) plugin install --yes -q actionlint
-	@$(MISE) install -q actionlint@$(ACTIONLINT_VERSION)
+download.actionlint:
+	MISE_DATA_DIR=$(MISE_DATA_DIR) $(MAKE) mise-install DEP_VER=github:rhysd/actionlint@$(ACTIONLINT_VERSION)
 
 HELM_VERSION = $(shell yq -p toml -o yaml '.tools["http:helm"].version' < $(MISE_FILE))
-HELM = $(PROJECT_DIR)/bin/installs/http-helm/$(HELM_VERSION)/helm
+HELM = helm
 .PHONY: download.helm
-download.helm: mise ## Download helm locally if necessary.
+download.helm:
 	@$(MAKE) mise-install DEP_VER=http:helm
 
 .PHONY: print.helm
@@ -61,7 +58,7 @@ verify.diff:
 	@$(PROJECT_DIR)/scripts/verify-diff.sh $(PROJECT_DIR)
 
 .PHONY: tools
-tools: kube-linter chartsnap shellcheck
+tools: kube-linter chartsnap download.shellcheck
 
 .PHONY: lint
 lint: tools lint.charts lint.shellcheck lint.actions
@@ -71,12 +68,12 @@ lint.charts:
 	$(KUBE_LINTER) lint charts/
 
 .PHONY: lint.shellcheck
-lint.shellcheck: shellcheck
+lint.shellcheck: download.shellcheck
 	$(SHELLCHECK) ./scripts/*
 	$(SHELLCHECK) ./charts/gateway-operator/scripts/*
 
 .PHONY: lint.actions
-lint.actions: download.actionlint shellcheck
+lint.actions: download.actionlint download.shellcheck
 # TODO: add more files to be checked
 	$(ACTIONLINT) -shellcheck $(SHELLCHECK) \
 		./.github/workflows/*

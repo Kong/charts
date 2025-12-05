@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.0.1
+
+### Changes
+
+* Fail chart rendering when `postgresql.enabled` is `true` but
+  `postgresql.image.repository` or `postgresql.image.tag` or
+  `postgresql.image.registry` are not set.
+  [#1444](https://github.com/Kong/charts/pull/1444)
+
 ## 3.0.0
 
 ### Changes
