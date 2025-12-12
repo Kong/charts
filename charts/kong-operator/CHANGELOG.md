@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0
+
+### Changed
+
+- Update Gateway API to 1.4.0
+  [#2451](https://github.com/Kong/kong-operator/pull/2451)
+
 ## 1.0.2
 
 ### Fixes
