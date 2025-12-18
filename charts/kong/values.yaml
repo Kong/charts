@@ -1076,7 +1076,10 @@ securityContext:
     type: RuntimeDefault
 
 # securityContext for containers.
+# Set containerSecurityContext.enabled=false for OpenShift, where the platform
+# automatically assigns UIDs/GIDs via Security Context Constraints (SCC).
 containerSecurityContext:
+  enabled: true
   readOnlyRootFilesystem: true
   allowPrivilegeEscalation: false
   runAsUser: 1000

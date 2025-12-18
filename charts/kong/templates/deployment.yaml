@@ -102,8 +102,10 @@ spec:
       - name: clear-stale-pid
         image: {{ include "kong.getRepoTag" .Values.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.containerSecurityContext.enabled }}
         securityContext:
-        {{ toYaml .Values.containerSecurityContext | nindent 10 }}
+        {{ toYaml (omit .Values.containerSecurityContext "enabled") | nindent 10 }}
+        {{- end }}
         resources:
 {{ toYaml (default .Values.resources .Values.initContainerResources) | indent 10 }}
         command:
@@ -144,8 +146,10 @@ spec:
       - name: "proxy"
         image: {{ include "kong.getRepoTag" .Values.image }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.containerSecurityContext.enabled }}
         securityContext:
-        {{ toYaml .Values.containerSecurityContext | nindent 10 }}
+        {{ toYaml (omit .Values.containerSecurityContext "enabled") | nindent 10 }}
+        {{- end }}
         env:
         {{- include "kong.no_daemon_env" . | nindent 8 }}
         {{- include "kong.envFrom" .Values.envFrom | nindent 8 }}

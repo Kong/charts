@@ -32,6 +32,7 @@ helm install kong/kong --generate-name
     - [DB-less deployment](#db-less-deployment)
     - [Using the Postgres sub-chart](#using-the-postgres-sub-chart)
       - [Postgres sub-chart considerations for OpenShift](#postgres-sub-chart-considerations-for-openshift)
+    - [Kong container security context for OpenShift](#kong-container-security-context-for-openshift)
   - [Runtime package](#runtime-package)
   - [Configuration method](#configuration-method)
   - [Separate admin and proxy nodes](#separate-admin-and-proxy-nodes)
@@ -209,6 +210,24 @@ Due to the default `securityContexts` in the postgres sub-chart, you will need t
     podSecurityContext:
       enabled: false
 ```
+
+#### Kong container security context for OpenShift
+
+OpenShift uses Security Context Constraints (SCC) that automatically assign
+dynamic user/group IDs to containers. The default `containerSecurityContext`
+in this chart includes hardcoded `runAsUser: 1000` and `runAsGroup: 1000`
+values that conflict with OpenShift's security model.
+
+To deploy Kong on OpenShift, disable the container security context so that
+OpenShift can inject its own dynamic UID/GID values:
+
+```yaml
+containerSecurityContext:
+  enabled: false
+```
+
+This allows OpenShift's SCC to manage the security context automatically,
+which is the recommended approach for OpenShift deployments.
 
 ### Runtime package
 
@@ -929,6 +948,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | secretVolumes                      | Mount given secrets as a volume in Kong container to override default certs and keys. | `[]`                |
 | securityContext                    | Set the securityContext for Kong Pods                                                 | See values.yaml     |
 | containerSecurityContext           | Set the securityContext for Containers                                                | See values.yaml     |
+| containerSecurityContext.enabled   | Enable container security context (set to `false` for OpenShift)                      | `true`              |
 | serviceMonitor.enabled             | Create ServiceMonitor for Prometheus Operator                                         | `false`             |
 | serviceMonitor.trustCRDsExist      | Do not check for the Prometheus Operator CRDs, just try to deploy                     | `false`             |
 | serviceMonitor.interval            | Scraping interval                                                                     | `30s`               |
