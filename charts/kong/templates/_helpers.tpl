@@ -859,8 +859,10 @@ The name of the Service which will be used by the controller to update the Ingre
 - name: wait-for-db
   image: {{ include "kong.getRepoTag" .Values.image }}
   imagePullPolicy: {{ .Values.image.pullPolicy }}
+  {{- if .Values.containerSecurityContext.enabled }}
   securityContext:
-  {{ toYaml .Values.containerSecurityContext | nindent 4 }}
+  {{ toYaml (omit .Values.containerSecurityContext "enabled") | nindent 4 }}
+  {{- end }}
   env:
   {{- include "kong.env" . | nindent 2 }}
   {{- include "kong.envFrom" .Values.envFrom | nindent 2 }}
@@ -897,8 +899,10 @@ The name of the Service which will be used by the controller to update the Ingre
 
 {{- define "kong.controller-container" -}}
 - name: ingress-controller
+  {{- if .Values.containerSecurityContext.enabled }}
   securityContext:
-{{ toYaml .Values.containerSecurityContext | nindent 4 }}
+{{ toYaml (omit .Values.containerSecurityContext "enabled") | nindent 4 }}
+  {{- end }}
   args:
   {{ if .Values.ingressController.args}}
   {{- range $val := .Values.ingressController.args }}
