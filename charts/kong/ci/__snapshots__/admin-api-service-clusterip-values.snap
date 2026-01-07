@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.9"
-    helm.sh/chart: kong-3.0.1
+    helm.sh/chart: kong-3.0.2
   name: chartsnap-kong
   namespace: default
 ---
@@ -28,7 +28,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.9"
-    helm.sh/chart: kong-3.0.1
+    helm.sh/chart: kong-3.0.2
   name: chartsnap-kong-custom-dbless-config
   namespace: default
 ---
@@ -40,7 +40,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.9"
-    helm.sh/chart: kong-3.0.1
+    helm.sh/chart: kong-3.0.2
   name: chartsnap-kong-admin
   namespace: default
 spec:
@@ -63,7 +63,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.9"
-    helm.sh/chart: kong-3.0.1
+    helm.sh/chart: kong-3.0.2
   name: chartsnap-kong-manager
   namespace: default
 spec:
@@ -91,7 +91,7 @@ metadata:
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.9"
     enable-metrics: "true"
-    helm.sh/chart: kong-3.0.1
+    helm.sh/chart: kong-3.0.2
   name: chartsnap-kong-proxy
   namespace: default
 spec:
@@ -119,7 +119,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: kong
     app.kubernetes.io/version: "3.9"
-    helm.sh/chart: kong-3.0.1
+    helm.sh/chart: kong-3.0.2
   name: chartsnap-kong
   namespace: default
 spec:
@@ -144,7 +144,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: kong
         app.kubernetes.io/version: "3.9"
-        helm.sh/chart: kong-3.0.1
+        helm.sh/chart: kong-3.0.2
         version: "3.9"
     spec:
       automountServiceAccountToken: false
