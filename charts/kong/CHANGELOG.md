@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.2
+
+### Added
+
+* Added `containerSecurityContext.enabled` option to allow disabling the
+  container security context for OpenShift compatibility.
+  [#1456](https://github.com/Kong/charts/pull/1456)
+
 ## 3.0.1
 
 ### Changes
