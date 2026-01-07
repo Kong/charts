@@ -981,7 +981,7 @@ Use the Pod security context defined in Values or set the UID by default
 {{- end -}}
 
 {{- define "kong.no_daemon_env" -}}
-{{- template "kong.env" . }}
+{{- include "kong.env" . }}
 - name: KONG_NGINX_DAEMON
   value: "off"
 {{- end -}}
