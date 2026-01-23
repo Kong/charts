@@ -521,6 +521,8 @@ you are affected and should review [the 2.26 upgrade instructions](https://githu
   [#813](https://github.com/Kong/charts/pull/813)
 * Bump postgres default tag to `13.11.0-debian-11-r20` which includes arm64 images.
   [#834](https://github.com/Kong/charts/pull/834)
+* Run `tpl` against user-defined initContainers.
+  [#826](https://github.com/Kong/charts/pull/826)
 
 ### Fixed
 
