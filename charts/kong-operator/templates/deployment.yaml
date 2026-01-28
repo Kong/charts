@@ -6,6 +6,12 @@ metadata:
     app.kubernetes.io/component: ko
   name: {{ template "kong.deploymentname" . }}
   namespace:  {{ template "kong.namespace" . }}
+  annotations:
+    # Env vars: KONG_OPERATOR_CLUSTER_CA_SECRET and KONG_OPERATOR_CLUSTER_CA_SECRET_NAMESPACE are set for this Deployment.
+    # These env vars don't contain any sensitive data. They just reference the name and namespace of the Secret that holds
+    # the CA certificate. Thus, it's safe to disable linter check (unfortunately, it has to be done this way since kube-linter
+    # doesn't support disabling specific checks for specific env vars only).
+    ignore-check.kube-linter.io/env-var-secret: "It's safe to reference CA related Secrets by name and namespace in env var"
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
