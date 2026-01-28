@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Bootstrapping CA certificate (that is used for signing certificates for
+  ControlPlane - DataPlane communication) is done automatically by Helm.
+  The existing certificate can be referenced by setting options
+  `certificateAuthority.secret.name` and `certificateAuthority.secret.namespace`.
+  [#3084](https://github.com/Kong/kong-operator/pull/3084)
+
+## 1.1.0
+
+### Changed
+
+- Update Gateway API to 1.4.0
+  [#2451](https://github.com/Kong/kong-operator/pull/2451)
+
 ## 1.0.2
 
 ### Fixes

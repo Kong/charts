@@ -80,6 +80,9 @@ Create a list of env vars based on the values of the `env` and `customEnv` maps.
 {{- $_ := set $defaultEnv "KONG_OPERATOR_HEALTH_PROBE_BIND_ADDRESS" ":8081" -}}
 {{- $_ := set $defaultEnv "KONG_OPERATOR_METRICS_BIND_ADDRESS" "0.0.0.0:8080" -}}
 
+{{- $_ := set $defaultEnv "KONG_OPERATOR_CLUSTER_CA_SECRET" (include "kong.caSecretName" .) -}}
+{{- $_ := set $defaultEnv "KONG_OPERATOR_CLUSTER_CA_SECRET_NAMESPACE" (include "kong.caSecretNamespace" .) -}}
+
 {{/*
 List of envs that are configured by other variables.
 The template fails if you try to configure the envs controlled by other variables.
@@ -138,6 +141,23 @@ The dict maps raw env variable key to the suggested variable path.
 {{- define "kong.webhookValidatingCertSecretName" -}}
 {{ template "kong.webhookServiceName" . }}-validating-server-cert
 {{- end -}}
+
+# Leave kong-operator-ca without .Release.Name prefix for backward compatibility,
+# to reuse existing secret in case of upgrades. Ensure that namespace is configured
+# only when secretNamespace is set.
+{{- define "kong.caSecretName" -}}
+{{- if .Values.global.certificateAuthority.secret.namespace -}}
+  {{- if not .Values.global.certificateAuthority.secret.name -}}
+    {{- fail "global.certificateAuthority.secret.name must be set when global.certificateAuthority.secret.namespace is configured" -}}
+  {{- end -}}
+{{- end -}}
+{{- default "kong-operator-ca" .Values.global.certificateAuthority.secret.name -}}
+{{- end -}}
+
+{{- define "kong.caSecretNamespace" -}}
+{{- .Values.global.certificateAuthority.secret.namespace | default .Release.Namespace -}}
+{{- end -}}
+
 
 {{- define "kong.volumes" -}}
 {{ if .Values.global.webhooks.conversion.enabled }}
