@@ -9,7 +9,7 @@ name: kong-operator
 sources:
   - https://github.com/Kong/kong-operator/charts/kong-operator/
 version: 1.0.2
-appVersion: "2.0"
+appVersion: "2.1.0"
 annotations:
   artifacthub.io/category: networking
   artifacthub.io/prerelease: "false"
@@ -24,8 +24,8 @@ dependencies:
   - name: ko-crds
     version: 1.0.1
   - name: gwapi-standard-crds
-    version: 1.3.0
+    version: 1.4.1
     condition: gwapi-standard-crds.enabled
   - name: gwapi-experimental-crds
-    version: 1.3.0
+    version: 1.4.1
     condition: gwapi-experimental-crds.enabled
