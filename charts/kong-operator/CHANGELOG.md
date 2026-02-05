@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.1.0
 
 ### Changed
 
@@ -9,11 +9,6 @@
   The existing certificate can be referenced by setting options
   `certificateAuthority.secret.name` and `certificateAuthority.secret.namespace`.
   [#3084](https://github.com/Kong/kong-operator/pull/3084)
-
-## 1.1.0
-
-### Changed
-
 - Update Gateway API to 1.4.0
   [#2451](https://github.com/Kong/kong-operator/pull/2451)
 
