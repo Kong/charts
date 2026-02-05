@@ -1,0 +1,18 @@
+{{ $caSecretName := (include "kong.caSecretName" .) }}
+{{ $caSecretNamespace := (include "kong.caSecretNamespace" .) }}
+{{ if not (lookup "v1" "Secret" $caSecretNamespace $caSecretName) }}
+{{ $ca := genCA "Kong Operator CA" 3650 }}
+apiVersion: v1
+kind: Secret
+metadata:
+    name: {{ $caSecretName }}
+    namespace: {{ $caSecretNamespace }}
+    labels:
+        konghq.com/secret: internal
+    annotations:
+        helm.sh/resource-policy: keep
+type: kubernetes.io/tls
+data:
+    tls.crt: {{ $ca.Cert | b64enc }}
+    tls.key: {{ $ca.Key | b64enc }}
+{{ end }}

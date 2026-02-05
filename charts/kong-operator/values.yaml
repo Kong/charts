@@ -1,6 +1,6 @@
 image:
   repository: docker.io/kong/kong-operator
-  tag: "2.0"
+  tag: "2.1.0"
   # If you want only the digest to be used, set tag to "" in your values.yaml.
   digest: ""
   # Optionally set a semantic version for version-gated features. This can normally
@@ -106,7 +106,7 @@ certsDir:
 # to use the defaults or are migrating to this chart and want to use existing labels.
 # selectorLabels: []
 
-# enable configuration dump for control planes.
+# Enable configuration dump for control planes.
 enableControlplaneConfigDump: false
 controlplaneConfigDumpPort: 10256
 # Global options that configure the operator behavior.
@@ -144,3 +144,21 @@ global:
       # Enable the creation of ValidatingWebhookConfiguration for resources
       # which will be consumed by the ControlPlane(s).
       enabled: true
+  certificateAuthority:
+    secret:
+      # Name of the Secret containing the CA certificate and key.
+      # If not set, it defaults to "kong-operator-ca" and it is created
+      # by the chart (RSA 2048 bits) with annotation "helm.sh/resource-policy: keep"
+      # to be preserved in case of upgrade or uninstall. In case of an existing Secret with
+      # that name, it will be used instead of creating a new one.
+      # If you set this to a custom value, make sure the Secret exists.
+      # Type of the Secret must be "kubernetes.io/tls" and labels must contain
+      # "konghq.com/secret: internal", fields "tls.crt" and "tls.key" must be present.
+      # Based on the type of this certificate (ECDSA or RSA, along with its key size),
+      # all other certificates created will follow the same configuration.
+      name: ""
+      # Namespace of the Secret containing the CA certificate and key.
+      # If not set, defaults to the operator's installation namespace.
+      # I can be set only when certificateAuthority.secret.name
+      # is set to a custom value, otherwise returns error.
+      namespace: ""
