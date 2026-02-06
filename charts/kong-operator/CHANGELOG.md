@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1
+
+### Fixes
+
+- Fix an issue with missing volume mount when `ko-crds.enabled=false` is set
+  and conversion webhook is enabled.
+  [#2356](https://github.com/Kong/kong-operator/pull/2356)
+
 ## 1.1.0
 
 ### Changed
