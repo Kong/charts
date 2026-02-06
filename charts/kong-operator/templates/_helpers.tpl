@@ -161,16 +161,13 @@ The dict maps raw env variable key to the suggested variable path.
 
 {{- define "kong.volumes" -}}
 {{ if .Values.global.webhooks.conversion.enabled }}
-{{- /* This volume is conditional on ko-crds being enabled because the certificate */ -}}
-{{- /* Secret is placed in that subchart. The reason for this is explained in */ -}}
-{{- /* https://github.com/Kong/kong-operator/blob/e555dbc0b6e57beecbb72cf79018ef8fdbe11ffa/hack/generators/conversion-webhook/main.go#L88-L95 */ -}}
-{{ $kocrds := (index .Values "ko-crds") }}
-{{ if $kocrds.enabled }}
+{{- /* Depending on the global.webhooks.options.certManager.enabled being true or false */ -}}
+{{- /* certificate below will either be sourced from chart generated Secret */ -}}
+{{- /* or from cert-manager generated Secret */ -}}
 - name: webhook-certs
   secret:
     defaultMode: 420
     secretName: {{ template "kong.webhookCertSecretName" . }}
-{{ end }}
 {{ end }}
 {{ if .Values.global.webhooks.validating.enabled }}
 - name: validating-webhook-certs
@@ -188,15 +185,12 @@ The dict maps raw env variable key to the suggested variable path.
 
 {{- define "kong.volumeMounts" -}}
 {{ if .Values.global.webhooks.conversion.enabled }}
-{{- /* This mount is conditional on ko-crds being enabled because the certificate */ -}}
-{{- /* Secret is placed in that subchart. The reason for this is explained in */ -}}
-{{- /* https://github.com/Kong/kong-operator/blob/e555dbc0b6e57beecbb72cf79018ef8fdbe11ffa/hack/generators/conversion-webhook/main.go#L88-L95 */ -}}
-{{ $kocrds := (index .Values "ko-crds") }}
-{{ if $kocrds.enabled }}
+{{- /* Depending on the global.webhooks.options.certManager.enabled being true or false */ -}}
+{{- /* certificate below will either be sourced from chart generated Secret */ -}}
+{{- /* or from cert-manager generated Secret */ -}}
 - name: webhook-certs
   mountPath: /tmp/k8s-webhook-server/serving-certs
   readOnly: true
-{{ end }}
 {{ end }}
 {{ if .Values.global.webhooks.validating.enabled }}
 - name: validating-webhook-certs
