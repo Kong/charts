@@ -19,9 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_PUSH_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_PUSH_TOKEN_KO_CHART }}
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@e3f713f2d8f53843e71c69a996d56f51aa9adfb9 # v2.14.1
@@ -37,8 +34,6 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      # See https://github.com/helm/chart-releaser-action/issues/6
-
       - uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3.6.1
 
       - name: Add dependency chart repos
@@ -53,16 +48,35 @@ jobs:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CR_SKIP_EXISTING: true
 
-      - name: Login to DockerHub (OCI)
-        if: ${{ contains(steps.chart_releaser.outputs.changed_charts, 'kong-operator') && env.DOCKERHUB_USERNAME != '' && env.DOCKERHUB_TOKEN != '' }}
+      - name: Released versions
+        if: ${{ steps.chart_releaser.outputs.changed_charts != '' }}
+        run: |
+          echo "Released charts: ${{ steps.chart_releaser.outputs.changed_charts }}"
+          echo "Chart version: ${{ steps.chart_releaser.outputs.chart_version }}"
+
+      - name: Check OCI push preconditions
+        id: oci_push
         env:
-          DOCKERHUB_USERNAME: ${{ env.DOCKERHUB_USERNAME }}
-          DOCKERHUB_TOKEN: ${{ env.DOCKERHUB_TOKEN }}
+          PUBLISH_OCI: ${{ contains(steps.chart_releaser.outputs.changed_charts, 'kong-operator') }}
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_PUSH_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_PUSH_TOKEN_KO_CHART }}
+        run: |
+          if [[ "$PUBLISH_OCI" == "true" && -n "$DOCKERHUB_USERNAME" && -n "$DOCKERHUB_TOKEN" ]]; then
+            echo "should_push=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_push=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Login to DockerHub (OCI)
+        if: ${{ steps.oci_push.outputs.should_push == 'true' }}
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_PUSH_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_PUSH_TOKEN_KO_CHART }}
         run: |
           helm registry login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_TOKEN" registry-1.docker.io
 
       - name: Prepare and push kong-operator-chart to DockerHub (OCI)
-        if: ${{ contains(steps.chart_releaser.outputs.changed_charts, 'kong-operator') && env.DOCKERHUB_USERNAME != '' && env.DOCKERHUB_TOKEN != '' }}
+        if: ${{ steps.oci_push.outputs.should_push == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
