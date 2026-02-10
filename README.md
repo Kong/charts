@@ -85,7 +85,7 @@ helm install kong/kong-operator --generate-name
 Or to use the OCI registry:
 
 ```bash
-helm install oci://registry-1.docker.io/kong/kong-operator-chart --generate-name
+helm install oci://docker.io/kong/kong-operator-chart --generate-name
 ```
 
 For more information about Kong Operator, see the [Kong Operator documentation][ko_docs].
