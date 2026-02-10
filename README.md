@@ -82,6 +82,12 @@ To use it:
 helm install kong/kong-operator --generate-name
 ```
 
+Or to use the OCI registry:
+
+```bash
+helm install oci://docker.io/kong/kong-operator-chart --generate-name
+```
+
 For more information about Kong Operator, see the [Kong Operator documentation][ko_docs].
 
 [ko_gh]: https://github.com/Kong/kong-operator
