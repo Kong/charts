@@ -1,12 +1,23 @@
 # Changelog
 
+## 1.2.0
+
+### Fixes
+
+- Fix broken installations using `--generate-name` or provided too long release name,
+  which caused the generated metrics `Service` name to exceed the 63 character limit.
+  If you rely on metrics `Service` name in your integrations (e.g., for ServiceMonitor),
+  please make sure to update it to match the new naming convention,
+  which is `<release-name>-metrics` truncated to 63 characters if needed.
+  [#3261](https://github.com/Kong/kong-operator/pull/3261)
+
 ## 1.1.1
 
 ### Fixes
 
 - Fix an issue with missing volume mount when `ko-crds.enabled=false` is set
   and conversion webhook is enabled.
-  [#2356](https://github.com/Kong/kong-operator/pull/2356)
+  [#3228](https://github.com/Kong/kong-operator/pull/3228)
 
 ## 1.1.0
 

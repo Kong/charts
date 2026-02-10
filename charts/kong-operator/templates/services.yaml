@@ -58,13 +58,14 @@ spec:
     app.kubernetes.io/component: ko
 {{- end }}
 ---
+{{- $metricsServiceName := printf "%s-metrics" (include "kong.fullname" .) | trunc 63 | trimSuffix "-" }}
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     control-plane: controller-manager
     app.kubernetes.io/component: ko
-  name: {{ template "kong.fullname" . }}-metrics-service
+  name: {{ $metricsServiceName }}
   namespace: {{ template "kong.namespace" . }}
 spec:
   ports:
