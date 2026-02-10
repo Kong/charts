@@ -55,7 +55,7 @@ kind: Secret
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.1.1
+    helm.sh/chart: kong-operator-1.2.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "2.1.0"
     app.kubernetes.io/component: ko
@@ -57846,7 +57846,7 @@ metadata:
   labels:
     control-plane: controller-manager
     app.kubernetes.io/component: ko
-  name: chartsnap-kong-operator-metrics-service
+  name: chartsnap-kong-operator-metrics
   namespace: default
 spec:
   ports:
@@ -57864,7 +57864,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.1.1
+    helm.sh/chart: kong-operator-1.2.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "2.1.0"
     app.kubernetes.io/component: ko
@@ -57892,7 +57892,7 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: kong-operator
-        helm.sh/chart: kong-operator-1.1.1
+        helm.sh/chart: kong-operator-1.2.0
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/version: "2.1.0"
         app.kubernetes.io/component: ko
@@ -58005,7 +58005,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.1.1
+    helm.sh/chart: kong-operator-1.2.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "2.1.0"
     app.kubernetes.io/component: ko
