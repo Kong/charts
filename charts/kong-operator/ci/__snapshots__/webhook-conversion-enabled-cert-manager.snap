@@ -51383,6 +51383,8 @@ spec:
                   x-kubernetes-validations:
                   - message: Only KongConsumer, KongConsumerGroup, KongRoute, KongCertificate, KongCACertificate, KongDataPlaneClientCertificate, KongService, KongUpstream, KongKey, KongKeySet, KongVault and KongPluginBinding kinds are supported for 'configuration.konghq.com' group
                     rule: self.group != 'configuration.konghq.com' || self.kind in [ 'KongConsumer', 'KongConsumerGroup', 'KongRoute', 'KongService', 'KongCertificate', 'KongCACertificate', 'KongDataPlaneClientCertificate', 'KongUpstream', 'KongKey', 'KongKeySet', 'KongVault', 'KongPluginBinding']
+                  - message: Only GatewayConfiguration kind is supported for 'gateway-operator.konghq.com' group
+                    rule: self.group != 'gateway-operator.konghq.com' || self.kind in [ 'GatewayConfiguration' ]
                   - message: namespace must be empty for KongVault and non-empty for other kinds
                     rule: 'self.kind == ''KongVault'' ? self.__namespace__ == "" : self.__namespace__ != ""'
                 maxItems: 16
@@ -57218,7 +57220,6 @@ rules:
   - kongclusterplugins
   - kongcustomentities
   - konglicenses
-  - kongreferencegrants
   - kongupstreampolicies
   verbs:
   - get
@@ -57284,6 +57285,7 @@ rules:
   - kongdataplaneclientcertificates
   - kongpluginbindings
   - kongplugins
+  - kongreferencegrants
   - kongroutes
   - kongservices
   - kongsnis
