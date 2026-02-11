@@ -144,7 +144,6 @@ rules:
       - kongclusterplugins
       - kongcustomentities
       - konglicenses
-      - kongreferencegrants
       - kongupstreampolicies
     verbs:
       - get
@@ -210,6 +209,7 @@ rules:
       - kongdataplaneclientcertificates
       - kongpluginbindings
       - kongplugins
+      - kongreferencegrants
       - kongroutes
       - kongservices
       - kongsnis
