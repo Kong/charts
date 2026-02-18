@@ -11,39 +11,96 @@ helm repo add kong https://charts.konghq.com
 helm repo update
 ```
 
-There are two available charts.
+## Charts
+
+- [`kong/ingress`][#kongingress]: An umbrella chart for Kong Gateway and [Kong Ingress Controller][kic_gh].
+- [`kong/kong`][#kongkong]: A flexible building block for supporting a wide variety of environment configurations.
+- [`kong/gateway-operator`][#konggateway-operator]: Installs [Kong Gateway Operator][kgo_gh].
+  - NOTE: This chart has been replaced by `kong/kong-operator` which installs [Kong Operator][ko_gh].
+- [`kong/kong-operator`][#kong-operator]: Installs [Kong Operator][ko_gh].
+
+[#kongingress]: #kongingress
+[#kongkong]: #kongkong
+[#konggateway-operator]: #konggateway-operator
+[#kong-operator]: #kongkong-operator
+[kic_gh]: https://github.com/Kong/kubernetes-ingress-controller
+
+### `kong/ingress`
 
 `kong/ingress` provides an opinionated ingress controller-managed DB-less
-environment. It is the recommended chart for new installations. To use it:
+environment.
+It is **the recommended chart** for new installations. To use it:
 
 ```bash
 helm install kong/ingress --generate-name
 ```
 
 `kong/ingress` is an umbrella chart using two instances of the `kong/kong`
-chart with some pre-configured values.yaml settings. The `controller` and
-`gateway` subsections support additional settings available in the `kong/kong`
-values.yaml.
+chart with some pre-configured `values.yaml` settings.
+The `controller` and `gateway` subsections support additional settings available
+in the `kong/kong` `values.yaml`.
+
+### `kong/kong`
 
 `kong/kong` is a flexible building block for supporting a wide variety of
 environment configurations not supported by `kong/ingress`, such as hybrid mode
-or unmanaged (no controller) Kong instances. To use it:
+or unmanaged (no controller) Kong instances.
+
+To use it:
 
 ```bash
 helm install kong/kong --generate-name
 ```
 
 For more details about the configuration required to support various
-environments, see the "Deployment Options" subsection of the `kong/kong`
-documentation's table of contents.
+environments, see the ["Deployment Options" subsection][kong_deployment_options]
+of the `kong/kong` documentation's table of contents.
+
+[kong_deployment_options]: ./charts/kong#deployment-options
+
+### `kong/gateway-operator`
+
+> NOTE: This chart has been replaced by `kong/kong-operator` which installs [Kong Operator][ko_gh].
+
+`kong/gateway-operator` installs [Kong Gateway Operator][kgo_gh].
+
+To use it:
+
+```bash
+helm install kong/gateway-operator --generate-name
+```
+
+[kgo_gh]: https://github.com/Kong/gateway-operator
+
+### `kong/kong-operator`
+
+`kong/kong-operator` installs [Kong Operator][ko_gh].
+
+To use it:
+
+```bash
+helm install kong/kong-operator --generate-name
+```
+
+Or to use the OCI registry:
+
+```bash
+helm install oci://docker.io/kong/kong-operator-chart --generate-name
+```
+
+For more information about Kong Operator, see the [Kong Operator documentation][ko_docs].
+
+[ko_gh]: https://github.com/Kong/kong-operator
+[ko_docs]: https://developer.konghq.com/operator/
 
 ## Documentation
 
 The documentation for Kong's Helm Charts is available on GitHub:
 
-* [kong/ingress](https://github.com/Kong/charts/blob/main/charts/ingress/README.md)
-* [kong/kong](https://github.com/Kong/charts/blob/main/charts/kong/README.md)
-
+- [kong/ingress](https://github.com/Kong/charts/blob/main/charts/ingress/README.md)
+- [kong/kong](https://github.com/Kong/charts/blob/main/charts/kong/README.md)
+- [kong/gateway-operator](https://github.com/Kong/charts/blob/main/charts/gateway-operator/README.md)
+- [kong/kong-operator](https://github.com/Kong/charts/blob/main/charts/kong-operator/README.md)
 
 ## Seeking help
 
@@ -66,11 +123,13 @@ the Helm repo:
 2. Open a PR to main and merge once approved.
 3. Wait for CI to release the new version. Investigate errors if the release job fails.
 
+Chart `kong/ingress` uses `kong/kong` as a dependency, so when changes released in `kong/kong` are beneficial for users of `kong/ingress` bump its version `cd charts/ingress && helm dependency update` and prepare a new release of `kong/ingress` as described above.
+
 Forks of this repo can use this release functionality without (much) additional
 configuration. Enabling GitHub pages for the `gh-pages` branch will make a Helm
 repo with your fork's changes available on your GitHub Pages URL. You can then
 use this with:
 
-```
+```sh
 helm repo add kong-fork https://myuser.github.io/charts/
 ```
