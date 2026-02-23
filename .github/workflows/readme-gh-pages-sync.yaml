@@ -1,0 +1,31 @@
+name: README.md gh-pages sync
+concurrency:
+  group: readme-gh-pages-sync
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - README.md
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e # v2.14.2
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: gh-pages
+
+      - name: Sync README.md to gh-pages
+        run: |
+          git config user.name "Kong's Team k8s bot"
+          git config user.email "team-k8s+github-bot@konghq.com"
+          git checkout main -- README.md
+          git commit -m "chore: sync README.md from main branch" || echo "No changes to commit"
+          git push origin gh-pages
