@@ -76,6 +76,16 @@
       "matchDepNames": [
         "kindest/node"
       ]
+    },
+    {
+      "description": "Ignore minor updates if depName has `@only-patch` suffix.",
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "enabled": false,
+      "matchDepNames": [
+        "/.*@only-patch/"
+      ]
     }
   ]
 }
