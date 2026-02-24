@@ -920,8 +920,8 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | autoscaling.targetCPUUtilizationPercentage | Target Percentage for when autoscaling takes affect. Only used if cluster does not support `autoscaling/v2` or `autoscaling/v2beta2` | `80`  |
 | autoscaling.metrics                | metrics used for autoscaling for clusters that supports `autoscaling/v2` or `autoscaling/v2beta2`           | See [values.yaml](values.yaml) |
 | updateStrategy                     | update strategy for deployment                                                        | `{}`                |
-| readinessProbe                     | Kong readiness probe                                                                  |                     |
-| livenessProbe                      | Kong liveness probe                                                                   |                     |
+| readinessProbe                     | Kong readiness probe                                                                  | See [values.yaml](values.yaml#L826) |
+| livenessProbe                      | Kong liveness probe                                                                   | See [values.yaml](values.yaml#L838) |
 | startupProbe                       | Kong startup probe                                                                    |                     |
 | lifecycle                          | Proxy container lifecycle hooks                                                       | see `values.yaml`   |
 | terminationGracePeriodSeconds      | Sets the [termination grace period](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#hook-handler-execution) for Deployment pods | 30                  |

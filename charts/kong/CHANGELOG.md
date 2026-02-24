@@ -251,6 +251,10 @@
 * Bumped default `kong/kubernetes-ingress-controller` image tag to 3.2.
   [#1085](https://github.com/Kong/charts/pull/1085)
 
+* Allows overriding the liveness/readiness probes to use a command, default behavior is not changed
+  [#1070](https://github.com/Kong/charts/pull/1070)
+
+
 ## 2.38.0
 
 ### Changes

@@ -1,0 +1,24 @@
+# CI test for testing the probe with an exec command instead of the default httpGet
+# - enable the probes with execGet
+
+livenessProbe:
+  exec:
+    command:
+      - python3.10
+      - /home/kong/scripts/liveness_probe.py
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+readinessProbe:
+  exec:
+    command:
+      - python3.10
+      - /home/kong/scripts/readiness_probe.py
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3

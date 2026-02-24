@@ -290,9 +290,30 @@ spec:
         {{- include "kong.volumeMounts" . | nindent 10 }}
         {{- include "kong.userDefinedVolumeMounts" .Values.deployment | nindent 10 }}
         readinessProbe:
+        {{- if .Values.readinessProbe.exec }}
+          exec:
+{{ toYaml .Values.readinessProbe.exec | indent 10 }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+          {{- else }}
 {{ include "kong.proxy.compatibleReadiness" . | indent 10 }}
+          {{- end }}
         livenessProbe:
-{{ toYaml .Values.livenessProbe | indent 10 }}
+          {{- if .Values.livenessProbe.exec }}
+          exec:
+{{ toYaml .Values.livenessProbe.exec | indent 10 }}
+          {{- else }}
+          httpGet:
+{{ toYaml .Values.livenessProbe.httpGet | indent 10 }}
+          {{- end }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
         {{- if .Values.startupProbe }}
         startupProbe:
 {{ toYaml .Values.startupProbe | indent 10 }}
