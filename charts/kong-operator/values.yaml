@@ -1,6 +1,6 @@
 image:
   repository: docker.io/kong/kong-operator
-  tag: "2.1.0"
+  tag: "2.1.1"
   # If you want only the digest to be used, set tag to "" in your values.yaml.
   digest: ""
   # Optionally set a semantic version for version-gated features. This can normally
