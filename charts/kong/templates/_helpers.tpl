@@ -338,7 +338,11 @@ Parameters: takes a service (e.g. .Values.proxy) as its argument and returns KON
   {{- end -}}
 
   {{- if .tls.enabled -}}
+  {{- if .tls.overrideServiceTargetPort -}}
+        {{- $portMaps = append $portMaps (printf "%d:%d" (int64 .tls.servicePort) (int64 .tls.overrideServiceTargetPort)) -}}
+  {{- else -}}
         {{- $portMaps = append $portMaps (printf "%d:%d" (int64 .tls.servicePort) (int64 .tls.containerPort)) -}}
+  {{- end -}}
   {{- end -}}
 
   {{- $portMapsString := ($portMaps | join ", ") -}}
