@@ -199,7 +199,7 @@ spec:
         {{- range $name, $svcConfig := .Values.additionalProxies }}
         {{- if $svcConfig.enabled }}
         {{- if (and $svcConfig.http $svcConfig.http.enabled) }}
-        - name: aprx-{{ $name }}
+        - name: {{ printf "px-%s" $name | trunc 15 | trimSuffix "-" }}
           containerPort: {{ $svcConfig.http.containerPort }}
           {{- if $svcConfig.http.hostPort }}
           hostPort: {{ $svcConfig.http.hostPort }}
@@ -207,7 +207,7 @@ spec:
           protocol: TCP
         {{- end }}
         {{- if (and $svcConfig.tls $svcConfig.tls.enabled) }}
-        - name: aprx-{{ $name }}-tls
+        - name: {{ printf "px-%s-tls" $name | trunc 15 | trimSuffix "-" }}
           containerPort: {{ $svcConfig.tls.containerPort }}
           {{- if $svcConfig.tls.hostPort }}
           hostPort: {{ $svcConfig.tls.hostPort }}
@@ -215,7 +215,7 @@ spec:
           protocol: TCP
         {{- end }}
         {{- range $svcConfig.stream }}
-        - name: aprxs{{ if (eq (default "TCP" .protocol) "UDP") }}u{{ end }}-{{ .containerPort }}
+        - name: {{ printf "pxs%s-%d" (ternary "u" "" (eq (default "TCP" .protocol) "UDP")) (int .containerPort) | trunc 15 | trimSuffix "-" }}
           containerPort: {{ .containerPort }}
           {{- if .hostPort }}
           hostPort: {{ .hostPort }}
