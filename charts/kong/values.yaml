@@ -436,6 +436,54 @@ udpProxy:
     #   # "ssl" is required for SNI-based routes. It is not supported on versions <2.0
     #   parameters: []
 
+# --------------------------------------------------------------------------
+# Additional proxy services
+# --------------------------------------------------------------------------
+# Define additional proxy services for the Kong proxy. Each entry creates a
+# separate Kubernetes Service that routes to the same Kong proxy container.
+# This is useful when you need multiple network paths with different
+# configurations, for example:
+#   - An external LoadBalancer with proxy_protocol for AWS NLB traffic
+#   - An internal ClusterIP service without proxy_protocol for in-cluster access
+#
+# Each additional proxy adds its own listeners to KONG_PROXY_LISTEN and
+# KONG_PORT_MAPS automatically, and exposes the corresponding container ports
+# in the deployment.
+#
+# IMPORTANT: Use container ports that do not conflict with the primary proxy
+# ports (8000/8443) or any other Kong listener ports.
+additionalProxies: {}
+  # Example: an internal ClusterIP proxy without proxy_protocol
+  # internal:
+  #   enabled: true
+  #   type: ClusterIP
+  #   loadBalancerClass: ""
+  #   loadBalancerSourceRanges: []
+  #   nameOverride: ""
+  #   annotations: {}
+  #   labels: {}
+  #   http:
+  #     enabled: true
+  #     servicePort: 80
+  #     containerPort: 7000
+  #     parameters: []
+  #   tls:
+  #     enabled: true
+  #     servicePort: 443
+  #     containerPort: 7443
+  #     parameters:
+  #     - http2
+  #     appProtocol: ""
+  #   stream: []
+  #   ingress:
+  #     enabled: false
+  #     ingressClassName:
+  #     annotations: {}
+  #     labels: {}
+  #     hostname:
+  #     path: /
+  #     pathType: ImplementationSpecific
+
 # Custom Kong plugins can be loaded into Kong by mounting the plugin code
 # into the file-system of Kong container.
 # The plugin code should be present in ConfigMap or Secret inside the same

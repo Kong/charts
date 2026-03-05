@@ -4,6 +4,13 @@
 
 ### Added
 
+* Added `additionalProxies` configuration to support multiple proxy services.
+  This allows creating additional Kubernetes Services (e.g., ClusterIP for
+  internal access) alongside the primary proxy service (e.g., LoadBalancer with
+  proxy_protocol for external access). Each additional proxy automatically
+  registers its listeners in `KONG_PROXY_LISTEN` and `KONG_PORT_MAPS`, and
+  exposes the corresponding container ports in the deployment.
+
 * Added `containerSecurityContext.enabled` option to allow disabling the
   container security context for OpenShift compatibility.
   [#1456](https://github.com/Kong/charts/pull/1456)
