@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.1.0
+
+### Changes
+
+* Applied `objectSelector` to all admission webhook configurations, not just
+  the `validations.kong.konghq.com` webhook. This ensures consistent filtering
+  across all webhook entries.
+  [#1497](https://github.com/Kong/charts/pull/1497)
+
 ## 3.0.2
 
 ### Added
