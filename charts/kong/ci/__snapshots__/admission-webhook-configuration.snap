@@ -1060,6 +1060,16 @@ webhooks:
           operator: NotIn
           values:
             - konnect
+        - key: owner
+          operator: NotIn
+          values:
+            - helm
+        - key: infra
+          operator: In
+          values:
+            - cloud
+      matchLabels:
+        app.kubernetes.io/instance: kong-test
     rules:
       - apiGroups:
           - ""
@@ -1090,6 +1100,16 @@ webhooks:
           operator: NotIn
           values:
             - konnect
+        - key: owner
+          operator: NotIn
+          values:
+            - helm
+        - key: infra
+          operator: In
+          values:
+            - cloud
+      matchLabels:
+        app.kubernetes.io/instance: kong-test
     rules:
       - apiGroups:
           - ""
@@ -1129,6 +1149,8 @@ webhooks:
           operator: In
           values:
             - cloud
+      matchLabels:
+        app.kubernetes.io/instance: kong-test
     rules:
       - apiGroups:
           - configuration.konghq.com

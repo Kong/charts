@@ -1566,6 +1566,10 @@ webhooks:
           operator: NotIn
           values:
             - konnect
+        - key: owner
+          operator: NotIn
+          values:
+            - helm
     rules:
       - apiGroups:
           - ""
@@ -1596,6 +1600,10 @@ webhooks:
           operator: NotIn
           values:
             - konnect
+        - key: owner
+          operator: NotIn
+          values:
+            - helm
     rules:
       - apiGroups:
           - ""

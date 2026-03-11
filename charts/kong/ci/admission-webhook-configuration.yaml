@@ -5,6 +5,8 @@ ingressController:
     timeoutSeconds: 5
     filterSecrets: true
     objectSelector:
+      matchLabels:
+        app.kubernetes.io/instance: kong-test
       matchExpressions:
       - key: owner
         operator: NotIn

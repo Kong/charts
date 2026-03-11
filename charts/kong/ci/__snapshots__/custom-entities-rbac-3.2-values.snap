@@ -1043,6 +1043,10 @@ webhooks:
           operator: NotIn
           values:
             - konnect
+        - key: owner
+          operator: NotIn
+          values:
+            - helm
     rules:
       - apiGroups:
           - ""
@@ -1066,14 +1070,14 @@ webhooks:
     name: secrets.plugins.validation.ingress-controller.konghq.com
     objectSelector:
       matchExpressions:
-        - key: owner
-          operator: NotIn
-          values:
-            - helm
         - key: konghq.com/credential
           operator: NotIn
           values:
             - konnect
+        - key: owner
+          operator: NotIn
+          values:
+            - helm
     rules:
       - apiGroups:
           - ""
