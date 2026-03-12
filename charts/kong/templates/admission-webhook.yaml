@@ -64,14 +64,14 @@ webhooks:
   timeoutSeconds: {{ . }}
   {{- end }}
   objectSelector:
+    {{- with .Values.ingressController.admissionWebhook.objectSelector.matchLabels }}
+    matchLabels:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     matchExpressions:
     - key: "konghq.com/credential"
       operator: "Exists"
-    {{- /* Do not validate Konnect credentials, these are targeted for KGO */}}
-    - key: "konghq.com/credential"
-      operator: "NotIn"
-      values:
-      - "konnect"
+    {{- include "kong.admissionWebhook.objectSelector.konnectExclusionAndUserExpressions" . | nindent 4 }}
   rules:
   - apiGroups:
     - ""
@@ -108,26 +108,22 @@ webhooks:
   {{- end }}
   {{- if .Values.ingressController.admissionWebhook.filterSecrets }}
   objectSelector:
+    {{- with .Values.ingressController.admissionWebhook.objectSelector.matchLabels }}
+    matchLabels:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     matchExpressions:
     - key: "konghq.com/validate"
       operator: "Exists"
-    {{- /* Do not validate Konnect credentials, these are targeted for KGO */}}
-    - key: "konghq.com/credential"
-      operator: "NotIn"
-      values:
-      - "konnect"
+    {{- include "kong.admissionWebhook.objectSelector.konnectExclusionAndUserExpressions" . | nindent 4 }}
   {{- else }}
   objectSelector:
+    {{- with .Values.ingressController.admissionWebhook.objectSelector.matchLabels }}
+    matchLabels:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
     matchExpressions:
-    - key: owner
-      operator: NotIn
-      values:
-      - helm
-    {{- /* Do not validate Konnect credentials, these are targeted for KGO */}}
-    - key: "konghq.com/credential"
-      operator: "NotIn"
-      values:
-      - "konnect"
+    {{- include "kong.admissionWebhook.objectSelector.konnectExclusionAndUserExpressions" . | nindent 4 }}
   {{- end }}
   rules:
   - apiGroups:
