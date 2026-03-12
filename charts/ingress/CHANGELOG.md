@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.23.0
+
+- Bumped dependencies on `kong/kong` chart to `==3.1.0`. Review the [kong chart
+  changelog](https://github.com/Kong/charts/blob/main/charts/kong/CHANGELOG.md#310)
+  for details.
+
 ## 0.22.0
 
 - Bumped dependencies on `kong/kong` chart to `==3.0.2`. Review the [kong chart
