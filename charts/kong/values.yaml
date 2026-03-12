@@ -619,7 +619,11 @@ ingressController:
     #        values:
     #          - kube-system
     namespaceSelector: {}
-    # ObjectSelector specifies which objects to match against validations.kong.konghq.com webhook webhook
+    # objectSelector specifies label selectors applied to all admission webhooks.
+    # For the secrets webhooks (credentials and plugins), chart-required expressions
+    # (e.g. credential type filtering, konnect exclusion) are always included
+    # in addition to any expressions you specify here.
+    # This is useful for scoping webhooks per Kong instance in multi-instance clusters.
     objectSelector:
       matchExpressions:
       - key: owner

@@ -1925,3 +1925,18 @@ envFrom:
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Render the konnect exclusion expression and user-provided matchExpressions
+from admissionWebhook.objectSelector. These always appear together at the
+end of the matchExpressions list for secrets webhooks.
+*/}}
+{{- define "kong.admissionWebhook.objectSelector.konnectExclusionAndUserExpressions" -}}
+- key: "konghq.com/credential"
+  operator: "NotIn"
+  values:
+  - "konnect"
+{{- with .Values.ingressController.admissionWebhook.objectSelector.matchExpressions }}
+{{ toYaml . }}
+{{- end -}}
+{{- end -}}
