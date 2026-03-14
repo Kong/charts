@@ -58,6 +58,7 @@ helm install kong/kong --generate-name
     - [Kong Service Parameters](#kong-service-parameters)
     - [Admin Service mTLS](#admin-service-mtls)
     - [Stream listens](#stream-listens)
+    - [Additional Proxy Services](#additional-proxy-services)
   - [Ingress Controller Parameters](#ingress-controller-parameters)
     - [The `env` section](#the-env-section)
     - [The `customEnv` section](#the-customenv-section)
@@ -762,6 +763,84 @@ are configured using an array of objects under `proxy.stream` and `udpProxy.stre
 | nodePort                           | Node port to use for a stream listen                                                  |                     |
 | hostPort                           | Host port to use for a stream listen                                                  |                     |
 | parameters                         | Array of additional listen parameters                                                 | `[]`                |
+
+#### Additional Proxy Services
+
+The `additionalProxies` map allows you to create additional Kubernetes
+Services that route to the same Kong proxy container. This is useful when
+you need Kong proxy accessible through multiple distinct network paths with
+different configurations.
+
+A common use case is exposing Kong through both an external LoadBalancer
+(e.g. AWS NLB with `proxy_protocol`) and an internal ClusterIP service
+(without `proxy_protocol`) simultaneously, from a single Helm release.
+
+Each entry in the map creates a separate Service (and optionally an
+Ingress) and automatically registers its listeners in `KONG_PROXY_LISTEN`
+and `KONG_PORT_MAPS`, and exposes the corresponding container ports in
+the deployment.
+
+**Important:** Use container ports that do not conflict with the primary
+proxy ports (8000/8443) or any other Kong listener ports.
+
+The keys under each named entry follow the same `SVC.*` pattern described
+in [Kong Service Parameters](#kong-service-parameters) (`http`, `tls`,
+`stream`, `type`, `annotations`, `labels`, `ingress`, etc.).
+
+Example values:
+
+```yaml
+# Primary proxy -- external LB with proxy_protocol
+proxy:
+  enabled: true
+  type: LoadBalancer
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  http:
+    enabled: true
+    servicePort: 80
+    containerPort: 8000
+    parameters:
+    - proxy_protocol
+  tls:
+    enabled: true
+    servicePort: 443
+    containerPort: 8443
+    parameters:
+    - http2
+    - proxy_protocol
+
+# Additional internal proxy -- ClusterIP, no proxy_protocol
+additionalProxies:
+  internal:
+    enabled: true
+    type: ClusterIP
+    annotations: {}
+    labels:
+      proxy-type: "internal"
+    http:
+      enabled: true
+      servicePort: 80
+      containerPort: 7000
+      parameters: []
+    tls:
+      enabled: true
+      servicePort: 443
+      containerPort: 7443
+      parameters:
+      - http2
+      appProtocol: ""
+    stream: []
+    ingress:
+      enabled: false
+```
+
+This produces two Services:
+- `<release>-kong-proxy` (LoadBalancer with proxy_protocol)
+- `<release>-kong-proxy-internal` (ClusterIP without proxy_protocol)
+
+And the resulting `KONG_PROXY_LISTEN` will include listeners for all
+configured ports across both the primary and additional proxies.
 
 ### Ingress Controller Parameters
 

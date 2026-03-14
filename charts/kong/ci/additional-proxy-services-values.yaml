@@ -1,0 +1,45 @@
+# Test additional proxy services feature
+# This creates a second proxy service (ClusterIP) alongside the primary proxy (LoadBalancer)
+# simulating the use case of external LB with proxy_protocol + internal ClusterIP without proxy_protocol
+
+proxy:
+  enabled: true
+  type: LoadBalancer
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+  http:
+    enabled: true
+    servicePort: 80
+    containerPort: 8000
+    parameters:
+    - proxy_protocol
+  tls:
+    enabled: true
+    servicePort: 443
+    containerPort: 8443
+    parameters:
+    - http2
+    - proxy_protocol
+
+additionalProxies:
+  internal:
+    enabled: true
+    type: ClusterIP
+    annotations: {}
+    labels:
+      proxy-type: "internal"
+    http:
+      enabled: true
+      servicePort: 80
+      containerPort: 7000
+      parameters: []
+    tls:
+      enabled: true
+      servicePort: 443
+      containerPort: 7443
+      parameters:
+      - http2
+      appProtocol: ""
+    stream: []
+    ingress:
+      enabled: false
