@@ -306,7 +306,7 @@ Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
       */}}
       {{- $listenConfig := dict -}}
       {{- $listenConfig := merge $listenConfig .tls -}}
-      {{- $parameters := append .tls.parameters "ssl" -}}
+      {{- $parameters := append (default (list) .tls.parameters) "ssl" -}}
       {{- $_ := set $listenConfig "parameters" $parameters -}}
       {{- $addresses := (default $defaultAddrs .addresses) -}}
       {{- range $addresses -}}
@@ -1087,6 +1087,14 @@ the template that it itself is using form the above sections.
   {{- $tcpStreamString := (include "kong.streamListen" .Values.proxy) -}}
   {{- if (not (eq $tcpStreamString "")) -}}
     {{- $streamStrings = (append $streamStrings $tcpStreamString) -}}
+  {{- end -}}
+{{- end -}}
+{{- range $name, $svcConfig := .Values.additionalProxies -}}
+  {{- if $svcConfig.enabled -}}
+    {{- $additionalStream := (include "kong.streamListen" $svcConfig) -}}
+    {{- if (not (eq $additionalStream "")) -}}
+      {{- $streamStrings = (append $streamStrings $additionalStream) -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 {{- if .Values.udpProxy.enabled -}}
