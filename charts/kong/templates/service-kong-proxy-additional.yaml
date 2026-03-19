@@ -1,0 +1,27 @@
+{{- if .Values.deployment.kong.enabled }}
+{{- range $name, $svcConfig := .Values.additionalProxies }}
+{{- if $svcConfig.enabled }}
+{{- if or (and $svcConfig.http $svcConfig.http.enabled) (and $svcConfig.tls $svcConfig.tls.enabled) }}
+{{- $serviceConfig := dict -}}
+{{- $serviceConfig := merge $serviceConfig $svcConfig -}}
+{{- $fullName := (include "kong.fullname" $) -}}
+{{- $serviceNameMaxLength := sub 63 (add 1 (len $fullName)) -}}
+{{- if le $serviceNameMaxLength 0 -}}
+{{- $serviceNameMaxLength = 1 -}}
+{{- end -}}
+{{- $serviceNameMaxLength = int $serviceNameMaxLength -}}
+{{- $_ := set $serviceConfig "fullName" $fullName -}}
+{{- $_ := set $serviceConfig "namespace" (include "kong.namespace" $) -}}
+{{- $_ := set $serviceConfig "metaLabels" (include "kong.metaLabels" $) -}}
+{{- $_ := set $serviceConfig "selectorLabels" (include "kong.selectorLabels" $) -}}
+{{- $_ := set $serviceConfig "serviceName" (printf "proxy-%s" $name | trunc $serviceNameMaxLength | trimSuffix "-") }}
+---
+{{ include "kong.service" $serviceConfig }}
+{{- if (and $svcConfig.ingress $svcConfig.ingress.enabled) }}
+---
+{{ include "kong.ingress" $serviceConfig }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

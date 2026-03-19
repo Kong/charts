@@ -306,7 +306,7 @@ Generic tool for creating KONG_PROXY_LISTEN, KONG_ADMIN_LISTEN, etc.
       */}}
       {{- $listenConfig := dict -}}
       {{- $listenConfig := merge $listenConfig .tls -}}
-      {{- $parameters := append .tls.parameters "ssl" -}}
+      {{- $parameters := append (default (list) .tls.parameters) "ssl" -}}
       {{- $_ := set $listenConfig "parameters" $parameters -}}
       {{- $addresses := (default $defaultAddrs .addresses) -}}
       {{- range $addresses -}}
@@ -1070,13 +1070,31 @@ the template that it itself is using form the above sections.
   {{- $_ := set $autoEnv "KONG_ADMIN_API_URI" (include "kong.ingress.serviceUrl" .Values.admin.ingress) -}}
 {{- end -}}
 
-{{- $_ := set $autoEnv "KONG_PROXY_LISTEN" (include "kong.listen" .Values.proxy) -}}
+{{- $proxyListenStrings := list -}}
+{{- $proxyListenStrings = append $proxyListenStrings (include "kong.listen" .Values.proxy) -}}
+{{- range $name, $svcConfig := .Values.additionalProxies -}}
+  {{- if $svcConfig.enabled -}}
+    {{- $additionalListen := (include "kong.listen" $svcConfig) -}}
+    {{- if (ne $additionalListen "off") -}}
+      {{- $proxyListenStrings = append $proxyListenStrings $additionalListen -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $_ := set $autoEnv "KONG_PROXY_LISTEN" ($proxyListenStrings | join ", ") -}}
 
 {{- $streamStrings := list -}}
 {{- if .Values.proxy.enabled -}}
   {{- $tcpStreamString := (include "kong.streamListen" .Values.proxy) -}}
   {{- if (not (eq $tcpStreamString "")) -}}
     {{- $streamStrings = (append $streamStrings $tcpStreamString) -}}
+  {{- end -}}
+{{- end -}}
+{{- range $name, $svcConfig := .Values.additionalProxies -}}
+  {{- if $svcConfig.enabled -}}
+    {{- $additionalStream := (include "kong.streamListen" $svcConfig) -}}
+    {{- if (not (eq $additionalStream "")) -}}
+      {{- $streamStrings = (append $streamStrings $additionalStream) -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 {{- if .Values.udpProxy.enabled -}}
@@ -1094,7 +1112,17 @@ the template that it itself is using form the above sections.
 {{- $_ := set $autoEnv "KONG_STATUS_LISTEN" (include "kong.listen" .Values.status) -}}
 
 {{- if .Values.proxy.enabled -}}
-  {{- $_ := set $autoEnv "KONG_PORT_MAPS" (include "kong.port_maps" .Values.proxy) -}}
+  {{- $portMapStrings := list -}}
+  {{- $portMapStrings = append $portMapStrings (include "kong.port_maps" .Values.proxy) -}}
+  {{- range $name, $svcConfig := .Values.additionalProxies -}}
+    {{- if $svcConfig.enabled -}}
+      {{- $additionalPortMaps := (include "kong.port_maps" $svcConfig) -}}
+      {{- if (ne (len $additionalPortMaps) 0) -}}
+        {{- $portMapStrings = append $portMapStrings $additionalPortMaps -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $_ := set $autoEnv "KONG_PORT_MAPS" ($portMapStrings | join ", ") -}}
 {{- end -}}
 
 {{- $_ := set $autoEnv "KONG_CLUSTER_LISTEN" (include "kong.listen" .Values.cluster) -}}

@@ -196,6 +196,34 @@ spec:
           {{- end}}
           protocol: {{ .protocol }}
         {{- end }}
+        {{- range $name, $svcConfig := .Values.additionalProxies }}
+        {{- if $svcConfig.enabled }}
+        {{- if (and $svcConfig.http $svcConfig.http.enabled) }}
+        - name: {{ printf "px-%s" $name | trunc 15 | trimSuffix "-" }}
+          containerPort: {{ $svcConfig.http.containerPort }}
+          {{- if $svcConfig.http.hostPort }}
+          hostPort: {{ $svcConfig.http.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
+        {{- if (and $svcConfig.tls $svcConfig.tls.enabled) }}
+        - name: {{ printf "px-%s-tls" $name | trunc 15 | trimSuffix "-" }}
+          containerPort: {{ $svcConfig.tls.containerPort }}
+          {{- if $svcConfig.tls.hostPort }}
+          hostPort: {{ $svcConfig.tls.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
+        {{- range $svcConfig.stream }}
+        - name: {{ printf "pxs%s-%d" (ternary "u" "" (eq (default "TCP" .protocol) "UDP")) (int .containerPort) | trunc 15 | trimSuffix "-" }}
+          containerPort: {{ .containerPort }}
+          {{- if .hostPort }}
+          hostPort: {{ .hostPort }}
+          {{- end}}
+          protocol: {{ .protocol }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
         {{- range .Values.udpProxy.stream }}
         - name: streamudp-{{ .containerPort }}
           containerPort: {{ .containerPort }}
