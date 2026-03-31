@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+
+* Added `ipFamilyPolicy` and `ipFamilies` settings for Kong Services to support
+  IPv6 single-stack and dual-stack Service configuration.
+  [#1508](https://github.com/Kong/charts/pull/1508)
+
 ## 3.1.0
 
 ### Changes
