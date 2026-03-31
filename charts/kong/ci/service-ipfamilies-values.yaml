@@ -1,0 +1,36 @@
+# render Services with explicit IP family configuration
+
+proxy:
+  ipFamilyPolicy: PreferDualStack
+
+cluster:
+  enabled: true
+  ipFamilyPolicy: SingleStack
+  ipFamilies:
+    - IPv4
+  tls:
+    enabled: true
+
+ingressController:
+  enabled: false
+
+dblessConfig:
+  config: |
+    _format_version: "1.1"
+    services:
+      - name: example.com
+        url: http://example.com
+        routes:
+        - name: example
+          paths:
+          - "/example"
+
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"

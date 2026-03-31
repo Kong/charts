@@ -156,6 +156,8 @@ admin:
   enabled: false
   type: NodePort
   loadBalancerClass:
+  ipFamilyPolicy:
+  ipFamilies: []
   # To specify annotations or labels for the admin service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -259,6 +261,8 @@ cluster:
 
   type: ClusterIP
   loadBalancerClass:
+  ipFamilyPolicy:
+  ipFamilies: []
 
   # Kong cluster ingress settings. Useful if you want to split CP and DP
   # in different clusters.
@@ -283,6 +287,8 @@ proxy:
   enabled: true
   type: LoadBalancer
   loadBalancerClass: ""
+  ipFamilyPolicy:
+  ipFamilies: []
   # Configures optional firewall rules and in the VPC network to only allow certain source ranges.
   loadBalancerSourceRanges: []
   # Override proxy Service name
@@ -411,6 +417,8 @@ udpProxy:
   enabled: false
   type: LoadBalancer
   loadBalancerClass:
+  ipFamilyPolicy:
+  ipFamilies: []
   # To specify annotations or labels for the proxy service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1185,6 +1193,8 @@ manager:
   enabled: true
   type: NodePort
   loadBalancerClass:
+  ipFamilyPolicy:
+  ipFamilies: []
   # To specify annotations or labels for the Manager service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1232,6 +1242,8 @@ portal:
   enabled: true
   type: NodePort
   loadBalancerClass:
+  ipFamilyPolicy:
+  ipFamilies: []
   # To specify annotations or labels for the Portal service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1279,6 +1291,8 @@ portalapi:
   enabled: true
   type: NodePort
   loadBalancerClass:
+  ipFamilyPolicy:
+  ipFamilies: []
   # To specify annotations or labels for the Portal API service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1337,6 +1351,8 @@ clustertelemetry:
 
   type: ClusterIP
   loadBalancerClass:
+  ipFamilyPolicy:
+  ipFamilies: []
 
   # Kong clustertelemetry ingress settings. Useful if you want to split
   # CP and DP in different clusters.
