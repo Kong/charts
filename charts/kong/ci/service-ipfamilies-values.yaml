@@ -13,3 +13,9 @@ cluster:
     - IPv6
   tls:
     enabled: true
+
+ingressController:
+  enabled: false
+
+env:
+  anonymous_reports: "off"
