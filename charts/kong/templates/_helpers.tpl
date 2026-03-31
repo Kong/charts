@@ -208,6 +208,15 @@ spec:
   - {{ $ip }}
   {{- end -}}
   {{- end }}
+  {{- if .ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .ipFamilyPolicy }}
+  {{- end }}
+  {{- if .ipFamilies }}
+  ipFamilies:
+  {{- range $family := .ipFamilies }}
+  - {{ $family }}
+  {{- end }}
+  {{- end }}
   ports:
   {{- if .http }}
   {{- if .http.enabled }}

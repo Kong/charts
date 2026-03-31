@@ -1,0 +1,15 @@
+# render Services with explicit IP family configuration
+
+proxy:
+  ipFamilyPolicy: PreferDualStack
+  ipFamilies:
+    - IPv6
+    - IPv4
+
+cluster:
+  enabled: true
+  ipFamilyPolicy: SingleStack
+  ipFamilies:
+    - IPv6
+  tls:
+    enabled: true
