@@ -6,6 +6,11 @@ on:
       - main
       - release/kong-2.x
 
+concurrency:
+  # Queue release runs per branch so duplicate OCI pushes cannot race each other.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
@@ -51,25 +56,17 @@ jobs:
 
           version="$(awk '$1=="version:" { print $2; exit }' charts/kong-operator/Chart.yaml)"
           tag="kong-operator-${version}"
-          status="$(
-            curl -sS -o /dev/null -w '%{http_code}' \
-              -H "Authorization: Bearer ${GH_TOKEN}" \
-              -H "Accept: application/vnd.github+json" \
-              "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases/tags/${tag}"
-          )"
+          error_file="$(mktemp)"
+          trap 'rm -f "${error_file}"' EXIT
 
-          case "${status}" in
-            200)
-              already_released=true
-              ;;
-            404)
-              already_released=false
-              ;;
-            *)
-              echo "Failed to inspect release '${tag}' (HTTP ${status})." >&2
-              exit 1
-              ;;
-          esac
+          if gh release view "${tag}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>"${error_file}"; then
+            already_released=true
+          elif grep -qE 'release not found|HTTP 404' "${error_file}"; then
+            already_released=false
+          else
+            cat "${error_file}" >&2
+            exit 1
+          fi
 
           {
             echo "version=${version}"
