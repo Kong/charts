@@ -6,6 +6,11 @@ on:
       - main
       - release/kong-2.x
 
+concurrency:
+  # Queue release runs per branch so duplicate OCI pushes cannot race each other.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
@@ -41,23 +46,56 @@ jobs:
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add kong https://charts.konghq.com
 
+      - name: Check existing kong-operator release
+        id: kong_operator_release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          version="$(awk '$1=="version:" { print $2; exit }' charts/kong-operator/Chart.yaml)"
+          tag="kong-operator-${version}"
+          error_file="$(mktemp)"
+          trap 'rm -f "${error_file}"' EXIT
+
+          if gh release view "${tag}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>"${error_file}"; then
+            already_released=true
+          elif grep -qE 'release not found|HTTP 404' "${error_file}"; then
+            already_released=false
+          else
+            cat "${error_file}" >&2
+            exit 1
+          fi
+
+          {
+            echo "version=${version}"
+            echo "already_released=${already_released}"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Run chart-releaser
         id: chart_releaser
         uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
+        with:
+          skip_existing: true
         env:
           CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CR_SKIP_EXISTING: true
 
-      - name: Released versions
+      - name: Chart releaser selection
         if: ${{ steps.chart_releaser.outputs.changed_charts != '' }}
         run: |
-          echo "Released charts: ${{ steps.chart_releaser.outputs.changed_charts }}"
-          echo "Chart version: ${{ steps.chart_releaser.outputs.chart_version }}"
+          echo "Selected charts: ${{ steps.chart_releaser.outputs.changed_charts }}"
+          echo "Existing GitHub releases are skipped during upload."
+
+      - name: Skip existing kong-operator OCI push
+        if: ${{ contains(steps.chart_releaser.outputs.changed_charts, 'charts/kong-operator') && steps.kong_operator_release.outputs.already_released == 'true' }}
+        run: |
+          echo "Skipping OCI push for kong-operator-chart:${{ steps.kong_operator_release.outputs.version }} because this chart release already existed before the workflow started."
 
       - name: Check OCI push preconditions
         id: oci_push
         env:
-          PUBLISH_OCI: ${{ contains(steps.chart_releaser.outputs.changed_charts, 'kong-operator') }}
+          PUBLISH_OCI: ${{ contains(steps.chart_releaser.outputs.changed_charts, 'charts/kong-operator') && steps.kong_operator_release.outputs.already_released != 'true' }}
           DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_PUSH_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_PUSH_TOKEN_KO_CHART }}
         run: |
@@ -78,6 +116,8 @@ jobs:
       - name: Prepare and push kong-operator-chart to DockerHub (OCI)
         if: ${{ steps.oci_push.outputs.should_push == 'true' }}
         shell: bash
+        env:
+          KONG_OPERATOR_VERSION: ${{ steps.kong_operator_release.outputs.version }}
         run: |
           set -euo pipefail
           WORKDIR="$(mktemp -d)"
@@ -88,5 +128,4 @@ jobs:
           grep -E '^name:' "${WORKDIR}/kong-operator-chart/Chart.yaml"
           # Package and push to kong/kong-operator-chart
           helm package "${WORKDIR}/kong-operator-chart"
-          VERSION=$(grep -E '^version:' charts/kong-operator/Chart.yaml | awk '{print $2}')
-          helm push "kong-operator-chart-${VERSION}.tgz" oci://registry-1.docker.io/kong
+          helm push "kong-operator-chart-${KONG_OPERATOR_VERSION}.tgz" oci://registry-1.docker.io/kong
