@@ -1,18 +1,56 @@
 {{ $caSecretName := (include "kong.caSecretName" .) }}
 {{ $caSecretNamespace := (include "kong.caSecretNamespace" .) }}
+
+{{ if not .Values.global.certificateAuthority.options.certManager.enabled }}
+
 {{ if not (lookup "v1" "Secret" $caSecretNamespace $caSecretName) }}
 {{ $ca := genCA "Kong Operator CA" 3650 }}
 apiVersion: v1
 kind: Secret
 metadata:
-    name: {{ $caSecretName }}
-    namespace: {{ $caSecretNamespace }}
-    labels:
-        konghq.com/secret: internal
-    annotations:
-        helm.sh/resource-policy: keep
+  name: {{ $caSecretName }}
+  namespace: {{ $caSecretNamespace }}
+  labels:
+    konghq.com/secret: internal
+  annotations:
+    helm.sh/resource-policy: keep
 type: kubernetes.io/tls
 data:
-    tls.crt: {{ $ca.Cert | b64enc }}
-    tls.key: {{ $ca.Key | b64enc }}
+  tls.crt: {{ $ca.Cert | b64enc }}
+  tls.key: {{ $ca.Key | b64enc }}
+{{ end }}
+
+{{ else }}
+
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: ko
+  name: selfsigned-issuer
+  namespace: {{ $caSecretNamespace }}
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: ko
+  name: {{ $caSecretName }}
+  namespace: {{ $caSecretNamespace }}
+spec:
+  secretName: {{ $caSecretName }}
+  secretTemplate:
+    labels:
+      konghq.com/secret: internal
+  isCA: true
+  commonName: "Kong Operator CA"
+  duration: 87600h # 3650 days
+  issuerRef:
+    name: selfsigned-issuer
+    kind: Issuer
+
 {{ end }}

@@ -8,7 +8,7 @@ maintainers:
 name: kong-operator
 sources:
   - https://github.com/Kong/kong-operator/charts/kong-operator/
-version: 1.2.2
+version: 1.2.3
 appVersion: "2.1.3"
 annotations:
   artifacthub.io/category: networking

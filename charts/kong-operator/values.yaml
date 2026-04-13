@@ -145,6 +145,16 @@ global:
       # which will be consumed by the ControlPlane(s).
       enabled: true
   certificateAuthority:
+    options:
+      certManager:
+        # Enable cert-manager integration.
+        # This requires to have cert-manager installed in the cluster.
+        # Setting this to true will generate cert-manager's Issuer objects
+        # for the Operator's certificate authority.
+        # If disabled, this chart will generate a self-signed certificate and
+        # use it by Operator.
+        # It is recommended to enable cert-manager integration for production use.
+        enabled: false
     secret:
       # Name of the Secret containing the CA certificate and key.
       # If not set, it defaults to "kong-operator-ca" and it is created
