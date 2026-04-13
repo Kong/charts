@@ -1,11 +1,20 @@
 # Changelog
 
+## 1.2.3
+
+### Changed
+
+- Bootstrapping CA certificate (that is used for signing certificates for
+  ControlPlane - DataPlane communication) can be done by cert-manager,
+  see the options `global.certificateAuthority.options.certManager.enabled`.
+  [#3655](https://github.com/Kong/kong-operator/pull/3655)
+
 ## 1.2.2
 
 ### Changed
 
-- Bump default version of the operator image to `2.1.2`
-  [#3394](https://github.com/Kong/kong-operator/pull/3394)
+- Bump default version of the operator image to `2.1.3`
+  [#3705](https://github.com/Kong/kong-operator/pull/3705)
 
 ## 1.2.1
 
