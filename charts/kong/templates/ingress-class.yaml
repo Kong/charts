@@ -29,5 +29,5 @@ metadata:
   labels:
   {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
-  controller: ingress-controllers.konghq.com/kong
+  controller: ingress-controllers.konghq.com/{{ .Values.ingressController.ingressClass }}
 {{- end -}}

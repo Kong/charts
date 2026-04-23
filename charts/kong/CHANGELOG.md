@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+
+* Align `IngressClass.spec.controller` and Gateway API
+  `CONTROLLER_GATEWAY_API_CONTROLLER_NAME` with `ingressController.ingressClass`
+  when using multiple controllers or a non-default ingress class.
+
 ## 3.2.0
 
 ### Changes

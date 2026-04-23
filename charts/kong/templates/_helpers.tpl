@@ -502,6 +502,7 @@ The name of the Service which will be used by the controller to update the Ingre
   {{- $_ := set $autoEnv "CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY" true -}}
   {{- $_ := set $autoEnv "CONTROLLER_PUBLISH_SERVICE" ( include "kong.controller-publish-service" . ) -}}
   {{- $_ := set $autoEnv "CONTROLLER_INGRESS_CLASS" .Values.ingressController.ingressClass -}}
+  {{- $_ := set $autoEnv "CONTROLLER_GATEWAY_API_CONTROLLER_NAME" (printf "ingress-controllers.konghq.com/-%s" .Values.ingressController.ingressClass) -}}
   {{- $_ := set $autoEnv "CONTROLLER_ELECTION_ID" (printf "kong-ingress-controller-leader-%s" .Values.ingressController.ingressClass) -}}
 
   {{- if .Values.ingressController.admissionWebhook.enabled }}
