@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.4
+
+### Changed
+
+- Bump default version of the operator image to `2.1.5`
+  [#3705](https://github.com/Kong/kong-operator/pull/3705)
+
 ## 1.2.3
 
 ### Changed
