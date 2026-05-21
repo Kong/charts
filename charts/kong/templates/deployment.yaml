@@ -118,7 +118,7 @@ spec:
         volumeMounts:
         {{- include "kong.volumeMounts" . | nindent 8 }}
         {{- if .Values.deployment.initContainers }}
-        {{- toYaml .Values.deployment.initContainers | nindent 6 }}
+        {{- tpl (toYaml .Values.deployment.initContainers) $ | nindent 6 }}
         {{- end }}
         {{- if (and (not (eq .Values.env.database "off")) .Values.waitImage.enabled) }}
         {{- include "kong.wait-for-db" . | nindent 6 }}
