@@ -1,0 +1,34 @@
+# render Services with explicit trafficDistribution configuration
+
+proxy:
+  trafficDistribution: PreferClose
+
+cluster:
+  enabled: true
+  trafficDistribution: PreferClose
+  tls:
+    enabled: true
+
+ingressController:
+  enabled: false
+
+dblessConfig:
+  config: |
+    _format_version: "1.1"
+    services:
+      - name: example.com
+        url: http://example.com
+        routes:
+        - name: example
+          paths:
+          - "/example"
+
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"

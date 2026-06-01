@@ -158,6 +158,7 @@ admin:
   loadBalancerClass:
   ipFamilyPolicy:
   ipFamilies: []
+  trafficDistribution:
   # To specify annotations or labels for the admin service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -263,6 +264,7 @@ cluster:
   loadBalancerClass:
   ipFamilyPolicy:
   ipFamilies: []
+  trafficDistribution:
 
   # Kong cluster ingress settings. Useful if you want to split CP and DP
   # in different clusters.
@@ -289,6 +291,7 @@ proxy:
   loadBalancerClass: ""
   ipFamilyPolicy:
   ipFamilies: []
+  trafficDistribution:
   # Configures optional firewall rules and in the VPC network to only allow certain source ranges.
   loadBalancerSourceRanges: []
   # Override proxy Service name
@@ -419,6 +422,7 @@ udpProxy:
   loadBalancerClass:
   ipFamilyPolicy:
   ipFamilies: []
+  trafficDistribution:
   # To specify annotations or labels for the proxy service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1195,6 +1199,7 @@ manager:
   loadBalancerClass:
   ipFamilyPolicy:
   ipFamilies: []
+  trafficDistribution:
   # To specify annotations or labels for the Manager service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1244,6 +1249,7 @@ portal:
   loadBalancerClass:
   ipFamilyPolicy:
   ipFamilies: []
+  trafficDistribution:
   # To specify annotations or labels for the Portal service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1293,6 +1299,7 @@ portalapi:
   loadBalancerClass:
   ipFamilyPolicy:
   ipFamilies: []
+  trafficDistribution:
   # To specify annotations or labels for the Portal API service, add them to the respective
   # "annotations" or "labels" dictionaries below.
   annotations: {}
@@ -1353,6 +1360,7 @@ clustertelemetry:
   loadBalancerClass:
   ipFamilyPolicy:
   ipFamilies: []
+  trafficDistribution:
 
   # Kong clustertelemetry ingress settings. Useful if you want to split
   # CP and DP in different clusters.
