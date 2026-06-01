@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+
+* Added `trafficDistribution` setting for Kong Services to support zone-aware
+  routing (`PreferClose`). Requires Kubernetes >= 1.31 (beta) / >= 1.33 (GA).
+  [#1525](https://github.com/Kong/charts/pull/1525)
+
 ## 3.2.0
 
 ### Changes
