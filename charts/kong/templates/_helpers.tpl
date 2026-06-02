@@ -269,6 +269,9 @@ spec:
   {{- if .externalTrafficPolicy }}
   externalTrafficPolicy: {{ .externalTrafficPolicy }}
   {{- end }}
+  {{- if .trafficDistribution }}
+  trafficDistribution: {{ .trafficDistribution }}
+  {{- end }}
   {{- if .clusterIP }}
   {{- if (or (not (eq .clusterIP "None")) (and (eq .type "ClusterIP") (eq .clusterIP "None"))) }}
   clusterIP: {{ .clusterIP }}

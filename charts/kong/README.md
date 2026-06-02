@@ -723,6 +723,7 @@ or `ingress` sections, as it is used only for stream listens.
 | SVC.clusterIP                     | k8s service clusterIP                                                                     |                          |
 | SVC.ipFamilyPolicy                | k8s service's ipFamilyPolicy. Options: SingleStack, PreferDualStack, RequireDualStack     |                          |
 | SVC.ipFamilies                    | k8s service's ipFamilies                                                                  | `[]`                     |
+| SVC.trafficDistribution           | k8s service's trafficDistribution (K8s >=1.31 beta, >=1.33 GA). Options: PreferClose      |                          |
 | SVC.loadBalancerClass             | loadBalancerClass to use for LoadBalancer provisionning                                   |                          |
 | SVC.loadBalancerSourceRanges      | Limit service access to CIDRs if set and service type is `LoadBalancer`                   | `[]`                     |
 | SVC.loadBalancerIP                | Reuse an existing ingress static IP for the service                                       |                          |
