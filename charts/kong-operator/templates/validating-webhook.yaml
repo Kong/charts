@@ -69,62 +69,6 @@ webhooks:
 {{- end }}
   failurePolicy: Fail
   matchPolicy: Equivalent
-  name: validations.kong.konghq.com
-  rules:
-  - apiGroups:
-    - configuration.konghq.com
-    apiVersions:
-    - '*'
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - kongconsumers
-    - kongconsumergroups
-    - kongplugins
-    - kongclusterplugins
-    - kongingresses
-    - kongvaults
-    - kongcustomentities
-    scope: '*'
-  - apiGroups:
-    - networking.k8s.io
-    apiVersions:
-    - v1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - ingresses
-    scope: '*'
-  - apiGroups:
-    - gateway.networking.k8s.io
-    apiVersions:
-    - v1alpha2
-    - v1beta1
-    - v1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - gateways
-    - httproutes
-    scope: '*'
-  sideEffects: None
-  timeoutSeconds: 10
-- admissionReviewVersions:
-  - v1
-  clientConfig:
-    service:
-      name: {{ template "kong.webhookServiceName" . }}
-      namespace: {{ template "kong.namespace" . }}
-      port: 5443
-{{- if not .Values.global.webhooks.options.certManager.enabled }}
-    caBundle: |
-      {{ $caCert | b64enc }}
-{{- end }}
-  failurePolicy: Fail
-  matchPolicy: Equivalent
   name: secrets.validations.kong.konghq.com
   objectSelector:
     matchLabels:
@@ -139,7 +83,6 @@ webhooks:
     - UPDATE
     resources:
     - secrets
-    scope: '*'
   sideEffects: None
   timeoutSeconds: 10
 - admissionReviewVersions:
@@ -155,18 +98,77 @@ webhooks:
 {{- end }}
   failurePolicy: Fail
   matchPolicy: Equivalent
-  name: services.validations.kong.konghq.com
+  name: gwapi.validations.kong.konghq.com
   rules:
   - apiGroups:
-    - ""
+    - gateway.networking.k8s.io
+    apiVersions:
+    - v1alpha2
+    - v1beta1
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - gateways
+    - httproutes
+  sideEffects: None
+  timeoutSeconds: 10
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: {{ template "kong.webhookServiceName" . }}
+      namespace: {{ template "kong.namespace" . }}
+      port: 5443
+{{- if not .Values.global.webhooks.options.certManager.enabled }}
+    caBundle: |
+      {{ $caCert | b64enc }}
+{{- end }}
+  failurePolicy: Fail
+  matchPolicy: Equivalent
+  name: kong.validations.kong.konghq.com
+  rules:
+  - apiGroups:
+    - configuration.konghq.com
+    apiVersions:
+    - '*'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - kongconsumers
+    - kongconsumergroups
+    - kongplugins
+    - kongclusterplugins
+    - kongvaults
+    - kongcustomentities
+  sideEffects: None
+  timeoutSeconds: 10
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: {{ template "kong.webhookServiceName" . }}
+      namespace: {{ template "kong.namespace" . }}
+      port: 5443
+{{- if not .Values.global.webhooks.options.certManager.enabled }}
+    caBundle: |
+      {{ $caCert | b64enc }}
+{{- end }}
+  failurePolicy: Fail
+  matchPolicy: Equivalent
+  name: networking.validations.kong.konghq.com
+  rules:
+  - apiGroups:
+    - networking.k8s.io
     apiVersions:
     - v1
     operations:
     - CREATE
     - UPDATE
     resources:
-    - services
-    scope: '*'
+    - ingresses
   sideEffects: None
   timeoutSeconds: 10
 

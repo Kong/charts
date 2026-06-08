@@ -39,7 +39,8 @@ dynamicFields:
       - /webhooks/0/clientConfig/caBundle
       - /webhooks/1/clientConfig/caBundle
       - /webhooks/2/clientConfig/caBundle
-  
+      - /webhooks/3/clientConfig/caBundle
+
   - apiVersion: v1
     kind: Secret
     name: kong-operator-ca

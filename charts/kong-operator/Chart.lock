@@ -1,12 +1,12 @@
 dependencies:
 - name: ko-crds
   repository: ""
-  version: 1.0.1
+  version: 1.1.0
 - name: gwapi-standard-crds
   repository: ""
-  version: 1.4.1
+  version: 1.5.1
 - name: gwapi-experimental-crds
   repository: ""
-  version: 1.4.1
-digest: sha256:2550f3a4f3a8538f587fd68e1d74751ba8f18cd06f52f7d34cb41b02fd591ad2
-generated: "2025-12-09T11:06:58.232872+01:00"
+  version: 1.5.1
+digest: sha256:5892c74cc22ba172109d58ae9cd9a0e02c27f136ec5284d4c6ea5cc887e92fa2
+generated: "2026-06-08T17:32:12.660327+02:00"

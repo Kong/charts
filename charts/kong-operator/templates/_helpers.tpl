@@ -128,10 +128,15 @@ The dict maps raw env variable key to the suggested variable path.
 
 {{- end -}}
 
-# kong.webhookServiceName is used in different subcharts and name has to match
-# hence only variadic part of this name is .Release.Name.
+# kong.webhookServiceName is used in different subcharts and name has to match.
+# It follows kong.fullname semantics while preserving a distinct webhook suffix.
 {{- define "kong.webhookServiceName" -}}
-{{- default (printf "%s-kong-operator-webhook" .Release.Name | trunc 63 | trimSuffix "-") -}}
+{{- $baseName := default (printf "%s-kong-operator" .Release.Name) .Values.fullnameOverride -}}
+{{- $suffix := "-webhook" -}}
+{{- $suffixLen := len $suffix -}}
+{{- $baseNameLenWithoutSuffix := int (sub 63 $suffixLen) -}}
+{{- $base := $baseName | trunc $baseNameLenWithoutSuffix | trimSuffix "-" -}}
+{{- printf "%s%s" $base $suffix | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "kong.webhookCertSecretName" -}}

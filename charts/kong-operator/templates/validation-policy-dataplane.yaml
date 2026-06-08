@@ -27,10 +27,9 @@ spec:
     reason: Invalid
   - expression: |
       variables.isNotValidatable ||
-      variables.envProxyListen == null ||
-      variables.ingressPorts.all(p, string(p.targetPort) in variables.proxyListenPorts)
+      variables.ingressPorts.all(p, (string(p.targetPort) in variables.proxyListenPorts) || (string(p.targetPort) in variables.streamListenPorts))
     messageExpression: '''Each port from spec.network.services.ingress.ports has to
-      have an accompanying port in KONG_PROXY_LISTEN env'''
+      have an accompanying port in KONG_PROXY_LISTEN or KONG_STREAM_LISTEN env'''
     reason: Invalid
   variables:
   - expression: object.spec.network.services.ingress.ports
@@ -54,11 +53,18 @@ spec:
         variables.proxyContainer.env.filter(e, e.name == "KONG_PROXY_LISTEN") : []
     name: envFilteredProxyListen
   - expression: |
+      variables.proxyContainer != null && has(variables.proxyContainer.env) ?
+        variables.proxyContainer.env.filter(e, e.name == "KONG_STREAM_LISTEN") : []
+    name: envFilteredStreamListen
+  - expression: |
       variables.envFilteredPortMaps.size() > 0 ? variables.envFilteredPortMaps[0].value : null
     name: envPortMaps
   - expression: |
       variables.envFilteredProxyListen.size() > 0 ? variables.envFilteredProxyListen[0].value : null
     name: envProxyListen
+  - expression: |
+      variables.envFilteredStreamListen.size() > 0 ? variables.envFilteredStreamListen[0].value : null
+    name: envStreamListen
   - expression: |
       !has(object.spec.network) ||
       !has(object.spec.network.services) ||
@@ -73,8 +79,16 @@ spec:
         s.trim().split(' ')[0]
       ).map(addr,
         addr.substring(addr.lastIndexOf(':') + 1)
-      ) : []
+      ) : ["8000","8443"]
     name: proxyListenPorts
+  - expression: |
+      variables.envStreamListen != null ?
+      variables.envStreamListen.split(',').map(s,
+        s.trim().split(' ')[0]
+      ).map(addr,
+        addr.substring(addr.lastIndexOf(':') + 1)
+      ) : []
+    name: streamListenPorts
   - expression: |
       variables.envPortMaps != null ?
       variables.envPortMaps.split(',').map(s,
