@@ -21,8 +21,7 @@ update the CRDs manually since [Helm does not manage CRD updates][helm_crd_updat
 
 This can be done by running the following command:
 
-
-```
+```sh
 kustomize build github.com/kong/kong-operator/config/crd/gateway-operator | kubectl apply --server-side -f -
 ```
 
@@ -54,10 +53,10 @@ running:
 kustomize build github.com/Kong/kong-operator/config/crd/gateway-operator?ref=v2.0.1 | kubectl apply -f -
 ```
 
-Upgrading [Gateway API][gwapi] to v1.2.0 requires running:
+Upgrading [Gateway API][gwapi] to v1.5.1 requires running:
 
 ```sh
-kustomize build github.com/kubernetes-sigs/gateway-api/config/crd\?ref=v1.2.0 | kubectl apply -f -
+kustomize build github.com/kubernetes-sigs/gateway-api/config/crd\?ref=v1.5.1 | kubectl apply -f -
 ```
 
 [gwapi]: https://github.com/kubernetes-sigs/gateway-api/

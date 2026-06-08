@@ -10,7 +10,9 @@ rules:
       - ""
     resources:
       - configmaps
+      - secrets
       - serviceaccounts
+      - services
     verbs:
       - create
       - delete
@@ -45,34 +47,10 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - secrets
-    verbs:
-      - delete
-      - get
-      - list
-      - patch
-      - update
-      - watch
-  - apiGroups:
-      - ""
-    resources:
       - secrets/finalizers
     verbs:
       - patch
       - update
-  - apiGroups:
-      - ""
-    resources:
-      - services
-    verbs:
-      - create
-      - delete
-      - deletecollection
-      - get
-      - list
-      - patch
-      - update
-      - watch
   - apiGroups:
       - ""
     resources:
@@ -88,7 +66,6 @@ rules:
     verbs:
       - create
       - delete
-      - deletecollection
       - get
       - list
       - patch
@@ -108,11 +85,18 @@ rules:
     verbs:
       - create
       - delete
-      - deletecollection
       - get
       - list
       - patch
       - update
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - replicasets
+    verbs:
+      - get
+      - list
       - watch
   - apiGroups:
       - autoscaling
@@ -140,19 +124,13 @@ rules:
   - apiGroups:
       - configuration.konghq.com
     resources:
-      - ingressclassparameterses
-      - kongclusterplugins
-      - kongcustomentities
-      - konglicenses
-      - kongreferencegrants
-      - kongupstreampolicies
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - configuration.konghq.com
-    resources:
+      - eventgatewaybackendclusters
+      - eventgatewaylistenerpolicies
+      - eventgatewaylisteners
+      - eventgatewayvirtualclusterconsumepolicies
+      - eventgatewayvirtualclusterpolicies
+      - eventgatewayvirtualclusterproducepolicies
+      - eventgatewayvirtualclusters
       - kongcacertificates
       - kongconsumergroups
       - kongconsumers
@@ -169,6 +147,22 @@ rules:
   - apiGroups:
       - configuration.konghq.com
     resources:
+      - eventgatewaybackendclusters/finalizers
+      - eventgatewaybackendclusters/status
+      - eventgatewaydataplanecertificates/finalizers
+      - eventgatewaydataplanecertificates/status
+      - eventgatewaylistenerpolicies/finalizers
+      - eventgatewaylistenerpolicies/status
+      - eventgatewaylisteners/finalizers
+      - eventgatewaylisteners/status
+      - eventgatewayvirtualclusterconsumepolicies/finalizers
+      - eventgatewayvirtualclusterconsumepolicies/status
+      - eventgatewayvirtualclusterpolicies/finalizers
+      - eventgatewayvirtualclusterpolicies/status
+      - eventgatewayvirtualclusterproducepolicies/finalizers
+      - eventgatewayvirtualclusterproducepolicies/status
+      - eventgatewayvirtualclusters/finalizers
+      - eventgatewayvirtualclusters/status
       - kongcacertificates/finalizers
       - kongcacertificates/status
       - kongcertificates/finalizers
@@ -201,6 +195,7 @@ rules:
   - apiGroups:
       - configuration.konghq.com
     resources:
+      - eventgatewaydataplanecertificates
       - kongcertificates
       - kongcredentialacls
       - kongcredentialapikeys
@@ -210,6 +205,7 @@ rules:
       - kongdataplaneclientcertificates
       - kongpluginbindings
       - kongplugins
+      - kongreferencegrants
       - kongroutes
       - kongservices
       - kongsnis
@@ -222,6 +218,18 @@ rules:
       - list
       - patch
       - update
+      - watch
+  - apiGroups:
+      - configuration.konghq.com
+    resources:
+      - ingressclassparameterses
+      - kongclusterplugins
+      - kongcustomentities
+      - konglicenses
+      - kongupstreampolicies
+    verbs:
+      - get
+      - list
       - watch
   - apiGroups:
       - configuration.konghq.com
@@ -265,6 +273,23 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - eventgateway.konghq.com
+    resources:
+      - kegdataplanes
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - eventgateway.konghq.com
+    resources:
+      - kegdataplanes/status
+    verbs:
+      - patch
+      - update
   - apiGroups:
       - gateway-operator.konghq.com
     resources:
@@ -335,7 +360,6 @@ rules:
       - grpcroutes
       - referencegrants
       - tcproutes
-      - tlsroutes
       - udproutes
     verbs:
       - get
@@ -394,6 +418,15 @@ rules:
     verbs:
       - get
   - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - tlsroutes
+    verbs:
+      - get
+      - list
+      - patch
+      - watch
+  - apiGroups:
       - incubator.ingress-controller.konghq.com
     resources:
       - kongservicefacades
@@ -416,6 +449,15 @@ rules:
       - konnectcloudgatewaydataplanegroupconfigurations
       - konnectcloudgatewaynetworks
       - konnectcloudgatewaytransitgateways
+      - konnecteventgateways
+      - portalcustomdomains
+      - portalcustomizations
+      - portalemailconfigs
+      - portalidentityproviderrequests
+      - portalipallowlists
+      - portalpages
+      - portals
+      - portalteams
     verbs:
       - get
       - list
@@ -433,10 +475,29 @@ rules:
       - konnectcloudgatewaynetworks/status
       - konnectcloudgatewaytransitgateways/finalizers
       - konnectcloudgatewaytransitgateways/status
+      - konnecteventgateways/finalizers
+      - konnecteventgateways/status
       - konnectextensions/finalizers
       - konnectextensions/status
       - konnectgatewaycontrolplanes/finalizers
       - konnectgatewaycontrolplanes/status
+      - mcpservers/status
+      - portalcustomdomains/finalizers
+      - portalcustomdomains/status
+      - portalcustomizations/finalizers
+      - portalcustomizations/status
+      - portalemailconfigs/finalizers
+      - portalemailconfigs/status
+      - portalidentityproviderrequests/finalizers
+      - portalidentityproviderrequests/status
+      - portalipallowlists/finalizers
+      - portalipallowlists/status
+      - portalpages/finalizers
+      - portalpages/status
+      - portals/finalizers
+      - portals/status
+      - portalteams/finalizers
+      - portalteams/status
     verbs:
       - patch
       - update
@@ -445,6 +506,7 @@ rules:
     resources:
       - konnectextensions
       - konnectgatewaycontrolplanes
+      - mcpservers
     verbs:
       - create
       - delete
@@ -453,6 +515,12 @@ rules:
       - patch
       - update
       - watch
+  - apiGroups:
+      - konnect.konghq.com
+    resources:
+      - mcpservers/finalizers
+    verbs:
+      - update
   - apiGroups:
       - networking.k8s.io
     resources:
@@ -477,7 +545,6 @@ rules:
     verbs:
       - create
       - delete
-      - deletecollection
       - get
       - list
       - patch
@@ -495,13 +562,6 @@ rules:
       - patch
       - update
       - watch
-  - apiGroups:
-      - rbac.authorization.k8s.io
-    resources:
-      - clusterrolebindings
-      - clusterroles
-    verbs:
-      - deletecollection
   - apiGroups:
       - rbac.authorization.k8s.io
     resources:
