@@ -11,55 +11,7 @@ metadata:
     helm.sh/chart: kong-3.4.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.9"
----
-# Source: kong/templates/config-dbless.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: chartsnap-kong-custom-dbless-config
-  namespace: default
-  labels:
-    app.kubernetes.io/name: kong
-    helm.sh/chart: kong-3.4.0
-    app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.9"
-data:
-  kong.yml: |
-    _format_version: "1.1"
-    services:
-      - name: example.com
-        url: http://example.com
-        routes:
-        - name: example
-          paths:
-          - "/example"
----
-# Source: kong/templates/service-kong-cluster.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: chartsnap-kong-cluster
-  namespace: default
-  labels:
-    app.kubernetes.io/name: kong
-    helm.sh/chart: kong-3.4.0
-    app.kubernetes.io/instance: "chartsnap"
-    app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.9"
-spec:
-  type: ClusterIP
-  ports:
-  - name: kong-cluster-tls
-    port: 8005
-    targetPort: 8005
-    protocol: TCP
-  trafficDistribution: PreferClose
-  selector:
-    app.kubernetes.io/name: kong
-    app.kubernetes.io/component: app
-    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/version: "3.15"
 ---
 # Source: kong/templates/service-kong-manager.yaml
 apiVersion: v1
@@ -72,7 +24,7 @@ metadata:
     helm.sh/chart: kong-3.4.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.9"
+    app.kubernetes.io/version: "3.15"
 spec:
   type: NodePort
   ports:
@@ -100,7 +52,7 @@ metadata:
     helm.sh/chart: kong-3.4.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.9"
+    app.kubernetes.io/version: "3.15"
     enable-metrics: "true"
 spec:
   type: LoadBalancer
@@ -113,7 +65,6 @@ spec:
     port: 443
     targetPort: 8443
     protocol: TCP
-  trafficDistribution: PreferClose
   selector:
     app.kubernetes.io/name: kong
     app.kubernetes.io/component: app
@@ -130,7 +81,7 @@ metadata:
     helm.sh/chart: kong-3.4.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
-    app.kubernetes.io/version: "3.9"
+    app.kubernetes.io/version: "3.15"
     app.kubernetes.io/component: app
 spec:
   replicas: 1
@@ -144,7 +95,6 @@ spec:
     metadata:
       annotations:
         kuma.io/service-account-token-volume: chartsnap-kong-token
-        checksum/dbless.config: 95c0309e6b27de23d64edae3a3602472635243f133fba88af3034ed4d5703d4a
         kuma.io/gateway: "enabled"
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
@@ -152,94 +102,17 @@ spec:
         helm.sh/chart: kong-3.4.0
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/managed-by: "Helm"
-        app.kubernetes.io/version: "3.9"
+        app.kubernetes.io/version: "3.15"
         app.kubernetes.io/component: app
         app: chartsnap-kong
-        version: "3.9"
+        version: "3.15"
     spec:
       serviceAccountName: chartsnap-kong
       automountServiceAccountToken: false
       initContainers:
-      - name: clear-stale-pid
-        image: kong:3.9
-        imagePullPolicy: IfNotPresent
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
-          runAsGroup: 1000
-          runAsNonRoot: true
-          runAsUser: 1000
-          seccompProfile:
-            type: RuntimeDefault
-        resources: {}
-        command:
-        - "rm"
-        - "-vrf"
-        - "$KONG_PREFIX/pids"
-        env:
-        - name: KONG_ADMIN_ACCESS_LOG
-          value: "/dev/stdout"
-        - name: KONG_ADMIN_ERROR_LOG
-          value: "/dev/stderr"
-        - name: KONG_ADMIN_GUI_ACCESS_LOG
-          value: "/dev/stdout"
-        - name: KONG_ADMIN_GUI_ERROR_LOG
-          value: "/dev/stderr"
-        - name: KONG_ADMIN_LISTEN
-          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
-        - name: KONG_ANONYMOUS_REPORTS
-          value: "off"
-        - name: KONG_CLUSTER_LISTEN
-          value: "0.0.0.0:8005 ssl, [::]:8005 ssl"
-        - name: KONG_DATABASE
-          value: "off"
-        - name: KONG_DECLARATIVE_CONFIG
-          value: "/kong_dbless/kong.yml"
-        - name: KONG_LUA_PACKAGE_PATH
-          value: "/opt/?.lua;/opt/?/init.lua;;"
-        - name: KONG_NGINX_WORKER_PROCESSES
-          value: "2"
-        - name: KONG_PORTAL_API_ACCESS_LOG
-          value: "/dev/stdout"
-        - name: KONG_PORTAL_API_ERROR_LOG
-          value: "/dev/stderr"
-        - name: KONG_PORT_MAPS
-          value: "80:8000, 443:8443"
-        - name: KONG_PREFIX
-          value: "/kong_prefix/"
-        - name: KONG_PROXY_ACCESS_LOG
-          value: "/dev/stdout"
-        - name: KONG_PROXY_ERROR_LOG
-          value: "/dev/stderr"
-        - name: KONG_PROXY_LISTEN
-          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
-        - name: KONG_PROXY_STREAM_ACCESS_LOG
-          value: "/dev/stdout basic"
-        - name: KONG_PROXY_STREAM_ERROR_LOG
-          value: "/dev/stderr"
-        - name: KONG_ROUTER_FLAVOR
-          value: "traditional"
-        - name: KONG_STATUS_ACCESS_LOG
-          value: "off"
-        - name: KONG_STATUS_ERROR_LOG
-          value: "/dev/stderr"
-        - name: KONG_STATUS_LISTEN
-          value: "0.0.0.0:8100, [::]:8100"
-        - name: KONG_STREAM_LISTEN
-          value: "off"
-        volumeMounts:
-        - name: chartsnap-kong-prefix-dir
-          mountPath: /kong_prefix/
-        - name: chartsnap-kong-tmp
-          mountPath: /tmp
-        - name: kong-custom-dbless-config-volume
-          mountPath: /kong_dbless/
       containers:
       - name: "proxy"
-        image: kong:3.9
+        image: kong/kong-gateway-dev:3.15.0.0-rc.5-distroless
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false
@@ -266,11 +139,9 @@ spec:
         - name: KONG_ANONYMOUS_REPORTS
           value: "off"
         - name: KONG_CLUSTER_LISTEN
-          value: "0.0.0.0:8005 ssl, [::]:8005 ssl"
+          value: "off"
         - name: KONG_DATABASE
           value: "off"
-        - name: KONG_DECLARATIVE_CONFIG
-          value: "/kong_dbless/kong.yml"
         - name: KONG_LUA_PACKAGE_PATH
           value: "/opt/?.lua;/opt/?/init.lua;;"
         - name: KONG_NGINX_WORKER_PROCESSES
@@ -322,16 +193,11 @@ spec:
         - name: status
           containerPort: 8100
           protocol: TCP
-        - name: cluster-tls
-          containerPort: 8005
-          protocol: TCP
         volumeMounts:
         - name: chartsnap-kong-prefix-dir
           mountPath: /kong_prefix/
         - name: chartsnap-kong-tmp
           mountPath: /tmp
-        - name: kong-custom-dbless-config-volume
-          mountPath: /kong_dbless/
         readinessProbe:
           failureThreshold: 3
           httpGet:
@@ -381,6 +247,3 @@ spec:
                   apiVersion: v1
                   fieldPath: metadata.namespace
                 path: namespace
-      - name: kong-custom-dbless-config-volume
-        configMap:
-          name: chartsnap-kong-custom-dbless-config
