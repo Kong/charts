@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.4.0
+
+### Changes
+
+* Allow disabling the `clearStalePid` init container for Kong deployments via
+  the `deployment.initContainers.clearStalePid.enabled` setting.
+  This provides flexibility for users who may not require this init container in their deployment.
+  [#1534](https://github.com/Kong/charts/pull/1534)
+
 ## 3.3.0
 
 ### Changes

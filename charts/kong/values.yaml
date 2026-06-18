@@ -19,6 +19,11 @@ deployment:
     # Setting this to false with ingressController.enabled=true will create a
     # controller-only release.
     enabled: true
+    # Control which predefined kong initContainers are enabled.
+    initContainers:
+      # Enable the init container which clears the stale PIDs from Kong's prefix directory.
+      clearStalePid:
+        enabled: true
   # The number of old `ReplicaSet`s to retain.
   revisionHistoryLimit: 10
 
