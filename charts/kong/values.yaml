@@ -24,6 +24,16 @@ deployment:
       # Enable the init container which clears the stale PIDs from Kong's prefix directory.
       clearStalePid:
         enabled: true
+        # Image used by the clear-stale-pid init container. Defaults to the Kong image
+        # when unset.
+        image: {}
+          # repository: busybox
+          # tag: "1.36"
+          # pullPolicy: IfNotPresent
+        command:
+        - "rm"
+        - "-vrf"
+        - "$(KONG_PREFIX)/pids"
   # The number of old `ReplicaSet`s to retain.
   revisionHistoryLimit: 10
 

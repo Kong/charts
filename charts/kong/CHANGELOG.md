@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Changes
+
+* Added image and command configuration for the `clearStalePid` init container.
+  This allows users to run stale PID cleanup with a utility image when the Kong
+  image does not include shell utilities (e.g. for distroless images).
+  [#1539](https://github.com/Kong/charts/pull/1539)
+
 ## 3.4.0
 
 ### Changes
