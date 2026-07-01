@@ -24,13 +24,6 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - events
-    verbs:
-      - create
-      - patch
-  - apiGroups:
-      - ""
-    resources:
       - namespaces
       - pods
     verbs:
@@ -59,6 +52,14 @@ rules:
       - get
       - patch
       - update
+  - apiGroups:
+      - ""
+      - events.k8s.io
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
   - apiGroups:
       - admissionregistration.k8s.io
     resources:
