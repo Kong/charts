@@ -902,6 +902,9 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | ---------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | namespace                          | Namespace to deploy chart resources                                                   |                     |
 | deployment.kong.enabled            | Enable or disable deploying Kong                                                      | `true`              |
+| deployment.kong.initContainers.clearStalePid.enabled | Enable the init container that clears stale PIDs from Kong's prefix directory. | `true` |
+| deployment.kong.initContainers.clearStalePid.image | Image used by the `clear-stale-pid` init container. Defaults to the Kong image when unset. | `{}` |
+| deployment.kong.initContainers.clearStalePid.command | Command used by the `clear-stale-pid` init container. | `["rm", "-vrf", "$(KONG_PREFIX)/pids"]` |
 | deployment.revisionHistoryLimit    | The number of `ReplicaSet`s to retain.                                              | `10`                |
 | deployment.minReadySeconds         | Minimum number of seconds for which newly created pods should be ready without any of its container crashing, for it to be considered available. |                     |
 | deployment.initContainers          | Create initContainers. Please go to Kubernetes doc for the spec of the initContainers |                     |

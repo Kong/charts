@@ -268,7 +268,7 @@ spec:
         - command:
             - rm
             - -vrf
-            - $KONG_PREFIX/pids
+            - $(KONG_PREFIX)/pids
           env:
             - name: KONG_ADMIN_ACCESS_LOG
               value: /dev/stdout

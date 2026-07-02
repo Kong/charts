@@ -100,9 +100,11 @@ spec:
       {{- if .Values.deployment.kong.enabled }}
       initContainers:
       {{- if .Values.deployment.kong.initContainers.clearStalePid.enabled }}
+      {{- $clearStalePid := .Values.deployment.kong.initContainers.clearStalePid }}
+      {{- $clearStalePidImage := default .Values.image $clearStalePid.image }}
       - name: clear-stale-pid
-        image: {{ include "kong.getRepoTag" .Values.image }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: {{ include "kong.getRepoTag" $clearStalePidImage }}
+        imagePullPolicy: {{ default .Values.image.pullPolicy $clearStalePidImage.pullPolicy }}
         {{- if .Values.containerSecurityContext.enabled }}
         securityContext:
         {{ toYaml (omit .Values.containerSecurityContext "enabled") | nindent 10 }}
@@ -110,9 +112,7 @@ spec:
         resources:
 {{ toYaml (default .Values.resources .Values.initContainerResources) | indent 10 }}
         command:
-        - "rm"
-        - "-vrf"
-        - "$KONG_PREFIX/pids"
+        {{- toYaml $clearStalePid.command | nindent 8 }}
         env:
         {{- include "kong.env" . | nindent 8 }}
         {{- include "kong.envFrom" .Values.envFrom | nindent 8 }}
