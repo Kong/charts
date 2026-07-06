@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1
+
+### Changed
+
+- Bump default image to 2.2.1
+
 ## 1.3.0
 
 ### Changed
