@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: dataplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -9485,6 +9485,19 @@ spec:
                             - Cluster
                             - Local
                             type: string
+                          internalTrafficPolicy:
+                            description: |-
+                              InternalTrafficPolicy describes how nodes distribute service traffic they
+                              receive on the ClusterIP. If set to "Local", the proxy will assume that pods
+                              only want to talk to endpoints of the service on the same node as the pod,
+                              dropping the traffic if there are no local endpoints. The default value,
+                              "Cluster", uses the standard behavior of routing to all endpoints evenly.
+
+                              More info: https://kubernetes.io/docs/concepts/services-networking/service/#internal-traffic-policy
+                            enum:
+                            - Cluster
+                            - Local
+                            type: string
                           labels:
                             additionalProperties:
                               description: LabelValue is a label value with constraints
@@ -9564,6 +9577,21 @@ spec:
                               type: object
                             maxItems: 64
                             type: array
+                          trafficDistribution:
+                            description: |-
+                              TrafficDistribution offers a way to express preferences for how traffic is
+                              distributed to Service endpoints. Implementations can use this field as a
+                              hint, but are not required to guarantee strict adherence. If the field is
+                              not set, the implementation will apply its default routing strategy.
+
+                              "PreferSameZone" prioritizes endpoints in the same zone as the client.
+                              "PreferSameNode" prioritizes endpoints on the same node as the client.
+
+                              More info: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution
+                            enum:
+                            - PreferSameZone
+                            - PreferSameNode
+                            type: string
                           type:
                             default: LoadBalancer
                             description: |-

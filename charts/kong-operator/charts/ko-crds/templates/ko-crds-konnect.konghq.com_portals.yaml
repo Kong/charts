@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: portals.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -215,6 +215,14 @@ spec:
                     x-kubernetes-validations:
                     - message: name is immutable
                       rule: self == oldSelf
+                  notificationsDeveloperPiiVisibilityEnabled:
+                    description: |-
+                      When enabled, portal registration notifications include the registering
+                      developer's identifying information (such as name and email).
+                    enum:
+                    - Enabled
+                    - Disabled
+                    type: string
                   rbacEnabled:
                     description: |-
                       Whether the portal resources are protected by Role Based Access Control
@@ -247,6 +255,14 @@ spec:
                       name:
                         description: Name is the name of the KonnectAPIAuthConfiguration
                           resource.
+                        maxLength: 253
+                        minLength: 1
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace is the namespace of the KonnectAPIAuthConfiguration resource.
+                          If not specified, defaults to the resource namespace.
+                        maxLength: 253
                         minLength: 1
                         type: string
                     required:

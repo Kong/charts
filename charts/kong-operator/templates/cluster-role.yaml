@@ -73,10 +73,28 @@ rules:
       - update
       - watch
   - apiGroups:
+      - aigateway.konghq.com
+    resources:
+      - aigatewaydataplanes
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - aigateway.konghq.com
+    resources:
+      - aigatewaydataplanes/status
+    verbs:
+      - patch
+      - update
+  - apiGroups:
       - apiextensions.k8s.io
     resources:
       - customresourcedefinitions
     verbs:
+      - get
       - list
       - watch
   - apiGroups:
@@ -125,21 +143,26 @@ rules:
   - apiGroups:
       - configuration.konghq.com
     resources:
-      - eventgatewaybackendclusters
-      - eventgatewaylistenerpolicies
-      - eventgatewaylisteners
-      - eventgatewayvirtualclusterconsumepolicies
-      - eventgatewayvirtualclusterpolicies
-      - eventgatewayvirtualclusterproducepolicies
-      - eventgatewayvirtualclusters
-      - kongcacertificates
-      - kongconsumergroups
-      - kongconsumers
-      - kongdataplaneclientcertificates/status
-      - kongkeys
-      - kongkeysets
-      - kongvaults
+      - aigatewaydataplanecertificates
+      - eventgatewaydataplanecertificates
+      - kongcertificates
+      - kongcredentialacls
+      - kongcredentialapikeys
+      - kongcredentialbasicauths
+      - kongcredentialhmacs
+      - kongcredentialjwts
+      - kongdataplaneclientcertificates
+      - kongpluginbindings
+      - kongplugins
+      - kongreferencegrants
+      - kongroutes
+      - kongservices
+      - kongsnis
+      - kongtargets
+      - kongupstreams
     verbs:
+      - create
+      - delete
       - get
       - list
       - patch
@@ -148,6 +171,8 @@ rules:
   - apiGroups:
       - configuration.konghq.com
     resources:
+      - aigatewaydataplanecertificates/finalizers
+      - aigatewaydataplanecertificates/status
       - eventgatewaybackendclusters/finalizers
       - eventgatewaybackendclusters/status
       - eventgatewaydataplanecertificates/finalizers
@@ -196,25 +221,21 @@ rules:
   - apiGroups:
       - configuration.konghq.com
     resources:
-      - eventgatewaydataplanecertificates
-      - kongcertificates
-      - kongcredentialacls
-      - kongcredentialapikeys
-      - kongcredentialbasicauths
-      - kongcredentialhmacs
-      - kongcredentialjwts
-      - kongdataplaneclientcertificates
-      - kongpluginbindings
-      - kongplugins
-      - kongreferencegrants
-      - kongroutes
-      - kongservices
-      - kongsnis
-      - kongtargets
-      - kongupstreams
+      - eventgatewaybackendclusters
+      - eventgatewaylistenerpolicies
+      - eventgatewaylisteners
+      - eventgatewayvirtualclusterconsumepolicies
+      - eventgatewayvirtualclusterpolicies
+      - eventgatewayvirtualclusterproducepolicies
+      - eventgatewayvirtualclusters
+      - kongcacertificates
+      - kongconsumergroups
+      - kongconsumers
+      - kongdataplaneclientcertificates/status
+      - kongkeys
+      - kongkeysets
+      - kongvaults
     verbs:
-      - create
-      - delete
       - get
       - list
       - patch
@@ -446,6 +467,16 @@ rules:
   - apiGroups:
       - konnect.konghq.com
     resources:
+      - aigatewayagents
+      - aigatewayconsumercredentials
+      - aigatewayconsumergroups
+      - aigatewayconsumers
+      - aigatewayidentityproviders
+      - aigatewaymcpservers
+      - aigatewaymodelproviders
+      - aigatewaymodels
+      - aigatewaypolicies
+      - konnectaigateways
       - konnectapiauthconfigurations
       - konnectcloudgatewaydataplanegroupconfigurations
       - konnectcloudgatewaynetworks
@@ -468,6 +499,26 @@ rules:
   - apiGroups:
       - konnect.konghq.com
     resources:
+      - aigatewayagents/finalizers
+      - aigatewayagents/status
+      - aigatewayconsumercredentials/finalizers
+      - aigatewayconsumercredentials/status
+      - aigatewayconsumergroups/finalizers
+      - aigatewayconsumergroups/status
+      - aigatewayconsumers/finalizers
+      - aigatewayconsumers/status
+      - aigatewayidentityproviders/finalizers
+      - aigatewayidentityproviders/status
+      - aigatewaymcpservers/finalizers
+      - aigatewaymcpservers/status
+      - aigatewaymodelproviders/finalizers
+      - aigatewaymodelproviders/status
+      - aigatewaymodels/finalizers
+      - aigatewaymodels/status
+      - aigatewaypolicies/finalizers
+      - aigatewaypolicies/status
+      - konnectaigateways/finalizers
+      - konnectaigateways/status
       - konnectapiauthconfigurations/finalizers
       - konnectapiauthconfigurations/status
       - konnectcloudgatewaydataplanegroupconfigurations/finalizers

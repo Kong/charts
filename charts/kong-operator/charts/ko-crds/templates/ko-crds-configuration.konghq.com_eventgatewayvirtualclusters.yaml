@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: eventgatewayvirtualclusters.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -99,6 +99,60 @@ spec:
                           type: object
                         clientCertificate:
                           description: ClientCertificate configuration.
+                          properties:
+                            fetchKongIdentityPrincipal:
+                              description: |-
+                                Fetches principal metadata from Kong Identity after successful
+                                authentication.
+                                The principal is looked up by a custom key matched against the authenticated
+                                identity.
+
+                                **Requires a minimum runtime version of `1.2`**.
+                              properties:
+                                directory:
+                                  description: Kong Identity directory to use for
+                                    principal lookup.
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                                failureMode:
+                                  description: |-
+                                    Behavior when the Kong Identity principal lookup fails.
+                                    * `error` - fail the authentication if the principal lookup fails.
+                                    * `ignore` - proceed without principal metadata if the lookup fails.
+
+                                    **Requires a minimum runtime version of `1.2`**.
+                                  enum:
+                                  - error
+                                  - ignore
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                                fetchBy:
+                                  description: |-
+                                    Defines how to look up the principal in Kong Identity.
+
+                                    **Requires a minimum runtime version of `1.2`**.
+                                  properties:
+                                    key:
+                                      description: |-
+                                        The metadata key in Kong Identity to match the authenticated identity
+                                        against.
+                                        Value for the lookup is a `username` in case of `sasl_plain` or
+                                        `sasl_scram`.
+                                        In case of `client_certificate` it's a principal mapped by the listener
+                                        TLSServer policy.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                  required:
+                                  - key
+                                  type: object
+                              required:
+                              - directory
+                              - failureMode
+                              - fetchBy
+                              type: object
                           type: object
                         oauthBearer:
                           description: OauthBearer configuration.
@@ -118,6 +172,37 @@ spec:
                                   maxLength: 253
                                   minLength: 1
                                   type: string
+                              type: object
+                            fetchKongIdentityPrincipal:
+                              description: |-
+                                Fetches principal metadata from Kong Identity after successful OAUTHBEARER
+                                authentication.
+                                The principal is looked up by the iss and sub claims from the JWT token.
+
+                                **Requires a minimum runtime version of `1.2`**.
+                              properties:
+                                directory:
+                                  description: Kong Identity directory to use for
+                                    principal lookup.
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                                failureMode:
+                                  description: |-
+                                    Behavior when the Kong Identity principal lookup fails.
+                                    * `error` - fail the authentication if the principal lookup fails.
+                                    * `ignore` - proceed without principal metadata if the lookup fails.
+
+                                    **Requires a minimum runtime version of `1.2`**.
+                                  enum:
+                                  - error
+                                  - ignore
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - directory
+                              - failureMode
                               type: object
                             jwks:
                               description: JSON Web Key Set configuration for verifying
@@ -197,6 +282,59 @@ spec:
                         saslPlain:
                           description: SaslPlain configuration.
                           properties:
+                            fetchKongIdentityPrincipal:
+                              description: |-
+                                Fetches principal metadata from Kong Identity after successful
+                                authentication.
+                                The principal is looked up by a custom key matched against the authenticated
+                                identity.
+
+                                **Requires a minimum runtime version of `1.2`**.
+                              properties:
+                                directory:
+                                  description: Kong Identity directory to use for
+                                    principal lookup.
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                                failureMode:
+                                  description: |-
+                                    Behavior when the Kong Identity principal lookup fails.
+                                    * `error` - fail the authentication if the principal lookup fails.
+                                    * `ignore` - proceed without principal metadata if the lookup fails.
+
+                                    **Requires a minimum runtime version of `1.2`**.
+                                  enum:
+                                  - error
+                                  - ignore
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                                fetchBy:
+                                  description: |-
+                                    Defines how to look up the principal in Kong Identity.
+
+                                    **Requires a minimum runtime version of `1.2`**.
+                                  properties:
+                                    key:
+                                      description: |-
+                                        The metadata key in Kong Identity to match the authenticated identity
+                                        against.
+                                        Value for the lookup is a `username` in case of `sasl_plain` or
+                                        `sasl_scram`.
+                                        In case of `client_certificate` it's a principal mapped by the listener
+                                        TLSServer policy.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                  required:
+                                  - key
+                                  type: object
+                              required:
+                              - directory
+                              - failureMode
+                              - fetchBy
+                              type: object
                             mediation:
                               description: The mediation type for SASL/PLAIN authentication.
                               enum:
@@ -253,6 +391,59 @@ spec:
                               maxLength: 253
                               minLength: 1
                               type: string
+                            fetchKongIdentityPrincipal:
+                              description: |-
+                                Fetches principal metadata from Kong Identity after successful
+                                authentication.
+                                The principal is looked up by a custom key matched against the authenticated
+                                identity.
+
+                                **Requires a minimum runtime version of `1.2`**.
+                              properties:
+                                directory:
+                                  description: Kong Identity directory to use for
+                                    principal lookup.
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                                failureMode:
+                                  description: |-
+                                    Behavior when the Kong Identity principal lookup fails.
+                                    * `error` - fail the authentication if the principal lookup fails.
+                                    * `ignore` - proceed without principal metadata if the lookup fails.
+
+                                    **Requires a minimum runtime version of `1.2`**.
+                                  enum:
+                                  - error
+                                  - ignore
+                                  maxLength: 253
+                                  minLength: 1
+                                  type: string
+                                fetchBy:
+                                  description: |-
+                                    Defines how to look up the principal in Kong Identity.
+
+                                    **Requires a minimum runtime version of `1.2`**.
+                                  properties:
+                                    key:
+                                      description: |-
+                                        The metadata key in Kong Identity to match the authenticated identity
+                                        against.
+                                        Value for the lookup is a `username` in case of `sasl_plain` or
+                                        `sasl_scram`.
+                                        In case of `client_certificate` it's a principal mapped by the listener
+                                        TLSServer policy.
+                                      maxLength: 253
+                                      minLength: 1
+                                      type: string
+                                  required:
+                                  - key
+                                  type: object
+                              required:
+                              - directory
+                              - failureMode
+                              - fetchBy
+                              type: object
                           required:
                           - algorithm
                           type: object
@@ -478,9 +669,6 @@ spec:
                     type: object
                   topicAliases:
                     description: |-
-                      **Pre-release Feature**
-                      This feature is currently in beta and is subject to change.
-
                       Topic aliases allow exposing backend topics under additional names.
                       An alias creates a new entry point to the same physical data.
                       The alias `topic` field references namespace-visible names (if namespace is
@@ -490,10 +678,8 @@ spec:
                       **Requires a minimum runtime version of `1.2`**.
                     items:
                       description: |-
-                        VirtualClusterTopicAlias **Pre-release Feature**
-                        This feature is currently in beta and is subject to change.
-
-                        A topic alias maps an alias name to a namespace-visible topic name.
+                        VirtualClusterTopicAlias A topic alias maps an alias name to a
+                        namespace-visible topic name.
                         Clients can produce to, consume from, and discover the topic under the alias
                         name.
                         The original topic name remains accessible.
@@ -505,6 +691,12 @@ spec:
                           maxLength: 253
                           minLength: 1
                           type: string
+                        condition:
+                          description: |-
+                            CEL expression evaluated against the connection's auth context.
+                            If omitted or empty, the alias is active for all connections.
+                          maxLength: 253
+                          type: string
                         conflict:
                           description: |-
                             How to handle conflicts where an alias shadows a physical topic.
@@ -514,12 +706,6 @@ spec:
                           enum:
                           - warn
                           - ignore
-                          maxLength: 253
-                          type: string
-                        match:
-                          description: |-
-                            CEL expression evaluated against the connection's auth context.
-                            If omitted or empty, the alias is active for all connections.
                           maxLength: 253
                           type: string
                         topic:
@@ -706,6 +892,12 @@ spec:
         required:
         - metadata
         type: object
+        x-kubernetes-validations:
+        - message: spec.eventGatewayBackendClusterRef is immutable when an entity
+            is already Programmed
+          rule: '!has(self.spec.eventGatewayBackendClusterRef) || !has(self.status.conditions)
+            || !self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
+            == ''True'') || oldSelf.spec.eventGatewayBackendClusterRef == self.spec.eventGatewayBackendClusterRef'
     served: true
     storage: true
     subresources:

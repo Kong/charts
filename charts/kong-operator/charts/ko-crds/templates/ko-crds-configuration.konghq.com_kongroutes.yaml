@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: kongroutes.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -259,8 +259,8 @@ spec:
                   HTTP requests are answered with an upgrade error. When set to only
                   `"http"`, HTTPS requests are answered with an error.
                 items:
-                  description: RouteJSONProtocols - A string representing a protocol,
-                    such as HTTP or HTTPS.
+                  description: Protocols - A string representing a protocol, such
+                    as HTTP or HTTPS.
                   type: string
                 type: array
               regex_priority:

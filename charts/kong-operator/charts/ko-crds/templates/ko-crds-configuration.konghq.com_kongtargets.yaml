@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: kongtargets.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -22,6 +22,14 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - description: The KongUpstream this Target is attached to
+      jsonPath: .spec.upstreamRef.name
+      name: Upstream
+      type: string
+    - description: The target address of the upstream
+      jsonPath: .spec.target
+      name: Target
+      type: string
     - description: The Resource is Programmed on Konnect
       jsonPath: .status.conditions[?(@.type=='Programmed')].status
       name: Programmed

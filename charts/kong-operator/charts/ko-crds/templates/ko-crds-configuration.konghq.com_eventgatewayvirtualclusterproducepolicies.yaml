@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: eventgatewayvirtualclusterproducepolicies.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -256,20 +256,33 @@ spec:
                                     Selects which fields of the parsed record to encrypt.
                                     A maximum of 50 path entries are allowed.
                                   properties:
+                                    array:
+                                      description: Array configuration.
+                                      items:
+                                        description: EventGatewayParsedRecordFieldPathsArrayItem
+                                          is a type alias.
+                                        properties:
+                                          match:
+                                            description: |-
+                                              A field selector. It can select nested fields and array entries.
+
+                                              Currently supported are exact matches.
+                                            maxLength: 253
+                                            minLength: 1
+                                            type: string
+                                        required:
+                                        - match
+                                        type: object
+                                      type: array
+                                    expression:
+                                      description: Expression configuration.
+                                      type: string
                                     type:
                                       description: Type designates the type of configuration.
                                       enum:
-                                      - variant1
-                                      - variant2
+                                      - array
+                                      - expression
                                       minLength: 1
-                                      type: string
-                                    variant1:
-                                      description: Variant1 configuration.
-                                      items:
-                                        x-kubernetes-preserve-unknown-fields: true
-                                      type: array
-                                    variant2:
-                                      description: Variant2 configuration.
                                       type: string
                                   required:
                                   - type
@@ -278,6 +291,7 @@ spec:
                               - encryptionKey
                               - paths
                               type: object
+                            maxItems: 256
                             type: array
                           failureMode:
                             description: |-
@@ -288,6 +302,8 @@ spec:
                               * `mark` - passes the record to the backend cluster but marks it with a
                               `kong/policy-failure-<id>` header whose value is the reason for the policy
                               failure (truncated to 512 characters).
+
+                              **Requires a minimum runtime version of `1.2`**.
                             enum:
                             - reject
                             - passthrough
@@ -440,6 +456,23 @@ spec:
                           confluentSchemaRegistry:
                             description: SchemaRegistry configuration.
                             properties:
+                              failureMode:
+                                description: |-
+                                  Describes how to handle a failure in a policy applied to produced records.
+                                  * `reject` - rejects the record batch.
+                                  * `passthrough` - passes the record silently to the backend cluster even
+                                  though policy execution failed.
+                                  * `mark` - passes the record to the backend cluster but marks it with a
+                                  `kong/policy-failure-<id>` header whose value is the reason for the policy
+                                  failure (truncated to 512 characters).
+
+                                  **Requires a minimum runtime version of `1.2`**.
+                                enum:
+                                - reject
+                                - passthrough
+                                - mark
+                                maxLength: 253
+                                type: string
                               keyValidationAction:
                                 description: |-
                                   Defines a behavior when record key is not valid.
@@ -480,6 +513,24 @@ spec:
                                 required:
                                 - type
                                 type: object
+                              validateKey:
+                                description: |-
+                                  If true, validate the record key.
+
+                                  **Requires a minimum runtime version of `1.2`**.
+                                enum:
+                                - Enabled
+                                - Disabled
+                                type: string
+                              validateValue:
+                                description: |-
+                                  If true, validate the record value.
+
+                                  **Requires a minimum runtime version of `1.2`**.
+                                enum:
+                                - Enabled
+                                - Disabled
+                                type: string
                               valueValidationAction:
                                 description: |-
                                   Defines a behavior when record value is not valid.
@@ -496,6 +547,23 @@ spec:
                           json:
                             description: JSON configuration.
                             properties:
+                              failureMode:
+                                description: |-
+                                  Describes how to handle a failure in a policy applied to produced records.
+                                  * `reject` - rejects the record batch.
+                                  * `passthrough` - passes the record silently to the backend cluster even
+                                  though policy execution failed.
+                                  * `mark` - passes the record to the backend cluster but marks it with a
+                                  `kong/policy-failure-<id>` header whose value is the reason for the policy
+                                  failure (truncated to 512 characters).
+
+                                  **Requires a minimum runtime version of `1.2`**.
+                                enum:
+                                - reject
+                                - passthrough
+                                - mark
+                                maxLength: 253
+                                type: string
                               keyValidationAction:
                                 description: |-
                                   Defines a behavior when record key is not valid.
@@ -536,6 +604,24 @@ spec:
                                 required:
                                 - type
                                 type: object
+                              validateKey:
+                                description: |-
+                                  If true, validate the record key.
+
+                                  **Requires a minimum runtime version of `1.2`**.
+                                enum:
+                                - Enabled
+                                - Disabled
+                                type: string
+                              validateValue:
+                                description: |-
+                                  If true, validate the record value.
+
+                                  **Requires a minimum runtime version of `1.2`**.
+                                enum:
+                                - Enabled
+                                - Disabled
+                                type: string
                               valueValidationAction:
                                 description: |-
                                   Defines a behavior when record value is not valid.
@@ -768,6 +854,12 @@ spec:
         required:
         - metadata
         type: object
+        x-kubernetes-validations:
+        - message: spec.eventGatewayVirtualClusterRef is immutable when an entity
+            is already Programmed
+          rule: '!has(self.spec.eventGatewayVirtualClusterRef) || !has(self.status.conditions)
+            || !self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
+            == ''True'') || oldSelf.spec.eventGatewayVirtualClusterRef == self.spec.eventGatewayVirtualClusterRef'
     served: true
     storage: true
     subresources:

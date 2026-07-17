@@ -56,7 +56,7 @@ metadata:
 {{ end }}
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: controlplanes.gateway-operator.konghq.com
 spec:
 {{ if .Values.global.webhooks.conversion.enabled }}
@@ -9502,7 +9502,7 @@ metadata:
 {{ end }}
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: gatewayconfigurations.gateway-operator.konghq.com
 spec:
 {{ if .Values.global.webhooks.conversion.enabled }}
@@ -27837,6 +27837,19 @@ spec:
                                 - Cluster
                                 - Local
                                 type: string
+                              internalTrafficPolicy:
+                                description: |-
+                                  InternalTrafficPolicy describes how nodes distribute service traffic they
+                                  receive on the ClusterIP. If set to "Local", the proxy will assume that pods
+                                  only want to talk to endpoints of the service on the same node as the pod,
+                                  dropping the traffic if there are no local endpoints. The default value,
+                                  "Cluster", uses the standard behavior of routing to all endpoints evenly.
+
+                                  More info: https://kubernetes.io/docs/concepts/services-networking/service/#internal-traffic-policy
+                                enum:
+                                - Cluster
+                                - Local
+                                type: string
                               labels:
                                 additionalProperties:
                                   description: LabelValue is a label value with constraints
@@ -27857,6 +27870,21 @@ spec:
                                 description: |-
                                   Name defines the name of the service.
                                   If Name is empty, the controller will generate a service name from the owning object.
+                                type: string
+                              trafficDistribution:
+                                description: |-
+                                  TrafficDistribution offers a way to express preferences for how traffic is
+                                  distributed to Service endpoints. Implementations can use this field as a
+                                  hint, but are not required to guarantee strict adherence. If the field is
+                                  not set, the implementation will apply its default routing strategy.
+
+                                  "PreferSameZone" prioritizes endpoints in the same zone as the client.
+                                  "PreferSameNode" prioritizes endpoints on the same node as the client.
+
+                                  More info: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution
+                                enum:
+                                - PreferSameZone
+                                - PreferSameNode
                                 type: string
                               type:
                                 default: LoadBalancer
@@ -38000,6 +38028,19 @@ spec:
                                 - Cluster
                                 - Local
                                 type: string
+                              internalTrafficPolicy:
+                                description: |-
+                                  InternalTrafficPolicy describes how nodes distribute service traffic they
+                                  receive on the ClusterIP. If set to "Local", the proxy will assume that pods
+                                  only want to talk to endpoints of the service on the same node as the pod,
+                                  dropping the traffic if there are no local endpoints. The default value,
+                                  "Cluster", uses the standard behavior of routing to all endpoints evenly.
+
+                                  More info: https://kubernetes.io/docs/concepts/services-networking/service/#internal-traffic-policy
+                                enum:
+                                - Cluster
+                                - Local
+                                type: string
                               labels:
                                 additionalProperties:
                                   description: LabelValue is a label value with constraints
@@ -38021,6 +38062,21 @@ spec:
                                   Name defines the name of the service.
                                   If Name is empty, the controller will generate a service name from the owning object.
                                 maxLength: 63
+                                type: string
+                              trafficDistribution:
+                                description: |-
+                                  TrafficDistribution offers a way to express preferences for how traffic is
+                                  distributed to Service endpoints. Implementations can use this field as a
+                                  hint, but are not required to guarantee strict adherence. If the field is
+                                  not set, the implementation will apply its default routing strategy.
+
+                                  "PreferSameZone" prioritizes endpoints in the same zone as the client.
+                                  "PreferSameNode" prioritizes endpoints on the same node as the client.
+
+                                  More info: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution
+                                enum:
+                                - PreferSameZone
+                                - PreferSameNode
                                 type: string
                               type:
                                 default: LoadBalancer
@@ -38212,12 +38268,14 @@ spec:
                       name:
                         description: Name is the name of the KonnectAPIAuthConfiguration
                           resource.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace of the KonnectAPIAuthConfiguration resource.
-                          If not specified, defaults to the same namespace as the KonnectConfiguration resource.
+                          If not specified, defaults to the resource namespace.
+                        maxLength: 253
                         minLength: 1
                         type: string
                     required:
@@ -38260,6 +38318,14 @@ spec:
                   rule: 'self.source == ''Mirror'' ? has(self.mirror) : true'
                 - message: mirror field cannot be set for type Origin
                   rule: 'self.source == ''Origin'' ? !has(self.mirror) : true'
+                - message: mirror is immutable once set
+                  rule: '!has(self.mirror) && !has(oldSelf.mirror) ? true : (has(self.mirror)
+                    && has(oldSelf.mirror) ? self.mirror == oldSelf.mirror : false)'
+                - message: source is immutable once set
+                  rule: '!has(self.source) && !has(oldSelf.source) ? true : self.source
+                    == oldSelf.source'
+                - message: authRef is immutable once set
+                  rule: '!has(oldSelf.authRef) ? true : self.authRef == oldSelf.authRef'
               listenersOptions:
                 description: |-
                   ListenerOptions is the specification for configuration bound to specific listeners in the Gateway.
@@ -38401,7 +38467,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: konnectextensions.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -38513,6 +38579,14 @@ spec:
                           name:
                             description: Name is the name of the KonnectAPIAuthConfiguration
                               resource.
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          namespace:
+                            description: |-
+                              Namespace is the namespace of the KonnectAPIAuthConfiguration resource.
+                              If not specified, defaults to the resource namespace.
+                            maxLength: 253
                             minLength: 1
                             type: string
                         required:
@@ -39147,12 +39221,14 @@ spec:
                       name:
                         description: Name is the name of the KonnectAPIAuthConfiguration
                           resource.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace of the KonnectAPIAuthConfiguration resource.
-                          If not specified, defaults to the same namespace as the KonnectConfiguration resource.
+                          If not specified, defaults to the resource namespace.
+                        maxLength: 253
                         minLength: 1
                         type: string
                     required:
@@ -39217,7 +39293,7 @@ metadata:
 {{ end }}
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: konnectgatewaycontrolplanes.konnect.konghq.com
 spec:
 {{ if .Values.global.webhooks.conversion.enabled }}
@@ -39316,6 +39392,14 @@ spec:
                       name:
                         description: Name is the name of the KonnectAPIAuthConfiguration
                           resource.
+                        maxLength: 253
+                        minLength: 1
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace is the namespace of the KonnectAPIAuthConfiguration resource.
+                          If not specified, defaults to the resource namespace.
+                        maxLength: 253
                         minLength: 1
                         type: string
                     required:
@@ -39693,12 +39777,14 @@ spec:
                       name:
                         description: Name is the name of the KonnectAPIAuthConfiguration
                           resource.
+                        maxLength: 253
                         minLength: 1
                         type: string
                       namespace:
                         description: |-
                           Namespace is the namespace of the KonnectAPIAuthConfiguration resource.
-                          If not specified, defaults to the same namespace as the KonnectConfiguration resource.
+                          If not specified, defaults to the resource namespace.
+                        maxLength: 253
                         minLength: 1
                         type: string
                     required:

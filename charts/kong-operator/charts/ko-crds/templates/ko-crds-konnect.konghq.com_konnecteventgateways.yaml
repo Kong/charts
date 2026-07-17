@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: konnecteventgateways.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -116,6 +116,14 @@ spec:
                       name:
                         description: Name is the name of the KonnectAPIAuthConfiguration
                           resource.
+                        maxLength: 253
+                        minLength: 1
+                        type: string
+                      namespace:
+                        description: |-
+                          Namespace is the namespace of the KonnectAPIAuthConfiguration resource.
+                          If not specified, defaults to the resource namespace.
+                        maxLength: 253
                         minLength: 1
                         type: string
                     required:

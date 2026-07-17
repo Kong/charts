@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.3
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
   name: portalipallowlists.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -71,6 +71,7 @@ spec:
                     description: The list of allowed ips for the portal.
                     items:
                       type: string
+                    maxItems: 25
                     type: array
                 required:
                 - allowedIps
