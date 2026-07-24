@@ -959,6 +959,7 @@ initContainerResources: {}
   #  memory: 64Mi
 
 # readinessProbe for Kong pods
+# replace httpGet with exec if you want to use a custom command
 readinessProbe:
   httpGet:
     path: "/status/ready"
@@ -971,6 +972,7 @@ readinessProbe:
   failureThreshold: 3
 
 # livenessProbe for Kong pods
+# replace httpGet with exec if you want to use a custom command
 livenessProbe:
   httpGet:
     path: "/status"
