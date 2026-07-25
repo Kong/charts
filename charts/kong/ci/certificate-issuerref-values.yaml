@@ -1,0 +1,27 @@
+# Reference cert-manager external issuers with custom kinds and API groups
+# via issuerRef, both globally and on a per-certificate basis.
+certificates:
+  enabled: true
+  issuerRef:
+    name: aws-pca-root
+    kind: AWSPCAClusterIssuer
+    group: awspca.cert-manager.io
+  cluster:
+    issuerRef:
+      name: step-ca
+      kind: StepClusterIssuer
+      group: certmanager.step.sm
+
+# NOTE: The purpose of those values below is to:
+# - to speed up, the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"
+
+ingressController:
+  env:
+    anonymous_reports: "false"

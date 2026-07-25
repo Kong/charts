@@ -494,6 +494,23 @@ an issuer, set `certificates.enabled: true` in values.yaml, and set your issuer
 name in `certificates.issuer` or `certificates.clusterIssuer` depending on the
 issuer type.
 
+Some issuers, such as [external issuers](https://cert-manager.io/docs/configuration/external/),
+use kinds and API groups other than the built-in `Issuer` and `ClusterIssuer`.
+To use these, set `certificates.issuerRef` with the complete issuer reference:
+
+```yaml
+certificates:
+  enabled: true
+  issuerRef:
+    name: my-issuer
+    kind: AWSPCAClusterIssuer
+    group: awspca.cert-manager.io
+```
+
+When set, `issuerRef` takes precedence over `issuer` and `clusterIssuer`. You
+can also set `issuerRef` on a per-certificate basis under the `proxy`, `admin`,
+`manager`, `portal`, and `cluster` sections.
+
 If you do not have an issuer available, you can install the example [self-signed ClusterIssuer](https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-issuers)
 and set `certificates.clusterIssuer: selfsigned-issuer` for testing. You
 should, however, migrate to an issuer using a CA your clients trust for actual
