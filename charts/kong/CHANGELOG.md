@@ -9,7 +9,7 @@
   `issuerRef` hardcoded the `cert-manager.io` group and the `Issuer` and
   `ClusterIssuer` kinds, which made it impossible to use external issuers such
   as aws-privateca-issuer or google-cas-issuer.
-  [#1545](https://github.com/Kong/charts/pull/1545)
+  [#1549](https://github.com/Kong/charts/pull/1549)
 
 ## 3.4.1
 
