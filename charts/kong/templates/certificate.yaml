@@ -8,6 +8,7 @@
 {{- $_ := set $genericCertificateConfig "globalDuration" .Values.certificates.duration -}}
 {{- $_ := set $genericCertificateConfig "globalIssuer" .Values.certificates.issuer -}}
 {{- $_ := set $genericCertificateConfig "globalClusterIssuer" .Values.certificates.clusterIssuer -}}
+{{- $_ := set $genericCertificateConfig "globalIssuerRef" .Values.certificates.issuerRef -}}
 {{- $_ := set $genericCertificateConfig "globalSubject" .Values.certificates.subject -}}
 {{- $_ := set $genericCertificateConfig "globalPrivateKey" .Values.certificates.privateKey -}}
 {{- $_ := set $genericCertificateConfig "defaultIssuer" (printf "%s-%s-%s" .Release.Name .Chart.Name "selfsigned-issuer") -}}
@@ -77,7 +78,10 @@ spec:
   privateKey:
     {{- toYaml .globalPrivateKey | nindent 4 }}
   {{- end }}
-  {{ if .clusterIssuer -}}
+  {{ if .issuerRef -}}
+  issuerRef:
+    {{- toYaml .issuerRef | nindent 4 }}
+  {{ else if .clusterIssuer -}}
   issuerRef:
     group: cert-manager.io
     name: {{ .clusterIssuer }}
@@ -87,6 +91,9 @@ spec:
     group: cert-manager.io
     name: {{ .issuer }}
     kind: Issuer
+  {{ else if .globalIssuerRef -}}
+  issuerRef:
+    {{- toYaml .globalIssuerRef | nindent 4 }}
   {{ else if .globalClusterIssuer -}}
   issuerRef:
     group: cert-manager.io

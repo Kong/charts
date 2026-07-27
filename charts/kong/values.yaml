@@ -845,6 +845,17 @@ certificates:
   # If left blank a built in self-signed issuer will be created and utilized
   issuer: ""
   clusterIssuer: ""
+  # Set `issuerRef` to reference an issuer by name, kind, and group. Use this
+  # for external issuers, such as aws-privateca-issuer or google-cas-issuer,
+  # whose kinds and API groups differ from the built-in cert-manager `Issuer`
+  # and `ClusterIssuer` kinds. When set, `issuerRef` takes precedence over
+  # `issuer` and `clusterIssuer`. It can also be set on a per-certificate basis
+  # under the `proxy`, `admin`, `manager`, `portal`, and `cluster` sections
+  # below.
+  issuerRef: {}
+  #  name: my-issuer
+  #  kind: AWSPCAClusterIssuer
+  #  group: awspca.cert-manager.io
 
   # Set proxy.enabled to true to issue default kong-proxy certificate with cert-manager
   proxy:
