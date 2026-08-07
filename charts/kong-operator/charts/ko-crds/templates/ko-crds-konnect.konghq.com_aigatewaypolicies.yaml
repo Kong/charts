@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: aigatewaypolicies.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -243,7 +243,7 @@ spec:
                   type:
                     description: |-
                       The type of the Policy. This is equivalent to the Kong 3 plugin name.
-                      Some examples are: 'ai-sanitizer', 'ai-prompt-guard', and 'openid-connect'.
+                      Some examples are: 'ai-sanitizer', 'ai-prompt-guard', and 'rate-limiting'.
                       Note: Plugins have been renamed to Policies in Kong AI Gateway.
                       Policy types and configuration documentation can be found in the [Developer
                       Docs](https://developer.konghq.com/plugins/).

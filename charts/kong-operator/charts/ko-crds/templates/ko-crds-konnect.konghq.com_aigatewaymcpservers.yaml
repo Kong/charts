@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: aigatewaymcpservers.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -267,11 +267,6 @@ spec:
                                 - Enabled
                                 - Disabled
                                 type: string
-                              statistics:
-                                enum:
-                                - Enabled
-                                - Disabled
-                                type: string
                             type: object
                           maxRequestBodySize:
                             description: Maximum size of request body to parse. Set
@@ -398,6 +393,11 @@ spec:
                                 enum:
                                 - Enabled
                                 - Disabled
+                                type: string
+                              label:
+                                description: The label of the MCP server. This is
+                                  used to filter the exported MCP tools.
+                                maxLength: 253
                                 type: string
                               session:
                                 description: |-
@@ -797,13 +797,6 @@ spec:
                                     maxLength: 253
                                     type: string
                                 type: object
-                              tag:
-                                description: |-
-                                  The tag of the MCP server.
-                                  This is used to filter the exported MCP tools.
-                                  The field should contain exactly one tag.
-                                maxLength: 253
-                                type: string
                               timeout:
                                 description: The timeout for calling the tools in
                                   milliseconds.
@@ -1167,11 +1160,6 @@ spec:
                                 - Disabled
                                 type: string
                               payloads:
-                                enum:
-                                - Enabled
-                                - Disabled
-                                type: string
-                              statistics:
                                 enum:
                                 - Enabled
                                 - Disabled
@@ -1766,11 +1754,6 @@ spec:
                                 - Enabled
                                 - Disabled
                                 type: string
-                              statistics:
-                                enum:
-                                - Enabled
-                                - Disabled
-                                type: string
                             type: object
                           maxRequestBodySize:
                             description: Maximum size of request body to parse. Set
@@ -1897,6 +1880,11 @@ spec:
                                 enum:
                                 - Enabled
                                 - Disabled
+                                type: string
+                              label:
+                                description: The label of the MCP server. This is
+                                  used to filter the exported MCP tools.
+                                maxLength: 253
                                 type: string
                               session:
                                 description: |-
@@ -2296,13 +2284,6 @@ spec:
                                     maxLength: 253
                                     type: string
                                 type: object
-                              tag:
-                                description: |-
-                                  The tag of the MCP server.
-                                  This is used to filter the exported MCP tools.
-                                  The field should contain exactly one tag.
-                                maxLength: 253
-                                type: string
                               timeout:
                                 description: The timeout for calling the tools in
                                   milliseconds.
@@ -2772,11 +2753,6 @@ spec:
                                 - Enabled
                                 - Disabled
                                 type: string
-                              statistics:
-                                enum:
-                                - Enabled
-                                - Disabled
-                                type: string
                             type: object
                           maxRequestBodySize:
                             description: Maximum size of request body to parse. Set
@@ -2972,6 +2948,11 @@ spec:
                                 enum:
                                 - Enabled
                                 - Disabled
+                                type: string
+                              label:
+                                description: The label of the MCP server. This is
+                                  used to filter the exported MCP tools.
+                                maxLength: 253
                                 type: string
                               session:
                                 description: |-
@@ -3371,13 +3352,6 @@ spec:
                                     maxLength: 253
                                     type: string
                                 type: object
-                              tag:
-                                description: |-
-                                  The tag of the MCP server.
-                                  This is used to filter the exported MCP tools.
-                                  The field should contain exactly one tag.
-                                maxLength: 253
-                                type: string
                               timeout:
                                 description: The timeout for calling the tools in
                                   milliseconds.
@@ -3868,11 +3842,6 @@ spec:
                                 - Enabled
                                 - Disabled
                                 type: string
-                              statistics:
-                                enum:
-                                - Enabled
-                                - Disabled
-                                type: string
                             type: object
                           maxRequestBodySize:
                             description: Maximum size of request body to parse. Set
@@ -3996,6 +3965,11 @@ spec:
                                 enum:
                                 - Enabled
                                 - Disabled
+                                type: string
+                              label:
+                                description: The label of the MCP server. This is
+                                  used to filter the exported MCP tools.
+                                maxLength: 253
                                 type: string
                               preserveUpstreamToolNames:
                                 description: |-
@@ -4406,13 +4380,6 @@ spec:
                                     maxLength: 253
                                     type: string
                                 type: object
-                              tag:
-                                description: |-
-                                  The tag of the MCP server.
-                                  This is used to filter the exported MCP tools.
-                                  The field should contain exactly one tag.
-                                maxLength: 253
-                                type: string
                               timeout:
                                 description: The timeout for calling the tools in
                                   milliseconds.

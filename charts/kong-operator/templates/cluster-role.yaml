@@ -181,6 +181,8 @@ rules:
       - eventgatewaylistenerpolicies/status
       - eventgatewaylisteners/finalizers
       - eventgatewaylisteners/status
+      - eventgatewayschemaregistries/finalizers
+      - eventgatewayschemaregistries/status
       - eventgatewayvirtualclusterconsumepolicies/finalizers
       - eventgatewayvirtualclusterconsumepolicies/status
       - eventgatewayvirtualclusterpolicies/finalizers
@@ -224,6 +226,7 @@ rules:
       - eventgatewaybackendclusters
       - eventgatewaylistenerpolicies
       - eventgatewaylisteners
+      - eventgatewayschemaregistries
       - eventgatewayvirtualclusterconsumepolicies
       - eventgatewayvirtualclusterpolicies
       - eventgatewayvirtualclusterproducepolicies
@@ -381,8 +384,6 @@ rules:
       - gatewayclasses
       - grpcroutes
       - referencegrants
-      - tcproutes
-      - udproutes
     verbs:
       - get
       - list
@@ -442,7 +443,9 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
+      - tcproutes
       - tlsroutes
+      - udproutes
     verbs:
       - get
       - list
@@ -481,6 +484,7 @@ rules:
       - konnectcloudgatewaydataplanegroupconfigurations
       - konnectcloudgatewaynetworks
       - konnectcloudgatewaytransitgateways
+      - konnectconfigstores
       - konnecteventgateways
       - portalcustomdomains
       - portalcustomizations
@@ -527,6 +531,8 @@ rules:
       - konnectcloudgatewaynetworks/status
       - konnectcloudgatewaytransitgateways/finalizers
       - konnectcloudgatewaytransitgateways/status
+      - konnectconfigstores/finalizers
+      - konnectconfigstores/status
       - konnecteventgateways/finalizers
       - konnecteventgateways/status
       - konnectextensions/finalizers

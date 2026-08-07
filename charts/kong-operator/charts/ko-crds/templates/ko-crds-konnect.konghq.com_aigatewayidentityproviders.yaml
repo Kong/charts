@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: aigatewayidentityproviders.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -336,6 +336,21 @@ spec:
                                 type: string
                               type: array
                             type: array
+                          consumerGroupsClaim:
+                            description: |-
+                              The claim used for consumer groups mapping.
+                              If multiple values are set, it means the claim is inside a nested object of
+                              the token payload.
+                            items:
+                              type: string
+                            type: array
+                          consumerGroupsOptional:
+                            description: Do not terminate the request if consumer
+                              groups mapping fails.
+                            enum:
+                            - Enabled
+                            - Disabled
+                            type: string
                           consumerOptional:
                             description: Do not terminate the request if consumer
                               mapping fails.

@@ -9,16 +9,16 @@ metadata:
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
     kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
-  name: eventgatewaylisteners.configuration.konghq.com
+  name: eventgatewayschemaregistries.configuration.konghq.com
 spec:
   group: configuration.konghq.com
   names:
     categories:
     - kong
-    kind: EventGatewayListener
-    listKind: EventGatewayListenerList
-    plural: eventgatewaylisteners
-    singular: eventgatewaylistener
+    kind: EventGatewaySchemaRegistry
+    listKind: EventGatewaySchemaRegistryList
+    plural: eventgatewayschemaregistries
+    singular: eventgatewayschemaregistry
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -40,7 +40,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: EventGatewayListener is the Schema for the eventgatewaylisteners
+        description: EventGatewaySchemaRegistry is the Schema for the eventgatewayschemaregistrys
           API.
         properties:
           apiVersion:
@@ -61,67 +61,168 @@ spec:
           metadata:
             type: object
           spec:
-            description: EventGatewayListenerSpec defines the desired state of EventGatewayListener.
+            description: EventGatewaySchemaRegistrySpec defines the desired state
+              of EventGatewaySchemaRegistry.
             properties:
               apiSpec:
                 description: APISpec defines the desired state of the resource's API
                   spec fields.
                 properties:
-                  addresses:
-                    description: |-
-                      Which address or addresses to listen on.
-                      `0.0.0.0` means all addresses on the host.
-                      `::` means all addresses on the host in IPv6.
+                  confluent:
+                    description: SchemaRegistryConfluent configuration.
+                    properties:
+                      config:
+                        description: The configuration of the schema registry.
+                        properties:
+                          authentication:
+                            description: The authentication configuration for the
+                              schema registry.
+                            properties:
+                              basic:
+                                description: SchemaRegistryAuthenticationBasic configuration.
+                                properties:
+                                  password:
+                                    description: |-
+                                      A sensitive value containing the secret or a reference to a secret as a
+                                      template string expression.
+                                      If the value is provided as plain text, it is encrypted at rest and omitted
+                                      from API responses.
+                                      If provided as an expression, the expression itself is stored and returned
+                                      by the API.
+                                    properties:
+                                      secretRef:
+                                        description: |-
+                                          SecretRef is a reference to a Kubernetes Secret containing the sensitive data.
+                                          Required when type is 'secretRef'.
+                                        properties:
+                                          key:
+                                            description: Key is the data key within
+                                              the Secret.
+                                            maxLength: 253
+                                            minLength: 1
+                                            type: string
+                                          name:
+                                            description: Name is the name of the referred
+                                              resource.
+                                            maxLength: 253
+                                            minLength: 1
+                                            type: string
+                                          namespace:
+                                            description: |-
+                                              Namespace is the namespace of the referred resource.
 
-                      If `0.0.0.0` or `::` is used, there can't be other extra addresses defined.
-                      WARNING: there are use cases where listening on all addresses is insecure.
-                      So use this with caution.
+                                              For namespace-scoped resources if no Namespace is provided then the
+                                              namespace of the parent object MUST be used.
 
-                      `localhost` means only the localhost ipv4 address.
-                    items:
-                      type: string
-                    type: array
-                  description:
-                    description: A human-readable description of the listener.
-                    maxLength: 512
-                    type: string
-                  labels:
-                    additionalProperties:
-                      description: LabelsValue is the value type for Labels.
-                      maxLength: 63
-                      minLength: 1
-                      pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
-                      type: string
-                    description: |-
-                      Labels store metadata of an entity that can be used for filtering an entity
-                      list or for searching across entity types.
+                                              This field MUST not be set when referring to cluster-scoped resources.
+                                            maxLength: 253
+                                            type: string
+                                        required:
+                                        - key
+                                        - name
+                                        type: object
+                                      type:
+                                        default: inline
+                                        description: 'Type indicates the source of
+                                          the sensitive data: ''inline'' or ''secretRef''.'
+                                        enum:
+                                        - inline
+                                        - secretRef
+                                        type: string
+                                      value:
+                                        description: |-
+                                          Value contains the sensitive data provided inline.
+                                          Required when type is 'inline'.
+                                        maxLength: 4096
+                                        type: string
+                                    required:
+                                    - type
+                                    type: object
+                                    x-kubernetes-validations:
+                                    - message: value required when type=inline; secretRef
+                                        required when type=secretRef
+                                      rule: 'self.type == ''inline'' ? has(self.value)
+                                        : has(self.secretRef)'
+                                  username:
+                                    description: |-
+                                      A literal value or a reference to an existing secret as a template string
+                                      expression.
+                                      The value is stored and returned by the API as-is, not treated as sensitive
+                                      information.
+                                    maxLength: 253
+                                    minLength: 1
+                                    type: string
+                                required:
+                                - password
+                                - username
+                                type: object
+                              type:
+                                description: Type designates the type of configuration.
+                                enum:
+                                - basic
+                                minLength: 1
+                                type: string
+                            required:
+                            - type
+                            type: object
+                          endpoint:
+                            description: The endpoint of the Confluent schema registry.
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          schemaType:
+                            description: The format of the message.
+                            enum:
+                            - avro
+                            - json
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          timeoutSeconds:
+                            description: |-
+                              Total time in seconds from establishing connection to receive a response
+                              from schema registry.
+                            minimum: 1
+                            type: integer
+                        required:
+                        - endpoint
+                        - schemaType
+                        type: object
+                      description:
+                        description: A human-readable description of the virtual cluster.
+                        maxLength: 512
+                        type: string
+                      labels:
+                        additionalProperties:
+                          description: LabelsValue is the value type for Labels.
+                          maxLength: 63
+                          minLength: 1
+                          pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                          type: string
+                        description: |-
+                          Labels store metadata of an entity that can be used for filtering an entity
+                          list or for searching across entity types.
 
-                      Keys must be of length 1-63 characters, and cannot start with "kong",
-                      "konnect", "mesh", "kic", or "_".
+                          Keys must be of length 1-63 characters, and cannot start with "kong",
+                          "konnect", "mesh", "kic", or "_".
+                        type: object
+                      name:
+                        description: The unique name of the schema registry.
+                        maxLength: 255
+                        minLength: 1
+                        type: string
+                    required:
+                    - config
+                    - name
                     type: object
-                  name:
-                    description: The unique name of the listener.
-                    maxLength: 255
+                  type:
+                    description: Type designates the type of configuration.
+                    enum:
+                    - confluent
                     minLength: 1
                     type: string
-                  ports:
-                    description: |-
-                      Which port or ports to listen on.
-                      There can be multiple ways to define ports:
-                      - as a single port, e.g. 9092
-                      - as a range of ports, e.g. 9092-9094
-
-                      It's possible to combine both, e.g. [9092, "9093-9095", 9096].
-                    items:
-                      anyOf:
-                      - type: integer
-                      - type: string
-                      x-kubernetes-int-or-string: true
-                    type: array
                 required:
-                - addresses
-                - name
-                - ports
+                - type
                 type: object
               gatewayRef:
                 description: GatewayRef is the reference to the parent Gateway object.
@@ -182,8 +283,8 @@ spec:
             - gatewayRef
             type: object
           status:
-            description: EventGatewayListenerStatus defines the observed state of
-              EventGatewayListener.
+            description: EventGatewaySchemaRegistryStatus defines the observed state
+              of EventGatewaySchemaRegistry.
             properties:
               conditions:
                 description: Conditions represent the current state of the resource.

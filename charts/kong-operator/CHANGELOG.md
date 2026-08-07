@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0-rc.2
+
+### Changed
+
+- Bump default image to `2.3.0-rc.3`.
+
 ## 1.4.0-rc.1
 
 ### Changed
