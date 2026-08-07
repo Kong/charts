@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: aigatewaymodels.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -1446,32 +1446,11 @@ spec:
                                 - Enabled
                                 - Disabled
                                 type: string
-                              statistics:
-                                enum:
-                                - Enabled
-                                - Disabled
-                                type: string
                             type: object
                           maxRequestBodySize:
                             description: Maximum size of request body to parse. Set
                               to 0 for unlimited.
                             type: integer
-                          model:
-                            description: |-
-                              **Pre-release Feature**
-                              This feature is currently in beta and is subject to change.
-                            properties:
-                              alias:
-                                description: |-
-                                  **Pre-release Feature**
-                                  This feature is currently in beta and is subject to change.
-
-                                  An alias for the model, used to select the target virtual model when passed
-                                  in the "model" parameter of the request body.
-                                  When not set, this defaults to the AI Gateway model's name.
-                                maxLength: 253
-                                type: string
-                            type: object
                           proxy:
                             description: |-
                               HTTP/HTTPS proxy configuration for outbound requests to the upstream AI
@@ -1587,6 +1566,89 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                              model:
+                                description: |-
+                                  Configuration for overriding routing to this model using a selector.
+                                  When not set, a default model selector will be created using the model's
+                                  name and format.
+                                properties:
+                                  body:
+                                    description: Body configuration.
+                                    properties:
+                                      bodyParam:
+                                        description: The body property name to match
+                                          for routing.
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      values:
+                                        description: |-
+                                          The list of values that are matched against the body property value.
+                                          If the body property value matches any of the specified values, the request
+                                          will be routed to the corresponding model.
+                                        items:
+                                          type: string
+                                        maxItems: 1
+                                        type: array
+                                    required:
+                                    - bodyParam
+                                    - values
+                                    type: object
+                                  headers:
+                                    description: Headers configuration.
+                                    properties:
+                                      headerParam:
+                                        description: The header property name to match
+                                          for routing.
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      values:
+                                        description: |-
+                                          The list of values that are matched against the header property value.
+                                          If the header property value matches any of the specified values, the
+                                          request will be routed to the corresponding model.
+                                        items:
+                                          type: string
+                                        maxItems: 1
+                                        type: array
+                                    required:
+                                    - headerParam
+                                    - values
+                                    type: object
+                                  path:
+                                    description: Path configuration.
+                                    properties:
+                                      pathParam:
+                                        description: The path param name to match
+                                          for routing.
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      values:
+                                        description: |-
+                                          The list of values that are matched against the path param value.
+                                          If the path param value matches any of the specified values, the request
+                                          will be routed to the corresponding model.
+                                        items:
+                                          type: string
+                                        maxItems: 1
+                                        type: array
+                                    required:
+                                    - pathParam
+                                    - values
+                                    type: object
+                                  type:
+                                    description: Type designates the type of configuration.
+                                    enum:
+                                    - body
+                                    - headers
+                                    - path
+                                    minLength: 1
+                                    type: string
+                                required:
+                                - type
+                                type: object
                               paths:
                                 description: A list of paths that match this route.
                                 items:
@@ -1685,6 +1747,7 @@ spec:
                               - gemini
                               - huggingface
                               - openai
+                              - vertex
                               maxLength: 253
                               type: string
                           type: object
@@ -2543,6 +2606,95 @@ spec:
                                       maxLength: 253
                                       type: string
                                   type: object
+                                sagemaker:
+                                  description: Sagemaker configuration.
+                                  properties:
+                                    aws:
+                                      description: |-
+                                        **Pre-release Feature**
+                                        This feature is currently in beta and is subject to change.
+                                      properties:
+                                        assumeRoleArn:
+                                          description: |-
+                                            Assume a different IAM role after authenticating; mutually required with
+                                            role_session_name.
+                                          maxLength: 253
+                                          type: string
+                                        region:
+                                          description: Overrides the AWS_REGION environment
+                                            variable for SageMaker requests.
+                                          maxLength: 253
+                                          type: string
+                                        roleSessionName:
+                                          description: |-
+                                            Session identifier for the assumed role; mutually required with
+                                            assume_role_arn.
+                                          maxLength: 253
+                                          type: string
+                                        stsEndpointURL:
+                                          description: Overrides the STS endpoint
+                                            when assuming a role.
+                                          maxLength: 253
+                                          type: string
+                                      type: object
+                                    embeddingsDimensions:
+                                      description: The number of dimensions for embedding
+                                        outputs.
+                                      type: integer
+                                    inputCost:
+                                      description: Cost per input token for billing
+                                        and cost tracking.
+                                      type: number
+                                    maxTokens:
+                                      description: The maximum number of tokens to
+                                        generate in the response.
+                                      type: integer
+                                    outputCost:
+                                      description: Cost per output token for billing
+                                        and cost tracking.
+                                      type: number
+                                    target:
+                                      description: AIGatewayTargetSagemakerConfigTarget
+                                        is a type alias.
+                                      properties:
+                                        containerHostname:
+                                          description: |-
+                                            Sets the X-Amzn-SageMaker-Target-Container-Hostname header
+                                            (multi-container).
+                                          maxLength: 253
+                                          type: string
+                                        model:
+                                          description: Sets the X-Amzn-SageMaker-Target-Model
+                                            header (multi-model endpoints).
+                                          maxLength: 253
+                                          type: string
+                                        variant:
+                                          description: Sets the X-Amzn-SageMaker-Target-Variant
+                                            header (A/B variant testing).
+                                          maxLength: 253
+                                          type: string
+                                      type: object
+                                    temperature:
+                                      description: |-
+                                        Controls randomness in the model output.
+                                        Higher values produce more varied responses.
+                                      type: number
+                                    topK:
+                                      description: |-
+                                        Limits the number of highest-probability tokens considered during
+                                        generation.
+                                      type: integer
+                                    topP:
+                                      description: |-
+                                        Nucleus sampling probability mass.
+                                        Tokens with cumulative probability up to top_p are considered.
+                                      type: number
+                                    upstreamURL:
+                                      description: The upstream URL for the model
+                                        endpoint.
+                                      maxLength: 253
+                                      type: string
+                                  type: object
                                 type:
                                   description: Type designates the type of configuration.
                                   enum:
@@ -2561,6 +2713,7 @@ spec:
                                   - mistral
                                   - ollama
                                   - openai
+                                  - sagemaker
                                   - vercel
                                   - vertex
                                   - vllm
@@ -2633,7 +2786,6 @@ spec:
                                             This must be set when running a target model on Gemini on Vertex Model
                                             Garden.
                                           maxLength: 253
-                                          minLength: 1
                                           type: string
                                         locationID:
                                           description: The Google Cloud location ID
@@ -2649,7 +2801,6 @@ spec:
                                           type: string
                                       required:
                                       - apiEndpoint
-                                      - endpointID
                                       - locationID
                                       - projectID
                                       type: object
@@ -2782,9 +2933,26 @@ spec:
                             provider:
                               description: Reference to a model provider instance
                                 by name.
-                              maxLength: 253
-                              minLength: 1
-                              type: string
+                              properties:
+                                kind:
+                                  default: AIGatewayModelProvider
+                                  description: Kind is the kind of the referenced
+                                    object.
+                                  enum:
+                                  - AIGatewayModelProvider
+                                  type: string
+                                name:
+                                  description: Name is the name of the referenced
+                                    object.
+                                  minLength: 1
+                                  type: string
+                                namespace:
+                                  description: Namespace is reserved for future cross-namespace
+                                    support.
+                                  type: string
+                              required:
+                              - name
+                              type: object
                             semanticDescription:
                               description: |-
                                 The semantic description of the target, required if using semantic load
@@ -4135,11 +4303,6 @@ spec:
                                 - Enabled
                                 - Disabled
                                 type: string
-                              statistics:
-                                enum:
-                                - Enabled
-                                - Disabled
-                                type: string
                             type: object
                           maxRequestBodySize:
                             description: Maximum size of request body to parse. Set
@@ -4150,16 +4313,6 @@ spec:
                               **Pre-release Feature**
                               This feature is currently in beta and is subject to change.
                             properties:
-                              alias:
-                                description: |-
-                                  **Pre-release Feature**
-                                  This feature is currently in beta and is subject to change.
-
-                                  An alias for the model, used to select the target virtual model when passed
-                                  in the "model" parameter of the request body.
-                                  When not set, this defaults to the AI Gateway model's name.
-                                maxLength: 253
-                                type: string
                               nameHeader:
                                 description: |-
                                   **Pre-release Feature**
@@ -4286,6 +4439,89 @@ spec:
                                 items:
                                   type: string
                                 type: array
+                              model:
+                                description: |-
+                                  Configuration for overriding routing to this model using a selector.
+                                  When not set, a default model selector will be created using the model's
+                                  name and format.
+                                properties:
+                                  body:
+                                    description: Body configuration.
+                                    properties:
+                                      bodyParam:
+                                        description: The body property name to match
+                                          for routing.
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      values:
+                                        description: |-
+                                          The list of values that are matched against the body property value.
+                                          If the body property value matches any of the specified values, the request
+                                          will be routed to the corresponding model.
+                                        items:
+                                          type: string
+                                        maxItems: 1
+                                        type: array
+                                    required:
+                                    - bodyParam
+                                    - values
+                                    type: object
+                                  headers:
+                                    description: Headers configuration.
+                                    properties:
+                                      headerParam:
+                                        description: The header property name to match
+                                          for routing.
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      values:
+                                        description: |-
+                                          The list of values that are matched against the header property value.
+                                          If the header property value matches any of the specified values, the
+                                          request will be routed to the corresponding model.
+                                        items:
+                                          type: string
+                                        maxItems: 1
+                                        type: array
+                                    required:
+                                    - headerParam
+                                    - values
+                                    type: object
+                                  path:
+                                    description: Path configuration.
+                                    properties:
+                                      pathParam:
+                                        description: The path param name to match
+                                          for routing.
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      values:
+                                        description: |-
+                                          The list of values that are matched against the path param value.
+                                          If the path param value matches any of the specified values, the request
+                                          will be routed to the corresponding model.
+                                        items:
+                                          type: string
+                                        maxItems: 1
+                                        type: array
+                                    required:
+                                    - pathParam
+                                    - values
+                                    type: object
+                                  type:
+                                    description: Type designates the type of configuration.
+                                    enum:
+                                    - body
+                                    - headers
+                                    - path
+                                    minLength: 1
+                                    type: string
+                                required:
+                                - type
+                                type: object
                               paths:
                                 description: A list of paths that match this route.
                                 items:
@@ -4384,6 +4620,7 @@ spec:
                               - gemini
                               - huggingface
                               - openai
+                              - vertex
                               maxLength: 253
                               type: string
                           type: object
@@ -5242,6 +5479,95 @@ spec:
                                       maxLength: 253
                                       type: string
                                   type: object
+                                sagemaker:
+                                  description: Sagemaker configuration.
+                                  properties:
+                                    aws:
+                                      description: |-
+                                        **Pre-release Feature**
+                                        This feature is currently in beta and is subject to change.
+                                      properties:
+                                        assumeRoleArn:
+                                          description: |-
+                                            Assume a different IAM role after authenticating; mutually required with
+                                            role_session_name.
+                                          maxLength: 253
+                                          type: string
+                                        region:
+                                          description: Overrides the AWS_REGION environment
+                                            variable for SageMaker requests.
+                                          maxLength: 253
+                                          type: string
+                                        roleSessionName:
+                                          description: |-
+                                            Session identifier for the assumed role; mutually required with
+                                            assume_role_arn.
+                                          maxLength: 253
+                                          type: string
+                                        stsEndpointURL:
+                                          description: Overrides the STS endpoint
+                                            when assuming a role.
+                                          maxLength: 253
+                                          type: string
+                                      type: object
+                                    embeddingsDimensions:
+                                      description: The number of dimensions for embedding
+                                        outputs.
+                                      type: integer
+                                    inputCost:
+                                      description: Cost per input token for billing
+                                        and cost tracking.
+                                      type: number
+                                    maxTokens:
+                                      description: The maximum number of tokens to
+                                        generate in the response.
+                                      type: integer
+                                    outputCost:
+                                      description: Cost per output token for billing
+                                        and cost tracking.
+                                      type: number
+                                    target:
+                                      description: AIGatewayTargetSagemakerConfigTarget
+                                        is a type alias.
+                                      properties:
+                                        containerHostname:
+                                          description: |-
+                                            Sets the X-Amzn-SageMaker-Target-Container-Hostname header
+                                            (multi-container).
+                                          maxLength: 253
+                                          type: string
+                                        model:
+                                          description: Sets the X-Amzn-SageMaker-Target-Model
+                                            header (multi-model endpoints).
+                                          maxLength: 253
+                                          type: string
+                                        variant:
+                                          description: Sets the X-Amzn-SageMaker-Target-Variant
+                                            header (A/B variant testing).
+                                          maxLength: 253
+                                          type: string
+                                      type: object
+                                    temperature:
+                                      description: |-
+                                        Controls randomness in the model output.
+                                        Higher values produce more varied responses.
+                                      type: number
+                                    topK:
+                                      description: |-
+                                        Limits the number of highest-probability tokens considered during
+                                        generation.
+                                      type: integer
+                                    topP:
+                                      description: |-
+                                        Nucleus sampling probability mass.
+                                        Tokens with cumulative probability up to top_p are considered.
+                                      type: number
+                                    upstreamURL:
+                                      description: The upstream URL for the model
+                                        endpoint.
+                                      maxLength: 253
+                                      type: string
+                                  type: object
                                 type:
                                   description: Type designates the type of configuration.
                                   enum:
@@ -5260,6 +5586,7 @@ spec:
                                   - mistral
                                   - ollama
                                   - openai
+                                  - sagemaker
                                   - vercel
                                   - vertex
                                   - vllm
@@ -5332,7 +5659,6 @@ spec:
                                             This must be set when running a target model on Gemini on Vertex Model
                                             Garden.
                                           maxLength: 253
-                                          minLength: 1
                                           type: string
                                         locationID:
                                           description: The Google Cloud location ID
@@ -5348,7 +5674,6 @@ spec:
                                           type: string
                                       required:
                                       - apiEndpoint
-                                      - endpointID
                                       - locationID
                                       - projectID
                                       type: object
@@ -5481,9 +5806,26 @@ spec:
                             provider:
                               description: Reference to a model provider instance
                                 by name.
-                              maxLength: 253
-                              minLength: 1
-                              type: string
+                              properties:
+                                kind:
+                                  default: AIGatewayModelProvider
+                                  description: Kind is the kind of the referenced
+                                    object.
+                                  enum:
+                                  - AIGatewayModelProvider
+                                  type: string
+                                name:
+                                  description: Name is the name of the referenced
+                                    object.
+                                  minLength: 1
+                                  type: string
+                                namespace:
+                                  description: Namespace is reserved for future cross-namespace
+                                    support.
+                                  type: string
+                              required:
+                              - name
+                              type: object
                             semanticDescription:
                               description: |-
                                 The semantic description of the target, required if using semantic load

@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: eventgatewayvirtualclusterconsumepolicies.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -450,30 +450,24 @@ spec:
                               schemaRegistry:
                                 description: A reference to a schema Registry.
                                 properties:
-                                  id:
-                                    description: ID configuration.
-                                    type: object
-                                  name:
-                                    description: Name configuration.
-                                    properties:
-                                      name:
-                                        description: The unique name of the schema
-                                          registry.
-                                        maxLength: 255
-                                        minLength: 1
-                                        type: string
-                                    required:
-                                    - name
-                                    type: object
-                                  type:
-                                    description: Type designates the type of configuration.
+                                  kind:
+                                    default: EventGatewaySchemaRegistry
+                                    description: Kind is the kind of the referenced
+                                      object.
                                     enum:
-                                    - id
-                                    - name
+                                    - EventGatewaySchemaRegistry
+                                    type: string
+                                  name:
+                                    description: Name is the name of the referenced
+                                      object.
                                     minLength: 1
                                     type: string
+                                  namespace:
+                                    description: Namespace is reserved for future
+                                      cross-namespace support.
+                                    type: string
                                 required:
-                                - type
+                                - name
                                 type: object
                               validateKey:
                                 description: |-
@@ -547,30 +541,24 @@ spec:
                               schemaRegistry:
                                 description: A reference to a schema Registry.
                                 properties:
-                                  id:
-                                    description: ID configuration.
-                                    type: object
-                                  name:
-                                    description: Name configuration.
-                                    properties:
-                                      name:
-                                        description: The unique name of the schema
-                                          registry.
-                                        maxLength: 255
-                                        minLength: 1
-                                        type: string
-                                    required:
-                                    - name
-                                    type: object
-                                  type:
-                                    description: Type designates the type of configuration.
+                                  kind:
+                                    default: EventGatewaySchemaRegistry
+                                    description: Kind is the kind of the referenced
+                                      object.
                                     enum:
-                                    - id
-                                    - name
+                                    - EventGatewaySchemaRegistry
+                                    type: string
+                                  name:
+                                    description: Name is the name of the referenced
+                                      object.
                                     minLength: 1
                                     type: string
+                                  namespace:
+                                    description: Namespace is reserved for future
+                                      cross-namespace support.
+                                    type: string
                                 required:
-                                - type
+                                - name
                                 type: object
                               validateKey:
                                 description: |-

@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: aigatewaydataplanes.aigateway.konghq.com
 spec:
   group: aigateway.konghq.com
@@ -99,6 +99,22 @@ spec:
                   Deployment configures the AI Gateway Deployment: image, replicas, resources,
                   extra env vars, volume mounts, etc.
                 properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Annotations are custom annotations that are propagated to the AI Gateway
+                      Deployment metadata by the operator.
+                    maxProperties: 64
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Labels are custom labels that are propagated to the AI Gateway Deployment
+                      metadata by the operator.
+                    maxProperties: 64
+                    type: object
                   podTemplateSpec:
                     description: |-
                       PodTemplateSpec defines PodTemplateSpec for Deployment's pods.

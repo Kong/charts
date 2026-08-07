@@ -9,16 +9,17 @@ metadata:
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
     kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
-  name: eventgatewaylisteners.configuration.konghq.com
+  name: konnectconfigstores.konnect.konghq.com
 spec:
-  group: configuration.konghq.com
+  group: konnect.konghq.com
   names:
     categories:
+    - konnect
     - kong
-    kind: EventGatewayListener
-    listKind: EventGatewayListenerList
-    plural: eventgatewaylisteners
-    singular: eventgatewaylistener
+    kind: KonnectConfigStore
+    listKind: KonnectConfigStoreList
+    plural: konnectconfigstores
+    singular: konnectconfigstore
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -40,7 +41,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: EventGatewayListener is the Schema for the eventgatewaylisteners
+        description: KonnectConfigStore is the Schema for the konnectconfigstores
           API.
         properties:
           apiVersion:
@@ -61,70 +62,20 @@ spec:
           metadata:
             type: object
           spec:
-            description: EventGatewayListenerSpec defines the desired state of EventGatewayListener.
+            description: KonnectConfigStoreSpec defines the desired state of KonnectConfigStore.
             properties:
               apiSpec:
                 description: APISpec defines the desired state of the resource's API
                   spec fields.
                 properties:
-                  addresses:
-                    description: |-
-                      Which address or addresses to listen on.
-                      `0.0.0.0` means all addresses on the host.
-                      `::` means all addresses on the host in IPv6.
-
-                      If `0.0.0.0` or `::` is used, there can't be other extra addresses defined.
-                      WARNING: there are use cases where listening on all addresses is insecure.
-                      So use this with caution.
-
-                      `localhost` means only the localhost ipv4 address.
-                    items:
-                      type: string
-                    type: array
-                  description:
-                    description: A human-readable description of the listener.
-                    maxLength: 512
-                    type: string
-                  labels:
-                    additionalProperties:
-                      description: LabelsValue is the value type for Labels.
-                      maxLength: 63
-                      minLength: 1
-                      pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
-                      type: string
-                    description: |-
-                      Labels store metadata of an entity that can be used for filtering an entity
-                      list or for searching across entity types.
-
-                      Keys must be of length 1-63 characters, and cannot start with "kong",
-                      "konnect", "mesh", "kic", or "_".
-                    type: object
                   name:
-                    description: The unique name of the listener.
-                    maxLength: 255
+                    maxLength: 100
                     minLength: 1
                     type: string
-                  ports:
-                    description: |-
-                      Which port or ports to listen on.
-                      There can be multiple ways to define ports:
-                      - as a single port, e.g. 9092
-                      - as a range of ports, e.g. 9092-9094
-
-                      It's possible to combine both, e.g. [9092, "9093-9095", 9096].
-                    items:
-                      anyOf:
-                      - type: integer
-                      - type: string
-                      x-kubernetes-int-or-string: true
-                    type: array
-                required:
-                - addresses
-                - name
-                - ports
                 type: object
-              gatewayRef:
-                description: GatewayRef is the reference to the parent Gateway object.
+              controlPlaneRef:
+                description: ControlPlaneRef is the reference to the parent ControlPlane
+                  object.
                 properties:
                   konnectID:
                     description: |-
@@ -179,11 +130,10 @@ spec:
                 - message: when type is konnectID, namespacedRef must not be set
                   rule: 'self.type == ''konnectID'' ? !has(self.namespacedRef) : true'
             required:
-            - gatewayRef
+            - controlPlaneRef
             type: object
           status:
-            description: EventGatewayListenerStatus defines the observed state of
-              EventGatewayListener.
+            description: KonnectConfigStoreStatus defines the observed state of KonnectConfigStore.
             properties:
               conditions:
                 description: Conditions represent the current state of the resource.
@@ -246,8 +196,8 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
-              gatewayID:
-                description: GatewayID is the Konnect ID of the parent Gateway.
+              controlPlaneID:
+                description: ControlPlaneID is the Konnect ID of the parent ControlPlane.
                 properties:
                   id:
                     description: ID is the unique identifier of the Konnect entity

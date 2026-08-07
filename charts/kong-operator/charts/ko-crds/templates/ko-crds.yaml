@@ -56,7 +56,7 @@ metadata:
 {{ end }}
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: controlplanes.gateway-operator.konghq.com
 spec:
 {{ if .Values.global.webhooks.conversion.enabled }}
@@ -9502,7 +9502,7 @@ metadata:
 {{ end }}
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: gatewayconfigurations.gateway-operator.konghq.com
 spec:
 {{ if .Values.global.webhooks.conversion.enabled }}
@@ -18340,6 +18340,36 @@ spec:
                       DataPlaneDeploymentOptions specifies options for the Deployments (as in the Kubernetes
                       resource "Deployment") which are created and managed for the DataPlane resource.
                     properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Annotations are custom annotations that are propagated to the DataPlane
+                          Deployment metadata by the operator.
+                        maxProperties: 64
+                        type: object
+                      hardened:
+                        default: disabled
+                        description: |-
+                          Hardened indicates whether the operator should apply a hardened
+                          security context (non-root user, read-only root filesystem, dropped
+                          capabilities) and the related volumes and environment variables to
+                          the DataPlane's proxy container.
+
+                          Enabling this on an existing DataPlane causes a rolling restart of
+                          its Pods.
+                        enum:
+                        - enabled
+                        - disabled
+                        type: string
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Labels are custom labels that are propagated to the DataPlane Deployment
+                          metadata by the operator.
+                        maxProperties: 64
+                        type: object
                       podTemplateSpec:
                         description: |-
                           PodTemplateSpec defines PodTemplateSpec for Deployment's pods.
@@ -28576,6 +28606,36 @@ spec:
                       DataPlaneDeploymentOptions specifies options for the Deployments (as in the Kubernetes
                       resource "Deployment") which are created and managed for the DataPlane resource.
                     properties:
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Annotations are custom annotations that are propagated to the DataPlane
+                          Deployment metadata by the operator.
+                        maxProperties: 64
+                        type: object
+                      hardened:
+                        default: disabled
+                        description: |-
+                          Hardened indicates whether the operator should apply a hardened
+                          security context (non-root user, read-only root filesystem, dropped
+                          capabilities) and the related volumes and environment variables to
+                          the DataPlane's proxy container.
+
+                          Enabling this on an existing DataPlane causes a rolling restart of
+                          its Pods.
+                        enum:
+                        - enabled
+                        - disabled
+                        type: string
+                      labels:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Labels are custom labels that are propagated to the DataPlane Deployment
+                          metadata by the operator.
+                        maxProperties: 64
+                        type: object
                       podTemplateSpec:
                         description: |-
                           PodTemplateSpec defines PodTemplateSpec for Deployment's pods.
@@ -38467,7 +38527,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: konnectextensions.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -39293,7 +39353,7 @@ metadata:
 {{ end }}
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: konnectgatewaycontrolplanes.konnect.konghq.com
 spec:
 {{ if .Values.global.webhooks.conversion.enabled }}

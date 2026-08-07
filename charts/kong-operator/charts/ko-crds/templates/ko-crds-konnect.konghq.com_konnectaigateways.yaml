@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.2
+    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
   name: konnectaigateways.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -267,6 +267,10 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              configVersion:
+                description: ConfigVersion contains the ConfigVersion returned by
+                  the Konnect API.
+                type: string
               endpoints:
                 description: Endpoints contains the Endpoints returned by the Konnect
                   API.
