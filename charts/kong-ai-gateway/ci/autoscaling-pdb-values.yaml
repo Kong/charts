@@ -1,0 +1,30 @@
+# Exercise autoscaling + PodDisruptionBudget rendering together.
+replicaCount: 2
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 4
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: "50%"
+  unhealthyPodEvictionPolicy: AlwaysAllow
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# NOTE: The purpose of those values below is to:
+# - to speed up the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"

@@ -1,0 +1,26 @@
+{{- if .Values.deployment.test.enabled }}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-test-proxy-reachable"
+  annotations:
+    "helm.sh/hook": test
+spec:
+  restartPolicy: OnFailure
+  containers:
+    - name: "{{ .Release.Name }}-curl"
+      image: curlimages/curl
+      # This only checks that the AI Gateway container is accepting connections
+      # on its proxy listener; it does not assert on routing behavior, since
+      # that depends on configuration streamed from a live Konnect AI Gateway
+      # control plane.
+      command:
+        - curl
+        - "--silent"
+        - "--show-error"
+        - "--output"
+        - "/dev/null"
+        - "--insecure"
+        - "https://{{ template "kong.fullname" . }}-proxy.{{ .Release.Namespace }}.svc.cluster.local:443/"
+{{- end }}

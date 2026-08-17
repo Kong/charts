@@ -1,0 +1,25 @@
+# Minimal configuration for Kong AI Gateway as a Konnect hybrid-mode data
+# plane, using cert-manager to issue the mTLS client certificate instead of
+# providing your own Secret. Requires cert-manager to already be installed
+# in the cluster, and an Issuer/ClusterIssuer whose CA Konnect is configured
+# to trust for this control plane.
+#
+# Search "CHANGEME" below to find the values that must be set to your own
+# Konnect AI Gateway control plane's connection details.
+
+env:
+  cluster_control_plane: CHANGEME-control-plane-endpoint.konghq.com:443
+  cluster_server_name: CHANGEME-control-plane-endpoint.konghq.com
+  cluster_telemetry_endpoint: CHANGEME-telemetry-endpoint.konghq.com:443
+  cluster_telemetry_server_name: CHANGEME-telemetry-endpoint.konghq.com
+  # cert-manager mounts the certificate at this path instead of the
+  # /etc/secrets/<name>/ path used by the secretVolumes/BYO-secret approach.
+  cluster_cert: /etc/cert-manager/cluster/tls.crt
+  cluster_cert_key: /etc/cert-manager/cluster/tls.key
+
+certificates:
+  enabled: true
+  issuer: CHANGEME-cert-manager-issuer
+  cluster:
+    enabled: true
+    commonName: CHANGEME-common-name

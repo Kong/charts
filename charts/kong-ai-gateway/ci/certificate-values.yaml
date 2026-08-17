@@ -1,0 +1,16 @@
+# Enable cert-manager integration for the Konnect mTLS client certificate,
+# instead of a user-provided Secret.
+certificates:
+  enabled: true
+  cluster:
+    enabled: true
+
+# NOTE: The purpose of those values below is to:
+# - to speed up the test
+# - to prevent anonymous reports from being sent
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"

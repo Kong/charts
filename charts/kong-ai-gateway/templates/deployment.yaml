@@ -1,0 +1,251 @@
+{{- if .Values.deployment.kong.enabled }}
+apiVersion: apps/v1
+{{- if .Values.deployment.daemonset }}
+kind: DaemonSet
+{{- else }}
+kind: Deployment
+{{- end }}
+metadata:
+  name: {{ template "kong.fullname" . }}
+  namespace:  {{ template "kong.namespace" . }}
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+    app.kubernetes.io/component: app
+  {{- if .Values.deploymentAnnotations }}
+  annotations:
+  {{- range $key, $value := .Values.deploymentAnnotations }}
+    {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote }}
+  {{- end }}
+  {{- end }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  {{- if not .Values.deployment.daemonset }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.deployment.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "kong.selectorLabels" . | nindent 6 }}
+  {{- if .Values.updateStrategy }}
+  {{- if .Values.deployment.daemonset }}
+  updateStrategy:
+  {{- else }}
+  strategy:
+  {{- end }}
+{{ toYaml .Values.updateStrategy | indent 4 }}
+  {{- end }}
+  {{- if .Values.deployment.minReadySeconds }}
+  minReadySeconds: {{ .Values.deployment.minReadySeconds }}
+  {{- end }}
+
+  template:
+    metadata:
+      annotations:
+        {{- if (and (not .Values.deployment.serviceAccount.automountServiceAccountToken) (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name)) }}
+        kuma.io/service-account-token-volume: {{ template "kong.serviceAccountTokenName" . }}
+        {{- end }}
+        {{- if .Values.podAnnotations }}
+        {{- range $key, $value := .Values.podAnnotations }}
+        {{ $key }}: {{ include "kong.renderTpl" (dict "value" $value "context" $) | quote }}
+        {{- end }}
+        {{- end }}
+      labels:
+        {{- include "kong.metaLabels" . | nindent 8 }}
+        app.kubernetes.io/component: app
+        app: {{ template "kong.fullname" . }}
+        {{ $version := semver (include "kong.effectiveVersion" .Values.image) }}
+        version: {{ printf "%d.%d" $version.Major $version.Minor | quote }}
+        {{- if .Values.podLabels }}
+        {{ include "kong.renderTpl" (dict "value" .Values.podLabels "context" $) | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.deployment.hostname }}
+      hostname: {{ .Values.deployment.hostname }}
+      {{- end }}
+      {{- if .Values.deployment.hostNetwork }}
+      hostNetwork: true
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+      {{- end }}
+      {{- if or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name }}
+      serviceAccountName: {{ template "kong.serviceAccountName" . }}
+      {{- end }}
+      {{- if (and (or .Values.deployment.serviceAccount.create .Values.deployment.serviceAccount.name) .Values.deployment.serviceAccount.automountServiceAccountToken) }}
+      automountServiceAccountToken: true
+      {{- else }}
+      automountServiceAccountToken: false
+      {{ end }}
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end }}
+      {{- end }}
+      {{- if .Values.deployment.kong.enabled }}
+      initContainers:
+      {{- if .Values.deployment.kong.initContainers.clearStalePid.enabled }}
+      {{- $clearStalePid := .Values.deployment.kong.initContainers.clearStalePid }}
+      {{- $clearStalePidImage := default .Values.image $clearStalePid.image }}
+      - name: clear-stale-pid
+        image: {{ include "kong.getRepoTag" $clearStalePidImage }}
+        imagePullPolicy: {{ default .Values.image.pullPolicy $clearStalePidImage.pullPolicy }}
+        {{- if .Values.containerSecurityContext.enabled }}
+        securityContext:
+        {{ toYaml (omit .Values.containerSecurityContext "enabled") | nindent 10 }}
+        {{- end }}
+        resources:
+{{ toYaml (default .Values.resources .Values.initContainerResources) | indent 10 }}
+        command:
+        {{- toYaml $clearStalePid.command | nindent 8 }}
+        env:
+        {{- include "kong.env" . | nindent 8 }}
+        {{- include "kong.envFrom" .Values.envFrom | nindent 8 }}
+        volumeMounts:
+        {{- include "kong.volumeMounts" . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.deployment.initContainers }}
+      {{- toYaml .Values.deployment.initContainers | nindent 6 }}
+      {{- end }}
+      {{- end }}
+      {{- if .Values.deployment.hostAliases }}
+      hostAliases:
+        {{- toYaml .Values.deployment.hostAliases | nindent 6 }}
+      {{- end}}
+      {{- if .Values.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.dnsConfig | indent 8 }}
+      {{- end }}
+      containers:
+      {{- if .Values.deployment.sidecarContainers }}
+      {{- toYaml .Values.deployment.sidecarContainers | nindent 6 }}
+      {{- end }}
+      {{- if .Values.deployment.kong.enabled }}
+      - name: "proxy"
+        image: {{ include "kong.getRepoTag" .Values.image }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.containerSecurityContext.enabled }}
+        securityContext:
+        {{ toYaml (omit .Values.containerSecurityContext "enabled") | nindent 10 }}
+        {{- end }}
+        env:
+        {{- include "kong.no_daemon_env" . | nindent 8 }}
+        {{- include "kong.envFrom" .Values.envFrom | nindent 8 }}
+        lifecycle:
+          {{- toYaml .Values.lifecycle | nindent 10 }}
+        ports:
+        {{- if (and .Values.admin.http.enabled .Values.admin.enabled) }}
+        - name: admin
+          containerPort: {{ .Values.admin.http.containerPort }}
+          {{- if .Values.admin.http.hostPort }}
+          hostPort: {{ .Values.admin.http.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
+        {{- if (and .Values.admin.tls.enabled .Values.admin.enabled) }}
+        - name: admin-tls
+          containerPort: {{ .Values.admin.tls.containerPort }}
+          {{- if .Values.admin.tls.hostPort }}
+          hostPort: {{ .Values.admin.tls.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
+        {{- if (and .Values.proxy.http.enabled .Values.proxy.enabled) }}
+        - name: proxy
+          containerPort: {{ .Values.proxy.http.containerPort }}
+          {{- if .Values.proxy.http.hostPort }}
+          hostPort: {{ .Values.proxy.http.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
+        {{- if (and .Values.proxy.tls.enabled .Values.proxy.enabled)}}
+        - name: proxy-tls
+          containerPort: {{ .Values.proxy.tls.containerPort }}
+          {{- if .Values.proxy.tls.hostPort }}
+          hostPort: {{ .Values.proxy.tls.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
+        {{- range .Values.proxy.stream }}
+        - name: stream{{ if (eq (default "TCP" .protocol) "UDP") }}udp{{ end }}-{{ .containerPort }}
+          containerPort: {{ .containerPort }}
+          {{- if .hostPort }}
+          hostPort: {{ .hostPort }}
+          {{- end}}
+          protocol: {{ .protocol }}
+        {{- end }}
+        {{- range .Values.udpProxy.stream }}
+        - name: streamudp-{{ .containerPort }}
+          containerPort: {{ .containerPort }}
+          {{- if .hostPort }}
+          hostPort: {{ .hostPort }}
+          {{- end}}
+          protocol: {{ .protocol }}
+        {{- end }}
+        {{- if (and .Values.status.http.enabled .Values.status.enabled)}}
+        - name: status
+          containerPort: {{ .Values.status.http.containerPort }}
+          {{- if .Values.status.http.hostPort }}
+          hostPort: {{ .Values.status.http.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
+        {{- if (and .Values.status.tls.enabled .Values.status.enabled) }}
+        - name: status-tls
+          containerPort: {{ .Values.status.tls.containerPort }}
+          {{- if .Values.status.tls.hostPort }}
+          hostPort: {{ .Values.status.tls.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
+        {{- if (and .Values.cluster.tls.enabled .Values.cluster.enabled) }}
+        - name: cluster-tls
+          containerPort: {{ .Values.cluster.tls.containerPort }}
+          {{- if .Values.cluster.tls.hostPort }}
+          hostPort: {{ .Values.cluster.tls.hostPort }}
+          {{- end}}
+          protocol: TCP
+        {{- end }}
+        volumeMounts:
+        {{- include "kong.volumeMounts" . | nindent 10 }}
+        {{- include "kong.userDefinedVolumeMounts" .Values.deployment | nindent 10 }}
+        readinessProbe:
+{{ include "kong.proxy.compatibleReadiness" . | indent 10 }}
+        livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 10 }}
+        {{- if .Values.startupProbe }}
+        startupProbe:
+{{ toYaml .Values.startupProbe | indent 10 }}
+        {{- end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        {{- end }} {{/* End of Kong container spec */}}
+    {{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+    {{- end }}
+    {{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+{{ toYaml .Values.topologySpreadConstraints | indent 8 }}
+    {{- end }}
+      securityContext:
+      {{- include "kong.podsecuritycontext" . | nindent 8 }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+    {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+    {{- end }}
+      volumes:
+      {{- include "kong.volumes" . | nindent 8 -}}
+      {{- include "kong.userDefinedVolumes" . | nindent 8 -}}
+{{- end }}
