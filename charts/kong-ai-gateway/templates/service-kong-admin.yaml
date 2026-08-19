@@ -1,0 +1,49 @@
+{{- if .Values.deployment.kong.enabled }}
+{{- if and .Values.admin.enabled (or .Values.admin.http.enabled .Values.admin.tls.enabled) -}}
+{{- $serviceConfig := dict -}}
+{{- $serviceConfig := merge $serviceConfig .Values.admin -}}
+{{- $_ := set $serviceConfig "ingressVersion" (include "kong.ingressVersion" .) -}}
+{{- $_ := set $serviceConfig "fullName" (include "kong.fullname" .) -}}
+{{- $_ := set $serviceConfig "namespace" (include "kong.namespace" .) -}}
+{{- $_ := set $serviceConfig "metaLabels" (include "kong.metaLabels" .) -}}
+{{- $_ := set $serviceConfig "selectorLabels" (include "kong.selectorLabels" .) -}}
+{{- $_ := set $serviceConfig "serviceName" "admin" -}}
+{{- include "kong.service" $serviceConfig }}
+{{ if .Values.admin.ingress.enabled }}
+---
+{{ include "kong.ingress" $serviceConfig }}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- /* Create a CA ConfigMap for Kong. */ -}}
+{{- $secretProvided := $.Values.admin.tls.client.secretName -}}
+{{- $bundleProvided := $.Values.admin.tls.client.caBundle -}}
+
+{{- if or $secretProvided $bundleProvided -}}
+{{- $cert := "" -}}
+
+{{- if $secretProvided -}}
+{{- $certSecret := (lookup "v1" "Secret" (include "kong.namespace" .) $.Values.admin.tls.client.secretName) -}}
+{{- if $certSecret }}
+{{- $cert = (b64dec (get $certSecret.data "tls.crt")) -}}
+{{- else -}}
+{{- fail (printf "%s/%s secret not found" (include "kong.namespace" .) $.Values.admin.tls.client.secretName) -}}
+{{- end }}
+{{- end }}
+
+{{- if $bundleProvided -}}
+{{- $cert = $.Values.admin.tls.client.caBundle -}}
+{{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "kong.fullname" . }}-admin-client-ca
+  namespace: {{ template "kong.namespace" . }}
+  labels:
+    {{- include "kong.metaLabels" . | nindent 4 }}
+data:
+  tls.crt: {{ $cert | quote }}
+{{- end -}}

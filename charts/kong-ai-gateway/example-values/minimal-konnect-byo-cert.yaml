@@ -1,0 +1,26 @@
+# Minimal configuration for Kong AI Gateway as a Konnect hybrid-mode data
+# plane, using a user-provided mTLS client certificate Secret.
+#
+# Before installing:
+# 1. Create the Konnect AI Gateway control plane in Konnect and copy its
+#    "cluster_control_plane" / "cluster_telemetry_endpoint" hostnames from
+#    its connection details.
+# 2. Download the control plane's generated client certificate/key pair (or
+#    generate your own signed by the CA Konnect expects) and create a Secret
+#    from it, e.g.:
+#      kubectl create secret tls kong-cluster-cert \
+#        --cert=./tls.crt --key=./tls.key
+#
+# Search "CHANGEME" below to find the values that must be set to your own
+# Konnect AI Gateway control plane's connection details.
+
+env:
+  cluster_control_plane: CHANGEME-control-plane-endpoint.konghq.com:443
+  cluster_server_name: CHANGEME-control-plane-endpoint.konghq.com
+  cluster_telemetry_endpoint: CHANGEME-telemetry-endpoint.konghq.com:443
+  cluster_telemetry_server_name: CHANGEME-telemetry-endpoint.konghq.com
+  cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
+  cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
+
+secretVolumes:
+- kong-cluster-cert

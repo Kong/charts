@@ -1,0 +1,40 @@
+Kong AI Gateway has been deployed as a hybrid-mode data plane.
+
+Check that the pod becomes ready and successfully connects to your Konnect AI
+Gateway control plane:
+
+  kubectl get pods --namespace {{ template "kong.namespace" . }} -l app.kubernetes.io/instance={{ .Release.Name }}
+  kubectl logs --namespace {{ template "kong.namespace" . }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+To connect to the AI Gateway ingress listener, please execute the following commands:
+{{ if contains "LoadBalancer" .Values.proxy.type }}
+HOST=$(kubectl get svc --namespace {{ template "kong.namespace" . }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+PORT=$(kubectl get svc --namespace {{ template "kong.namespace" . }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.spec.ports[0].port}')
+{{ else if contains "NodePort" .Values.proxy.type }}HOST=$(kubectl get nodes --namespace {{ template "kong.namespace" . }} -o jsonpath='{.items[0].status.addresses[0].address}')
+PORT=$(kubectl get svc --namespace {{ template "kong.namespace" . }} {{ template "kong.fullname" . }}-proxy -o jsonpath='{.spec.ports[0].nodePort}')
+{{ end -}}
+export PROXY_IP=${HOST}:${PORT}
+curl $PROXY_IP
+
+This chart requires a Konnect AI Gateway control plane to already exist and a
+client mTLS certificate/key to be provided via `env.cluster_cert` /
+`env.cluster_cert_key` (see `secretVolumes` and the chart README for details).
+Without a valid Konnect connection, the pod will not become Ready.
+
+{{ $warnings := list -}}
+
+{{- include "kong.deprecation-warnings" $warnings -}}
+
+{{- if .Values.demo -}}
+
+#############################################################################################
+##### WARNING: DEMO VALUES USED
+#############################################################################################
+
+The values file used has been marked as a demo configuration.
+It should NOT be used in production without comprehensive review of all settings provided.
+
+#############################################################################################
+##### WARNING: DEMO VALUES USED
+#############################################################################################
+{{- end -}}
