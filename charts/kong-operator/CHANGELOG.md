@@ -1,19 +1,5 @@
 # Changelog
 
-## 1.4.0-rc.2
-
-### Changed
-
-- Bump default image to `2.3.0-rc.3`.
-
-## 1.4.0-rc.1
-
-### Changed
-
-- Bump default image to `2.3.0-rc.2`.
-- Bump Gateway API CRDs subcharts (`gwapi-standard-crds`, `gwapi-experimental-crds`)
-  to `1.6.1`.
-
 ## 1.3.1
 
 ### Changed

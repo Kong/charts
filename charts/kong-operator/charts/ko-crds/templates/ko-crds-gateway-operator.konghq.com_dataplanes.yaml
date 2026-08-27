@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
+    kubernetes-configuration.konghq.com/version: v2.2.4
   name: dataplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -62,36 +62,6 @@ spec:
                   DataPlaneDeploymentOptions specifies options for the Deployments (as in the Kubernetes
                   resource "Deployment") which are created and managed for the DataPlane resource.
                 properties:
-                  annotations:
-                    additionalProperties:
-                      type: string
-                    description: |-
-                      Annotations are custom annotations that are propagated to the DataPlane
-                      Deployment metadata by the operator.
-                    maxProperties: 64
-                    type: object
-                  hardened:
-                    default: disabled
-                    description: |-
-                      Hardened indicates whether the operator should apply a hardened
-                      security context (non-root user, read-only root filesystem, dropped
-                      capabilities) and the related volumes and environment variables to
-                      the DataPlane's proxy container.
-
-                      Enabling this on an existing DataPlane causes a rolling restart of
-                      its Pods.
-                    enum:
-                    - enabled
-                    - disabled
-                    type: string
-                  labels:
-                    additionalProperties:
-                      type: string
-                    description: |-
-                      Labels are custom labels that are propagated to the DataPlane Deployment
-                      metadata by the operator.
-                    maxProperties: 64
-                    type: object
                   podTemplateSpec:
                     description: |-
                       PodTemplateSpec defines PodTemplateSpec for Deployment's pods.
@@ -9515,19 +9485,6 @@ spec:
                             - Cluster
                             - Local
                             type: string
-                          internalTrafficPolicy:
-                            description: |-
-                              InternalTrafficPolicy describes how nodes distribute service traffic they
-                              receive on the ClusterIP. If set to "Local", the proxy will assume that pods
-                              only want to talk to endpoints of the service on the same node as the pod,
-                              dropping the traffic if there are no local endpoints. The default value,
-                              "Cluster", uses the standard behavior of routing to all endpoints evenly.
-
-                              More info: https://kubernetes.io/docs/concepts/services-networking/service/#internal-traffic-policy
-                            enum:
-                            - Cluster
-                            - Local
-                            type: string
                           labels:
                             additionalProperties:
                               description: LabelValue is a label value with constraints
@@ -9588,14 +9545,6 @@ spec:
                                     service.
                                   format: int32
                                   type: integer
-                                protocol:
-                                  default: TCP
-                                  description: The IP protocol for this port. Supports
-                                    "TCP" and "UDP". Defaults to "TCP".
-                                  enum:
-                                  - TCP
-                                  - UDP
-                                  type: string
                                 targetPort:
                                   anyOf:
                                   - type: integer
@@ -9615,21 +9564,6 @@ spec:
                               type: object
                             maxItems: 64
                             type: array
-                          trafficDistribution:
-                            description: |-
-                              TrafficDistribution offers a way to express preferences for how traffic is
-                              distributed to Service endpoints. Implementations can use this field as a
-                              hint, but are not required to guarantee strict adherence. If the field is
-                              not set, the implementation will apply its default routing strategy.
-
-                              "PreferSameZone" prioritizes endpoints in the same zone as the client.
-                              "PreferSameNode" prioritizes endpoints on the same node as the client.
-
-                              More info: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution
-                            enum:
-                            - PreferSameZone
-                            - PreferSameNode
-                            type: string
                           type:
                             default: LoadBalancer
                             description: |-

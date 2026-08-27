@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.0-rc.3
+    kubernetes-configuration.konghq.com/version: v2.2.4
   name: aigateways.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -28,10 +28,6 @@ spec:
       jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
-    deprecated: true
-    deprecationWarning: gateway-operator/v1alpha1 AIGateway (AI gateway v1) is deprecated
-      and will be removed in a future release. For Konnect enabled alternative please
-      use konnect.konghq.com/v1alpha1 AIGateway* (AI gateway v2) instead.
     name: v1alpha1
     schema:
       openAPIV3Schema:
