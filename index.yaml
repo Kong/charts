@@ -5314,6 +5314,23 @@ entries:
     version: 0.36.5
   kong-ai-gateway:
   - apiVersion: v2
+    appVersion: 2.0.3
+    created: "2026-09-01T16:26:16.661904295Z"
+    description: Kong AI Gateway data plane, connecting to a Konnect AI Gateway control
+      plane
+    digest: 73f8e9e1fe0f075ff06e92d278d2f254db76c10e8cbdee08e8ef9e1de9de92b0
+    home: https://konghq.com/
+    icon: https://s3.amazonaws.com/downloads.kong/universe/assets/icon-kong-inc-large.png
+    maintainers:
+    - email: team-k8s@konghq.com
+      name: team-k8s-bot
+    name: kong-ai-gateway
+    sources:
+    - https://github.com/Kong/charts/tree/main/charts/kong-ai-gateway
+    urls:
+    - https://github.com/Kong/charts/releases/download/kong-ai-gateway-0.2.0/kong-ai-gateway-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: 2.0.2-rc.2
     created: "2026-08-19T05:36:03.081183949Z"
     description: Kong AI Gateway data plane, connecting to a Konnect AI Gateway control
@@ -6090,4 +6107,4 @@ entries:
     urls:
     - https://github.com/Kong/charts/releases/download/kong-operator-0.0.1/kong-operator-0.0.1.tgz
     version: 0.0.1
-generated: "2026-08-19T05:36:03.081543653Z"
+generated: "2026-09-01T16:26:17.05326461Z"
