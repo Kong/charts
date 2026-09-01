@@ -8,11 +8,11 @@ maintainers:
 name: kong-operator
 sources:
   - https://github.com/Kong/kong-operator/charts/kong-operator/
-version: 1.4.0-rc.2
+version: 1.4.0
 appVersion: "2.3.0"
 annotations:
   artifacthub.io/category: networking
-  artifacthub.io/prerelease: "true"
+  artifacthub.io/prerelease: "false"
   artifacthub.io/operator: "true"
   artifacthub.io/operatorCapabilities: Seamless Upgrades
   artifacthub.io/links: |

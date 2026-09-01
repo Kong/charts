@@ -55,7 +55,7 @@ kind: Secret
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.4.0-rc.2
+    helm.sh/chart: kong-operator-1.4.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "2.3.0"
     a: "b"
@@ -107108,7 +107108,7 @@ kind: Deployment
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.4.0-rc.2
+    helm.sh/chart: kong-operator-1.4.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "2.3.0"
     a: "b"
@@ -107137,7 +107137,7 @@ spec:
       labels:
         control-plane: controller-manager
         app.kubernetes.io/name: kong-operator
-        helm.sh/chart: kong-operator-1.4.0-rc.2
+        helm.sh/chart: kong-operator-1.4.0
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/version: "2.3.0"
         a: "b"
@@ -107245,7 +107245,7 @@ kind: ValidatingWebhookConfiguration
 metadata:
   labels:
     app.kubernetes.io/name: kong-operator
-    helm.sh/chart: kong-operator-1.4.0-rc.2
+    helm.sh/chart: kong-operator-1.4.0
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/version: "2.3.0"
     a: "b"
