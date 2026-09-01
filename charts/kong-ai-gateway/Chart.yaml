@@ -8,5 +8,5 @@ maintainers:
 name: kong-ai-gateway
 sources:
   - https://github.com/Kong/charts/tree/main/charts/kong-ai-gateway
-version: 0.1.0
-appVersion: "2.0.2-rc.2"
+version: 0.2.0
+appVersion: "2.0.3"

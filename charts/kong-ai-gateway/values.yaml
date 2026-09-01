@@ -162,11 +162,9 @@ envFrom: []
 extraLabels: {}
 
 # Specify Kong AI Gateway's Docker image and repository details here.
-# NOTE: kong/kong-ai-gateway-dev is a pre-GA tag; revisit this default once a
-# stable kong/kong-ai-gateway GA image/tag is published.
 image:
-  repository: kong/kong-ai-gateway-dev
-  tag: "2.0.2-rc.2"
+  repository: kong/kong-ai-gateway
+  tag: "2.0.3"
 
   # Specify a semver version if your image tag is not one (e.g. "nightly")
   effectiveSemver:
