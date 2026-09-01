@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.4
+    kubernetes-configuration.konghq.com/version: v2.3.0
   name: kegdataplanes.eventgateway.konghq.com
 spec:
   group: eventgateway.konghq.com
@@ -215,6 +215,22 @@ spec:
                   Deployment configures the keg Deployment: image, replicas, resources,
                   extra env vars, volume mounts, etc.
                 properties:
+                  annotations:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Annotations are custom annotations that are propagated to the keg
+                      Deployment metadata by the operator.
+                    maxProperties: 64
+                    type: object
+                  labels:
+                    additionalProperties:
+                      type: string
+                    description: |-
+                      Labels are custom labels that are propagated to the keg Deployment
+                      metadata by the operator.
+                    maxProperties: 64
+                    type: object
                   podTemplateSpec:
                     description: |-
                       PodTemplateSpec defines PodTemplateSpec for Deployment's pods.
@@ -9505,6 +9521,19 @@ spec:
                             - Cluster
                             - Local
                             type: string
+                          internalTrafficPolicy:
+                            description: |-
+                              InternalTrafficPolicy describes how nodes distribute service traffic they
+                              receive on the ClusterIP. If set to "Local", the proxy will assume that pods
+                              only want to talk to endpoints of the service on the same node as the pod,
+                              dropping the traffic if there are no local endpoints. The default value,
+                              "Cluster", uses the standard behavior of routing to all endpoints evenly.
+
+                              More info: https://kubernetes.io/docs/concepts/services-networking/service/#internal-traffic-policy
+                            enum:
+                            - Cluster
+                            - Local
+                            type: string
                           labels:
                             additionalProperties:
                               description: LabelValue is a label value with constraints
@@ -9553,6 +9582,21 @@ spec:
                               type: object
                             maxItems: 64
                             type: array
+                          trafficDistribution:
+                            description: |-
+                              TrafficDistribution offers a way to express preferences for how traffic is
+                              distributed to Service endpoints. Implementations can use this field as a
+                              hint, but are not required to guarantee strict adherence. If the field is
+                              not set, the implementation will apply its default routing strategy.
+
+                              "PreferSameZone" prioritizes endpoints in the same zone as the client.
+                              "PreferSameNode" prioritizes endpoints on the same node as the client.
+
+                              More info: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution
+                            enum:
+                            - PreferSameZone
+                            - PreferSameNode
+                            type: string
                           type:
                             default: ClusterIP
                             description: |-
@@ -9578,6 +9622,49 @@ spec:
           status:
             description: Status defines the observed state of KegDataPlane.
             properties:
+              addresses:
+                description: |-
+                  Addresses lists the addresses of the Kafka Service.
+                  For LoadBalancer-type Services the list holds the externally-reachable
+                  hostname or IP once allocated, plus the ClusterIP(s). For other Service
+                  types it holds the ClusterIP(s) only.
+                items:
+                  description: Address describes a reachable address of the Kafka
+                    Service.
+                  properties:
+                    sourceType:
+                      description: SourceType of the address.
+                      enum:
+                      - PublicLoadBalancer
+                      - PrivateLoadBalancer
+                      - PublicIP
+                      - PrivateIP
+                      type: string
+                    type:
+                      default: IPAddress
+                      description: Type of the address.
+                      enum:
+                      - IPAddress
+                      - Hostname
+                      type: string
+                    value:
+                      description: |-
+                        Value of the address. The validity of the values will depend
+                        on the type and support by the controller.
+
+                        Examples: `1.2.3.4`, `128::1`, `my-ip-address`.
+                      maxLength: 253
+                      minLength: 1
+                      type: string
+                  required:
+                  - sourceType
+                  - value
+                  type: object
+                maxItems: 16
+                type: array
+                x-kubernetes-list-map-keys:
+                - value
+                x-kubernetes-list-type: map
               conditions:
                 default:
                 - lastTransitionTime: "1970-01-01T00:00:00Z"

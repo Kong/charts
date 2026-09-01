@@ -73,10 +73,84 @@ rules:
       - update
       - watch
   - apiGroups:
+      - aiconfiguration.konghq.com
+    resources:
+      - aigatewayagents
+      - aigatewayauthstrategies
+      - aigatewayconsumercredentials
+      - aigatewayconsumergroups
+      - aigatewayconsumers
+      - aigatewaymcpservers
+      - aigatewaymodelproviders
+      - aigatewaymodels
+      - aigatewaypolicies
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - aiconfiguration.konghq.com
+    resources:
+      - aigatewayagents/finalizers
+      - aigatewayagents/status
+      - aigatewayauthstrategies/finalizers
+      - aigatewayauthstrategies/status
+      - aigatewayconsumercredentials/finalizers
+      - aigatewayconsumercredentials/status
+      - aigatewayconsumergroups/finalizers
+      - aigatewayconsumergroups/status
+      - aigatewayconsumers/finalizers
+      - aigatewayconsumers/status
+      - aigatewaydataplanecertificates/finalizers
+      - aigatewaydataplanecertificates/status
+      - aigatewaymcpservers/finalizers
+      - aigatewaymcpservers/status
+      - aigatewaymodelproviders/finalizers
+      - aigatewaymodelproviders/status
+      - aigatewaymodels/finalizers
+      - aigatewaymodels/status
+      - aigatewaypolicies/finalizers
+      - aigatewaypolicies/status
+    verbs:
+      - patch
+      - update
+  - apiGroups:
+      - aiconfiguration.konghq.com
+    resources:
+      - aigatewaydataplanecertificates
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - aigateway.konghq.com
+    resources:
+      - aigatewaydataplanes
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - aigateway.konghq.com
+    resources:
+      - aigatewaydataplanes/status
+    verbs:
+      - patch
+      - update
+  - apiGroups:
       - apiextensions.k8s.io
     resources:
       - customresourcedefinitions
     verbs:
+      - get
       - list
       - watch
   - apiGroups:
@@ -128,6 +202,7 @@ rules:
       - eventgatewaybackendclusters
       - eventgatewaylistenerpolicies
       - eventgatewaylisteners
+      - eventgatewayschemaregistries
       - eventgatewayvirtualclusterconsumepolicies
       - eventgatewayvirtualclusterpolicies
       - eventgatewayvirtualclusterproducepolicies
@@ -156,6 +231,8 @@ rules:
       - eventgatewaylistenerpolicies/status
       - eventgatewaylisteners/finalizers
       - eventgatewaylisteners/status
+      - eventgatewayschemaregistries/finalizers
+      - eventgatewayschemaregistries/status
       - eventgatewayvirtualclusterconsumepolicies/finalizers
       - eventgatewayvirtualclusterconsumepolicies/status
       - eventgatewayvirtualclusterpolicies/finalizers
@@ -358,10 +435,7 @@ rules:
     resources:
       - backendtlspolicies
       - gatewayclasses
-      - grpcroutes
       - referencegrants
-      - tcproutes
-      - udproutes
     verbs:
       - get
       - list
@@ -405,6 +479,18 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
+      - grpcroutes
+      - tcproutes
+      - tlsroutes
+      - udproutes
+    verbs:
+      - get
+      - list
+      - patch
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
       - httproutes/status
       - tcproutes/status
       - tlsroutes/status
@@ -418,15 +504,6 @@ rules:
       - referencegrants/status
     verbs:
       - get
-  - apiGroups:
-      - gateway.networking.k8s.io
-    resources:
-      - tlsroutes
-    verbs:
-      - get
-      - list
-      - patch
-      - watch
   - apiGroups:
       - incubator.ingress-controller.konghq.com
     resources:
@@ -446,10 +523,12 @@ rules:
   - apiGroups:
       - konnect.konghq.com
     resources:
+      - konnectaigateways
       - konnectapiauthconfigurations
       - konnectcloudgatewaydataplanegroupconfigurations
       - konnectcloudgatewaynetworks
       - konnectcloudgatewaytransitgateways
+      - konnectconfigstores
       - konnecteventgateways
       - portalcustomdomains
       - portalcustomizations
@@ -468,6 +547,8 @@ rules:
   - apiGroups:
       - konnect.konghq.com
     resources:
+      - konnectaigateways/finalizers
+      - konnectaigateways/status
       - konnectapiauthconfigurations/finalizers
       - konnectapiauthconfigurations/status
       - konnectcloudgatewaydataplanegroupconfigurations/finalizers
@@ -476,6 +557,8 @@ rules:
       - konnectcloudgatewaynetworks/status
       - konnectcloudgatewaytransitgateways/finalizers
       - konnectcloudgatewaytransitgateways/status
+      - konnectconfigstores/finalizers
+      - konnectconfigstores/status
       - konnecteventgateways/finalizers
       - konnecteventgateways/status
       - konnectextensions/finalizers
@@ -521,6 +604,30 @@ rules:
     resources:
       - mcpservers/finalizers
     verbs:
+      - update
+  - apiGroups:
+      - mcp.konghq.com
+    resources:
+      - mcpserverdataplanes
+    verbs:
+      - create
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - mcp.konghq.com
+    resources:
+      - mcpserverdataplanes/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - mcp.konghq.com
+    resources:
+      - mcpserverdataplanes/status
+    verbs:
+      - patch
       - update
   - apiGroups:
       - networking.k8s.io

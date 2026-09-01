@@ -8,18 +8,17 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.1.0
-  name: identityproviderrequests.konnect.konghq.com
+    kubernetes-configuration.konghq.com/version: v2.3.0
+  name: aigatewayconsumergroups.aiconfiguration.konghq.com
 spec:
-  group: konnect.konghq.com
+  group: aiconfiguration.konghq.com
   names:
     categories:
-    - konnect
     - kong
-    kind: IdentityProviderRequest
-    listKind: IdentityProviderRequestList
-    plural: identityproviderrequests
-    singular: identityproviderrequest
+    kind: AIGatewayConsumerGroup
+    listKind: AIGatewayConsumerGroupList
+    plural: aigatewayconsumergroups
+    singular: aigatewayconsumergroup
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -41,7 +40,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: IdentityProviderRequest is the Schema for the identityproviderrequests
+        description: AIGatewayConsumerGroup is the Schema for the aigatewayconsumergroups
           API.
         properties:
           apiVersion:
@@ -62,121 +61,11 @@ spec:
           metadata:
             type: object
           spec:
-            description: IdentityProviderRequestSpec defines the desired state of
-              IdentityProviderRequest.
+            description: AIGatewayConsumerGroupSpec defines the desired state of AIGatewayConsumerGroup.
             properties:
-              apiSpec:
-                description: APISpec defines the desired state of the resource's API
-                  spec fields.
-                properties:
-                  config:
-                    description: |-
-                      IdentityProviderRequestConfig represents a union type for config.
-                      Only one of the fields should be set based on the Type.
-                    properties:
-                      oIDC:
-                        description: OIDC configuration.
-                        properties:
-                          claimMappings:
-                            description: |-
-                              Defines the mappings between OpenID Connect (OIDC) claims and local claims
-                              used by your application for
-                              authentication.
-                            properties:
-                              email:
-                                description: The claim mapping for the user's email
-                                  address.
-                                maxLength: 253
-                                type: string
-                              groups:
-                                description: The claim mapping for the user's group
-                                  membership information.
-                                maxLength: 253
-                                type: string
-                              name:
-                                description: The claim mapping for the user's name.
-                                maxLength: 253
-                                type: string
-                            type: object
-                          clientID:
-                            description: The client ID assigned to your application
-                              by the identity provider.
-                            maxLength: 253
-                            minLength: 1
-                            type: string
-                          clientSecret:
-                            description: The Client Secret assigned to your application
-                              by the identity provider.
-                            maxLength: 253
-                            type: string
-                          issuerURL:
-                            description: |-
-                              The issuer URI of the identity provider.
-                              This is the URL where the provider's metadata can be obtained.
-                            maxLength: 253
-                            minLength: 1
-                            type: string
-                          scopes:
-                            description: |-
-                              The scopes requested by your application when authenticating with the
-                              identity provider.
-                            items:
-                              type: string
-                            type: array
-                        required:
-                        - clientID
-                        - issuerURL
-                        type: object
-                      sAML:
-                        description: SAML configuration.
-                        properties:
-                          idpMetadataURL:
-                            description: |-
-                              The identity provider's metadata URL where the identity provider's metadata
-                              can be obtained.
-                            maxLength: 253
-                            type: string
-                          idpMetadataXML:
-                            description: |-
-                              The identity provider's SAML metadata.
-                              If the identity provider supports a metadata URL, you can use the
-                              `idp_metadata_url` field instead.
-                            maxLength: 253
-                            type: string
-                        type: object
-                      type:
-                        description: Type designates the type of configuration.
-                        enum:
-                        - oIDC
-                        - sAML
-                        minLength: 1
-                        type: string
-                    required:
-                    - type
-                    type: object
-                  enabled:
-                    description: |-
-                      Indicates whether the identity provider is enabled.
-                      Only one identity provider can be active at a time, such as SAML or OIDC.
-                    enum:
-                    - Enabled
-                    - Disabled
-                    type: string
-                  loginPath:
-                    description: The path used for initiating login requests with
-                      the identity provider.
-                    maxLength: 253
-                    type: string
-                  type:
-                    description: Specifies the type of identity provider.
-                    enum:
-                    - oidc
-                    - saml
-                    maxLength: 253
-                    type: string
-                type: object
-              portalRef:
-                description: PortalRef is the reference to the parent Portal object.
+              aiGatewayRef:
+                description: AIGatewayRef is the reference to the parent KonnectAIGateway
+                  object.
                 properties:
                   konnectID:
                     description: |-
@@ -230,12 +119,92 @@ spec:
                   rule: 'self.type == ''konnectID'' ? has(self.konnectID) : true'
                 - message: when type is konnectID, namespacedRef must not be set
                   rule: 'self.type == ''konnectID'' ? !has(self.namespacedRef) : true'
+              apiSpec:
+                description: APISpec defines the desired state of the resource's API
+                  spec fields.
+                properties:
+                  displayName:
+                    description: The display name for this consumer group instance.
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                  labels:
+                    additionalProperties:
+                      description: PublicLabelsValue is the value type for PublicLabels.
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                      type: string
+                    description: |-
+                      Public labels store information about an entity that can be used for
+                      filtering a list of objects.
+
+                      Public labels are intended to store **PUBLIC** metadata.
+
+                      Keys must be of length 1-63 characters, and cannot start with "kong",
+                      "konnect", "mesh", "kic", or "_".
+                    type: object
+                  managedBy:
+                    additionalProperties:
+                      description: ManagedByValue is the value type for ManagedBy.
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                      type: string
+                    description: |-
+                      Stores information about what manages this entity, such as the tool or
+                      system responsible for its lifecycle (for example, `terraform`).
+
+                      Keys must be 1–63 characters long and start with an alphanumeric
+                      character.
+                    type: object
+                  name:
+                    description: |-
+                      **Pre-release Feature**
+                      This feature is currently in beta and is subject to change.
+
+                      A user-defined unique identifier for this consumer group, used as a stable
+                      human-readable reference.
+                      This value is immutable after creation.
+                    maxLength: 256
+                    minLength: 1
+                    pattern: ^[A-Za-z0-9._:-]{1,256}$
+                    type: string
+                  policies:
+                    description: List of policy references.
+                    items:
+                      description: |-
+                        AIGatewayPolicyRef references an AIGatewayPolicy in the cluster. The referenced
+                        object's Konnect name is used where the Konnect API accepts it.
+                      properties:
+                        kind:
+                          default: AIGatewayPolicy
+                          description: Kind is the kind of the referenced object.
+                          enum:
+                          - AIGatewayPolicy
+                          type: string
+                        name:
+                          description: Name is the name of the referenced object.
+                          minLength: 1
+                          type: string
+                        namespace:
+                          description: Namespace is reserved for future cross-namespace
+                            support.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                required:
+                - displayName
+                - name
+                type: object
             required:
-            - portalRef
+            - aiGatewayRef
             type: object
           status:
-            description: IdentityProviderRequestStatus defines the observed state
-              of IdentityProviderRequest.
+            description: AIGatewayConsumerGroupStatus defines the observed state of
+              AIGatewayConsumerGroup.
             properties:
               conditions:
                 description: Conditions represent the current state of the resource.
@@ -298,6 +267,15 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              gatewayID:
+                description: GatewayID is the Konnect ID of the parent Gateway.
+                properties:
+                  id:
+                    description: ID is the unique identifier of the Konnect entity
+                      as assigned by Konnect API.
+                    maxLength: 256
+                    type: string
+                type: object
               id:
                 description: |-
                   ID is the unique identifier of the Konnect entity as assigned by Konnect API.
@@ -313,15 +291,6 @@ spec:
                   created in.
                 maxLength: 256
                 type: string
-              portalID:
-                description: PortalID is the Konnect ID of the parent Portal.
-                properties:
-                  id:
-                    description: ID is the unique identifier of the Konnect entity
-                      as assigned by Konnect API.
-                    maxLength: 256
-                    type: string
-                type: object
               serverURL:
                 description: ServerURL is the URL of the Konnect server in which the
                   entity exists.
@@ -331,6 +300,11 @@ spec:
         required:
         - metadata
         type: object
+        x-kubernetes-validations:
+        - message: spec.aiGatewayRef is immutable when an entity is already Programmed
+          rule: '!has(self.spec.aiGatewayRef) || !has(self.status.conditions) || !self.status.conditions.exists(c,
+            c.type == ''Programmed'' && c.status == ''True'') || oldSelf.spec.aiGatewayRef
+            == self.spec.aiGatewayRef'
     served: true
     storage: true
     subresources:

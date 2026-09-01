@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.4
+    kubernetes-configuration.konghq.com/version: v2.3.0
   name: eventgatewaylisteners.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -279,6 +279,11 @@ spec:
         required:
         - metadata
         type: object
+        x-kubernetes-validations:
+        - message: spec.gatewayRef is immutable when an entity is already Programmed
+          rule: '!has(self.spec.gatewayRef) || !has(self.status.conditions) || !self.status.conditions.exists(c,
+            c.type == ''Programmed'' && c.status == ''True'') || oldSelf.spec.gatewayRef
+            == self.spec.gatewayRef'
     served: true
     storage: true
     subresources:

@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.4
+    kubernetes-configuration.konghq.com/version: v2.3.0
   name: portalteams.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -74,10 +74,13 @@ spec:
                     - Disabled
                     type: string
                   description:
+                    description: The description of the team.
                     maxLength: 250
+                    minLength: 1
                     type: string
                   name:
-                    maxLength: 253
+                    description: The name of the team.
+                    maxLength: 250
                     minLength: 1
                     pattern: ^[\w \W]+$
                     type: string
@@ -239,6 +242,11 @@ spec:
         required:
         - metadata
         type: object
+        x-kubernetes-validations:
+        - message: spec.portalRef is immutable when an entity is already Programmed
+          rule: '!has(self.spec.portalRef) || !has(self.status.conditions) || !self.status.conditions.exists(c,
+            c.type == ''Programmed'' && c.status == ''True'') || oldSelf.spec.portalRef
+            == self.spec.portalRef'
     served: true
     storage: true
     subresources:

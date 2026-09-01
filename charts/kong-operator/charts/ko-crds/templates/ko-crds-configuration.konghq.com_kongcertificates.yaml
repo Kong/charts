@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.4
+    kubernetes-configuration.konghq.com/version: v2.3.0
   name: kongcertificates.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -119,17 +119,35 @@ spec:
                     : true'
               cert:
                 description: |-
-                  Cert is the PEM-encoded certificate.
+                  Cert is the PEM-encoded certificate or a Kong vault reference resolving to one.
                   This field is used when type is 'inline'.
+
+                  A vault reference has the form '{vault://<vault>/<resource>[/<key>]}', for example
+                  '{vault://certvault/my-service-cert}'. Vault references are passed to Kong as-is
+                  and are resolved by Kong Gateway at runtime, so the certificate material does not
+                  have to be stored in Kubernetes.
                 type: string
+                x-kubernetes-validations:
+                - message: cert must contain certificate material or a valid Kong
+                    vault reference, e.g. '{vault://my-vault/my-secret}'
+                  rule: '!self.startsWith(''{vault:'') || self.matches(''^[{]vault://[a-zA-Z0-9._-]+/[^{}]+[}][[:space:]]*$'')'
               cert_alt:
                 description: |-
-                  CertAlt is the PEM-encoded certificate.
+                  CertAlt is the PEM-encoded certificate or a Kong vault reference resolving to one.
                   This should only be set if you have both RSA and ECDSA types of
                   certificate available and would like Kong to prefer serving using ECDSA certs
                   when client advertises support for it.
                   This field is used when type is 'inline'.
+
+                  A vault reference has the form '{vault://<vault>/<resource>[/<key>]}', for example
+                  '{vault://certvault/my-service-cert-alt}'. Vault references are passed to Kong as-is
+                  and are resolved by Kong Gateway at runtime, so the certificate material does not
+                  have to be stored in Kubernetes.
                 type: string
+                x-kubernetes-validations:
+                - message: cert_alt must contain certificate material or a valid Kong
+                    vault reference, e.g. '{vault://my-vault/my-secret}'
+                  rule: '!self.startsWith(''{vault:'') || self.matches(''^[{]vault://[a-zA-Z0-9._-]+/[^{}]+[}][[:space:]]*$'')'
               controlPlaneRef:
                 description: ControlPlaneRef references the Konnect Control Plane
                   that this KongCertificate should be created in.
@@ -190,17 +208,35 @@ spec:
                   rule: '!has(self.type) ? !has(self.konnectNamespacedRef) : true'
               key:
                 description: |-
-                  Key is the PEM-encoded private key.
+                  Key is the PEM-encoded private key or a Kong vault reference resolving to one.
                   This field is used when type is 'inline'.
+
+                  A vault reference has the form '{vault://<vault>/<resource>[/<key>]}', for example
+                  '{vault://certvault/my-service-key}'. Vault references are passed to Kong as-is
+                  and are resolved by Kong Gateway at runtime, so the private key does not have to
+                  be stored in Kubernetes.
                 type: string
+                x-kubernetes-validations:
+                - message: key must contain private key material or a valid Kong vault
+                    reference, e.g. '{vault://my-vault/my-secret}'
+                  rule: '!self.startsWith(''{vault:'') || self.matches(''^[{]vault://[a-zA-Z0-9._-]+/[^{}]+[}][[:space:]]*$'')'
               key_alt:
                 description: |-
-                  KeyAlt is the PEM-encoded private key.
+                  KeyAlt is the PEM-encoded private key or a Kong vault reference resolving to one.
                   This should only be set if you have both RSA and ECDSA types of
                   certificate available and would like Kong to prefer serving using ECDSA certs
                   when client advertises support for it.
                   This field is used when type is 'inline'.
+
+                  A vault reference has the form '{vault://<vault>/<resource>[/<key>]}', for example
+                  '{vault://certvault/my-service-key-alt}'. Vault references are passed to Kong as-is
+                  and are resolved by Kong Gateway at runtime, so the private key does not have to
+                  be stored in Kubernetes.
                 type: string
+                x-kubernetes-validations:
+                - message: key_alt must contain private key material or a valid Kong
+                    vault reference, e.g. '{vault://my-vault/my-secret}'
+                  rule: '!self.startsWith(''{vault:'') || self.matches(''^[{]vault://[a-zA-Z0-9._-]+/[^{}]+[}][[:space:]]*$'')'
               secretRef:
                 description: |-
                   SecretRef is a reference to a Kubernetes Secret containing the certificate and key.
