@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.2.4
+    kubernetes-configuration.konghq.com/version: v2.3.0
   name: kongreferencegrants.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -161,17 +161,23 @@ spec:
                     rule: .self.group != 'core' || .self.kind == 'Secret'
                   - message: Only 'KonnectGatewayControlPlane', 'KonnectAPIAuthConfiguration',
                       'Portal', 'KonnectEventGateway', 'EventGatewayBackendCluster',
-                      'EventGatewayListener' and 'EventGatewayVirtualCluster' kinds
-                      are supported for 'konnect.konghq.com' group
+                      'EventGatewayListener', 'EventGatewayVirtualCluster', 'KonnectConfigStore'
+                      and 'KonnectAIGateway' kinds are supported for 'konnect.konghq.com'
+                      group
                     rule: .self.group != 'konnect.konghq.com' || .self.kind in ['KonnectGatewayControlPlane',
                       'KonnectAPIAuthConfiguration', 'Portal', 'KonnectEventGateway',
-                      'EventGatewayBackendCluster', 'EventGatewayListener', 'EventGatewayVirtualCluster']
+                      'EventGatewayBackendCluster', 'EventGatewayListener', 'EventGatewayVirtualCluster',
+                      'KonnectConfigStore', 'KonnectAIGateway']
                   - message: Only 'KongPlugin', 'KongService', 'KongCertificate',
                       'KongCACertificate' and 'KongUpstream' kinds are supported for
                       'configuration.konghq.com' group
                     rule: .self.group != 'configuration.konghq.com' || .self.kind
                       in ['KongPlugin', 'KongService', 'KongCertificate', 'KongCACertificate',
                       'KongUpstream']
+                  - message: Only 'AIGatewayConsumerGroup' kind is supported for 'aiconfiguration.konghq.com'
+                      group
+                    rule: .self.group != 'aiconfiguration.konghq.com' || .self.kind
+                      in ['AIGatewayConsumerGroup']
                 maxItems: 16
                 minItems: 1
                 type: array

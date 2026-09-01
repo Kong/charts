@@ -1,6 +1,6 @@
 image:
   repository: docker.io/kong/kong-operator
-  tag: "2.2.4"
+  tag: "2.3.0"
   # If you want only the digest to be used, set tag to "" in your values.yaml.
   digest: ""
   # Optionally set a semantic version for version-gated features. This can normally
@@ -48,6 +48,7 @@ gwapi-experimental-crds:
   enabled: false
 affinity: {}
 tolerations: []
+nodeSelector: {}
 # Customize gateway-operator livenessProbe.
 livenessProbe:
   httpGet:
@@ -66,7 +67,7 @@ readinessProbe:
 resources:
   limits:
     cpu: 500m
-    memory: 256Mi
+    memory: 512Mi
   requests:
     cpu: 10m
     memory: 128Mi
