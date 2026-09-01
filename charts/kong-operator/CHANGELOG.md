@@ -1,30 +1,20 @@
 # Changelog
 
-## Unreleased
+## 1.4.0
 
 ### Added
 
 - Added `nodeSelector` value for the operator pod, mirroring the existing
   `tolerations` and `affinity` values.
   [#5246](https://github.com/Kong/kong-operator/pull/5246)
+- Introduced AIGateway CRD to support Kong AI Gateway.
 
 ### Changed
 
 - Bump operator's memory limits from `256Mi` to `512Mi` to prevent OOM issues
   with default settings in environments with a lot of cluster resources.
   [#5248](https://github.com/Kong/kong-operator/pull/5248)
-
-## 1.4.0-rc.2
-
-### Changed
-
-- Bump default image to `2.3.0-rc.3`.
-
-## 1.4.0-rc.1
-
-### Changed
-
-- Bump default image to `2.3.0-rc.2`.
+- Bump default image to `2.3.0`.
 - Bump Gateway API CRDs subcharts (`gwapi-standard-crds`, `gwapi-experimental-crds`)
   to `1.6.1`.
 
