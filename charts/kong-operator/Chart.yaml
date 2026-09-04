@@ -24,8 +24,8 @@ dependencies:
   - name: ko-crds
     version: 1.2.0
   - name: gwapi-standard-crds
-    version: 1.6.1
+    version: 1.6.2
     condition: gwapi-standard-crds.enabled
   - name: gwapi-experimental-crds
-    version: 1.6.1
+    version: 1.6.2
     condition: gwapi-experimental-crds.enabled
