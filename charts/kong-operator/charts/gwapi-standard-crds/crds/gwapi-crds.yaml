@@ -3,7 +3,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/4530
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   labels:
     gateway.networking.k8s.io/policy: Direct
@@ -1380,7 +1380,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/4530
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: gatewayclasses.gateway.networking.k8s.io
 spec:
@@ -1893,7 +1893,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/4530
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: gateways.gateway.networking.k8s.io
 spec:
@@ -5185,7 +5185,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/4530
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: grpcroutes.gateway.networking.k8s.io
 spec:
@@ -7258,7 +7258,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/4530
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: httproutes.gateway.networking.k8s.io
 spec:
@@ -8439,7 +8439,7 @@ spec:
                                         Accepted Condition for the Route to `status: False`, with a
                                         Reason of `UnsupportedValue`.
 
-                                        Support: Core
+                                        Support: statusCode 301 and 302 are Core; all others are Extended.
                                       enum:
                                       - 301
                                       - 302
@@ -9693,7 +9693,7 @@ spec:
                                   Accepted Condition for the Route to `status: False`, with a
                                   Reason of `UnsupportedValue`.
 
-                                  Support: Core
+                                  Support: statusCode 301 and 302 are Core; all others are Extended.
                                 enum:
                                 - 301
                                 - 302
@@ -11889,7 +11889,7 @@ spec:
                                         Accepted Condition for the Route to `status: False`, with a
                                         Reason of `UnsupportedValue`.
 
-                                        Support: Core
+                                        Support: statusCode 301 and 302 are Core; all others are Extended.
                                       enum:
                                       - 301
                                       - 302
@@ -13143,7 +13143,7 @@ spec:
                                   Accepted Condition for the Route to `status: False`, with a
                                   Reason of `UnsupportedValue`.
 
-                                  Support: Core
+                                  Support: statusCode 301 and 302 are Core; all others are Extended.
                                 enum:
                                 - 301
                                 - 302
@@ -14178,7 +14178,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/4530
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: listenersets.gateway.networking.k8s.io
 spec:
@@ -14953,7 +14953,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/4530
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: referencegrants.gateway.networking.k8s.io
 spec:
@@ -15305,7 +15305,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/4530
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: tcproutes.gateway.networking.k8s.io
 spec:
@@ -16598,7 +16598,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/4530
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: tlsroutes.gateway.networking.k8s.io
 spec:
@@ -18722,7 +18722,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/4530
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: udproutes.gateway.networking.k8s.io
 spec:
@@ -20014,7 +20014,7 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingAdmissionPolicy
 metadata:
   annotations:
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: safe-upgrades.gateway.networking.k8s.io
 spec:
@@ -20057,7 +20057,7 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingAdmissionPolicyBinding
 metadata:
   annotations:
-    gateway.networking.k8s.io/bundle-version: v1.6.1
+    gateway.networking.k8s.io/bundle-version: v1.6.2
     gateway.networking.k8s.io/channel: standard
   name: safe-upgrades.gateway.networking.k8s.io
 spec:
