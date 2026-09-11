@@ -974,16 +974,6 @@ extensions/v1beta1
 {{- end -}}
 {{- end -}}
 
-{{- define "kong.proxy.compatibleReadiness" -}}
-{{- $proxyReadiness := .Values.readinessProbe -}}
-{{- if (semverCompare "< 3.3.0" (include "kong.effectiveVersion" .Values.image)) -}}
-    {{- if (eq $proxyReadiness.httpGet.path "/status/ready") -}}
-        {{- $_ := set $proxyReadiness.httpGet "path" "/status" -}}
-    {{- end -}}
-{{- end -}}
-{{- (toYaml $proxyReadiness) -}}
-{{- end -}}
-
 {{- define "kong.envFrom" -}}
   {{- if (gt (len .) 0) -}}
 envFrom:
@@ -991,4 +981,3 @@ envFrom:
   {{- else -}}
   {{- end -}}
 {{- end -}}
-

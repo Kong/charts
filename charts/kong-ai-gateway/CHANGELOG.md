@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixes
+
+- Preserve the configured readiness probe path instead of applying Kong Gateway
+  version compatibility rules to the AI Gateway image version.
+
 ## 0.2.0
 
 ### Changes
