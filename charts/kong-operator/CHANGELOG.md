@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.5.0-rapid.1
+
+### Added
+
+- Added CRDs for the new operator APIs: `OnPremAIGateway`,
+  `AIGatewayCertificate`, `AIGatewayCACertificate`, `AIGatewaySNI`,
+  `KonnectConfigStoreSync` and `DBBackedHybridControlPlane`, together with the
+  RBAC rules the operator needs to reconcile them.
+  [#5595](https://github.com/Kong/kong-operator/pull/5595),
+  [#5656](https://github.com/Kong/kong-operator/pull/5656),
+  [#5658](https://github.com/Kong/kong-operator/pull/5658),
+  [#5667](https://github.com/Kong/kong-operator/pull/5667),
+  [#5660](https://github.com/Kong/kong-operator/pull/5660),
+  [#5773](https://github.com/Kong/kong-operator/pull/5773)
+
+### Changed
+
+- Bump default image to 2.4.0-rapid.1
+- Bump Gateway API CRDs subcharts (`gwapi-standard-crds`, `gwapi-experimental-crds`)
+  to `1.6.2`.
+  [#5462](https://github.com/Kong/kong-operator/pull/5462)
+- Strip CRD description strings from the chart's copy of the CRDs.
+  [#5819](https://github.com/Kong/kong-operator/pull/5819)
+
 ## 1.4.0
 
 ### Added

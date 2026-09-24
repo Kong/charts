@@ -9,25 +9,28 @@ metadata:
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
     kubernetes-configuration.konghq.com/version: v2.4.0-rapid.1
-  name: kongplugininstallations.gateway-operator.konghq.com
+  name: onpremaigateways.aigateway.konghq.com
 spec:
-  group: gateway-operator.konghq.com
+  group: aigateway.konghq.com
   names:
     categories:
     - kong
-    kind: KongPluginInstallation
-    listKind: KongPluginInstallationList
-    plural: kongplugininstallations
+    kind: OnPremAIGateway
+    listKind: OnPremAIGatewayList
+    plural: onpremaigateways
     shortNames:
-    - kpi
-    singular: kongplugininstallation
+    - onpremaigw
+    singular: onpremaigateway
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - description: The Resource is accepted
-      jsonPath: .status.conditions[?(@.type=='Accepted')].status
-      name: Accepted
+    - description: The Resource is ready
+      jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
       type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -39,40 +42,16 @@ spec:
           metadata:
             type: object
           spec:
-            properties:
-              image:
-                type: string
-              imagePullSecretRef:
-                properties:
-                  group:
-                    default: ""
-                    maxLength: 253
-                    pattern: ^$|^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
-                    type: string
-                  kind:
-                    default: Secret
-                    maxLength: 63
-                    minLength: 1
-                    pattern: ^[a-zA-Z]([-a-zA-Z0-9]*[a-zA-Z0-9])?$
-                    type: string
-                  name:
-                    maxLength: 253
-                    minLength: 1
-                    type: string
-                  namespace:
-                    maxLength: 63
-                    minLength: 1
-                    pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
-                    type: string
-                required:
-                - name
-                type: object
-            required:
-            - image
             type: object
           status:
             properties:
               conditions:
+                default:
+                - lastTransitionTime: "1970-01-01T00:00:00Z"
+                  message: Waiting for controller
+                  reason: Pending
+                  status: Unknown
+                  type: Ready
                 items:
                   properties:
                     lastTransitionTime:
@@ -112,7 +91,8 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
-              underlyingConfigMapName:
+              configHash:
+                maxLength: 64
                 type: string
             type: object
         type: object

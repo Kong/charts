@@ -9,16 +9,16 @@ metadata:
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
     kubernetes-configuration.konghq.com/version: v2.4.0-rapid.1
-  name: aigatewaypolicies.aiconfiguration.konghq.com
+  name: aigatewaycertificates.aiconfiguration.konghq.com
 spec:
   group: aiconfiguration.konghq.com
   names:
     categories:
     - kong
-    kind: AIGatewayPolicy
-    listKind: AIGatewayPolicyList
-    plural: aigatewaypolicies
-    singular: aigatewaypolicy
+    kind: AIGatewayCertificate
+    listKind: AIGatewayCertificateList
+    plural: aigatewaycertificates
+    singular: aigatewaycertificate
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -90,10 +90,7 @@ spec:
                     : self.group == ''konnect.konghq.com'''
               apiSpec:
                 properties:
-                  condition:
-                    maxLength: 1024
-                    type: string
-                  config:
+                  cert:
                     properties:
                       secretRef:
                         properties:
@@ -119,8 +116,8 @@ spec:
                         - secretRef
                         type: string
                       value:
-                        type: object
-                        x-kubernetes-preserve-unknown-fields: true
+                        maxLength: 4096
+                        type: string
                     required:
                     - type
                     type: object
@@ -128,20 +125,111 @@ spec:
                     - message: value required when type=inline; secretRef required
                         when type=secretRef
                       rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
-                  displayName:
-                    maxLength: 256
-                    minLength: 1
-                    type: string
-                  enabled:
-                    enum:
-                    - Enabled
-                    - Disabled
-                    type: string
-                  global:
-                    enum:
-                    - Enabled
-                    - Disabled
-                    type: string
+                  certAlt:
+                    properties:
+                      secretRef:
+                        properties:
+                          key:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          name:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          namespace:
+                            maxLength: 253
+                            type: string
+                        required:
+                        - key
+                        - name
+                        type: object
+                      type:
+                        default: inline
+                        enum:
+                        - inline
+                        - secretRef
+                        type: string
+                      value:
+                        maxLength: 4096
+                        type: string
+                    required:
+                    - type
+                    type: object
+                    x-kubernetes-validations:
+                    - message: value required when type=inline; secretRef required
+                        when type=secretRef
+                      rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
+                  key:
+                    properties:
+                      secretRef:
+                        properties:
+                          key:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          name:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          namespace:
+                            maxLength: 253
+                            type: string
+                        required:
+                        - key
+                        - name
+                        type: object
+                      type:
+                        default: inline
+                        enum:
+                        - inline
+                        - secretRef
+                        type: string
+                      value:
+                        maxLength: 4096
+                        type: string
+                    required:
+                    - type
+                    type: object
+                    x-kubernetes-validations:
+                    - message: value required when type=inline; secretRef required
+                        when type=secretRef
+                      rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
+                  keyAlt:
+                    properties:
+                      secretRef:
+                        properties:
+                          key:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          name:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          namespace:
+                            maxLength: 253
+                            type: string
+                        required:
+                        - key
+                        - name
+                        type: object
+                      type:
+                        default: inline
+                        enum:
+                        - inline
+                        - secretRef
+                        type: string
+                      value:
+                        maxLength: 4096
+                        type: string
+                    required:
+                    - type
+                    type: object
+                    x-kubernetes-validations:
+                    - message: value required when type=inline; secretRef required
+                        when type=secretRef
+                      rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
                   labels:
                     additionalProperties:
                       maxLength: 63
@@ -161,15 +249,10 @@ spec:
                     minLength: 1
                     pattern: ^[A-Za-z0-9._:@-]{1,256}$
                     type: string
-                  type:
-                    maxLength: 253
-                    minLength: 1
-                    type: string
                 required:
-                - config
-                - displayName
+                - cert
+                - key
                 - name
-                - type
                 type: object
             required:
             - aiGatewayRef
