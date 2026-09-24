@@ -9,16 +9,16 @@ metadata:
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
     kubernetes-configuration.konghq.com/version: v2.4.0-rapid.1
-  name: eventgatewaydataplanecertificates.configuration.konghq.com
+  name: aigatewaysnis.aiconfiguration.konghq.com
 spec:
-  group: configuration.konghq.com
+  group: aiconfiguration.konghq.com
   names:
     categories:
     - kong
-    kind: EventGatewayDataPlaneCertificate
-    listKind: EventGatewayDataPlaneCertificateList
-    plural: eventgatewaydataplanecertificates
-    singular: eventgatewaydataplanecertificate
+    kind: AIGatewaySNI
+    listKind: AIGatewaySNIList
+    plural: aigatewaysnis
+    singular: aigatewaysni
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -49,56 +49,19 @@ spec:
             type: object
           spec:
             properties:
-              apiSpec:
+              aiGatewayRef:
                 properties:
-                  certificate:
-                    properties:
-                      secretRef:
-                        properties:
-                          key:
-                            maxLength: 253
-                            minLength: 1
-                            type: string
-                          name:
-                            maxLength: 253
-                            minLength: 1
-                            type: string
-                          namespace:
-                            maxLength: 253
-                            type: string
-                        required:
-                        - key
-                        - name
-                        type: object
-                      type:
-                        default: inline
-                        enum:
-                        - inline
-                        - secretRef
-                        type: string
-                      value:
-                        maxLength: 4096
-                        type: string
-                    required:
-                    - type
-                    type: object
-                    x-kubernetes-validations:
-                    - message: value required when type=inline; secretRef required
-                        when type=secretRef
-                      rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
-                  description:
-                    maxLength: 253
+                  group:
+                    default: konnect.konghq.com
+                    enum:
+                    - konnect.konghq.com
+                    - aigateway.konghq.com
                     type: string
-                  name:
-                    maxLength: 253
-                    type: string
-                required:
-                - certificate
-                type: object
-              gatewayRef:
-                properties:
-                  konnectID:
-                    maxLength: 36
+                  kind:
+                    default: KonnectAIGateway
+                    enum:
+                    - KonnectAIGateway
+                    - OnPremAIGateway
                     type: string
                   namespacedRef:
                     properties:
@@ -113,25 +76,70 @@ spec:
                     - name
                     type: object
                   type:
+                    default: namespacedRef
                     enum:
-                    - konnectID
                     - namespacedRef
                     type: string
                 required:
-                - type
+                - namespacedRef
                 type: object
                 x-kubernetes-validations:
-                - message: when type is namespacedRef, namespacedRef must be set
-                  rule: 'self.type == ''namespacedRef'' ? has(self.namespacedRef)
-                    : true'
-                - message: when type is namespacedRef, konnectID must not be set
-                  rule: 'self.type == ''namespacedRef'' ? !has(self.konnectID) : true'
-                - message: when type is konnectID, konnectID must be set
-                  rule: 'self.type == ''konnectID'' ? has(self.konnectID) : true'
-                - message: when type is konnectID, namespacedRef must not be set
-                  rule: 'self.type == ''konnectID'' ? !has(self.namespacedRef) : true'
+                - message: group must be aigateway.konghq.com when kind is OnPremAIGateway,
+                    and konnect.konghq.com when kind is KonnectAIGateway
+                  rule: 'self.kind == ''OnPremAIGateway'' ? self.group == ''aigateway.konghq.com''
+                    : self.group == ''konnect.konghq.com'''
+              apiSpec:
+                properties:
+                  certificate:
+                    properties:
+                      kind:
+                        default: AIGatewayCertificate
+                        enum:
+                        - AIGatewayCertificate
+                        type: string
+                      name:
+                        minLength: 1
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    type: object
+                  displayName:
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                  hostname:
+                    maxLength: 253
+                    minLength: 1
+                    type: string
+                  labels:
+                    additionalProperties:
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                      type: string
+                    type: object
+                  managedBy:
+                    additionalProperties:
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                      type: string
+                    type: object
+                  name:
+                    maxLength: 256
+                    minLength: 1
+                    pattern: ^[0-9a-z-]+$
+                    type: string
+                required:
+                - certificate
+                - displayName
+                - hostname
+                - name
+                type: object
             required:
-            - gatewayRef
+            - aiGatewayRef
             type: object
           status:
             properties:
@@ -196,10 +204,10 @@ spec:
             type: object
         type: object
         x-kubernetes-validations:
-        - message: spec.gatewayRef is immutable when an entity is already Programmed
-          rule: '!has(self.spec.gatewayRef) || !has(self.status.conditions) || !self.status.conditions.exists(c,
-            c.type == ''Programmed'' && c.status == ''True'') || oldSelf.spec.gatewayRef
-            == self.spec.gatewayRef'
+        - message: spec.aiGatewayRef is immutable when an entity is already Programmed
+          rule: '!has(self.spec.aiGatewayRef) || !has(self.status.conditions) || !self.status.conditions.exists(c,
+            c.type == ''Programmed'' && c.status == ''True'') || oldSelf.spec.aiGatewayRef
+            == self.spec.aiGatewayRef'
     served: true
     storage: true
     subresources:

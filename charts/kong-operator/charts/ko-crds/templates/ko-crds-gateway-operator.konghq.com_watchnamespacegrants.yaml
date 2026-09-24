@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.1
   name: watchnamespacegrants.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -22,49 +22,27 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: |-
-          WatchNamespaceGrant is a grant that allows a trusted namespace to watch
-          resources in the namespace this grant exists in.
         properties:
           apiVersion:
-            description: |-
-              APIVersion defines the versioned schema of this representation of an object.
-              Servers should convert recognized schemas to the latest internal value, and
-              may reject unrecognized values.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: |-
-              Kind is a string value representing the REST resource this object represents.
-              Servers may infer this from the endpoint the client submits requests to.
-              Cannot be updated.
-              In CamelCase.
-              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
-            description: Spec is the desired state of the WatchNamespaceGrant.
             properties:
               from:
-                description: |-
-                  From describes the trusted namespaces and kinds that can reference the
-                  namespace this grant exists in.
                 items:
-                  description: WatchNamespaceGrantFrom describes trusted namespaces.
                   properties:
                     group:
-                      description: Group is the group of the referent.
                       enum:
                       - gateway-operator.konghq.com
                       type: string
                     kind:
-                      description: Kind is the kind of the referent.
                       enum:
                       - ControlPlane
                       type: string
                     namespace:
-                      description: Namespace is the namespace of the referent.
                       type: string
                   required:
                   - group
@@ -80,4 +58,5 @@ spec:
         type: object
     served: true
     storage: true
+
 {{- end }}
