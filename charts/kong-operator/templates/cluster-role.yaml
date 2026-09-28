@@ -77,8 +77,6 @@ rules:
     resources:
       - aigatewayagents
       - aigatewayauthstrategies
-      - aigatewaycacertificates
-      - aigatewaycertificates
       - aigatewayconsumercredentials
       - aigatewayconsumergroups
       - aigatewayconsumers
@@ -86,7 +84,6 @@ rules:
       - aigatewaymodelproviders
       - aigatewaymodels
       - aigatewaypolicies
-      - aigatewaysnis
     verbs:
       - get
       - list
@@ -100,10 +97,6 @@ rules:
       - aigatewayagents/status
       - aigatewayauthstrategies/finalizers
       - aigatewayauthstrategies/status
-      - aigatewaycacertificates/finalizers
-      - aigatewaycacertificates/status
-      - aigatewaycertificates/finalizers
-      - aigatewaycertificates/status
       - aigatewayconsumercredentials/finalizers
       - aigatewayconsumercredentials/status
       - aigatewayconsumergroups/finalizers
@@ -117,10 +110,9 @@ rules:
       - aigatewaymodelproviders/finalizers
       - aigatewaymodelproviders/status
       - aigatewaymodels/finalizers
+      - aigatewaymodels/status
       - aigatewaypolicies/finalizers
       - aigatewaypolicies/status
-      - aigatewaysnis/finalizers
-      - aigatewaysnis/status
     verbs:
       - patch
       - update
@@ -137,18 +129,9 @@ rules:
       - update
       - watch
   - apiGroups:
-      - aiconfiguration.konghq.com
-    resources:
-      - aigatewaymodels/status
-    verbs:
-      - get
-      - patch
-      - update
-  - apiGroups:
       - aigateway.konghq.com
     resources:
       - aigatewaydataplanes
-      - onpremaigateways
     verbs:
       - get
       - list
@@ -159,15 +142,8 @@ rules:
       - aigateway.konghq.com
     resources:
       - aigatewaydataplanes/status
-      - onpremaigateways/status
     verbs:
       - patch
-      - update
-  - apiGroups:
-      - aigateway.konghq.com
-    resources:
-      - onpremaigateways/finalizers
-    verbs:
       - update
   - apiGroups:
       - apiextensions.k8s.io

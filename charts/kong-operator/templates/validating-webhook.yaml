@@ -69,6 +69,35 @@ webhooks:
 {{- end }}
   failurePolicy: Fail
   matchPolicy: Equivalent
+  name: secrets.validations.kong.konghq.com
+  objectSelector:
+    matchLabels:
+      konghq.com/secret: "true"
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - secrets
+  sideEffects: None
+  timeoutSeconds: 10
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: {{ template "kong.webhookServiceName" . }}
+      namespace: {{ template "kong.namespace" . }}
+      port: 5443
+{{- if not .Values.global.webhooks.options.certManager.enabled }}
+    caBundle: |
+      {{ $caCert | b64enc }}
+{{- end }}
+  failurePolicy: Fail
+  matchPolicy: Equivalent
   name: gwapi.validations.kong.konghq.com
   rules:
   - apiGroups:
@@ -140,35 +169,6 @@ webhooks:
     - UPDATE
     resources:
     - ingresses
-  sideEffects: None
-  timeoutSeconds: 10
-- admissionReviewVersions:
-  - v1
-  clientConfig:
-    service:
-      name: {{ template "kong.webhookServiceName" . }}
-      namespace: {{ template "kong.namespace" . }}
-      port: 5443
-{{- if not .Values.global.webhooks.options.certManager.enabled }}
-    caBundle: |
-      {{ $caCert | b64enc }}
-{{- end }}
-  failurePolicy: Fail
-  matchPolicy: Equivalent
-  name: secrets.validations.kong.konghq.com
-  objectSelector:
-    matchLabels:
-      konghq.com/secret: "true"
-  rules:
-  - apiGroups:
-    - ""
-    apiVersions:
-    - v1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - secrets
   sideEffects: None
   timeoutSeconds: 10
 
