@@ -9,20 +9,23 @@ metadata:
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
     kubernetes-configuration.konghq.com/version: v2.4.0-rapid.2.0
-  name: portalcustomdomains.konnect.konghq.com
+  name: aigatewaysnis.aiconfiguration.konghq.com
 spec:
-  group: konnect.konghq.com
+  group: aiconfiguration.konghq.com
   names:
     categories:
-    - konnect
     - kong
-    kind: PortalCustomDomain
-    listKind: PortalCustomDomainList
-    plural: portalcustomdomains
-    singular: portalcustomdomain
+    kind: AIGatewaySNI
+    listKind: AIGatewaySNIList
+    plural: aigatewaysnis
+    singular: aigatewaysni
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - description: Konnect ID
+      jsonPath: .status.id
+      name: ID
+      type: string
     - description: The Resource is Programmed on Konnect
       jsonPath: .status.conditions[?(@.type=='Programmed')].status
       name: Programmed
@@ -46,74 +49,19 @@ spec:
             type: object
           spec:
             properties:
-              apiSpec:
+              aiGatewayRef:
                 properties:
-                  enabled:
+                  group:
+                    default: konnect.konghq.com
                     enum:
-                    - Enabled
-                    - Disabled
+                    - konnect.konghq.com
+                    - aigateway.konghq.com
                     type: string
-                  hostname:
-                    maxLength: 253
-                    minLength: 1
-                    type: string
-                  ssl:
-                    properties:
-                      standard:
-                        properties:
-                          domainVerificationMethod:
-                            enum:
-                            - http
-                            maxLength: 253
-                            minLength: 1
-                            type: string
-                        required:
-                        - domainVerificationMethod
-                        type: object
-                      type:
-                        enum:
-                        - withCustomCertificate
-                        - standard
-                        minLength: 1
-                        type: string
-                      withCustomCertificate:
-                        properties:
-                          customCertificate:
-                            maxLength: 4096
-                            minLength: 1
-                            type: string
-                          customPrivateKey:
-                            maxLength: 4096
-                            minLength: 1
-                            type: string
-                          domainVerificationMethod:
-                            enum:
-                            - custom_certificate
-                            maxLength: 253
-                            minLength: 1
-                            type: string
-                          skipCaCheck:
-                            enum:
-                            - Enabled
-                            - Disabled
-                            type: string
-                        required:
-                        - customCertificate
-                        - customPrivateKey
-                        - domainVerificationMethod
-                        type: object
-                    required:
-                    - type
-                    type: object
-                required:
-                - enabled
-                - hostname
-                - ssl
-                type: object
-              portalRef:
-                properties:
-                  konnectID:
-                    maxLength: 36
+                  kind:
+                    default: KonnectAIGateway
+                    enum:
+                    - KonnectAIGateway
+                    - OnPremAIGateway
                     type: string
                   namespacedRef:
                     properties:
@@ -128,25 +76,73 @@ spec:
                     - name
                     type: object
                   type:
+                    default: namespacedRef
                     enum:
-                    - konnectID
                     - namespacedRef
                     type: string
                 required:
-                - type
+                - namespacedRef
                 type: object
                 x-kubernetes-validations:
-                - message: when type is namespacedRef, namespacedRef must be set
-                  rule: 'self.type == ''namespacedRef'' ? has(self.namespacedRef)
-                    : true'
-                - message: when type is namespacedRef, konnectID must not be set
-                  rule: 'self.type == ''namespacedRef'' ? !has(self.konnectID) : true'
-                - message: when type is konnectID, konnectID must be set
-                  rule: 'self.type == ''konnectID'' ? has(self.konnectID) : true'
-                - message: when type is konnectID, namespacedRef must not be set
-                  rule: 'self.type == ''konnectID'' ? !has(self.namespacedRef) : true'
+                - message: group must be aigateway.konghq.com when kind is OnPremAIGateway,
+                    and konnect.konghq.com when kind is KonnectAIGateway
+                  rule: 'self.kind == ''OnPremAIGateway'' ? self.group == ''aigateway.konghq.com''
+                    : self.group == ''konnect.konghq.com'''
+                - message: repointing an entity between KonnectAIGateway and OnPremAIGateway
+                    is forbidden
+                  rule: '!has(oldSelf.kind) || self.kind == oldSelf.kind'
+              apiSpec:
+                properties:
+                  certificate:
+                    properties:
+                      kind:
+                        default: AIGatewayCertificate
+                        enum:
+                        - AIGatewayCertificate
+                        type: string
+                      name:
+                        minLength: 1
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    type: object
+                  displayName:
+                    maxLength: 256
+                    minLength: 1
+                    type: string
+                  hostname:
+                    maxLength: 253
+                    minLength: 1
+                    type: string
+                  labels:
+                    additionalProperties:
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                      type: string
+                    type: object
+                  managedBy:
+                    additionalProperties:
+                      maxLength: 63
+                      minLength: 1
+                      pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                      type: string
+                    type: object
+                  name:
+                    maxLength: 256
+                    minLength: 1
+                    pattern: ^[0-9a-z-]+$
+                    type: string
+                required:
+                - certificate
+                - displayName
+                - hostname
+                - name
+                type: object
             required:
-            - portalRef
+            - aiGatewayRef
             type: object
           status:
             properties:
@@ -190,6 +186,12 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
+              gatewayID:
+                properties:
+                  id:
+                    maxLength: 256
+                    type: string
+                type: object
               id:
                 maxLength: 256
                 type: string
@@ -199,22 +201,16 @@ spec:
               organizationID:
                 maxLength: 256
                 type: string
-              portalID:
-                properties:
-                  id:
-                    maxLength: 256
-                    type: string
-                type: object
               serverURL:
                 maxLength: 512
                 type: string
             type: object
         type: object
         x-kubernetes-validations:
-        - message: spec.portalRef is immutable when an entity is already Programmed
-          rule: '!has(self.spec.portalRef) || !has(self.status.conditions) || !self.status.conditions.exists(c,
-            c.type == ''Programmed'' && c.status == ''True'') || oldSelf.spec.portalRef
-            == self.spec.portalRef'
+        - message: spec.aiGatewayRef is immutable when an entity is already Programmed
+          rule: '!has(self.spec.aiGatewayRef) || !has(self.status) || !has(self.status.conditions)
+            || !self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
+            == ''True'') || oldSelf.spec.aiGatewayRef == self.spec.aiGatewayRef'
     served: true
     storage: true
     subresources:

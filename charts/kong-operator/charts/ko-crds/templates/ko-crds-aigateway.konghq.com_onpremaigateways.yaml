@@ -9,32 +9,28 @@ metadata:
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
     kubernetes-configuration.konghq.com/version: v2.4.0-rapid.2.0
-  name: kongcustomentities.configuration.konghq.com
+  name: onpremaigateways.aigateway.konghq.com
 spec:
-  group: configuration.konghq.com
+  group: aigateway.konghq.com
   names:
     categories:
     - kong
-    kind: KongCustomEntity
-    listKind: KongCustomEntityList
-    plural: kongcustomentities
+    kind: OnPremAIGateway
+    listKind: OnPremAIGatewayList
+    plural: onpremaigateways
     shortNames:
-    - kce
-    singular: kongcustomentity
+    - onpremaigw
+    singular: onpremaigateway
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - description: type of the Kong entity
-      jsonPath: .spec.type
-      name: Entity Type
+    - description: The Resource is ready
+      jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: Ready
       type: string
-    - description: Age
-      jsonPath: .metadata.creationTimestamp
+    - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
-    - jsonPath: .status.conditions[?(@.type=="Programmed")].status
-      name: Programmed
-      type: string
     name: v1alpha1
     schema:
       openAPIV3Schema:
@@ -46,37 +42,7 @@ spec:
           metadata:
             type: object
           spec:
-            properties:
-              controllerName:
-                type: string
-              fields:
-                x-kubernetes-preserve-unknown-fields: true
-              parentRef:
-                properties:
-                  group:
-                    type: string
-                  kind:
-                    enum:
-                    - KongPlugin
-                    - KongClusterPlugin
-                    type: string
-                  name:
-                    type: string
-                  namespace:
-                    type: string
-                required:
-                - name
-                type: object
-              type:
-                type: string
-            required:
-            - controllerName
-            - fields
-            - type
             type: object
-            x-kubernetes-validations:
-            - message: The type field cannot be one of the known Kong entity types
-              rule: '!(self.type in [''services'',''routes'',''upstreams'',''targets'',''plugins'',''consumers'',''consumer_groups''])'
           status:
             properties:
               conditions:
@@ -85,7 +51,7 @@ spec:
                   message: Waiting for controller
                   reason: Pending
                   status: Unknown
-                  type: Programmed
+                  type: Ready
                 items:
                   properties:
                     lastTransitionTime:
@@ -125,15 +91,11 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
-            required:
-            - conditions
+              configHash:
+                maxLength: 64
+                type: string
             type: object
-        required:
-        - spec
         type: object
-        x-kubernetes-validations:
-        - message: The spec.type field is immutable
-          rule: self.spec.type == oldSelf.spec.type
     served: true
     storage: true
     subresources:
