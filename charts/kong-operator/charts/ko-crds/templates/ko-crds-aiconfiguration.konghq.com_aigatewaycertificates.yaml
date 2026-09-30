@@ -9,16 +9,16 @@ metadata:
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
     kubernetes-configuration.konghq.com/version: v2.4.0-rapid.2.0
-  name: aigatewayconsumercredentials.aiconfiguration.konghq.com
+  name: aigatewaycertificates.aiconfiguration.konghq.com
 spec:
   group: aiconfiguration.konghq.com
   names:
     categories:
     - kong
-    kind: AIGatewayConsumerCredential
-    listKind: AIGatewayConsumerCredentialList
-    plural: aigatewayconsumercredentials
-    singular: aigatewayconsumercredential
+    kind: AIGatewayCertificate
+    listKind: AIGatewayCertificateList
+    plural: aigatewaycertificates
+    singular: aigatewaycertificate
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -49,10 +49,19 @@ spec:
             type: object
           spec:
             properties:
-              aiGatewayConsumerRef:
+              aiGatewayRef:
                 properties:
-                  konnectID:
-                    maxLength: 36
+                  group:
+                    default: konnect.konghq.com
+                    enum:
+                    - konnect.konghq.com
+                    - aigateway.konghq.com
+                    type: string
+                  kind:
+                    default: KonnectAIGateway
+                    enum:
+                    - KonnectAIGateway
+                    - OnPremAIGateway
                     type: string
                   namespacedRef:
                     properties:
@@ -67,26 +76,24 @@ spec:
                     - name
                     type: object
                   type:
+                    default: namespacedRef
                     enum:
-                    - konnectID
                     - namespacedRef
                     type: string
                 required:
-                - type
+                - namespacedRef
                 type: object
                 x-kubernetes-validations:
-                - message: when type is namespacedRef, namespacedRef must be set
-                  rule: 'self.type == ''namespacedRef'' ? has(self.namespacedRef)
-                    : true'
-                - message: when type is namespacedRef, konnectID must not be set
-                  rule: 'self.type == ''namespacedRef'' ? !has(self.konnectID) : true'
-                - message: when type is konnectID, konnectID must be set
-                  rule: 'self.type == ''konnectID'' ? has(self.konnectID) : true'
-                - message: when type is konnectID, namespacedRef must not be set
-                  rule: 'self.type == ''konnectID'' ? !has(self.namespacedRef) : true'
+                - message: group must be aigateway.konghq.com when kind is OnPremAIGateway,
+                    and konnect.konghq.com when kind is KonnectAIGateway
+                  rule: 'self.kind == ''OnPremAIGateway'' ? self.group == ''aigateway.konghq.com''
+                    : self.group == ''konnect.konghq.com'''
+                - message: repointing an entity between KonnectAIGateway and OnPremAIGateway
+                    is forbidden
+                  rule: '!has(oldSelf.kind) || self.kind == oldSelf.kind'
               apiSpec:
                 properties:
-                  apiKey:
+                  cert:
                     properties:
                       secretRef:
                         properties:
@@ -121,10 +128,111 @@ spec:
                     - message: value required when type=inline; secretRef required
                         when type=secretRef
                       rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
-                  displayName:
-                    maxLength: 253
-                    minLength: 1
-                    type: string
+                  certAlt:
+                    properties:
+                      secretRef:
+                        properties:
+                          key:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          name:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          namespace:
+                            maxLength: 253
+                            type: string
+                        required:
+                        - key
+                        - name
+                        type: object
+                      type:
+                        default: inline
+                        enum:
+                        - inline
+                        - secretRef
+                        type: string
+                      value:
+                        maxLength: 4096
+                        type: string
+                    required:
+                    - type
+                    type: object
+                    x-kubernetes-validations:
+                    - message: value required when type=inline; secretRef required
+                        when type=secretRef
+                      rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
+                  key:
+                    properties:
+                      secretRef:
+                        properties:
+                          key:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          name:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          namespace:
+                            maxLength: 253
+                            type: string
+                        required:
+                        - key
+                        - name
+                        type: object
+                      type:
+                        default: inline
+                        enum:
+                        - inline
+                        - secretRef
+                        type: string
+                      value:
+                        maxLength: 4096
+                        type: string
+                    required:
+                    - type
+                    type: object
+                    x-kubernetes-validations:
+                    - message: value required when type=inline; secretRef required
+                        when type=secretRef
+                      rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
+                  keyAlt:
+                    properties:
+                      secretRef:
+                        properties:
+                          key:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          name:
+                            maxLength: 253
+                            minLength: 1
+                            type: string
+                          namespace:
+                            maxLength: 253
+                            type: string
+                        required:
+                        - key
+                        - name
+                        type: object
+                      type:
+                        default: inline
+                        enum:
+                        - inline
+                        - secretRef
+                        type: string
+                      value:
+                        maxLength: 4096
+                        type: string
+                    required:
+                    - type
+                    type: object
+                    x-kubernetes-validations:
+                    - message: value required when type=inline; secretRef required
+                        when type=secretRef
+                      rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
                   labels:
                     additionalProperties:
                       maxLength: 63
@@ -144,21 +252,13 @@ spec:
                     minLength: 1
                     pattern: ^[A-Za-z0-9._:@-]{1,256}$
                     type: string
-                  ttl:
-                    type: integer
-                  type:
-                    enum:
-                    - api-key
-                    maxLength: 253
-                    minLength: 1
-                    type: string
                 required:
-                - displayName
+                - cert
+                - key
                 - name
-                - type
                 type: object
             required:
-            - aiGatewayConsumerRef
+            - aiGatewayRef
             type: object
           status:
             properties:
@@ -202,12 +302,6 @@ spec:
                 x-kubernetes-list-map-keys:
                 - type
                 x-kubernetes-list-type: map
-              consumerID:
-                properties:
-                  id:
-                    maxLength: 256
-                    type: string
-                type: object
               gatewayID:
                 properties:
                   id:
@@ -229,11 +323,10 @@ spec:
             type: object
         type: object
         x-kubernetes-validations:
-        - message: spec.aiGatewayConsumerRef is immutable when an entity is already
-            Programmed
-          rule: '!has(self.spec.aiGatewayConsumerRef) || !has(self.status.conditions)
+        - message: spec.aiGatewayRef is immutable when an entity is already Programmed
+          rule: '!has(self.spec.aiGatewayRef) || !has(self.status) || !has(self.status.conditions)
             || !self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
-            == ''True'') || oldSelf.spec.aiGatewayConsumerRef == self.spec.aiGatewayConsumerRef'
+            == ''True'') || oldSelf.spec.aiGatewayRef == self.spec.aiGatewayRef'
     served: true
     storage: true
     subresources:

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.5.0-rapid.2.0
+
+### Added
+
+- Added the `AIGatewayCustomPolicy` CRD, together with the RBAC rules the
+  operator needs to reconcile it.
+  [#5896](https://github.com/Kong/kong-operator/pull/5896)
+
+### Changed
+
+- Bump default image to 2.4.0-rapid.2.0
+
 ## 1.5.0-rapid.1
 
 ### Added
@@ -21,14 +33,20 @@
 - Bump Gateway API CRDs subcharts (`gwapi-standard-crds`, `gwapi-experimental-crds`)
   to `1.6.2`.
   [#5462](https://github.com/Kong/kong-operator/pull/5462)
-- Strip CRD description strings from the chart's copy of the CRDs.
+- Strip the per-field `description` doc strings from the chart's copy of the
+  operator CRDs. The CRDs ship as chart templates, so they are part of the Helm
+  release manifest, which is stored gzip-compressed in a `Secret` capped at 1MiB.
+  With `ko-crds.enabled=true` the manifest grew past that limit and
+  `helm install`/`helm upgrade` failed with
+  `Secret ... is invalid: data: Too long`. Dropping the doc strings takes the CRD
+  set from 7.6MB to 2.9MB raw (743KB to 133KB compressed), which restores
+  Helm-managed CRD installs and upgrades with enough headroom to spare.
+  Note that `kubectl explain` no longer prints field documentation for CRDs
+  installed through this chart. The published API reference is generated from
+  `config/crd/kong-operator`, which is untouched. See
+  [CRD field descriptions](UPGRADE.md#crd-field-descriptions) for how to
+  install the CRDs with their field documentation.
   [#5819](https://github.com/Kong/kong-operator/pull/5819)
-
-## 1.4.1
-
-### Changed
-
-- Bump default image to 2.3.2
 
 ## 1.4.0
 
