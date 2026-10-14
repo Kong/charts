@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - release/kong-2.x
+      - release/kong-operator-1.4.x
 
 concurrency:
   # Queue release runs per branch so duplicate OCI pushes cannot race each other.
