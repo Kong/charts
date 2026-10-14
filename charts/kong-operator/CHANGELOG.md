@@ -24,6 +24,12 @@
 - Strip CRD description strings from the chart's copy of the CRDs.
   [#5819](https://github.com/Kong/kong-operator/pull/5819)
 
+## 1.4.2
+
+### Changed
+
+- Bump default image to 2.3.3
+
 ## 1.4.1
 
 ### Changed
