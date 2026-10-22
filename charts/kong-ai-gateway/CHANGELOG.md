@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Fixes
+
+- Fixed the ingress `duplication of specified ingress path` check so that it
+  only fails when an `ingress.hosts` entry repeats both the `ingress.hostname`
+  host and the `ingress.path` path.
+
 ## 0.3.0
 
 ### Changes
