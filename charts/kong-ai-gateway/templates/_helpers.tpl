@@ -109,7 +109,12 @@ spec:
           path: {{ $path }}
           pathType: {{ $pathType }}
   {{- end }}
+  {{- $hostPaths := dict }}
+  {{- if $hostname }}
+  {{- $_ := set $hostPaths (list $hostname $path | toJson) true }}
+  {{- end }}
   {{- range .ingress.hosts }}
+  {{- $host := default "" .host }}
   - host: {{ .host | quote }}
     http:
       paths:
@@ -123,9 +128,11 @@ spec:
               port:
                 number: {{ $servicePort }}
           {{- end }}
-          {{- if (and $hostname (and (eq $path .path))) }}
+          {{- $hostPath := list $host .path | toJson }}
+          {{- if hasKey $hostPaths $hostPath }}
           {{- fail "duplication of specified ingress path" }}
           {{- end }}
+          {{- $_ := set $hostPaths $hostPath true }}
           path: {{ .path }}
           pathType: {{ .pathType }}
         {{- end }}
