@@ -110,6 +110,7 @@ spec:
           pathType: {{ $pathType }}
   {{- end }}
   {{- range .ingress.hosts }}
+  {{- $host := default "" .host }}
   - host: {{ .host | quote }}
     http:
       paths:
@@ -123,7 +124,7 @@ spec:
               port:
                 number: {{ $servicePort }}
           {{- end }}
-          {{- if (and $hostname (and (eq $path .path))) }}
+          {{- if (and $hostname (eq $hostname $host) (eq $path .path)) }}
           {{- fail "duplication of specified ingress path" }}
           {{- end }}
           path: {{ .path }}
