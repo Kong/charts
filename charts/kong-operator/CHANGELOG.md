@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.3
+
+### Changed
+
+- Bump default image to 2.3.4
+
 ## 1.5.0-rapid.2.0
 
 ### Added
