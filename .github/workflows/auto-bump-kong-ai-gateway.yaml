@@ -97,7 +97,7 @@ jobs:
 
           # Prepend the new changelog entry right after the "# Changelog" header.
           entry_file="$(mktemp)"
-          printf '## %s\n\n### Changes\n\n- Update the default AI Gateway DataPlane image to `kong/kong-ai-gateway:%s`.\n' "${new_chart_version}" "${LATEST}" > "${entry_file}"
+          printf "## %s\n\n### Changes\n\n- Update the default AI Gateway DataPlane image to \`kong/kong-ai-gateway:%s\`.\n" "${new_chart_version}" "${LATEST}" > "${entry_file}"
           {
             sed -n '1p' "${changelog_file}"
             echo ""
