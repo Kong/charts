@@ -1,0 +1,150 @@
+name: Auto bump Kong AI Gateway chart
+
+# Bumps the default Kong AI Gateway DataPlane image in charts/kong-ai-gateway
+# when a new version is published to Docker Hub, and opens a PR with the
+# update (image tag, Chart.yaml appVersion and chart version, CHANGELOG entry).
+
+on:
+  schedule:
+    # Daily at 04:30 UTC.
+    - cron: "30 4 * * *"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Kong AI Gateway version to bump the chart to (e.g. "2.2.0"). Defaults to the latest version published on Docker Hub.'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Determine the latest Kong AI Gateway version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+
+          if [ -n "${INPUT_VERSION}" ]; then
+            latest="${INPUT_VERSION#v}"
+          else
+            latest="$(
+              curl -sf "https://hub.docker.com/v2/repositories/kong/kong-ai-gateway/tags?page_size=100&ordering=last_updated" |
+                jq -r '[.results[].name | select(test("^[0-9]+\\.[0-9]+\\.[0-9]+$"))] | sort_by(split(".") | map(tonumber)) | reverse | .[0]'
+            )"
+          fi
+
+          current="$(sed -n 's/^appVersion: "\(.*\)"$/\1/p' charts/kong-ai-gateway/Chart.yaml)"
+
+          echo "latest=${latest}" >> "${GITHUB_OUTPUT}"
+          echo "current=${current}" >> "${GITHUB_OUTPUT}"
+
+          if [ "${latest}" = "${current}" ]; then
+            echo "The chart is already up to date at ${current}."
+            echo "update=false" >> "${GITHUB_OUTPUT}"
+          else
+            echo "Bumping the chart from ${current} to ${latest}."
+            echo "update=true" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Update the chart
+        if: steps.version.outputs.update == 'true'
+        env:
+          LATEST: ${{ steps.version.outputs.latest }}
+          CURRENT: ${{ steps.version.outputs.current }}
+        run: |
+          set -euo pipefail
+
+          chart_file=charts/kong-ai-gateway/Chart.yaml
+          values_file=charts/kong-ai-gateway/values.yaml
+          changelog_file=charts/kong-ai-gateway/CHANGELOG.md
+
+          chart_version="$(sed -n 's/^version: \(.*\)$/\1/p' "${chart_file}")"
+          IFS=. read -r c_major c_minor c_patch <<<"${chart_version}"
+          IFS=. read -r v_major v_minor _ <<<"${CURRENT}"
+          IFS=. read -r l_major l_minor _ <<<"${LATEST}"
+
+          # Bump the chart version in lockstep with the image version: a new
+          # image major/minor bumps the chart minor (patch reset to 0), an
+          # image patch bumps the chart patch.
+          if [ "${l_major}" != "${v_major}" ]; then
+            new_chart_version="$((c_major + 1)).0.0"
+          elif [ "${l_minor}" != "${v_minor}" ]; then
+            new_chart_version="${c_major}.$((c_minor + 1)).0"
+          else
+            new_chart_version="${c_major}.${c_minor}.$((c_patch + 1))"
+          fi
+
+          sed -i "s/^version: ${chart_version}$/version: ${new_chart_version}/" "${chart_file}"
+          sed -i "s/^appVersion: \"${CURRENT}\"$/appVersion: \"${LATEST}\"/" "${chart_file}"
+          sed -i "s/^  tag: \"${CURRENT}\"$/  tag: \"${LATEST}\"/" "${values_file}"
+
+          # Prepend the new changelog entry right after the "# Changelog" header.
+          entry_file="$(mktemp)"
+          printf '## %s\n\n### Changes\n\n- Update the default AI Gateway DataPlane image to `kong/kong-ai-gateway:%s`.\n' "${new_chart_version}" "${LATEST}" > "${entry_file}"
+          {
+            sed -n '1p' "${changelog_file}"
+            echo ""
+            cat "${entry_file}"
+            echo ""
+            # Skip the blank line following the header to avoid a double blank.
+            if [ -z "$(sed -n '2p' "${changelog_file}")" ]; then
+              sed -n '3,$p' "${changelog_file}"
+            else
+              sed -n '2,$p' "${changelog_file}"
+            fi
+          } > "${changelog_file}.tmp" && mv "${changelog_file}.tmp" "${changelog_file}"
+          rm -f "${entry_file}"
+
+          echo "Bumped the chart from ${chart_version} to ${new_chart_version} (image ${CURRENT} -> ${LATEST})."
+
+      - name: Create Pull Request
+        if: steps.version.outputs.update == 'true'
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1
+        with:
+          token: ${{ secrets.K8S_TEAM_BOT_GH_PAT }}
+          title: 'chore(kong-ai-gateway): bump default image to ${{ steps.version.outputs.latest }}'
+          commit-message: 'chore(kong-ai-gateway): bump default image to ${{ steps.version.outputs.latest }}'
+          committer: Kong's Team k8s bot <team-k8s+github-bot@konghq.com>
+          author: Kong's Team k8s bot <team-k8s+github-bot@konghq.com>
+          signoff: true
+          base: ${{ github.ref_name == '' && 'main' || github.ref_name }}
+          branch: chore/auto-update-kong-ai-gateway
+          delete-branch: true
+          draft: false
+          labels: dependencies
+          body: |
+            #### What this PR does / why we need it:
+
+            Bumps the default Kong AI Gateway DataPlane image to `kong/kong-ai-gateway:${{ steps.version.outputs.latest }}`.
+
+            Automated PR created by the `Auto bump Kong AI Gateway chart` workflow.
+
+            #### Which issue this PR fixes
+            *(optional, in `fixes #<issue number>(, fixes #<issue_number>, ...)` format, will close that issue when PR gets merged)*
+              - fixes #
+
+            #### Special notes for your reviewer:
+
+            #### Checklist
+            [Place an '[x]' (no spaces) in all applicable fields. Please remove unrelated fields.]
+            - [x] PR is based off the current tip of the `main` branch.
+            - [x] Changes are documented in charts/kong-ai-gateway/CHANGELOG.md
+            - [ ] New or modified sections of values.yaml are documented in the README.md
+            - [x] Commits follow the [Kong commit message guidelines](https://github.com/Kong/kong/blob/master/CONTRIBUTING.md#commit-message-format)
