@@ -164,7 +164,7 @@ extraLabels: {}
 # Specify Kong AI Gateway's Docker image and repository details here.
 image:
   repository: kong/kong-ai-gateway
-  tag: "2.0.3"
+  tag: "2.2.0"
 
   # Specify a semver version if your image tag is not one (e.g. "nightly")
   effectiveSemver:

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+### Changes
+
+- Update the default AI Gateway DataPlane image to `kong/kong-ai-gateway:2.2.0`.
+
 ## 0.2.1
 
 ### Fixes
