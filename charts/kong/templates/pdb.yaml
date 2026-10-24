@@ -22,6 +22,5 @@ spec:
   unhealthyPodEvictionPolicy: {{ .Values.podDisruptionBudget.unhealthyPodEvictionPolicy }}
   selector:
     matchLabels:
-      {{- include "kong.metaLabels" . | nindent 6 }}
-      app.kubernetes.io/component: app
+      {{- include "kong.selectorLabels" . | nindent 6 }}
 {{- end }}

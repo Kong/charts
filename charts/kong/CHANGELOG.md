@@ -11,6 +11,13 @@
   as aws-privateca-issuer or google-cas-issuer.
   [#1549](https://github.com/Kong/charts/pull/1549)
 
+### Fixes
+
+* The PodDisruptionBudget now selects pods with the same labels as the
+  Deployment selector. Previously it also matched `helm.sh/chart` and
+  `app.kubernetes.io/version`, so after an upgrade that changed either label it
+  did not cover the pods from the previous release until they were replaced.
+
 ## 3.4.1
 
 ### Changes

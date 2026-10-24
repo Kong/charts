@@ -18,11 +18,8 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: kong
-      helm.sh/chart: kong-3.4.1
-      app.kubernetes.io/instance: "chartsnap"
-      app.kubernetes.io/managed-by: "Helm"
-      app.kubernetes.io/version: "3.9"
       app.kubernetes.io/component: app
+      app.kubernetes.io/instance: "chartsnap"
 ---
 # Source: kong/templates/service-account.yaml
 apiVersion: v1
