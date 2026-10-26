@@ -11,6 +11,13 @@
   as aws-privateca-issuer or google-cas-issuer.
   [#1549](https://github.com/Kong/charts/pull/1549)
 
+### Fixes
+
+* Fixed the ingress `duplication of specified ingress path` check so that it
+  only fails when an `ingress.hosts` entry repeats both the `ingress.hostname`
+  host and the `ingress.path` path. Previously, any `ingress.hosts` entry that
+  reused the `ingress.path` path failed to render, even for a different host.
+
 ## 3.4.1
 
 ### Changes
