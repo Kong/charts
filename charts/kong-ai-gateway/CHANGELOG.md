@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Fixes
+
+- The PodDisruptionBudget now selects pods with the same labels as the
+  Deployment selector. Previously it also matched `helm.sh/chart` and
+  `app.kubernetes.io/version`, so after an upgrade that changed either label it
+  did not cover the pods from the previous release until they were replaced.
+
 ## 0.3.0
 
 ### Changes

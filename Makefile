@@ -83,7 +83,8 @@ test.golden:
 	@ \
 		$(MAKE) _chartsnap CHART=kong && \
 		$(MAKE) _chartsnap CHART=ingress && \
-		$(MAKE) _chartsnap CHART=gateway-operator || \
+		$(MAKE) _chartsnap CHART=gateway-operator && \
+		$(MAKE) _chartsnap CHART=kong-ai-gateway || \
 	(echo "$$GOLDEN_TEST_FAILURE_MSG" && exit 1)
 
 .PHONY: test.golden.update
@@ -92,6 +93,7 @@ test.golden.update: download.helm
 	@ $(MAKE) _chartsnap CHART=kong CHARTSNAP_ARGS="-u"
 	@ $(MAKE) _chartsnap CHART=ingress CHARTSNAP_ARGS="-u"
 	@ $(MAKE) _chartsnap CHART=gateway-operator CHARTSNAP_ARGS="-u"
+	@ $(MAKE) _chartsnap CHART=kong-ai-gateway CHARTSNAP_ARGS="-u"
 
 # Defining multi-line strings to echo: https://stackoverflow.com/a/649462/7958339
 define GOLDEN_TEST_FAILURE_MSG
