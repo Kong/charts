@@ -3,6 +3,9 @@ name: Auto bump Kong AI Gateway chart
 # Bumps the default Kong AI Gateway DataPlane image in charts/kong-ai-gateway
 # when a new version is published to Docker Hub, and opens a PR with the
 # update (image tag, Chart.yaml appVersion and chart version, CHANGELOG entry).
+# Requires the Kong k8s GitHub App installed on this repository, with
+# GH_APP__KONG_K8S__APP_ID (variable) and GH_APP__KONG_K8S__PRIVATE_KEY (secret)
+# available to this workflow.
 
 on:
   schedule:
@@ -114,11 +117,23 @@ jobs:
 
           echo "Bumped the chart from ${chart_version} to ${new_chart_version} (image ${CURRENT} -> ${LATEST})."
 
+      - name: Generate GitHub App token
+        id: app-token
+        if: steps.version.outputs.update == 'true'
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.GH_APP__KONG_K8S__APP_ID }}
+          private-key: ${{ secrets.GH_APP__KONG_K8S__PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
+
       - name: Create Pull Request
         if: steps.version.outputs.update == 'true'
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1
         with:
-          token: ${{ secrets.K8S_TEAM_BOT_GH_PAT }}
+          token: ${{ steps.app-token.outputs.token }}
           title: 'chore(kong-ai-gateway): bump default image to ${{ steps.version.outputs.latest }}'
           commit-message: 'chore(kong-ai-gateway): bump default image to ${{ steps.version.outputs.latest }}'
           committer: Kong's Team k8s bot <team-k8s+github-bot@konghq.com>
