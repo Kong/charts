@@ -1,0 +1,326 @@
+# chartsnap: snapshot_version=v3
+---
+# Source: kong-ai-gateway/templates/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: chartsnap-kong-ai-gateway
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong-ai-gateway
+    helm.sh/chart: kong-ai-gateway-0.3.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "2.2"
+---
+# Source: kong-ai-gateway/templates/service-kong-proxy.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: chartsnap-kong-ai-gateway-proxy
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong-ai-gateway
+    helm.sh/chart: kong-ai-gateway-0.3.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "2.2"
+    enable-metrics: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: kong-proxy
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+  - name: kong-proxy-tls
+    port: 443
+    targetPort: 8443
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: kong-ai-gateway
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: "chartsnap"
+---
+# Source: kong-ai-gateway/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chartsnap-kong-ai-gateway
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kong-ai-gateway
+    helm.sh/chart: kong-ai-gateway-0.3.0
+    app.kubernetes.io/instance: "chartsnap"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "2.2"
+    app.kubernetes.io/component: app
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kong-ai-gateway
+      app.kubernetes.io/component: app
+      app.kubernetes.io/instance: "chartsnap"
+  template:
+    metadata:
+      annotations:
+        kuma.io/service-account-token-volume: chartsnap-kong-ai-gateway-token
+        kuma.io/gateway: "enabled"
+        traffic.sidecar.istio.io/includeInboundPorts: ""
+      labels:
+        app.kubernetes.io/name: kong-ai-gateway
+        helm.sh/chart: kong-ai-gateway-0.3.0
+        app.kubernetes.io/instance: "chartsnap"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/version: "2.2"
+        app.kubernetes.io/component: app
+        app: chartsnap-kong-ai-gateway
+        version: "2.2"
+    spec:
+      serviceAccountName: chartsnap-kong-ai-gateway
+      automountServiceAccountToken: false
+      initContainers:
+      - name: clear-stale-pid
+        image: kong/kong-ai-gateway:2.2.0
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        resources: {}
+        command:
+        - rm
+        - -vrf
+        - $(KONG_PREFIX)/pids
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_ANONYMOUS_REPORTS
+          value: "off"
+        - name: KONG_CLUSTER_CERT
+          value: "/etc/secrets/kong-cluster-cert/tls.crt"
+        - name: KONG_CLUSTER_CERT_KEY
+          value: "/etc/secrets/kong-cluster-cert/tls.key"
+        - name: KONG_CLUSTER_CONTROL_PLANE
+          value: "CHANGEME-control-plane-endpoint.konghq.com:443"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_MTLS
+          value: "pki"
+        - name: KONG_CLUSTER_SERVER_NAME
+          value: "CHANGEME-control-plane-endpoint.konghq.com"
+        - name: KONG_CLUSTER_TELEMETRY_ENDPOINT
+          value: "CHANGEME-telemetry-endpoint.konghq.com:443"
+        - name: KONG_CLUSTER_TELEMETRY_SERVER_NAME
+          value: "CHANGEME-telemetry-endpoint.konghq.com"
+        - name: KONG_DATABASE
+          value: "off"
+        - name: KONG_KONNECT_MODE
+          value: "on"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_LUA_SSL_TRUSTED_CERTIFICATE
+          value: "system"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROLE
+          value: "data_plane"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_VITALS
+          value: "off"
+        volumeMounts:
+        - name: chartsnap-kong-ai-gateway-prefix-dir
+          mountPath: /kong_prefix/
+        - name: chartsnap-kong-ai-gateway-tmp
+          mountPath: /tmp
+      containers:
+      - name: "proxy"
+        image: kong/kong-ai-gateway:2.2.0
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+        env:
+        - name: KONG_ADMIN_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_GUI_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_ADMIN_GUI_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ADMIN_LISTEN
+          value: "127.0.0.1:8444 http2 ssl, [::1]:8444 http2 ssl"
+        - name: KONG_ANONYMOUS_REPORTS
+          value: "off"
+        - name: KONG_CLUSTER_CERT
+          value: "/etc/secrets/kong-cluster-cert/tls.crt"
+        - name: KONG_CLUSTER_CERT_KEY
+          value: "/etc/secrets/kong-cluster-cert/tls.key"
+        - name: KONG_CLUSTER_CONTROL_PLANE
+          value: "CHANGEME-control-plane-endpoint.konghq.com:443"
+        - name: KONG_CLUSTER_LISTEN
+          value: "off"
+        - name: KONG_CLUSTER_MTLS
+          value: "pki"
+        - name: KONG_CLUSTER_SERVER_NAME
+          value: "CHANGEME-control-plane-endpoint.konghq.com"
+        - name: KONG_CLUSTER_TELEMETRY_ENDPOINT
+          value: "CHANGEME-telemetry-endpoint.konghq.com:443"
+        - name: KONG_CLUSTER_TELEMETRY_SERVER_NAME
+          value: "CHANGEME-telemetry-endpoint.konghq.com"
+        - name: KONG_DATABASE
+          value: "off"
+        - name: KONG_KONNECT_MODE
+          value: "on"
+        - name: KONG_LUA_PACKAGE_PATH
+          value: "/opt/?.lua;/opt/?/init.lua;;"
+        - name: KONG_LUA_SSL_TRUSTED_CERTIFICATE
+          value: "system"
+        - name: KONG_NGINX_WORKER_PROCESSES
+          value: "2"
+        - name: KONG_PORT_MAPS
+          value: "80:8000, 443:8443"
+        - name: KONG_PREFIX
+          value: "/kong_prefix/"
+        - name: KONG_PROXY_ACCESS_LOG
+          value: "/dev/stdout"
+        - name: KONG_PROXY_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_PROXY_LISTEN
+          value: "0.0.0.0:8000, [::]:8000, 0.0.0.0:8443 http2 ssl, [::]:8443 http2 ssl"
+        - name: KONG_PROXY_STREAM_ACCESS_LOG
+          value: "/dev/stdout basic"
+        - name: KONG_PROXY_STREAM_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_ROLE
+          value: "data_plane"
+        - name: KONG_STATUS_ACCESS_LOG
+          value: "off"
+        - name: KONG_STATUS_ERROR_LOG
+          value: "/dev/stderr"
+        - name: KONG_STATUS_LISTEN
+          value: "0.0.0.0:8100, [::]:8100"
+        - name: KONG_STREAM_LISTEN
+          value: "off"
+        - name: KONG_VITALS
+          value: "off"
+        - name: KONG_NGINX_DAEMON
+          value: "off"
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - kong
+              - quit
+              - --wait=15
+        ports:
+        - name: proxy
+          containerPort: 8000
+          protocol: TCP
+        - name: proxy-tls
+          containerPort: 8443
+          protocol: TCP
+        - name: status
+          containerPort: 8100
+          protocol: TCP
+        volumeMounts:
+        - name: chartsnap-kong-ai-gateway-prefix-dir
+          mountPath: /kong_prefix/
+        - name: chartsnap-kong-ai-gateway-tmp
+          mountPath: /tmp
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /status/ready
+            port: status
+            scheme: HTTP
+          initialDelaySeconds: 1
+          periodSeconds: 1
+          successThreshold: 1
+          timeoutSeconds: 5
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /status
+            port: status
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources: {}
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: chartsnap-kong-ai-gateway-prefix-dir
+        emptyDir:
+          sizeLimit: 256Mi
+      - name: chartsnap-kong-ai-gateway-tmp
+        emptyDir:
+          sizeLimit: 1Gi
+      - name: chartsnap-kong-ai-gateway-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 3607
+              path: token
+          - configMap:
+              items:
+              - key: ca.crt
+                path: ca.crt
+              name: kube-root-ca.crt
+          - downwardAPI:
+              items:
+              - fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+                path: namespace
