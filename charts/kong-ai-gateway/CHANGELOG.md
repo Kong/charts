@@ -8,6 +8,7 @@
   Deployment selector. Previously it also matched `helm.sh/chart` and
   `app.kubernetes.io/version`, so after an upgrade that changed either label it
   did not cover the pods from the previous release until they were replaced.
+  [#1593](https://github.com/Kong/charts/pull/1593)
 
 ## 0.4.0
 
