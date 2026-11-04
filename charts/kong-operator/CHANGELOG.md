@@ -1,11 +1,5 @@
 # Changelog
 
-## 1.4.3
-
-### Changed
-
-- Bump default image to 2.3.4
-
 ## 1.5.0-rapid.2.0
 
 ### Added
@@ -53,18 +47,6 @@
   [CRD field descriptions](UPGRADE.md#crd-field-descriptions) for how to
   install the CRDs with their field documentation.
   [#5819](https://github.com/Kong/kong-operator/pull/5819)
-
-## 1.4.2
-
-### Changed
-
-- Bump default image to 2.3.3
-
-## 1.4.1
-
-### Changed
-
-- Bump default image to 2.3.2
 
 ## 1.4.0
 
