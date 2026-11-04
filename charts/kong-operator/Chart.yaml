@@ -8,7 +8,7 @@ maintainers:
 name: kong-operator
 sources:
   - https://github.com/Kong/kong-operator/charts/kong-operator/
-version: 1.5.0-rapid.2.0
+version: 1.5.0-rapid.3.1
 appVersion: "2.4.0-rapid.3.1"
 annotations:
   artifacthub.io/category: networking
