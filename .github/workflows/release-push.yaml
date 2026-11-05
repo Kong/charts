@@ -27,7 +27,7 @@ jobs:
       contents: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
         with:
           egress-policy: audit
       - name: Checkout
@@ -76,7 +76,7 @@ jobs:
 
       - name: Run chart-releaser
         id: chart_releaser
-        uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
+        uses: helm/chart-releaser-action@92c6b97fa9f664492a2592e0d1d80bc6bf378957 # v1.9.0
         with:
           skip_existing: true
         env:

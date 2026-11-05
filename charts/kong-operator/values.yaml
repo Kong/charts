@@ -1,6 +1,6 @@
 image:
   repository: docker.io/kong/kong-operator
-  tag: "2.3.4"
+  tag: "2.4.0-rapid.3.1"
   # If you want only the digest to be used, set tag to "" in your values.yaml.
   digest: ""
   # Optionally set a semantic version for version-gated features. This can normally
@@ -85,6 +85,12 @@ env: {}
 # enable_controller_dataplane_bluegreen: true
 # # aigateway controller. (experimental)
 # enable_controller_aigateway: false
+# # AIGatewayDataPlane controller.
+# enable_controller_aigatewaydataplane: false
+# # on-prem AI Gateway (control plane) controller.
+# enable_controller_onpremaigateway: false
+# # GWAdmin controller (gw-admin, the on-prem control plane of the data planes that do not use Konnect).
+# enable_controller_gwadmin: false
 # # konglicense controller.
 # enable_controller_konglicense: true
 # # controlplane extensions controller.

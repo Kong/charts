@@ -77,13 +77,19 @@ rules:
     resources:
       - aigatewayagents
       - aigatewayauthstrategies
+      - aigatewaycacertificates
+      - aigatewaycertificates
       - aigatewayconsumercredentials
       - aigatewayconsumergroups
       - aigatewayconsumers
+      - aigatewaycustompolicies
+      - aigatewaydatastores
       - aigatewaymcpservers
       - aigatewaymodelproviders
       - aigatewaymodels
       - aigatewaypolicies
+      - aigatewaysnis
+      - aigatewayvaults
     verbs:
       - get
       - list
@@ -94,26 +100,45 @@ rules:
       - aiconfiguration.konghq.com
     resources:
       - aigatewayagents/finalizers
-      - aigatewayagents/status
       - aigatewayauthstrategies/finalizers
-      - aigatewayauthstrategies/status
+      - aigatewaycacertificates/finalizers
+      - aigatewaycertificates/finalizers
       - aigatewayconsumercredentials/finalizers
       - aigatewayconsumercredentials/status
       - aigatewayconsumergroups/finalizers
-      - aigatewayconsumergroups/status
       - aigatewayconsumers/finalizers
-      - aigatewayconsumers/status
+      - aigatewaycustompolicies/finalizers
       - aigatewaydataplanecertificates/finalizers
-      - aigatewaydataplanecertificates/status
+      - aigatewaydatastores/finalizers
       - aigatewaymcpservers/finalizers
-      - aigatewaymcpservers/status
       - aigatewaymodelproviders/finalizers
-      - aigatewaymodelproviders/status
       - aigatewaymodels/finalizers
-      - aigatewaymodels/status
       - aigatewaypolicies/finalizers
-      - aigatewaypolicies/status
+      - aigatewaysnis/finalizers
+      - aigatewayvaults/finalizers
     verbs:
+      - patch
+      - update
+  - apiGroups:
+      - aiconfiguration.konghq.com
+    resources:
+      - aigatewayagents/status
+      - aigatewayauthstrategies/status
+      - aigatewaycacertificates/status
+      - aigatewaycertificates/status
+      - aigatewayconsumergroups/status
+      - aigatewayconsumers/status
+      - aigatewaycustompolicies/status
+      - aigatewaydataplanecertificates/status
+      - aigatewaydatastores/status
+      - aigatewaymcpservers/status
+      - aigatewaymodelproviders/status
+      - aigatewaymodels/status
+      - aigatewaypolicies/status
+      - aigatewaysnis/status
+      - aigatewayvaults/status
+    verbs:
+      - get
       - patch
       - update
   - apiGroups:
@@ -132,6 +157,7 @@ rules:
       - aigateway.konghq.com
     resources:
       - aigatewaydataplanes
+      - onpremaigateways
     verbs:
       - get
       - list
@@ -142,8 +168,15 @@ rules:
       - aigateway.konghq.com
     resources:
       - aigatewaydataplanes/status
+      - onpremaigateways/status
     verbs:
       - patch
+      - update
+  - apiGroups:
+      - aigateway.konghq.com
+    resources:
+      - onpremaigateways/finalizers
+    verbs:
       - update
   - apiGroups:
       - apiextensions.k8s.io
@@ -203,8 +236,11 @@ rules:
       - eventgatewaylistenerpolicies
       - eventgatewaylisteners
       - eventgatewayschemaregistries
+      - eventgatewaystatickeys
+      - eventgatewaytlstrustbundles
       - eventgatewayvirtualclusterconsumepolicies
       - eventgatewayvirtualclusterpolicies
+      - eventgatewayvirtualclusterpolicychains
       - eventgatewayvirtualclusterproducepolicies
       - eventgatewayvirtualclusters
       - kongcacertificates
@@ -233,10 +269,16 @@ rules:
       - eventgatewaylisteners/status
       - eventgatewayschemaregistries/finalizers
       - eventgatewayschemaregistries/status
+      - eventgatewaystatickeys/finalizers
+      - eventgatewaystatickeys/status
+      - eventgatewaytlstrustbundles/finalizers
+      - eventgatewaytlstrustbundles/status
       - eventgatewayvirtualclusterconsumepolicies/finalizers
       - eventgatewayvirtualclusterconsumepolicies/status
       - eventgatewayvirtualclusterpolicies/finalizers
       - eventgatewayvirtualclusterpolicies/status
+      - eventgatewayvirtualclusterpolicychains/finalizers
+      - eventgatewayvirtualclusterpolicychains/status
       - eventgatewayvirtualclusterproducepolicies/finalizers
       - eventgatewayvirtualclusterproducepolicies/status
       - eventgatewayvirtualclusters/finalizers
@@ -365,8 +407,24 @@ rules:
       - eventgateway.konghq.com
     resources:
       - kegdataplanes/status
+      - onpremeventgateways/status
     verbs:
       - patch
+      - update
+  - apiGroups:
+      - eventgateway.konghq.com
+    resources:
+      - onpremeventgateways
+    verbs:
+      - get
+      - list
+      - patch
+      - watch
+  - apiGroups:
+      - eventgateway.konghq.com
+    resources:
+      - onpremeventgateways/finalizers
+    verbs:
       - update
   - apiGroups:
       - gateway-operator.konghq.com
@@ -388,6 +446,7 @@ rules:
       - aigateways/finalizers
       - controlplanes/finalizers
       - dataplanes/finalizers
+      - gwadmins/finalizers
     verbs:
       - update
   - apiGroups:
@@ -396,6 +455,7 @@ rules:
       - aigateways/status
       - controlplanes/status
       - dataplanes/status
+      - gwadmins/status
       - kongplugininstallations/status
       - konnectextensions/finalizers
       - konnectextensions/status
@@ -408,6 +468,7 @@ rules:
       - controlplane
       - dataplanemetricsextensions
       - gatewayconfigurations
+      - watchnamespacegrants
     verbs:
       - get
       - list
@@ -415,6 +476,7 @@ rules:
   - apiGroups:
       - gateway-operator.konghq.com
     resources:
+      - gwadmins
       - kongplugininstallations
       - konnectextensions
     verbs:
@@ -422,13 +484,6 @@ rules:
       - list
       - patch
       - update
-      - watch
-  - apiGroups:
-      - gateway-operator.konghq.com
-    resources:
-      - watchnamespacegrants
-    verbs:
-      - list
       - watch
   - apiGroups:
       - gateway.networking.k8s.io
@@ -529,6 +584,7 @@ rules:
       - konnectcloudgatewaynetworks
       - konnectcloudgatewaytransitgateways
       - konnectconfigstores
+      - konnectconfigstoresyncs
       - konnecteventgateways
       - portalcustomdomains
       - portalcustomizations
@@ -559,6 +615,7 @@ rules:
       - konnectcloudgatewaytransitgateways/status
       - konnectconfigstores/finalizers
       - konnectconfigstores/status
+      - konnectconfigstoresyncs/finalizers
       - konnecteventgateways/finalizers
       - konnecteventgateways/status
       - konnectextensions/finalizers
@@ -583,6 +640,14 @@ rules:
       - portalteams/finalizers
       - portalteams/status
     verbs:
+      - patch
+      - update
+  - apiGroups:
+      - konnect.konghq.com
+    resources:
+      - konnectconfigstoresyncs/status
+    verbs:
+      - get
       - patch
       - update
   - apiGroups:
