@@ -111,7 +111,7 @@ spec:
   {{- end }}
   {{- $hostPaths := dict }}
   {{- if $hostname }}
-  {{- $_ := set $hostPaths (list $hostname $path | toJson) true }}
+  {{- $_ := set $hostPaths (list (lower $hostname) $path | toJson) true }}
   {{- end }}
   {{- range .ingress.hosts }}
   {{- $host := default "" .host }}
@@ -128,9 +128,13 @@ spec:
               port:
                 number: {{ $servicePort }}
           {{- end }}
-          {{- $hostPath := list $host .path | toJson }}
+          {{- $hostPath := list (lower $host) .path | toJson }}
           {{- if hasKey $hostPaths $hostPath }}
-          {{- fail "duplication of specified ingress path" }}
+          {{- if $host }}
+          {{- fail (printf "duplication of specified ingress path %q for host %q" .path $host) }}
+          {{- else }}
+          {{- fail (printf "duplication of specified ingress path %q in ingress.hosts entries with an empty host" .path) }}
+          {{- end }}
           {{- end }}
           {{- $_ := set $hostPaths $hostPath true }}
           path: {{ .path }}
