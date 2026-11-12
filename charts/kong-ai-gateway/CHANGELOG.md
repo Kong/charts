@@ -9,6 +9,13 @@
   `app.kubernetes.io/version`, so after an upgrade that changed either label it
   did not cover the pods from the previous release until they were replaced.
   [#1593](https://github.com/Kong/charts/pull/1593)
+- The ingress `duplication of specified ingress path` check now fails only when
+  two rules use the same host and path, whether they come from
+  `ingress.hostname` and `ingress.path` or from `ingress.hosts` entries.
+  Previously, an `ingress.hosts` entry that reused the `ingress.path` path
+  failed to render even for a different host, and two `ingress.hosts` entries
+  with the same host and path rendered without error.
+  [#1586](https://github.com/Kong/charts/pull/1586)
 
 ## 0.4.0
 
