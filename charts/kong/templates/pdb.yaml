@@ -13,10 +13,10 @@ metadata:
   labels:
     {{- include "kong.metaLabels" . | nindent 4 }}
 spec:
-  {{- if .Values.podDisruptionBudget.minAvailable }}
+  {{- if ne .Values.podDisruptionBudget.minAvailable nil }}
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
   {{- end  }}
-  {{- if .Values.podDisruptionBudget.maxUnavailable }}
+  {{- if ne .Values.podDisruptionBudget.maxUnavailable nil }}
   maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
   {{- end  }}
   unhealthyPodEvictionPolicy: {{ .Values.podDisruptionBudget.unhealthyPodEvictionPolicy }}

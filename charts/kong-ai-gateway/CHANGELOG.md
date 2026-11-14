@@ -4,6 +4,10 @@
 
 ### Fixes
 
+- `deployment.revisionHistoryLimit`, `podDisruptionBudget.minAvailable` and
+  `podDisruptionBudget.maxUnavailable` are now rendered when set to `0`.
+  Previously a `0` was treated as unset and the field was left out.
+
 - The PodDisruptionBudget now selects pods with the same labels as the
   Deployment selector. Previously it also matched `helm.sh/chart` and
   `app.kubernetes.io/version`, so after an upgrade that changed either label it
