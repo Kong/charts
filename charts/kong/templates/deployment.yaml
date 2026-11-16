@@ -23,7 +23,7 @@ spec:
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   {{- end }}
-  {{- if .Values.deployment.revisionHistoryLimit }}
+  {{- if ne .Values.deployment.revisionHistoryLimit nil }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
   {{- end }}
   selector:

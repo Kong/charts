@@ -1,0 +1,16 @@
+# Values that are valid at 0 and must still be rendered.
+replicaCount: 2
+
+deployment:
+  revisionHistoryLimit: 0
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 0
+
+env:
+  database: postgres
+  pg_host: postgres.example
+
+migrations:
+  ttlSecondsAfterFinished: 0

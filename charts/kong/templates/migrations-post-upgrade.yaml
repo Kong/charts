@@ -18,7 +18,7 @@ metadata:
   {{- end }}
 spec:
   backoffLimit: {{ .Values.migrations.backoffLimit }}
-  {{- if .Values.migrations.ttlSecondsAfterFinished }}
+  {{- if ne .Values.migrations.ttlSecondsAfterFinished nil }}
   ttlSecondsAfterFinished: {{ .Values.migrations.ttlSecondsAfterFinished }}
   {{- end }}
   template:
