@@ -2,7 +2,8 @@ name: Auto bump Kong AI Gateway chart
 
 # Bumps the default Kong AI Gateway DataPlane image in charts/kong-ai-gateway
 # when a new version is published to Docker Hub, and opens a PR with the
-# update (image tag, Chart.yaml appVersion and chart version, CHANGELOG entry).
+# update (image tag, Chart.yaml appVersion and chart version, CHANGELOG entry,
+# golden test files).
 # Requires the Kong k8s GitHub App installed on this repository, with
 # GH_APP__KONG_K8S__APP_ID (variable) and GH_APP__KONG_K8S__PRIVATE_KEY (secret)
 # available to this workflow.
@@ -116,6 +117,17 @@ jobs:
           rm -f "${entry_file}"
 
           echo "Bumped the chart from ${chart_version} to ${new_chart_version} (image ${CURRENT} -> ${LATEST})."
+
+      - name: Set up the tools
+        if: steps.version.outputs.update == 'true'
+        uses: jdx/mise-action@f10502fc09dadecfefb962fff68ce77213930204 # v4.2.2
+
+      - name: Update the golden test files
+        if: steps.version.outputs.update == 'true'
+        run: |
+          helm repo add kong https://charts.konghq.com
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          make test.golden.update
 
       - name: Generate GitHub App token
         id: app-token
