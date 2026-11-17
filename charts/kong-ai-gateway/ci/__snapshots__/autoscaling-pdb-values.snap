@@ -8,7 +8,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong-ai-gateway
-    helm.sh/chart: kong-ai-gateway-0.4.0
+    helm.sh/chart: kong-ai-gateway-0.4.1
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "2.3"
@@ -29,7 +29,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong-ai-gateway
-    helm.sh/chart: kong-ai-gateway-0.4.0
+    helm.sh/chart: kong-ai-gateway-0.4.1
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "2.3"
@@ -42,7 +42,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong-ai-gateway
-    helm.sh/chart: kong-ai-gateway-0.4.0
+    helm.sh/chart: kong-ai-gateway-0.4.1
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "2.3"
@@ -71,7 +71,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong-ai-gateway
-    helm.sh/chart: kong-ai-gateway-0.4.0
+    helm.sh/chart: kong-ai-gateway-0.4.1
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "2.3"
@@ -91,7 +91,7 @@ spec:
         traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         app.kubernetes.io/name: kong-ai-gateway
-        helm.sh/chart: kong-ai-gateway-0.4.0
+        helm.sh/chart: kong-ai-gateway-0.4.1
         app.kubernetes.io/instance: "chartsnap"
         app.kubernetes.io/managed-by: "Helm"
         app.kubernetes.io/version: "2.3"
@@ -103,7 +103,7 @@ spec:
       automountServiceAccountToken: false
       initContainers:
       - name: clear-stale-pid
-        image: kong/kong-ai-gateway:2.3.0
+        image: kong/kong-ai-gateway:2.3.1
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false
@@ -199,7 +199,7 @@ spec:
           mountPath: /tmp
       containers:
       - name: "proxy"
-        image: kong/kong-ai-gateway:2.3.0
+        image: kong/kong-ai-gateway:2.3.1
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false
@@ -365,7 +365,7 @@ metadata:
   namespace: default
   labels:
     app.kubernetes.io/name: kong-ai-gateway
-    helm.sh/chart: kong-ai-gateway-0.4.0
+    helm.sh/chart: kong-ai-gateway-0.4.1
     app.kubernetes.io/instance: "chartsnap"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "2.3"
