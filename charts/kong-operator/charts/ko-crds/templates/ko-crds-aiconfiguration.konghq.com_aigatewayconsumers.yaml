@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: aigatewayconsumers.aiconfiguration.konghq.com
 spec:
   group: aiconfiguration.konghq.com
@@ -110,9 +110,9 @@ spec:
                     type: object
                   managedBy:
                     additionalProperties:
-                      maxLength: 63
+                      maxLength: 127
                       minLength: 1
-                      pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                      pattern: ^[^\s\x00-\x1F\x7F-\x9F]+$
                       type: string
                     maxProperties: 5
                     type: object

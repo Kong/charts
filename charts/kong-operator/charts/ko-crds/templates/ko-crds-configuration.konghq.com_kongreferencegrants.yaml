@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: kongreferencegrants.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -63,16 +63,19 @@ spec:
                   - message: Only KongConsumer, KongConsumerGroup, KongRoute, KongCertificate,
                       KongCACertificate, KongDataPlaneClientCertificate, KongService,
                       KongUpstream, KongTarget, KongKey, KongKeySet, KongVault, KongPluginBinding,
-                      KongSNI, EventGatewayStaticKey, EventGatewayBackendCluster,
-                      EventGatewaySchemaRegistry, EventGatewayTLSTrustBundle and EventGatewayListenerPolicy
-                      kinds are supported for 'configuration.konghq.com' group
+                      KongSNI and Event Gateway entity kinds are supported for 'configuration.konghq.com'
+                      group
                     rule: self.group != 'configuration.konghq.com' || self.kind in
                       [ 'KongConsumer', 'KongConsumerGroup', 'KongRoute', 'KongService',
                       'KongCertificate', 'KongCACertificate', 'KongDataPlaneClientCertificate',
                       'KongUpstream', 'KongTarget', 'KongKey', 'KongKeySet', 'KongVault',
-                      'KongPluginBinding', 'KongSNI', 'EventGatewayStaticKey', 'EventGatewayBackendCluster',
-                      'EventGatewaySchemaRegistry', 'EventGatewayTLSTrustBundle',
-                      'EventGatewayListenerPolicy']
+                      'KongPluginBinding', 'KongSNI', 'EventGatewayBackendCluster',
+                      'EventGatewayDataPlaneCertificate', 'EventGatewayListener',
+                      'EventGatewayListenerPolicy', 'EventGatewayListenerPolicyChain',
+                      'EventGatewaySchemaRegistry', 'EventGatewayStaticKey', 'EventGatewayTLSTrustBundle',
+                      'EventGatewayVirtualCluster', 'EventGatewayVirtualClusterConsumePolicy',
+                      'EventGatewayVirtualClusterPolicy', 'EventGatewayVirtualClusterPolicyChain',
+                      'EventGatewayVirtualClusterProducePolicy']
                   - message: Only GatewayConfiguration kind is supported for 'gateway-operator.konghq.com'
                       group
                     rule: self.group != 'gateway-operator.konghq.com' || self.kind
@@ -110,24 +113,28 @@ spec:
                   - message: Only 'Secret' kind is supported for 'core' group
                     rule: .self.group != 'core' || .self.kind == 'Secret'
                   - message: Only 'KonnectGatewayControlPlane', 'KonnectAPIAuthConfiguration',
-                      'Portal', 'KonnectEventGateway', 'EventGatewayBackendCluster',
-                      'EventGatewayListener', 'EventGatewayVirtualCluster', 'KonnectConfigStore'
-                      and 'KonnectAIGateway' kinds are supported for 'konnect.konghq.com'
-                      group
+                      'Portal', 'KonnectEventGateway', 'KonnectConfigStore' and 'KonnectAIGateway'
+                      kinds are supported for 'konnect.konghq.com' group; Event Gateway
+                      entities are in the 'configuration.konghq.com' group
                     rule: .self.group != 'konnect.konghq.com' || .self.kind in ['KonnectGatewayControlPlane',
                       'KonnectAPIAuthConfiguration', 'Portal', 'KonnectEventGateway',
-                      'EventGatewayBackendCluster', 'EventGatewayListener', 'EventGatewayVirtualCluster',
                       'KonnectConfigStore', 'KonnectAIGateway']
                   - message: Only 'KongPlugin', 'KongService', 'KongCertificate',
-                      'KongCACertificate' and 'KongUpstream' kinds are supported for
+                      'KongCACertificate', 'KongUpstream' and Event Gateway entity
+                      kinds other policies and entities reference are supported for
                       'configuration.konghq.com' group
                     rule: .self.group != 'configuration.konghq.com' || .self.kind
                       in ['KongPlugin', 'KongService', 'KongCertificate', 'KongCACertificate',
-                      'KongUpstream']
-                  - message: Only 'AIGatewayConsumerGroup' kind is supported for 'aiconfiguration.konghq.com'
+                      'KongUpstream', 'EventGatewayBackendCluster', 'EventGatewayListener',
+                      'EventGatewayListenerPolicy', 'EventGatewaySchemaRegistry',
+                      'EventGatewayStaticKey', 'EventGatewayTLSTrustBundle', 'EventGatewayVirtualCluster',
+                      'EventGatewayVirtualClusterConsumePolicy', 'EventGatewayVirtualClusterPolicy',
+                      'EventGatewayVirtualClusterProducePolicy']
+                  - message: Only 'AIGatewayConsumerGroup', 'AIGatewayCACertificate'
+                      and 'AIGatewayCertificate' kinds are supported for 'aiconfiguration.konghq.com'
                       group
                     rule: .self.group != 'aiconfiguration.konghq.com' || .self.kind
-                      in ['AIGatewayConsumerGroup']
+                      in ['AIGatewayConsumerGroup', 'AIGatewayCACertificate', 'AIGatewayCertificate']
                 maxItems: 16
                 minItems: 1
                 type: array

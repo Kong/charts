@@ -104,7 +104,56 @@ spec:
   policyName: ports.dataplane.gateway-operator.konghq.com
   validationActions:
   - Deny
-
-{{- end -}}
+{{- end }}
+---
+{{- if .Values.global.validatingPolicies.podDisruptionBudgetReplicas.enabled }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pdb-replicas.dataplane.gateway-operator.konghq.com
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - gateway-operator.konghq.com
+      apiVersions:
+      - v1beta1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - dataplanes
+  validations:
+  - expression: |
+      !variables.specChanged || !variables.hasPDB || variables.replicaFloor > 1
+    messageExpression: |
+      'spec.resources.podDisruptionBudget is set but the replica floor is ' + string(variables.replicaFloor) +
+      ': set spec.deployment.replicas or spec.deployment.scaling.horizontal.minReplicas to at least 2'
+    reason: Invalid
+  variables:
+  - expression: |
+      has(object.spec.resources) && has(object.spec.resources.podDisruptionBudget)
+    name: hasPDB
+  - expression: |
+      !has(object.spec.deployment) ? 1 :
+      has(object.spec.deployment.replicas) ? object.spec.deployment.replicas :
+      (has(object.spec.deployment.scaling) &&
+        has(object.spec.deployment.scaling.horizontal) &&
+        has(object.spec.deployment.scaling.horizontal.minReplicas)) ?
+        object.spec.deployment.scaling.horizontal.minReplicas : 1
+    name: replicaFloor
+  - expression: |
+      request.operation == 'CREATE' || object.spec != oldObject.spec
+    name: specChanged
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: binding-pdb-replicas.dataplane.gateway-operator.konghq.com
+spec:
+  policyName: pdb-replicas.dataplane.gateway-operator.konghq.com
+  validationActions:
+  {{- toYaml .Values.global.validatingPolicies.podDisruptionBudgetReplicas.validationActions | nindent 2 }}
+{{- end }}
 
 {{- end -}}

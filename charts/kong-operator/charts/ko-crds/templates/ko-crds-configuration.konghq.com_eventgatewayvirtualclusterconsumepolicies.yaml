@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: eventgatewayvirtualclusterconsumepolicies.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -635,21 +635,6 @@ spec:
                                 - skip
                                 maxLength: 253
                                 type: string
-                              schemaRegistry:
-                                properties:
-                                  kind:
-                                    default: EventGatewaySchemaRegistry
-                                    enum:
-                                    - EventGatewaySchemaRegistry
-                                    type: string
-                                  name:
-                                    minLength: 1
-                                    type: string
-                                  namespace:
-                                    type: string
-                                required:
-                                - name
-                                type: object
                               validateKey:
                                 enum:
                                 - Enabled
@@ -786,25 +771,18 @@ spec:
                                         type: object
                                       schemaRegistry:
                                         properties:
-                                          id:
-                                            type: object
-                                          name:
-                                            properties:
-                                              name:
-                                                maxLength: 255
-                                                minLength: 1
-                                                type: string
-                                            required:
-                                            - name
-                                            type: object
-                                          type:
+                                          kind:
+                                            default: EventGatewaySchemaRegistry
                                             enum:
-                                            - id
-                                            - name
+                                            - EventGatewaySchemaRegistry
+                                            type: string
+                                          name:
                                             minLength: 1
                                             type: string
+                                          namespace:
+                                            type: string
                                         required:
-                                        - type
+                                        - name
                                         type: object
                                       subject:
                                         maxLength: 253
@@ -888,25 +866,18 @@ spec:
                                         type: object
                                       schemaRegistry:
                                         properties:
-                                          id:
-                                            type: object
-                                          name:
-                                            properties:
-                                              name:
-                                                maxLength: 255
-                                                minLength: 1
-                                                type: string
-                                            required:
-                                            - name
-                                            type: object
-                                          type:
+                                          kind:
+                                            default: EventGatewaySchemaRegistry
                                             enum:
-                                            - id
-                                            - name
+                                            - EventGatewaySchemaRegistry
+                                            type: string
+                                          name:
                                             minLength: 1
                                             type: string
+                                          namespace:
+                                            type: string
                                         required:
-                                        - type
+                                        - name
                                         type: object
                                       subject:
                                         maxLength: 253
@@ -1088,9 +1059,16 @@ spec:
         x-kubernetes-validations:
         - message: spec.eventGatewayVirtualClusterRef is immutable when an entity
             is already Programmed
-          rule: '!has(self.spec.eventGatewayVirtualClusterRef) || !has(self.status.conditions)
-            || !self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
-            == ''True'') || oldSelf.spec.eventGatewayVirtualClusterRef == self.spec.eventGatewayVirtualClusterRef'
+          rule: '!has(self.spec.eventGatewayVirtualClusterRef) || !has(self.status)
+            || !has(self.status.conditions) || !self.status.conditions.exists(c, c.type
+            == ''Programmed'' && c.status == ''True'') || oldSelf.spec.eventGatewayVirtualClusterRef
+            == self.spec.eventGatewayVirtualClusterRef'
+        - fieldPath: .spec.eventGatewayVirtualClusterRef
+          message: spec.eventGatewayVirtualClusterRef must use namespacedRef
+          optionalOldSelf: true
+          rule: '!has(self.spec.eventGatewayVirtualClusterRef) || self.spec.eventGatewayVirtualClusterRef.type
+            == ''namespacedRef'' || (oldSelf.hasValue() && has(oldSelf.value().spec.eventGatewayVirtualClusterRef)
+            && oldSelf.value().spec.eventGatewayVirtualClusterRef == self.spec.eventGatewayVirtualClusterRef)'
         - fieldPath: .spec.eventGatewayVirtualClusterRef
           message: spec.eventGatewayVirtualClusterRef is immutable once the entity
             has been created in Konnect
@@ -1105,18 +1083,18 @@ spec:
             == oldSelf.spec.apiSpec.parentPolicyRef : !has(oldSelf.spec.apiSpec) ||
             !has(oldSelf.spec.apiSpec.parentPolicyRef))'
         - fieldPath: .spec.apiSpec.parentPolicyRef
-          message: parentPolicyRef is required for decryptFields
+          message: parentPolicyRef is required for decryptFields, maskFields and transcode
           optionalOldSelf: true
-          rule: '!has(self.spec.apiSpec) || !has(self.spec.apiSpec.type) || self.spec.apiSpec.type
-            != ''decryptFields'' || has(self.spec.apiSpec.parentPolicyRef) || (oldSelf.hasValue()
-            && has(oldSelf.value().spec.apiSpec) && has(oldSelf.value().spec.apiSpec.type)
-            && oldSelf.value().spec.apiSpec.type == ''decryptFields'' && !has(oldSelf.value().spec.apiSpec.parentPolicyRef))'
+          rule: '!has(self.spec.apiSpec) || !has(self.spec.apiSpec.type) || !(self.spec.apiSpec.type
+            in [''decryptFields'', ''maskFields'', ''transcode'']) || has(self.spec.apiSpec.parentPolicyRef)
+            || (oldSelf.hasValue() && has(oldSelf.value().spec.apiSpec) && has(oldSelf.value().spec.apiSpec.type)
+            && oldSelf.value().spec.apiSpec.type == self.spec.apiSpec.type && !has(oldSelf.value().spec.apiSpec.parentPolicyRef))'
         - fieldPath: .spec.apiSpec.parentPolicyRef
-          message: parentPolicyRef is only supported for decryptFields, modifyHeaders
-            and skipRecord
+          message: parentPolicyRef is only supported for decryptFields, modifyHeaders,
+            skipRecord, maskFields and transcode
           rule: '!has(self.spec.apiSpec) || !has(self.spec.apiSpec.parentPolicyRef)
             || (has(self.spec.apiSpec.type) && self.spec.apiSpec.type in [''decryptFields'',
-            ''modifyHeaders'', ''skipRecord''])'
+            ''modifyHeaders'', ''skipRecord'', ''maskFields'', ''transcode''])'
         - message: parentPolicyRef must not reference the EventGatewayVirtualClusterConsumePolicy
             itself
           rule: '!has(self.spec.apiSpec) || !has(self.spec.apiSpec.parentPolicyRef)

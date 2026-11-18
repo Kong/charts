@@ -56,7 +56,7 @@ metadata:
 {{ end }}
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: controlplanes.gateway-operator.konghq.com
 spec:
 {{ if .Values.global.webhooks.conversion.enabled }}
@@ -4211,6 +4211,9 @@ spec:
                     type: string
                 type: object
               configDump:
+                default:
+                  dumpSensitive: disabled
+                  state: disabled
                 properties:
                   dumpSensitive:
                     default: disabled
@@ -4274,6 +4277,8 @@ spec:
                 - message: Ref cannot be provided when type is set to managedByOwner
                   rule: self.type != 'managedByOwner' || !has(self.ref)
               dataplaneSync:
+                default:
+                  reverseSync: disabled
                 properties:
                   interval:
                     type: string
@@ -4442,7 +4447,7 @@ spec:
                   fallbackConfiguration:
                     properties:
                       useLastValidConfig:
-                        default: enabled
+                        default: disabled
                         enum:
                         - enabled
                         - disabled
@@ -4480,6 +4485,13 @@ spec:
             - message: When dataplane target is of type 'ref' the ingressClass must
                 be set
               rule: self.dataplane.type != 'ref' || has(self.ingressClass)
+            - message: fallbackConfiguration.useLastValidConfig can only be enabled
+                when the FallbackConfiguration feature gate is enabled
+              rule: '!has(self.translation) || !has(self.translation.fallbackConfiguration)
+                || !has(self.translation.fallbackConfiguration.useLastValidConfig)
+                || self.translation.fallbackConfiguration.useLastValidConfig != ''enabled''
+                || (has(self.featureGates) && self.featureGates.exists(g, g.name ==
+                ''FallbackConfiguration'' && g.state == ''enabled''))'
           status:
             properties:
               conditions:
@@ -4602,7 +4614,7 @@ metadata:
 {{ end }}
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: gatewayconfigurations.gateway-operator.konghq.com
 spec:
 {{ if .Values.global.webhooks.conversion.enabled }}
@@ -13302,6 +13314,9 @@ spec:
                         type: string
                     type: object
                   configDump:
+                    default:
+                      dumpSensitive: disabled
+                      state: disabled
                     properties:
                       dumpSensitive:
                         default: disabled
@@ -13341,6 +13356,8 @@ spec:
                     - name
                     x-kubernetes-list-type: map
                   dataplaneSync:
+                    default:
+                      reverseSync: disabled
                     properties:
                       interval:
                         type: string
@@ -13482,7 +13499,7 @@ spec:
                       fallbackConfiguration:
                         properties:
                           useLastValidConfig:
-                            default: enabled
+                            default: disabled
                             enum:
                             - enabled
                             - disabled
@@ -13514,6 +13531,14 @@ spec:
                     - message: list must not be specified when type is not 'list'
                       rule: 'self.type != ''list'' ? !has(self.list) : true'
                 type: object
+                x-kubernetes-validations:
+                - message: fallbackConfiguration.useLastValidConfig can only be enabled
+                    when the FallbackConfiguration feature gate is enabled
+                  rule: '!has(self.translation) || !has(self.translation.fallbackConfiguration)
+                    || !has(self.translation.fallbackConfiguration.useLastValidConfig)
+                    || self.translation.fallbackConfiguration.useLastValidConfig !=
+                    ''enabled'' || (has(self.featureGates) && self.featureGates.exists(g,
+                    g.name == ''FallbackConfiguration'' && g.state == ''enabled''))'
               dataPlaneOptions:
                 properties:
                   deployment:
@@ -17874,8 +17899,13 @@ spec:
                   network:
                     properties:
                       services:
+                        default:
+                          ingress:
+                            type: LoadBalancer
                         properties:
                           ingress:
+                            default:
+                              type: LoadBalancer
                             properties:
                               annotations:
                                 additionalProperties:
@@ -18154,7 +18184,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: konnectextensions.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -18708,7 +18738,7 @@ metadata:
 {{ end }}
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: konnectgatewaycontrolplanes.konnect.konghq.com
 spec:
 {{ if .Values.global.webhooks.conversion.enabled }}
@@ -18877,9 +18907,9 @@ spec:
             - message: spec.cluster_type is immutable
               rule: '!has(self.cluster_type) ? !has(oldSelf.cluster_type) : self.cluster_type
                 == oldSelf.cluster_type'
-            - message: cloud_gateway cannot be set for cluster_type 'CLUSTER_TYPE_K8S_INGRESS_CONTROLLER'
+            - message: cloud_gateway cannot be true for cluster_type 'CLUSTER_TYPE_K8S_INGRESS_CONTROLLER'
               rule: 'has(self.cluster_type) && self.cluster_type == ''CLUSTER_TYPE_K8S_INGRESS_CONTROLLER''
-                ? !has(self.cloud_gateway) : true'
+                ? !(has(self.cloud_gateway) && self.cloud_gateway) : true'
             - message: createControlPlaneRequest fields cannot be set for type Mirror
               rule: 'self.source == ''Mirror'' ? !has(self.name) && !has(self.description)
                 && !has(self.cluster_type) && !has(self.auth_type) && !has(self.cloud_gateway)
@@ -19135,11 +19165,12 @@ spec:
                 ? true : (has(self.createControlPlaneRequest) && has(oldSelf.createControlPlaneRequest)
                 && (!has(self.createControlPlaneRequest.cluster_type) ? !has(oldSelf.createControlPlaneRequest.cluster_type)
                 : self.createControlPlaneRequest.cluster_type == oldSelf.createControlPlaneRequest.cluster_type))'
-            - message: spec.createControlPlaneRequest.cloud_gateway cannot be set
+            - message: spec.createControlPlaneRequest.cloud_gateway cannot be true
                 for spec.createControlPlaneRequest.cluster_type 'CLUSTER_TYPE_K8S_INGRESS_CONTROLLER'
               rule: 'has(self.createControlPlaneRequest) && has(self.createControlPlaneRequest.cluster_type)
                 && self.createControlPlaneRequest.cluster_type == ''CLUSTER_TYPE_K8S_INGRESS_CONTROLLER''
-                ? !has(self.createControlPlaneRequest.cloud_gateway) : true'
+                ? !(has(self.createControlPlaneRequest.cloud_gateway) && self.createControlPlaneRequest.cloud_gateway)
+                : true'
             - message: createControlPlaneRequest fields cannot be set for type Mirror
               rule: 'has(self.source) && self.source == ''Mirror'' ? !has(self.createControlPlaneRequest)
                 : true'

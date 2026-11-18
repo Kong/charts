@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: konnectconfigstores.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -59,10 +59,7 @@ spec:
                 type: object
               controlPlaneRef:
                 properties:
-                  konnectID:
-                    maxLength: 36
-                    type: string
-                  namespacedRef:
+                  konnectNamespacedRef:
                     properties:
                       name:
                         maxLength: 253
@@ -76,22 +73,12 @@ spec:
                     type: object
                   type:
                     enum:
-                    - konnectID
-                    - namespacedRef
+                    - konnectNamespacedRef
                     type: string
                 required:
+                - konnectNamespacedRef
                 - type
                 type: object
-                x-kubernetes-validations:
-                - message: when type is namespacedRef, namespacedRef must be set
-                  rule: 'self.type == ''namespacedRef'' ? has(self.namespacedRef)
-                    : true'
-                - message: when type is namespacedRef, konnectID must not be set
-                  rule: 'self.type == ''namespacedRef'' ? !has(self.konnectID) : true'
-                - message: when type is konnectID, konnectID must be set
-                  rule: 'self.type == ''konnectID'' ? has(self.konnectID) : true'
-                - message: when type is konnectID, namespacedRef must not be set
-                  rule: 'self.type == ''konnectID'' ? !has(self.namespacedRef) : true'
             required:
             - controlPlaneRef
             type: object
@@ -159,8 +146,8 @@ spec:
         type: object
         x-kubernetes-validations:
         - message: spec.controlPlaneRef is immutable when an entity is already Programmed
-          rule: '!has(self.spec.controlPlaneRef) || !has(self.status.conditions) ||
-            !self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
+          rule: '!has(self.spec.controlPlaneRef) || !has(self.status) || !has(self.status.conditions)
+            || !self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
             == ''True'') || oldSelf.spec.controlPlaneRef == self.spec.controlPlaneRef'
     served: true
     storage: true

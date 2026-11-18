@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: gwadmins.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -4362,6 +4362,38 @@ spec:
                 x-kubernetes-validations:
                 - message: Using both replicas and scaling fields is not allowed.
                   rule: '!(has(self.scaling) && has(self.replicas))'
+              license:
+                properties:
+                  entitlements:
+                    default:
+                    - event_gateway
+                    items:
+                      enum:
+                      - event_gateway
+                      type: string
+                    maxItems: 1
+                    minItems: 1
+                    type: array
+                    x-kubernetes-list-type: set
+                  secretRef:
+                    properties:
+                      key:
+                        maxLength: 253
+                        minLength: 1
+                        pattern: ^[-._a-zA-Z0-9]+$
+                        type: string
+                      name:
+                        maxLength: 253
+                        minLength: 1
+                        pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                        type: string
+                    required:
+                    - key
+                    - name
+                    type: object
+                required:
+                - secretRef
+                type: object
               network:
                 properties:
                   cp:
@@ -4463,6 +4495,8 @@ spec:
                       rule: 'self.provisioning == ''Manual'' ? has(self.secretRef)
                         : !has(self.secretRef)'
                 type: object
+            required:
+            - license
             type: object
           status:
             properties:
@@ -4555,6 +4589,8 @@ spec:
                     type: string
                 type: object
             type: object
+        required:
+        - spec
         type: object
         x-kubernetes-validations:
         - message: name must be a valid DNS-1035 label of at most 59 characters, so

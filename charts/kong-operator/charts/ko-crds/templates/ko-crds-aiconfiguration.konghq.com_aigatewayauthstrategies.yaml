@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: aigatewayauthstrategies.aiconfiguration.konghq.com
 spec:
   group: aiconfiguration.konghq.com
@@ -195,9 +195,9 @@ spec:
                         type: object
                       managedBy:
                         additionalProperties:
-                          maxLength: 63
+                          maxLength: 127
                           minLength: 1
-                          pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                          pattern: ^[^\s\x00-\x1F\x7F-\x9F]+$
                           type: string
                         maxProperties: 5
                         type: object
@@ -472,6 +472,8 @@ spec:
                                   required when type=secretRef
                                 rule: 'self.type == ''inline'' ? has(self.value) :
                                   has(self.secretRef)'
+                              - message: only one of value and secretRef can be set
+                                rule: '!(has(self.value) && has(self.secretRef))'
                             type: array
                           clusterCacheRedis:
                             properties:
@@ -557,8 +559,44 @@ spec:
                                 minimum: 1
                                 type: integer
                               password:
-                                maxLength: 253
-                                type: string
+                                properties:
+                                  secretRef:
+                                    properties:
+                                      key:
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      name:
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      namespace:
+                                        maxLength: 253
+                                        type: string
+                                    required:
+                                    - key
+                                    - name
+                                    type: object
+                                  type:
+                                    default: inline
+                                    enum:
+                                    - inline
+                                    - secretRef
+                                    type: string
+                                  value:
+                                    maxLength: 4096
+                                    type: string
+                                required:
+                                - type
+                                type: object
+                                x-kubernetes-validations:
+                                - message: value required when type=inline; secretRef
+                                    required when type=secretRef
+                                  rule: 'self.type == ''inline'' ? has(self.value)
+                                    : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                               port:
                                 maximum: 65535
                                 minimum: 0
@@ -587,8 +625,44 @@ spec:
                                   type: object
                                 type: array
                               sentinelPassword:
-                                maxLength: 253
-                                type: string
+                                properties:
+                                  secretRef:
+                                    properties:
+                                      key:
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      name:
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      namespace:
+                                        maxLength: 253
+                                        type: string
+                                    required:
+                                    - key
+                                    - name
+                                    type: object
+                                  type:
+                                    default: inline
+                                    enum:
+                                    - inline
+                                    - secretRef
+                                    type: string
+                                  value:
+                                    maxLength: 4096
+                                    type: string
+                                required:
+                                - type
+                                type: object
+                                x-kubernetes-validations:
+                                - message: value required when type=inline; secretRef
+                                    required when type=secretRef
+                                  rule: 'self.type == ''inline'' ? has(self.value)
+                                    : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                               sentinelRole:
                                 enum:
                                 - any
@@ -1162,8 +1236,44 @@ spec:
                                 minimum: 1
                                 type: integer
                               password:
-                                maxLength: 253
-                                type: string
+                                properties:
+                                  secretRef:
+                                    properties:
+                                      key:
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      name:
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      namespace:
+                                        maxLength: 253
+                                        type: string
+                                    required:
+                                    - key
+                                    - name
+                                    type: object
+                                  type:
+                                    default: inline
+                                    enum:
+                                    - inline
+                                    - secretRef
+                                    type: string
+                                  value:
+                                    maxLength: 4096
+                                    type: string
+                                required:
+                                - type
+                                type: object
+                                x-kubernetes-validations:
+                                - message: value required when type=inline; secretRef
+                                    required when type=secretRef
+                                  rule: 'self.type == ''inline'' ? has(self.value)
+                                    : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                               port:
                                 maximum: 65535
                                 minimum: 0
@@ -1195,8 +1305,44 @@ spec:
                                   type: object
                                 type: array
                               sentinelPassword:
-                                maxLength: 253
-                                type: string
+                                properties:
+                                  secretRef:
+                                    properties:
+                                      key:
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      name:
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      namespace:
+                                        maxLength: 253
+                                        type: string
+                                    required:
+                                    - key
+                                    - name
+                                    type: object
+                                  type:
+                                    default: inline
+                                    enum:
+                                    - inline
+                                    - secretRef
+                                    type: string
+                                  value:
+                                    maxLength: 4096
+                                    type: string
+                                required:
+                                - type
+                                type: object
+                                x-kubernetes-validations:
+                                - message: value required when type=inline; secretRef
+                                    required when type=secretRef
+                                  rule: 'self.type == ''inline'' ? has(self.value)
+                                    : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                               sentinelRole:
                                 enum:
                                 - any
@@ -1820,9 +1966,9 @@ spec:
                         type: object
                       managedBy:
                         additionalProperties:
-                          maxLength: 63
+                          maxLength: 127
                           minLength: 1
-                          pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                          pattern: ^[^\s\x00-\x1F\x7F-\x9F]+$
                           type: string
                         maxProperties: 5
                         type: object

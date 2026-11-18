@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: aigatewaydatastores.aiconfiguration.konghq.com
 spec:
   group: aiconfiguration.konghq.com
@@ -170,6 +170,9 @@ spec:
                                     required when type=secretRef
                                   rule: 'self.type == ''inline'' ? has(self.value)
                                     : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                               azureClientID:
                                 maxLength: 253
                                 type: string
@@ -209,6 +212,9 @@ spec:
                                     required when type=secretRef
                                   rule: 'self.type == ''inline'' ? has(self.value)
                                     : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                               azureTenantID:
                                 maxLength: 253
                                 type: string
@@ -248,6 +254,9 @@ spec:
                                     required when type=secretRef
                                   rule: 'self.type == ''inline'' ? has(self.value)
                                     : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                             type: object
                           database:
                             type: integer
@@ -290,6 +299,8 @@ spec:
                             - message: value required when type=inline; secretRef
                                 required when type=secretRef
                               rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
+                            - message: only one of value and secretRef can be set
+                              rule: '!(has(self.value) && has(self.secretRef))'
                           port:
                             maximum: 65535
                             minimum: 1
@@ -332,9 +343,9 @@ spec:
                         type: object
                       managedBy:
                         additionalProperties:
-                          maxLength: 63
+                          maxLength: 127
                           minLength: 1
-                          pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                          pattern: ^[^\s\x00-\x1F\x7F-\x9F]+$
                           type: string
                         maxProperties: 5
                         type: object
@@ -428,6 +439,9 @@ spec:
                                     required when type=secretRef
                                   rule: 'self.type == ''inline'' ? has(self.value)
                                     : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                               azureClientID:
                                 maxLength: 253
                                 type: string
@@ -467,6 +481,9 @@ spec:
                                     required when type=secretRef
                                   rule: 'self.type == ''inline'' ? has(self.value)
                                     : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                               azureTenantID:
                                 maxLength: 253
                                 type: string
@@ -506,6 +523,9 @@ spec:
                                     required when type=secretRef
                                   rule: 'self.type == ''inline'' ? has(self.value)
                                     : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                             type: object
                           clusterMaxRedirections:
                             type: integer
@@ -577,6 +597,8 @@ spec:
                             - message: value required when type=inline; secretRef
                                 required when type=secretRef
                               rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
+                            - message: only one of value and secretRef can be set
+                              rule: '!(has(self.value) && has(self.secretRef))'
                           port:
                             properties:
                               type:
@@ -650,6 +672,8 @@ spec:
                             - message: value required when type=inline; secretRef
                                 required when type=secretRef
                               rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
+                            - message: only one of value and secretRef can be set
+                              rule: '!(has(self.value) && has(self.secretRef))'
                           sentinelRole:
                             enum:
                             - master
@@ -696,9 +720,9 @@ spec:
                         type: object
                       managedBy:
                         additionalProperties:
-                          maxLength: 63
+                          maxLength: 127
                           minLength: 1
-                          pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                          pattern: ^[^\s\x00-\x1F\x7F-\x9F]+$
                           type: string
                         maxProperties: 5
                         type: object
@@ -764,9 +788,9 @@ spec:
                         type: object
                       managedBy:
                         additionalProperties:
-                          maxLength: 63
+                          maxLength: 127
                           minLength: 1
-                          pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                          pattern: ^[^\s\x00-\x1F\x7F-\x9F]+$
                           type: string
                         maxProperties: 5
                         type: object
@@ -838,6 +862,8 @@ spec:
                             - message: value required when type=inline; secretRef
                                 required when type=secretRef
                               rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
+                            - message: only one of value and secretRef can be set
+                              rule: '!(has(self.value) && has(self.secretRef))'
                           port:
                             maximum: 65535
                             minimum: 1
@@ -885,6 +911,8 @@ spec:
                             - message: value required when type=inline; secretRef
                                 required when type=secretRef
                               rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
+                            - message: only one of value and secretRef can be set
+                              rule: '!(has(self.value) && has(self.secretRef))'
                           sslRequired:
                             enum:
                             - Enabled
@@ -924,9 +952,9 @@ spec:
                         type: object
                       managedBy:
                         additionalProperties:
-                          maxLength: 63
+                          maxLength: 127
                           minLength: 1
-                          pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                          pattern: ^[^\s\x00-\x1F\x7F-\x9F]+$
                           type: string
                         maxProperties: 5
                         type: object
