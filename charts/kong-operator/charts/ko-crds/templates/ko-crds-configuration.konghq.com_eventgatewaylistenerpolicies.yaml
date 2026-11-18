@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: eventgatewaylistenerpolicies.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -69,13 +69,19 @@ spec:
                                 maxLength: 253
                                 type: string
                               destination:
-                                maxProperties: 1
-                                minProperties: 1
                                 properties:
-                                  id:
+                                  kind:
+                                    default: EventGatewayVirtualCluster
+                                    enum:
+                                    - EventGatewayVirtualCluster
                                     type: string
                                   name:
+                                    minLength: 1
                                     type: string
+                                  namespace:
+                                    type: string
+                                required:
+                                - name
                                 type: object
                               minBrokerID:
                                 type: integer
@@ -185,6 +191,9 @@ spec:
                                       required when type=secretRef
                                     rule: 'self.type == ''inline'' ? has(self.value)
                                       : has(self.secretRef)'
+                                  - message: only one of value and secretRef can be
+                                      set
+                                    rule: '!(has(self.value) && has(self.secretRef))'
                                 key:
                                   properties:
                                     secretRef:
@@ -221,6 +230,9 @@ spec:
                                       required when type=secretRef
                                     rule: 'self.type == ''inline'' ? has(self.value)
                                       : has(self.secretRef)'
+                                  - message: only one of value and secretRef can be
+                                      set
+                                    rule: '!(has(self.value) && has(self.secretRef))'
                               required:
                               - certificate
                               - key
@@ -241,28 +253,19 @@ spec:
                                 type: string
                               tlsTrustBundles:
                                 items:
-                                  maxProperties: 1
-                                  minProperties: 1
                                   properties:
-                                    id:
+                                    kind:
+                                      default: EventGatewayTLSTrustBundle
+                                      enum:
+                                      - EventGatewayTLSTrustBundle
                                       type: string
                                     name:
+                                      minLength: 1
                                       type: string
-                                    namespacedRef:
-                                      properties:
-                                        kind:
-                                          default: EventGatewayTLSTrustBundle
-                                          enum:
-                                          - EventGatewayTLSTrustBundle
-                                          type: string
-                                        name:
-                                          minLength: 1
-                                          type: string
-                                        namespace:
-                                          type: string
-                                      required:
-                                      - name
-                                      type: object
+                                    namespace:
+                                      type: string
+                                  required:
+                                  - name
                                   type: object
                                 type: array
                             required:
@@ -427,9 +430,15 @@ spec:
         x-kubernetes-validations:
         - message: spec.eventGatewayListenerRef is immutable when an entity is already
             Programmed
-          rule: '!has(self.spec.eventGatewayListenerRef) || !has(self.status.conditions)
+          rule: '!has(self.spec.eventGatewayListenerRef) || !has(self.status) || !has(self.status.conditions)
             || !self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
             == ''True'') || oldSelf.spec.eventGatewayListenerRef == self.spec.eventGatewayListenerRef'
+        - fieldPath: .spec.eventGatewayListenerRef
+          message: spec.eventGatewayListenerRef must use namespacedRef
+          optionalOldSelf: true
+          rule: '!has(self.spec.eventGatewayListenerRef) || self.spec.eventGatewayListenerRef.type
+            == ''namespacedRef'' || (oldSelf.hasValue() && has(oldSelf.value().spec.eventGatewayListenerRef)
+            && oldSelf.value().spec.eventGatewayListenerRef == self.spec.eventGatewayListenerRef)'
         - fieldPath: .spec.eventGatewayListenerRef
           message: spec.eventGatewayListenerRef is immutable once the entity has been
             created in Konnect

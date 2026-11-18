@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: aigatewayagents.aiconfiguration.konghq.com
 spec:
   group: aiconfiguration.konghq.com
@@ -198,11 +198,37 @@ spec:
                     properties:
                       caCertificates:
                         items:
-                          type: string
+                          properties:
+                            kind:
+                              default: AIGatewayCACertificate
+                              enum:
+                              - AIGatewayCACertificate
+                              type: string
+                            name:
+                              minLength: 1
+                              type: string
+                            namespace:
+                              type: string
+                          required:
+                          - name
+                          type: object
                         type: array
                       certificates:
                         items:
-                          type: string
+                          properties:
+                            kind:
+                              default: AIGatewayCertificate
+                              enum:
+                              - AIGatewayCertificate
+                              type: string
+                            name:
+                              minLength: 1
+                              type: string
+                            namespace:
+                              type: string
+                          required:
+                          - name
+                          type: object
                         maxItems: 1
                         type: array
                       logging:
@@ -226,8 +252,44 @@ spec:
                           auth:
                             properties:
                               password:
-                                maxLength: 253
-                                type: string
+                                properties:
+                                  secretRef:
+                                    properties:
+                                      key:
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      name:
+                                        maxLength: 253
+                                        minLength: 1
+                                        type: string
+                                      namespace:
+                                        maxLength: 253
+                                        type: string
+                                    required:
+                                    - key
+                                    - name
+                                    type: object
+                                  type:
+                                    default: inline
+                                    enum:
+                                    - inline
+                                    - secretRef
+                                    type: string
+                                  value:
+                                    maxLength: 4096
+                                    type: string
+                                required:
+                                - type
+                                type: object
+                                x-kubernetes-validations:
+                                - message: value required when type=inline; secretRef
+                                    required when type=secretRef
+                                  rule: 'self.type == ''inline'' ? has(self.value)
+                                    : has(self.secretRef)'
+                                - message: only one of value and secretRef can be
+                                    set
+                                  rule: '!(has(self.value) && has(self.secretRef))'
                               username:
                                 maxLength: 253
                                 type: string
@@ -377,9 +439,9 @@ spec:
                     type: object
                   managedBy:
                     additionalProperties:
-                      maxLength: 63
+                      maxLength: 127
                       minLength: 1
-                      pattern: ^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$
+                      pattern: ^[^\s\x00-\x1F\x7F-\x9F]+$
                       type: string
                     maxProperties: 5
                     type: object

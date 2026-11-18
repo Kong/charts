@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: portals.konnect.konghq.com
 spec:
   group: konnect.konghq.com
@@ -52,6 +52,49 @@ spec:
             properties:
               apiSpec:
                 properties:
+                  ai:
+                    properties:
+                      enabled:
+                        enum:
+                        - Enabled
+                        - Disabled
+                        type: string
+                      features:
+                        properties:
+                          aiSearch:
+                            properties:
+                              enabled:
+                                enum:
+                                - Enabled
+                                - Disabled
+                                type: string
+                            required:
+                            - enabled
+                            type: object
+                          mcpServer:
+                            properties:
+                              enabled:
+                                enum:
+                                - Enabled
+                                - Disabled
+                                type: string
+                              writeOperationsEnabled:
+                                enum:
+                                - Enabled
+                                - Disabled
+                                type: string
+                            required:
+                            - enabled
+                            - writeOperationsEnabled
+                            type: object
+                        required:
+                        - aiSearch
+                        - mcpServer
+                        type: object
+                    required:
+                    - enabled
+                    - features
+                    type: object
                   authenticationEnabled:
                     enum:
                     - Enabled
@@ -152,6 +195,9 @@ spec:
                     enum:
                     - Enabled
                     - Disabled
+                    type: string
+                  themeName:
+                    maxLength: 253
                     type: string
                 required:
                 - name

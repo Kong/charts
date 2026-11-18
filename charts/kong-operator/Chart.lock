@@ -4,9 +4,9 @@ dependencies:
   version: 1.3.0
 - name: gwapi-standard-crds
   repository: ""
-  version: 1.6.3
+  version: 1.7.0
 - name: gwapi-experimental-crds
   repository: ""
-  version: 1.6.3
-digest: sha256:be1eb6923e5bc1afa6f59cb1b5b15459baac9c43560b4ff9111261084fbd7900
-generated: "2026-10-08T14:22:12.831405+02:00"
+  version: 1.7.0
+digest: sha256:9417af9090c97a67d1bccf4da5d4200dddbcfe642a54f2155616ffbdce86d7f7
+generated: "2026-11-04T12:30:23.857338+08:00"

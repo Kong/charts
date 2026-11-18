@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: eventgatewaytlstrustbundles.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -88,6 +88,8 @@ spec:
                         - message: value required when type=inline; secretRef required
                             when type=secretRef
                           rule: 'self.type == ''inline'' ? has(self.value) : has(self.secretRef)'
+                        - message: only one of value and secretRef can be set
+                          rule: '!(has(self.value) && has(self.secretRef))'
                     required:
                     - trustedCa
                     type: object
@@ -265,6 +267,12 @@ spec:
             && self.spec.parentRef.__namespace__ == oldSelf.spec.gatewayRef.namespacedRef.__namespace__)
             : (!has(oldSelf.spec.gatewayRef.namespacedRef.__namespace__) || size(oldSelf.spec.gatewayRef.namespacedRef.__namespace__)
             == 0)))'
+        - fieldPath: .spec.gatewayRef
+          message: spec.gatewayRef must use namespacedRef
+          optionalOldSelf: true
+          rule: '!has(self.spec.gatewayRef) || self.spec.gatewayRef.type == ''namespacedRef''
+            || (oldSelf.hasValue() && has(oldSelf.value().spec.gatewayRef) && oldSelf.value().spec.gatewayRef
+            == self.spec.gatewayRef)'
     served: true
     storage: true
     subresources:

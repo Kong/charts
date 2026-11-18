@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.5.0
+
+### Added
+
+- Add `ValidatingAdmissionPolicies` warning when a `DataPlane` or
+  `GatewayConfiguration` sets a `PodDisruptionBudget` while its replica floor
+  (`replicas`, or `scaling.horizontal.minReplicas`) is lower than 2.
+  Set the chart value
+  `global.validatingPolicies.podDisruptionBudgetReplicas.validationActions`
+  to `[Deny]` to reject such objects instead. Changes made through the
+  `DataPlane` scale subresource (e.g. `kubectl scale`) are not validated.
+  [#6490](https://github.com/Kong/kong-operator/pull/6490)
+- Add a `ValidatingAdmissionPolicy` warning when a `KegDataPlane` sets
+  `spec.config.configPollIntervalSeconds` or `spec.config.enableDebugEndpoints`,
+  which keg 1.3.0 removed. Disable it with the chart value
+  `global.validatingPolicies.kegDataPlaneDeprecatedSettings.enabled`.
+  [#6637](https://github.com/Kong/kong-operator/pull/6637)
+
+### Changed
+
+- Bump default image to `2.4.0`.
+
 ## 1.5.0-rapid.3.1
 
 ### Changed

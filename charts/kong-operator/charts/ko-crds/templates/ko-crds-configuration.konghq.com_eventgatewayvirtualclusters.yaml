@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: eventgatewayvirtualclusters.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -541,9 +541,16 @@ spec:
         x-kubernetes-validations:
         - message: spec.eventGatewayBackendClusterRef is immutable when an entity
             is already Programmed
-          rule: '!has(self.spec.eventGatewayBackendClusterRef) || !has(self.status.conditions)
-            || !self.status.conditions.exists(c, c.type == ''Programmed'' && c.status
-            == ''True'') || oldSelf.spec.eventGatewayBackendClusterRef == self.spec.eventGatewayBackendClusterRef'
+          rule: '!has(self.spec.eventGatewayBackendClusterRef) || !has(self.status)
+            || !has(self.status.conditions) || !self.status.conditions.exists(c, c.type
+            == ''Programmed'' && c.status == ''True'') || oldSelf.spec.eventGatewayBackendClusterRef
+            == self.spec.eventGatewayBackendClusterRef'
+        - fieldPath: .spec.eventGatewayBackendClusterRef
+          message: spec.eventGatewayBackendClusterRef must use namespacedRef
+          optionalOldSelf: true
+          rule: '!has(self.spec.eventGatewayBackendClusterRef) || self.spec.eventGatewayBackendClusterRef.type
+            == ''namespacedRef'' || (oldSelf.hasValue() && has(oldSelf.value().spec.eventGatewayBackendClusterRef)
+            && oldSelf.value().spec.eventGatewayBackendClusterRef == self.spec.eventGatewayBackendClusterRef)'
         - fieldPath: .spec.eventGatewayBackendClusterRef
           message: spec.eventGatewayBackendClusterRef is immutable once the entity
             has been created in Konnect

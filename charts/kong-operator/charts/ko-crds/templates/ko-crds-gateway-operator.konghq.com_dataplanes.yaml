@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: dataplanes.gateway-operator.konghq.com
 spec:
   group: gateway-operator.konghq.com
@@ -4445,8 +4445,13 @@ spec:
                     - issuer
                     type: object
                   services:
+                    default:
+                      ingress:
+                        type: LoadBalancer
                     properties:
                       ingress:
+                        default:
+                          type: LoadBalancer
                         properties:
                           annotations:
                             additionalProperties:

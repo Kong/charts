@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: kegdataplanes.eventgateway.konghq.com
 spec:
   group: eventgateway.konghq.com
@@ -139,6 +139,10 @@ spec:
                         maxLength: 253
                         minLength: 1
                         type: string
+                      namespace:
+                        maxLength: 63
+                        minLength: 1
+                        type: string
                     required:
                     - name
                     type: object
@@ -146,6 +150,10 @@ spec:
                     properties:
                       name:
                         maxLength: 253
+                        minLength: 1
+                        type: string
+                      namespace:
+                        maxLength: 63
                         minLength: 1
                         type: string
                     required:
@@ -4657,6 +4665,13 @@ spec:
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: the name of a KegDataPlane of an OnPremEventGateway must be a valid
+            DNS-1035 label of at most 57 characters, so that its labels and the name
+            of its Service are valid
+          optionalOldSelf: true
+          rule: oldSelf.hasValue() || self.spec.controlPlaneRef.type != 'onpremNamespacedRef'
+            || (self.metadata.name.size() <= 57 && self.metadata.name.matches('^[a-z]([-a-z0-9]*[a-z0-9])?$'))
     served: true
     storage: true
     subresources:

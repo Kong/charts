@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: onpremaigateways.aigateway.konghq.com
 spec:
   group: aigateway.konghq.com
@@ -54,6 +54,10 @@ spec:
                     minimum: 0
                     type: integer
                 type: object
+              minRuntimeVersion:
+                maxLength: 32
+                pattern: ^\d+\.\d+$
+                type: string
               objectFilters:
                 properties:
                   secrets:

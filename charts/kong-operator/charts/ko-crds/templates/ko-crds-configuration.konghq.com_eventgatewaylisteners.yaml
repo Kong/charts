@@ -8,7 +8,7 @@ metadata:
     helm.sh/resource-policy: keep
 {{ end }}
     kubernetes-configuration.konghq.com/channels: kong-operator
-    kubernetes-configuration.konghq.com/version: v2.4.0-rapid.3.1
+    kubernetes-configuration.konghq.com/version: v2.4.0
   name: eventgatewaylisteners.configuration.konghq.com
 spec:
   group: configuration.konghq.com
@@ -237,6 +237,12 @@ spec:
             && self.spec.parentRef.__namespace__ == oldSelf.spec.gatewayRef.namespacedRef.__namespace__)
             : (!has(oldSelf.spec.gatewayRef.namespacedRef.__namespace__) || size(oldSelf.spec.gatewayRef.namespacedRef.__namespace__)
             == 0)))'
+        - fieldPath: .spec.gatewayRef
+          message: spec.gatewayRef must use namespacedRef
+          optionalOldSelf: true
+          rule: '!has(self.spec.gatewayRef) || self.spec.gatewayRef.type == ''namespacedRef''
+            || (oldSelf.hasValue() && has(oldSelf.value().spec.gatewayRef) && oldSelf.value().spec.gatewayRef
+            == self.spec.gatewayRef)'
     served: true
     storage: true
     subresources:
