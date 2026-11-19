@@ -1,0 +1,26 @@
+# CI test for combined ingress hostname and hosts configuration where
+# different hosts share the same path, and one host has several paths
+proxy:
+  ingress:
+    enabled: true
+    hostname: "proxy.kong.example"
+    path: /
+    hosts:
+    - host: "proxy2.kong.example"
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: "proxy2.kong.example"
+      paths:
+        - path: /api
+          pathType: ImplementationSpecific
+
+# NOTE: The values below:
+# - speed up the test
+# - prevent anonymous reports from being sent
+readinessProbe:
+  initialDelaySeconds: 1
+  periodSeconds: 1
+
+env:
+  anonymous_reports: "off"
