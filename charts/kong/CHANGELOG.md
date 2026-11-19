@@ -4,6 +4,8 @@
 
 ### Changes
 
+* Added `deployment.shareProcessNamespace` to enable process namespace sharing
+  between containers in Kong pods. It defaults to `false`.
 * Added `certificates.issuerRef` (also available per-certificate) to reference
   cert-manager issuers by `name`, `kind`, and `group`. Previously the rendered
   `issuerRef` hardcoded the `cert-manager.io` group and the `Issuer` and

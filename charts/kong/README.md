@@ -928,6 +928,7 @@ On the Gateway release side, set either `admin.tls.client.secretName` to the nam
 | deployment.daemonset               | Use a DaemonSet instead of a Deployment                                               | `false`             |
 | deployment.hostname                | Set the Deployment's `.spec.template.hostname`. Kong reports this as its hostname.    |                     |
 | deployment.hostNetwork             | Enable hostNetwork, which binds to the ports to the host                              | `false`             |
+| deployment.shareProcessNamespace   | Enable process namespace sharing between containers in the pod                        | `false`             |
 | deployment.userDefinedVolumes      | Create volumes. Please go to Kubernetes doc for the spec of the volumes               |                     |
 | deployment.userDefinedVolumeMounts | Create volumeMounts. Please go to Kubernetes doc for the spec of the volumeMounts     |                     |
 | deployment.serviceAccount.create   | Create Service Account for the Deployment / Daemonset and the migrations              | `true`              |
