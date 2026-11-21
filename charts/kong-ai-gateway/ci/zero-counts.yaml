@@ -1,0 +1,9 @@
+# Values that are valid at 0 and must still be rendered.
+replicaCount: 2
+
+deployment:
+  revisionHistoryLimit: 0
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 0

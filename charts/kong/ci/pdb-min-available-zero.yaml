@@ -1,0 +1,6 @@
+# minAvailable: 0 is a valid value and must still be rendered.
+replicaCount: 2
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 0
